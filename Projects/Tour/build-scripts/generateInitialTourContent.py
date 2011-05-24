@@ -58,12 +58,12 @@ for stop in stops:
     jsonOutFile.write(json.dumps(stop))
     
     # retrieve media content (photos and video)
-    downloadMedia.retrieveAndSave(stop['id'], stop['photo'])
-    downloadMedia.retrieveAndSave(stop['id'], stop['thumbnail'])
+    downloadMedia.retrieveAndSave(stop['photo'])
+    downloadMedia.retrieveAndSave(stop['thumbnail'])
     for lense in stop['lenses'].values():
         for lenseItem in lense:
             if lenseItem['type'] == u'photo' or lenseItem['type'] == u'video':
-                downloadMedia.retrieveAndSave(stop['id'], lenseItem['url'])
+                downloadMedia.retrieveAndSave(lenseItem['url'])
             elif lenseItem['type'] == u'slideshow':
                 for slide in lenseItem['slides']:
-                    downloadMedia.retrieveAndSave(stop['id'], slide['url'])
+                    downloadMedia.retrieveAndSave(slide['url'])
