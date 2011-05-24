@@ -12,6 +12,7 @@
 #import "ContentModule.h"
 #import "SettingsModule.h"
 #import "VideoModule.h"
+#import "TourModule.h"
 
 @implementation KGOModule (Factory)
 
@@ -47,7 +48,7 @@
         module = [[[CalendarModule alloc] initWithDictionary:args] autorelease];
     
     else if ([className isEqualToString:@"HomeModule"])
-        module = [[[HomeModule alloc] initWithDictionary:args] autorelease];
+        module = [[[TourModule alloc] initWithDictionary:args] autorelease];
     
     else if ([className isEqualToString:@"ExternalURLModule"])
         module = [[[ExternalURLModule alloc] initWithDictionary:args] autorelease];

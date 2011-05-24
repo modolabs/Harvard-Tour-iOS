@@ -30,50 +30,6 @@
 			<key>tag</key>
 			<string>home</string>
 		</dict>
-		<dict>
-			<key>class</key>
-			<string>AboutModule</string>
-			<key>longName</key>
-			<string>About</string>
-			<key>secondary</key>
-			<true/>
-			<key>shortName</key>
-			<string>About</string>
-			<key>tag</key>
-			<string>about</string>
-		</dict>
-		<dict>
-			<key>class</key>
-			<string>SettingsModule</string>
-			<key>iconImage</key>
-			<string>modules/home/customize.png</string>
-			<key>listViewImage</key>
-			<string>modules/home/module-settings.png</string>
-			<key>longName</key>
-			<string>Settings</string>
-			<key>secondary</key>
-			<true/>
-			<key>shortName</key>
-			<string>Settings</string>
-			<key>tabBarImage</key>
-			<string>modules/home/tab-settings.png</string>
-			<key>tag</key>
-			<string>settings</string>
-		</dict>
-		<dict>
-			<key>class</key>
-			<string>ExternalURLModule</string>
-			<key>longName</key>
-			<string>Full Website</string>
-			<key>secondary</key>
-			<true/>
-			<key>shortName</key>
-			<string>Full Website</string>
-			<key>tag</key>
-			<string>fullweb</string>
-			<key>url</key>
-			<string>http://www.modolabs.com</string>
-		</dict>
 	</array>
 	<key>NavigationControllerClass</key>
 	<string>UINavigationController</string>

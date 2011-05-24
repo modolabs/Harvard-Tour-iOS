@@ -16,11 +16,23 @@
 		3AA219501039D74700DB7637 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA2194F1039D74700DB7637 /* CoreData.framework */; };
 		4463CCB210D6F5750048CA83 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4463CCB110D6F5750048CA83 /* CoreLocation.framework */; };
 		4B050C55132E48F50016591D /* NewsDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B050C54132E48F50016591D /* NewsDataManager.m */; };
+		4B29B38D138C40C7001B3A1E /* Tour.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4B29B38B138C40C7001B3A1E /* Tour.xcdatamodeld */; };
+		4B29B390138C4165001B3A1E /* TourLenseSlideShowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B29B38F138C4165001B3A1E /* TourLenseSlideShowItem.m */; };
+		4B29B393138C41F3001B3A1E /* TourLenseItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B29B392138C41F3001B3A1E /* TourLenseItem.m */; };
 		4B3904EF134147D000CD9C6F /* EmergencyDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3904E5134147D000CD9C6F /* EmergencyDataManager.m */; };
 		4B3904F0134147D000CD9C6F /* EmergencyHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3904E7134147D000CD9C6F /* EmergencyHomeViewController.m */; };
 		4B3904F1134147D000CD9C6F /* EmergencyModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3904E9134147D000CD9C6F /* EmergencyModule.m */; };
 		4B3904F2134147D000CD9C6F /* Emergency.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4B3904EB134147D000CD9C6F /* Emergency.xcdatamodeld */; };
 		4B3904F3134147D000CD9C6F /* EmergencyNotice.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3904EE134147D000CD9C6F /* EmergencyNotice.m */; };
+		4B3C4CE5138C0A0E00034B17 /* TourConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3C4CE4138C0A0E00034B17 /* TourConstants.m */; };
+		4B3C4CE7138C24EC00034B17 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 4B3C4CE6138C24EC00034B17 /* data */; };
+		4B3C4CEC138C2B2B00034B17 /* TourDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3C4CEA138C2B2B00034B17 /* TourDataManager.m */; };
+		4B48FFF4138C05BB004952AF /* TourLenseHtmlItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B48FFEC138C05BB004952AF /* TourLenseHtmlItem.m */; };
+		4B48FFF5138C05BB004952AF /* TourMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B48FFEE138C05BB004952AF /* TourMediaItem.m */; };
+		4B48FFF6138C05BB004952AF /* TourSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B48FFF0138C05BB004952AF /* TourSlide.m */; };
+		4B48FFF7138C05BB004952AF /* TourStop.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B48FFF2138C05BB004952AF /* TourStop.m */; };
+		4B9A56E1138C03F00008BB4E /* TourLense.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B9A56E0138C03F00008BB4E /* TourLense.m */; };
+		4BAF7DD8138B2EB800F9967A /* TourModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAF7DD7138B2EB800F9967A /* TourModule.m */; };
 		4BD493691349144400891968 /* EmergencyContactsSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD493681349144400891968 /* EmergencyContactsSection.m */; };
 		4BD4936C1349146900891968 /* EmergencyContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD4936B1349146900891968 /* EmergencyContact.m */; };
 		4BD4936F13492C2400891968 /* EmergencyContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD4936E13492C2400891968 /* EmergencyContactsViewController.m */; };
@@ -276,6 +288,11 @@
 		4463CCB110D6F5750048CA83 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		4B050C53132E48F40016591D /* NewsDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsDataManager.h; sourceTree = "<group>"; };
 		4B050C54132E48F50016591D /* NewsDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsDataManager.m; sourceTree = "<group>"; };
+		4B29B38C138C40C7001B3A1E /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		4B29B38E138C4165001B3A1E /* TourLenseSlideShowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourLenseSlideShowItem.h; sourceTree = "<group>"; };
+		4B29B38F138C4165001B3A1E /* TourLenseSlideShowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourLenseSlideShowItem.m; sourceTree = "<group>"; };
+		4B29B391138C41F3001B3A1E /* TourLenseItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourLenseItem.h; sourceTree = "<group>"; };
+		4B29B392138C41F3001B3A1E /* TourLenseItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourLenseItem.m; sourceTree = "<group>"; };
 		4B3904E4134147D000CD9C6F /* EmergencyDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyDataManager.h; sourceTree = "<group>"; };
 		4B3904E5134147D000CD9C6F /* EmergencyDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergencyDataManager.m; sourceTree = "<group>"; };
 		4B3904E6134147D000CD9C6F /* EmergencyHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyHomeViewController.h; sourceTree = "<group>"; };
@@ -285,6 +302,23 @@
 		4B3904EC134147D000CD9C6F /* Emergency.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Emergency.xcdatamodel; sourceTree = "<group>"; };
 		4B3904ED134147D000CD9C6F /* EmergencyNotice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyNotice.h; sourceTree = "<group>"; };
 		4B3904EE134147D000CD9C6F /* EmergencyNotice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergencyNotice.m; sourceTree = "<group>"; };
+		4B3C4CE3138C091500034B17 /* TourConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourConstants.h; sourceTree = "<group>"; };
+		4B3C4CE4138C0A0E00034B17 /* TourConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourConstants.m; sourceTree = "<group>"; };
+		4B3C4CE6138C24EC00034B17 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = Resources/data; sourceTree = "<group>"; };
+		4B3C4CE9138C2B2A00034B17 /* TourDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourDataManager.h; sourceTree = "<group>"; };
+		4B3C4CEA138C2B2B00034B17 /* TourDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourDataManager.m; sourceTree = "<group>"; };
+		4B48FFEB138C05BB004952AF /* TourLenseHtmlItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourLenseHtmlItem.h; sourceTree = "<group>"; };
+		4B48FFEC138C05BB004952AF /* TourLenseHtmlItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourLenseHtmlItem.m; sourceTree = "<group>"; };
+		4B48FFED138C05BB004952AF /* TourMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourMediaItem.h; sourceTree = "<group>"; };
+		4B48FFEE138C05BB004952AF /* TourMediaItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourMediaItem.m; sourceTree = "<group>"; };
+		4B48FFEF138C05BB004952AF /* TourSlide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourSlide.h; sourceTree = "<group>"; };
+		4B48FFF0138C05BB004952AF /* TourSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourSlide.m; sourceTree = "<group>"; };
+		4B48FFF1138C05BB004952AF /* TourStop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourStop.h; sourceTree = "<group>"; };
+		4B48FFF2138C05BB004952AF /* TourStop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourStop.m; sourceTree = "<group>"; };
+		4B9A56DF138C03F00008BB4E /* TourLense.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourLense.h; sourceTree = "<group>"; };
+		4B9A56E0138C03F00008BB4E /* TourLense.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourLense.m; sourceTree = "<group>"; };
+		4BAF7DD6138B2EB800F9967A /* TourModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourModule.h; sourceTree = "<group>"; };
+		4BAF7DD7138B2EB800F9967A /* TourModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourModule.m; sourceTree = "<group>"; };
 		4BD493671349144400891968 /* EmergencyContactsSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyContactsSection.h; sourceTree = "<group>"; };
 		4BD493681349144400891968 /* EmergencyContactsSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergencyContactsSection.m; sourceTree = "<group>"; };
 		4BD4936A1349146900891968 /* EmergencyContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyContact.h; sourceTree = "<group>"; };
@@ -639,6 +673,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4B3C4CE6138C24EC00034B17 /* data */,
 				EB46CA891327F95E00AF7B5C /* kurogo */,
 				EB1B88C71324A6AC00108A8F /* common */,
 				EB1B88C81324A6AC00108A8F /* modules */,
@@ -716,6 +751,42 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		4B9A56DB138C03E20008BB4E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4B29B38B138C40C7001B3A1E /* Tour.xcdatamodeld */,
+				4B29B391138C41F3001B3A1E /* TourLenseItem.h */,
+				4B29B392138C41F3001B3A1E /* TourLenseItem.m */,
+				4B29B38E138C4165001B3A1E /* TourLenseSlideShowItem.h */,
+				4B29B38F138C4165001B3A1E /* TourLenseSlideShowItem.m */,
+				4B48FFEB138C05BB004952AF /* TourLenseHtmlItem.h */,
+				4B48FFEC138C05BB004952AF /* TourLenseHtmlItem.m */,
+				4B48FFED138C05BB004952AF /* TourMediaItem.h */,
+				4B48FFEE138C05BB004952AF /* TourMediaItem.m */,
+				4B48FFEF138C05BB004952AF /* TourSlide.h */,
+				4B48FFF0138C05BB004952AF /* TourSlide.m */,
+				4B48FFF1138C05BB004952AF /* TourStop.h */,
+				4B48FFF2138C05BB004952AF /* TourStop.m */,
+				4B9A56DF138C03F00008BB4E /* TourLense.h */,
+				4B9A56E0138C03F00008BB4E /* TourLense.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		4BAF7DD5138B2EB800F9967A /* Tour */ = {
+			isa = PBXGroup;
+			children = (
+				4B9A56DB138C03E20008BB4E /* Model */,
+				4BAF7DD6138B2EB800F9967A /* TourModule.h */,
+				4BAF7DD7138B2EB800F9967A /* TourModule.m */,
+				4B3C4CE3138C091500034B17 /* TourConstants.h */,
+				4B3C4CE4138C0A0E00034B17 /* TourConstants.m */,
+				4B3C4CE9138C2B2A00034B17 /* TourDataManager.h */,
+				4B3C4CEA138C2B2B00034B17 /* TourDataManager.m */,
+			);
+			path = Tour;
+			sourceTree = "<group>";
+		};
 		562F4B61133EC6DE000B9344 /* Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -763,6 +834,7 @@
 		DE715445102FE468005E6111 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				4BAF7DD5138B2EB800F9967A /* Tour */,
 				4B3904E3134147D000CD9C6F /* Emergency */,
 				562F4B61133EC6DE000B9344 /* Content */,
 				EB181FA5131EDF1B003728FF /* Login */,
@@ -1420,6 +1492,7 @@
 				EB46A348134EB97C005796E4 /* MainWindow-iPad.xib in Resources */,
 				EB46A4B413501A80005796E4 /* Icon-72.png in Resources */,
 				EB163ABA136CFB2F003C69E2 /* Default-Portrait~ipad.png in Resources */,
+				4B3C4CE7138C24EC00034B17 /* data in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1589,6 +1662,17 @@
 				EB1637CC13690476003C69E2 /* KGOFoursquareEngine.m in Sources */,
 				EB1637CD13690476003C69E2 /* KGOFoursquareService.m in Sources */,
 				EB1637CE13690476003C69E2 /* KGOTwitterService.m in Sources */,
+				4BAF7DD8138B2EB800F9967A /* TourModule.m in Sources */,
+				4B9A56E1138C03F00008BB4E /* TourLense.m in Sources */,
+				4B48FFF4138C05BB004952AF /* TourLenseHtmlItem.m in Sources */,
+				4B48FFF5138C05BB004952AF /* TourMediaItem.m in Sources */,
+				4B48FFF6138C05BB004952AF /* TourSlide.m in Sources */,
+				4B48FFF7138C05BB004952AF /* TourStop.m in Sources */,
+				4B3C4CE5138C0A0E00034B17 /* TourConstants.m in Sources */,
+				4B3C4CEC138C2B2B00034B17 /* TourDataManager.m in Sources */,
+				4B29B38D138C40C7001B3A1E /* Tour.xcdatamodeld in Sources */,
+				4B29B390138C4165001B3A1E /* TourLenseSlideShowItem.m in Sources */,
+				4B29B393138C41F3001B3A1E /* TourLenseItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1768,6 +1852,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
+		4B29B38B138C40C7001B3A1E /* Tour.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4B29B38C138C40C7001B3A1E /* Model.xcdatamodel */,
+			);
+			currentVersion = 4B29B38C138C40C7001B3A1E /* Model.xcdatamodel */;
+			path = Tour.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		4B3904EB134147D000CD9C6F /* Emergency.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
