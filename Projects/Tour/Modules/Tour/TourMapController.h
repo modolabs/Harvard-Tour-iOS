@@ -21,6 +21,7 @@
 @property (nonatomic, retain) TourStop *selectedStop;
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;
 @property (nonatomic, retain) IBOutlet UIImageView *thumbnailView;
+@property (nonatomic, retain) IBOutlet UILabel *stopTitleLabel;
 @property (nonatomic, retain) IBOutlet UILabel *mapTipLabel;
 @property (nonatomic) BOOL showMapTip;
 

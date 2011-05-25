@@ -4,12 +4,14 @@
 @interface TourMapController (Private) 
 - (void)showSelectedStop;
 - (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops;
+- (void)deallocViews;
 @end
 
 @implementation TourMapController
 @synthesize thumbnailView = _thumbnailView;
 @synthesize mapView;
 @synthesize showMapTip;
+@synthesize stopTitleLabel;
 @synthesize mapTipLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -23,10 +25,7 @@
 
 - (void)dealloc
 {
-    self.thumbnailView = nil;
-    self.mapTipLabel = nil;
-    self.selectedStop = nil;
-    self.mapView = nil;
+    [self deallocViews];
     [super dealloc];
 }
 
@@ -53,12 +52,17 @@
     [self.mapView addAnnotations:tourStops];
 }
 
+- (void)deallocViews {
+    self.thumbnailView = nil;
+    self.stopTitleLabel = nil;
+    self.mapTipLabel = nil;
+    self.mapView = nil;
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    self.thumbnailView = nil;
-    self.mapTipLabel = nil;
-    self.mapView = nil;
+
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -83,6 +87,7 @@
 
 - (void)showSelectedStop {
     _thumbnailView.image = [(TourMediaItem *)_selectedStop.thumbnail image]; 
+    self.stopTitleLabel.text = _selectedStop.title;
 }
 
 - (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops {
