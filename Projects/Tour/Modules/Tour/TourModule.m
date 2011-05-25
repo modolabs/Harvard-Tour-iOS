@@ -1,8 +1,8 @@
 #import "TourModule.h"
+#import "TourHomeViewController.h"
 #import "TourDataManager.h"
 
 @implementation TourModule
-@synthesize dataManager;
 
 - (id)initWithDictionary:(NSDictionary *)moduleDict {
   self = [super initWithDictionary:moduleDict];
@@ -11,14 +11,6 @@
   }
   return self;
 }
-
-- (void)initDataManager {
-    if (!self.dataManager) {
-        self.dataManager = [[[TourDataManager alloc] init] autorelease];
-        [self.dataManager loadStopSummarys];
-    }
-}
-
 
 #pragma mark Data
 
@@ -29,7 +21,11 @@
 
 - (UIViewController *)modulePage:(NSString *)pageName params:(NSDictionary *)params {
     UIViewController *vc = nil;
-    [self initDataManager];
+    [[TourDataManager sharedManager] loadStopSummarys];
+    
+    if([pageName isEqualToString:LocalPathPageNameHome]) {
+        vc = [[[TourHomeViewController alloc] initWithNibName:@"TourHomeViewController" bundle:nil] autorelease];
+    }
     return vc;
 }
 

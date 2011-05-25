@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import <MapKit/MapKit.h>
 
 
-@interface TourStop : NSManagedObject {
+@interface TourStop : NSManagedObject <MKAnnotation> {
 @private
 }
 @property (nonatomic, retain) NSString * subtitle;

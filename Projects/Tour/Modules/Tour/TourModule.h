@@ -6,6 +6,4 @@
 
 }
 
-@property (nonatomic, retain) TourDataManager *dataManager;
-
 @end

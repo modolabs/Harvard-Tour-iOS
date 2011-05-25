@@ -8,10 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+#import "TourStop.h"
+#import "TourMediaItem.h"
 
 @interface TourDataManager : NSObject {
-    
+    BOOL stopSummarysLoaded;
 }
 
++ (TourDataManager *)sharedManager;
 - (void)loadStopSummarys;
+- (TourStop *)getFirstStop;
+- (NSArray *)getAllTourStops;
 @end

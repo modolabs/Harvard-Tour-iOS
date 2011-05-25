@@ -19,6 +19,12 @@
 		4B29B38D138C40C7001B3A1E /* Tour.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4B29B38B138C40C7001B3A1E /* Tour.xcdatamodeld */; };
 		4B29B390138C4165001B3A1E /* TourLenseSlideShowItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B29B38F138C4165001B3A1E /* TourLenseSlideShowItem.m */; };
 		4B29B393138C41F3001B3A1E /* TourLenseItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B29B392138C41F3001B3A1E /* TourLenseItem.m */; };
+		4B29B3A9138C5130001B3A1E /* TourHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B29B3A7138C512F001B3A1E /* TourHomeViewController.m */; };
+		4B29B3AA138C5130001B3A1E /* TourHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B29B3A8138C512F001B3A1E /* TourHomeViewController.xib */; };
+		4B29B3AE138C5601001B3A1E /* TourMapController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B29B3AC138C5601001B3A1E /* TourMapController.m */; };
+		4B29B3AF138C5601001B3A1E /* TourMapController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B29B3AD138C5601001B3A1E /* TourMapController.xib */; };
+		4B29B3B3138D575B001B3A1E /* TourOverviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B29B3B1138D5759001B3A1E /* TourOverviewController.m */; };
+		4B29B3B4138D575B001B3A1E /* TourOverviewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B29B3B2138D575A001B3A1E /* TourOverviewController.xib */; };
 		4B3904EF134147D000CD9C6F /* EmergencyDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3904E5134147D000CD9C6F /* EmergencyDataManager.m */; };
 		4B3904F0134147D000CD9C6F /* EmergencyHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3904E7134147D000CD9C6F /* EmergencyHomeViewController.m */; };
 		4B3904F1134147D000CD9C6F /* EmergencyModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3904E9134147D000CD9C6F /* EmergencyModule.m */; };
@@ -293,6 +299,15 @@
 		4B29B38F138C4165001B3A1E /* TourLenseSlideShowItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourLenseSlideShowItem.m; sourceTree = "<group>"; };
 		4B29B391138C41F3001B3A1E /* TourLenseItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourLenseItem.h; sourceTree = "<group>"; };
 		4B29B392138C41F3001B3A1E /* TourLenseItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourLenseItem.m; sourceTree = "<group>"; };
+		4B29B3A6138C512F001B3A1E /* TourHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourHomeViewController.h; sourceTree = "<group>"; };
+		4B29B3A7138C512F001B3A1E /* TourHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourHomeViewController.m; sourceTree = "<group>"; };
+		4B29B3A8138C512F001B3A1E /* TourHomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TourHomeViewController.xib; sourceTree = "<group>"; };
+		4B29B3AB138C5600001B3A1E /* TourMapController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourMapController.h; sourceTree = "<group>"; };
+		4B29B3AC138C5601001B3A1E /* TourMapController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourMapController.m; sourceTree = "<group>"; };
+		4B29B3AD138C5601001B3A1E /* TourMapController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TourMapController.xib; sourceTree = "<group>"; };
+		4B29B3B0138D5759001B3A1E /* TourOverviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourOverviewController.h; sourceTree = "<group>"; };
+		4B29B3B1138D5759001B3A1E /* TourOverviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourOverviewController.m; sourceTree = "<group>"; };
+		4B29B3B2138D575A001B3A1E /* TourOverviewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TourOverviewController.xib; sourceTree = "<group>"; };
 		4B3904E4134147D000CD9C6F /* EmergencyDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyDataManager.h; sourceTree = "<group>"; };
 		4B3904E5134147D000CD9C6F /* EmergencyDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergencyDataManager.m; sourceTree = "<group>"; };
 		4B3904E6134147D000CD9C6F /* EmergencyHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyHomeViewController.h; sourceTree = "<group>"; };
@@ -783,6 +798,15 @@
 				4B3C4CE4138C0A0E00034B17 /* TourConstants.m */,
 				4B3C4CE9138C2B2A00034B17 /* TourDataManager.h */,
 				4B3C4CEA138C2B2B00034B17 /* TourDataManager.m */,
+				4B29B3A6138C512F001B3A1E /* TourHomeViewController.h */,
+				4B29B3A7138C512F001B3A1E /* TourHomeViewController.m */,
+				4B29B3A8138C512F001B3A1E /* TourHomeViewController.xib */,
+				4B29B3AB138C5600001B3A1E /* TourMapController.h */,
+				4B29B3AC138C5601001B3A1E /* TourMapController.m */,
+				4B29B3AD138C5601001B3A1E /* TourMapController.xib */,
+				4B29B3B0138D5759001B3A1E /* TourOverviewController.h */,
+				4B29B3B1138D5759001B3A1E /* TourOverviewController.m */,
+				4B29B3B2138D575A001B3A1E /* TourOverviewController.xib */,
 			);
 			path = Tour;
 			sourceTree = "<group>";
@@ -1493,6 +1517,9 @@
 				EB46A4B413501A80005796E4 /* Icon-72.png in Resources */,
 				EB163ABA136CFB2F003C69E2 /* Default-Portrait~ipad.png in Resources */,
 				4B3C4CE7138C24EC00034B17 /* data in Resources */,
+				4B29B3AA138C5130001B3A1E /* TourHomeViewController.xib in Resources */,
+				4B29B3AF138C5601001B3A1E /* TourMapController.xib in Resources */,
+				4B29B3B4138D575B001B3A1E /* TourOverviewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1673,6 +1700,9 @@
 				4B29B38D138C40C7001B3A1E /* Tour.xcdatamodeld in Sources */,
 				4B29B390138C4165001B3A1E /* TourLenseSlideShowItem.m in Sources */,
 				4B29B393138C41F3001B3A1E /* TourLenseItem.m in Sources */,
+				4B29B3A9138C5130001B3A1E /* TourHomeViewController.m in Sources */,
+				4B29B3AE138C5601001B3A1E /* TourMapController.m in Sources */,
+				4B29B3B3138D575B001B3A1E /* TourOverviewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

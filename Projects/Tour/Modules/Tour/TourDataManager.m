@@ -7,7 +7,18 @@
 
 @implementation TourDataManager
 
++ (TourDataManager *)sharedManager {
+	static TourDataManager *sharedInstance = nil;
+	if (!sharedInstance) {
+		sharedInstance = [TourDataManager new];
+	}
+	return sharedInstance;
+}
+
 - (void)loadStopSummarys {
+    if(stopSummarysLoaded) {
+        return;
+    }
     
     // check if stops already loaded into core data
     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
@@ -34,6 +45,19 @@
         [[CoreDataManager sharedManager] saveData];
     }
     
+    stopSummarysLoaded = YES;
 }
 
+- (TourStop *)getFirstStop {
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"order = %d", 0];
+    return [[[CoreDataManager sharedManager] objectsForEntity:TourStopEntityName
+                                                               matchingPredicate:pred] lastObject];
+}
+
+- (NSArray *)getAllTourStops {
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"order" ascending:YES];
+    return [[CoreDataManager sharedManager] objectsForEntity:TourStopEntityName 
+                                           matchingPredicate:nil 
+                                             sortDescriptors:[NSArray arrayWithObject:sort]];
+}
 @end

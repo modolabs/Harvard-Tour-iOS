@@ -14,8 +14,10 @@
 @private
 }
 @property (nonatomic, retain) NSString * URL;
-@property (nonatomic, retain) NSData * mediaData;
 
 + (TourMediaItem *)mediaItemForURL:(NSString *)url;
+
+- (NSString *)mediaFilePath;
+- (UIImage *)image;
 
 @end

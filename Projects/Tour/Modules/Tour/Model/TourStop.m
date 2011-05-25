@@ -62,4 +62,7 @@
                     
 }
 
+- (CLLocationCoordinate2D)coordinate {
+    return CLLocationCoordinate2DMake([self.latitude floatValue], [self.longitude floatValue]);
+}
 @end
