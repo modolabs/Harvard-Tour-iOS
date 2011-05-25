@@ -85,17 +85,23 @@
 
 - (void)showMapAnimated:(BOOL)animated {
     if([self.tourMapController.view superview] != _contentView) {
-        [_stopsTableView removeFromSuperview];
         self.tourMapController.view.frame = _contentView.bounds;
-        [_contentView addSubview:self.tourMapController.view];
+        NSTimeInterval duration = animated ? 0.75 : -1;
+        [UIView transitionFromView:_stopsTableView 
+            toView:self.tourMapController.view duration:duration 
+            options:UIViewAnimationOptionTransitionFlipFromLeft 
+            completion:NULL];
     }
 }
 
 - (void)showListAnimated:(BOOL)animated {
     if([self.stopsTableView superview] != _contentView) {
-        [self.tourMapController.view removeFromSuperview];
-        _stopsTableView.frame = _contentView.bounds;
-        [_contentView addSubview:_stopsTableView];
+        NSTimeInterval duration = animated ? 0.75 : -1;
+        [UIView transitionFromView:self.tourMapController.view
+                            toView:_stopsTableView
+                          duration:duration 
+                           options:UIViewAnimationOptionTransitionFlipFromRight 
+                        completion:NULL];
     }
 }
 # pragma TableView dataSource
