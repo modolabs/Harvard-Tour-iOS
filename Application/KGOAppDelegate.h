@@ -9,6 +9,7 @@ typedef enum {
     KGONavigationStyleTableView,
     KGONavigationStyleIconGrid,
     KGONavigationStylePortlet,
+    KGONavigationStyleCustom,
     // the following are not enabled for iPhone
     KGONavigationStyleTabletSidebar,
     KGONavigationStyleTabletSplitView

@@ -127,6 +127,7 @@
         switch (navStyle) {
             case KGONavigationStyleTabletSidebar:
             case KGONavigationStyleTabletSplitView:
+            case KGONavigationStyleCustom:
             {
                 _appHomeScreen = [homeVC retain];
                 self.window.rootViewController = _appHomeScreen;
@@ -294,6 +295,9 @@
             
         } else if ([style isEqualToString:@"Portlet"]) {
             _navigationStyle = KGONavigationStylePortlet;
+            
+        } else if ([style isEqualToString:@"Custom"]) {
+            _navigationStyle = KGONavigationStyleCustom;
             
         } else if ([style isEqualToString:@"Sidebar"] && UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             _navigationStyle = KGONavigationStyleTabletSidebar;
