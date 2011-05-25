@@ -25,6 +25,7 @@
 		4B29B3AF138C5601001B3A1E /* TourMapController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B29B3AD138C5601001B3A1E /* TourMapController.xib */; };
 		4B29B3B3138D575B001B3A1E /* TourOverviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B29B3B1138D5759001B3A1E /* TourOverviewController.m */; };
 		4B29B3B4138D575B001B3A1E /* TourOverviewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B29B3B2138D575A001B3A1E /* TourOverviewController.xib */; };
+		4B29B3BE138DAC62001B3A1E /* TourStopCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B29B3BC138DAC61001B3A1E /* TourStopCell.xib */; };
 		4B3904EF134147D000CD9C6F /* EmergencyDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3904E5134147D000CD9C6F /* EmergencyDataManager.m */; };
 		4B3904F0134147D000CD9C6F /* EmergencyHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3904E7134147D000CD9C6F /* EmergencyHomeViewController.m */; };
 		4B3904F1134147D000CD9C6F /* EmergencyModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B3904E9134147D000CD9C6F /* EmergencyModule.m */; };
@@ -308,6 +309,7 @@
 		4B29B3B0138D5759001B3A1E /* TourOverviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourOverviewController.h; sourceTree = "<group>"; };
 		4B29B3B1138D5759001B3A1E /* TourOverviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourOverviewController.m; sourceTree = "<group>"; };
 		4B29B3B2138D575A001B3A1E /* TourOverviewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TourOverviewController.xib; sourceTree = "<group>"; };
+		4B29B3BC138DAC61001B3A1E /* TourStopCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TourStopCell.xib; sourceTree = "<group>"; };
 		4B3904E4134147D000CD9C6F /* EmergencyDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyDataManager.h; sourceTree = "<group>"; };
 		4B3904E5134147D000CD9C6F /* EmergencyDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergencyDataManager.m; sourceTree = "<group>"; };
 		4B3904E6134147D000CD9C6F /* EmergencyHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyHomeViewController.h; sourceTree = "<group>"; };
@@ -807,6 +809,7 @@
 				4B29B3B0138D5759001B3A1E /* TourOverviewController.h */,
 				4B29B3B1138D5759001B3A1E /* TourOverviewController.m */,
 				4B29B3B2138D575A001B3A1E /* TourOverviewController.xib */,
+				4B29B3BC138DAC61001B3A1E /* TourStopCell.xib */,
 			);
 			path = Tour;
 			sourceTree = "<group>";
@@ -1520,6 +1523,7 @@
 				4B29B3AA138C5130001B3A1E /* TourHomeViewController.xib in Resources */,
 				4B29B3AF138C5601001B3A1E /* TourMapController.xib in Resources */,
 				4B29B3B4138D575B001B3A1E /* TourOverviewController.xib in Resources */,
+				4B29B3BE138DAC62001B3A1E /* TourStopCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
