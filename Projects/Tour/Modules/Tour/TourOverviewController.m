@@ -1,11 +1,3 @@
-//
-//  TourOverviewController.m
-//  Tour
-//
-//  Created by Brian Patt on 5/25/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
-//
-
 #import "TourOverviewController.h"
 #import "TourMapController.h"
 #import "TourDataManager.h"
@@ -15,15 +7,19 @@
 @interface TourOverviewController (Private)
 - (void)showMapAnimated:(BOOL)animated;
 - (void)showListAnimated:(BOOL)animated;
+- (void)deallocViews;
+- (UIToolbar *)mapToolbar;
 @end
 
 @implementation TourOverviewController
 @synthesize selectedStop;
 @synthesize tourStops;
+@synthesize mode;
 @synthesize tourMapController;
 @synthesize contentView = _contentView;
 @synthesize stopsTableView = _stopsTableView;
 @synthesize stopCell;
+@synthesize mapContainerView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -37,6 +33,7 @@
 
 - (void)dealloc
 {
+    [self deallocViews];
     [super dealloc];
 }
 
@@ -53,6 +50,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.mapContainerView = [[[UIView alloc] initWithFrame:self.contentView.bounds] autorelease];
+    self.mapContainerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    UIToolbar *mapToolbar = [self mapToolbar];
+    self.tourMapController.view.frame = CGRectMake(0, 0, 
+        self.contentView.frame.size.width, self.contentView.frame.size.height - mapToolbar.frame.size.height);
+    mapToolbar.frame = CGRectMake(0, self.contentView.frame.size.height - mapToolbar.frame.size.height,
+                            self.contentView.frame.size.width, mapToolbar.frame.size.height);
+    [self.mapContainerView addSubview:self.tourMapController.view];
+    [self.mapContainerView addSubview:mapToolbar];
+    
     self.stopsTableView.rowHeight = 50;
     if(!self.tourStops) {
         self.tourStops = [[TourDataManager sharedManager] getAllTourStops];
@@ -61,9 +69,15 @@
     [self showMapAnimated:NO];
 }
 
+- (void)deallocViews {
+    self.mapContainerView = nil;
+    self.contentView = nil;
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [self deallocViews];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -84,11 +98,11 @@
 }
 
 - (void)showMapAnimated:(BOOL)animated {
-    if([self.tourMapController.view superview] != _contentView) {
-        self.tourMapController.view.frame = _contentView.bounds;
+    if([self.mapContainerView superview] != _contentView) {
+        self.mapContainerView.frame = _contentView.bounds;
         NSTimeInterval duration = animated ? 0.75 : -1;
         [UIView transitionFromView:_stopsTableView 
-            toView:self.tourMapController.view duration:duration 
+            toView:self.mapContainerView duration:duration 
             options:UIViewAnimationOptionTransitionFlipFromLeft 
             completion:NULL];
     }
@@ -97,13 +111,31 @@
 - (void)showListAnimated:(BOOL)animated {
     if([self.stopsTableView superview] != _contentView) {
         NSTimeInterval duration = animated ? 0.75 : -1;
-        [UIView transitionFromView:self.tourMapController.view
+        [UIView transitionFromView:self.mapContainerView
                             toView:_stopsTableView
                           duration:duration 
                            options:UIViewAnimationOptionTransitionFlipFromRight 
                         completion:NULL];
     }
 }
+
+- (UIToolbar *)mapToolbar {
+    UIToolbar *toolbar = [[[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 100, 44)] autorelease];
+    toolbar.barStyle = UIBarStyleDefault;
+    toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    if(self.mode == TourOverviewModeStart) {
+        UIBarItem *startButton = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStyleBordered target:nil action:nil];
+        UIBarItem *leftMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        toolbar.items = [NSArray arrayWithObjects:leftMargin, startButton, nil];
+    } else if(self.mode == TourOverviewModeContinue) {
+        UIBarItem *previousButton = [[UIBarButtonItem alloc] initWithTitle:@"Previous" style:UIBarButtonItemStyleBordered target:nil action:nil];
+        UIBarItem *middleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        UIBarItem *nextButton = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStyleBordered target:nil action:nil];
+        toolbar.items = [NSArray arrayWithObjects:previousButton, middleSpace, nextButton, nil];
+    }
+    return toolbar;
+}
+
 # pragma TableView dataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

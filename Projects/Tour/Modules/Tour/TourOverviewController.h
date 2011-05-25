@@ -1,26 +1,27 @@
-//
-//  TourOverviewController.h
-//  Tour
-//
-//  Created by Brian Patt on 5/25/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 @class TourStop;
 @class TourMapController;
 
-@interface TourOverviewController : UIViewController <UITableViewDataSource, UITabBarDelegate> {
+typedef enum  {
+    TourOverviewModeStart,
+    TourOverviewModeContinue
+} TourOverviewMode;
+
+@interface TourOverviewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
     UIView *_contentView;
     UITableView *_stopsTableView;
+    UIView *_mapContainerView;
 }
 
 @property (nonatomic, retain) IBOutlet UIView *contentView;
+@property (nonatomic, retain) UIView *mapContainerView;
 @property (nonatomic, retain) TourStop *selectedStop;
 @property (nonatomic, retain) TourMapController *tourMapController;
 @property (nonatomic, retain) IBOutlet UITableView *stopsTableView;
 @property (nonatomic, retain) IBOutlet UITableViewCell *stopCell;
 @property (nonatomic, retain) NSArray *tourStops;
+
+@property (nonatomic) TourOverviewMode mode;
 
 - (IBAction)mapListToggled:(id)sender;
 
