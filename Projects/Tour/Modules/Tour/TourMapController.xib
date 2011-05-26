@@ -107,16 +107,16 @@
 						<int key="IBUIBaselineAdjustment">1</int>
 						<float key="IBUIMinimumFontSize">10</float>
 					</object>
-					<object class="IBUIView" id="83839357">
+					<object class="IBUIView" id="875782274">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<object class="NSMutableArray" key="NSSubviews">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBUIImageView" id="769216056">
-								<reference key="NSNextResponder" ref="83839357"/>
+								<reference key="NSNextResponder" ref="875782274"/>
 								<int key="NSvFlags">274</int>
 								<string key="NSFrameSize">{75, 50}</string>
-								<reference key="NSSuperview" ref="83839357"/>
+								<reference key="NSSuperview" ref="875782274"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="812929627"/>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -130,7 +130,7 @@
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
-							<object class="NSColorSpace" key="NSCustomColorSpace" id="537471499">
+							<object class="NSColorSpace" key="NSCustomColorSpace" id="1052370087">
 								<int key="NSID">2</int>
 							</object>
 						</object>
@@ -140,11 +140,11 @@
 				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="83839357"/>
+				<reference key="NSNextKeyView" ref="875782274"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MQA</bytes>
-					<reference key="NSCustomColorSpace" ref="537471499"/>
+					<reference key="NSCustomColorSpace" ref="1052370087"/>
 				</object>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -196,7 +196,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">photoTapped:</string>
-						<reference key="source" ref="83839357"/>
+						<reference key="source" ref="875782274"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
@@ -206,9 +206,17 @@
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">imageViewControl</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="83839357"/>
+						<reference key="destination" ref="875782274"/>
 					</object>
 					<int key="connectionID">16</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="524074357"/>
+						<reference key="destination" ref="372490531"/>
+					</object>
+					<int key="connectionID">17</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -228,7 +236,7 @@
 							<reference ref="524074357"/>
 							<reference ref="708447218"/>
 							<reference ref="812929627"/>
-							<reference ref="83839357"/>
+							<reference ref="875782274"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -260,7 +268,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">14</int>
-						<reference key="object" ref="83839357"/>
+						<reference key="object" ref="875782274"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="769216056"/>
@@ -270,7 +278,7 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">7</int>
 						<reference key="object" ref="769216056"/>
-						<reference key="parent" ref="83839357"/>
+						<reference key="parent" ref="875782274"/>
 					</object>
 				</object>
 			</object>
@@ -315,7 +323,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">16</int>
+			<int key="maxID">17</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

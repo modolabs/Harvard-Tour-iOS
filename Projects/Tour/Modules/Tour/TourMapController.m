@@ -90,7 +90,8 @@
 
 - (void)showSelectedStop {
     if(approachPhotoZoomedIn) {
-        self.thumbnailView.frame = photoZoomedOutFrame;
+        self.imageViewControl.frame = photoZoomedOutFrame;
+        approachPhotoZoomedIn = NO;
     }
     _thumbnailView.image = [(TourMediaItem *)_selectedStop.thumbnail image]; 
     self.stopTitleLabel.text = _selectedStop.title;
@@ -159,4 +160,9 @@
         MKCoordinateSpanMake(maxLatitude - minLatitude, maxLongitude - minLongitude));
 }
 
+#pragma MKMapViewDelegate methods
+
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+    self.selectedStop = (TourStop *)view.annotation;
+}
 @end
