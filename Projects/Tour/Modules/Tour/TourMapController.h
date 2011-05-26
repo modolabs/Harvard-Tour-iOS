@@ -16,13 +16,20 @@
     NSInteger numberOfStops;
     TourStop *_selectedStop;
     UIImageView *_thumbnailView;
+    BOOL approachPhotoZoomedIn;
+    
+    CGRect photoZoomedOutFrame;
+    CGRect photoZoomedInFrame;
 }
 
 @property (nonatomic, retain) TourStop *selectedStop;
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;
+@property (nonatomic, retain) IBOutlet UIControl *imageViewControl;
 @property (nonatomic, retain) IBOutlet UIImageView *thumbnailView;
 @property (nonatomic, retain) IBOutlet UILabel *stopTitleLabel;
 @property (nonatomic, retain) IBOutlet UILabel *mapTipLabel;
 @property (nonatomic) BOOL showMapTip;
+
+- (IBAction)photoTapped:(id)sender;
 
 @end

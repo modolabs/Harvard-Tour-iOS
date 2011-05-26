@@ -9,6 +9,7 @@
 
 @implementation TourMapController
 @synthesize thumbnailView = _thumbnailView;
+@synthesize imageViewControl;
 @synthesize mapView;
 @synthesize showMapTip;
 @synthesize stopTitleLabel;
@@ -18,7 +19,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        photoZoomedInFrame = CGRectNull;
+        photoZoomedOutFrame = CGRectNull;
     }
     return self;
 }
@@ -53,6 +55,7 @@
 }
 
 - (void)deallocViews {
+    self.imageViewControl = nil;
     self.thumbnailView = nil;
     self.stopTitleLabel = nil;
     self.mapTipLabel = nil;
@@ -86,8 +89,38 @@
 }
 
 - (void)showSelectedStop {
+    if(approachPhotoZoomedIn) {
+        self.thumbnailView.frame = photoZoomedOutFrame;
+    }
     _thumbnailView.image = [(TourMediaItem *)_selectedStop.thumbnail image]; 
     self.stopTitleLabel.text = _selectedStop.title;
+}
+
+- (IBAction)photoTapped:(id)sender {
+    if(!approachPhotoZoomedIn) {
+        if (CGRectIsNull(photoZoomedOutFrame)) {
+            photoZoomedOutFrame = self.imageViewControl.frame;
+        }
+        if (CGRectIsNull(photoZoomedInFrame)) {
+            CGFloat width = self.view.frame.size.width;
+            CGFloat height = width / photoZoomedOutFrame.size.width * photoZoomedOutFrame.size.height;
+            photoZoomedInFrame = photoZoomedOutFrame;
+            photoZoomedInFrame.size = CGSizeMake(width, height);
+        }
+    }
+    
+    approachPhotoZoomedIn = !approachPhotoZoomedIn;
+    if (approachPhotoZoomedIn) {
+        _thumbnailView.image = [(TourMediaItem *)self.selectedStop.photo image];
+    }
+    
+    [UIView animateWithDuration:0.75 animations:^(void) {
+       self.imageViewControl.frame = approachPhotoZoomedIn ? photoZoomedInFrame : photoZoomedOutFrame;
+    } completion:^(BOOL finished) {
+        if (!approachPhotoZoomedIn) {
+            _thumbnailView.image = [(TourMediaItem *)self.selectedStop.thumbnail image];
+        }
+    }];
 }
 
 - (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops {
