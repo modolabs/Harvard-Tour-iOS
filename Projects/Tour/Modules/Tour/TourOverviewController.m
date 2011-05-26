@@ -103,7 +103,7 @@
         NSTimeInterval duration = animated ? 0.75 : -1;
         [UIView transitionFromView:_stopsTableView 
             toView:self.mapContainerView duration:duration 
-            options:UIViewAnimationOptionTransitionFlipFromLeft 
+            options:UIViewAnimationOptionTransitionFlipFromRight 
             completion:NULL];
     }
 }
@@ -114,7 +114,7 @@
         [UIView transitionFromView:self.mapContainerView
                             toView:_stopsTableView
                           duration:duration 
-                           options:UIViewAnimationOptionTransitionFlipFromRight 
+                           options:UIViewAnimationOptionTransitionFlipFromLeft 
                         completion:NULL];
     }
 }
