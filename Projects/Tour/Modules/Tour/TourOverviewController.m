@@ -1,6 +1,7 @@
 #import "TourOverviewController.h"
 #import "TourMapController.h"
 #import "TourDataManager.h"
+#import "TourWalkingPathViewController.h"
 
 #define CellThumbnailViewTag 1
 
@@ -9,6 +10,8 @@
 - (void)showListAnimated:(BOOL)animated;
 - (void)deallocViews;
 - (UIToolbar *)mapToolbar;
+
+- (void)startTour;
 @end
 
 @implementation TourOverviewController
@@ -124,7 +127,7 @@
     toolbar.barStyle = UIBarStyleDefault;
     toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     if(self.mode == TourOverviewModeStart) {
-        UIBarItem *startButton = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStyleBordered target:nil action:nil];
+        UIBarItem *startButton = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStyleBordered target:self action:@selector(startTour)];
         UIBarItem *leftMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
         toolbar.items = [NSArray arrayWithObjects:leftMargin, startButton, nil];
     } else if(self.mode == TourOverviewModeContinue) {
@@ -155,5 +158,29 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.tourStops.count;
+}
+
+# pragma user actions
+
+- (void)startTour {
+    TourWalkingPathViewController *walkingPathViewController = [[TourWalkingPathViewController alloc] initWithNibName:@"TourWalkingPathViewController" bundle:nil];
+    walkingPathViewController.initialStop = self.selectedStop;
+    walkingPathViewController.currentStop = self.selectedStop;
+    
+    //slide transition;
+    CGRect newViewFinalFrame = self.view.frame;
+    CGRect newViewInitialFrame = self.view.frame;
+    newViewInitialFrame.origin.x = self.view.frame.origin.x + self.view.frame.size.width;
+    CGRect oldViewFinalFrame = self.view.frame;
+    oldViewFinalFrame.origin.x = self.view.frame.origin.x - self.view.frame.size.width;
+    walkingPathViewController.view.frame = newViewInitialFrame;
+    [[self.view superview] addSubview:walkingPathViewController.view];
+    
+    [UIView animateWithDuration:0.25 animations:^(void) {
+        walkingPathViewController.view.frame = newViewFinalFrame;
+        self.view.frame = oldViewFinalFrame;
+    } completion:^(BOOL finished) {
+        [self.view removeFromSuperview]; 
+    }];
 }
 @end

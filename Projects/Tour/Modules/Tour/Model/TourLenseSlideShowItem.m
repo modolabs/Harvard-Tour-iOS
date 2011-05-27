@@ -1,14 +1,8 @@
-//
-//  TourLenseSlideShowItem.m
-//  Tour
-//
-//  Created by Brian Patt on 5/24/11.
-//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
-//
-
 #import "TourLenseSlideShowItem.h"
 #import "TourSlide.h"
-
+#import "TourConstants.h"
+#import "CoreDataManager.h"
+#import "Foundation+KGOAdditions.h"
 
 @implementation TourLenseSlideShowItem
 @dynamic slides;
@@ -41,5 +35,18 @@
     [self didChangeValueForKey:@"slides" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
++ (TourLenseSlideShowItem *)itemWithDictionary:(NSDictionary *)slideShowDict {
+    TourLenseSlideShowItem *slideShow = [[CoreDataManager sharedManager] 
+                                           insertNewObjectForEntityForName:TourLenseSlideShowItemEntityName];
+    
+    NSArray *slideDicts = [slideShowDict arrayForKey:@"slides"];
+    for(NSInteger index=0; index < slideDicts.count; index++) {
+        NSDictionary *slideDict = [slideDicts objectAtIndex:index];
+        TourSlide *slide = [TourSlide slideWithDictionary:slideDict];
+        slide.order = [NSNumber numberWithInt:index];
+        [slideShow addSlidesObject:slide];
+    }
+    return slideShow;
+}
 
 @end

@@ -1,7 +1,9 @@
 #import "TourStop.h"
 #import "TourMediaItem.h"
+#import "TourLense.h"
 #import "TourConstants.h"
 #import "CoreDataManager.h"
+#import "Foundation+KGOAdditions.h"
 
 @implementation TourStop
 @dynamic subtitle;
@@ -43,6 +45,14 @@
     [self didChangeValueForKey:@"lenses" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
+- (void)updateStopDetailsWithDictionary:(NSDictionary *)stopDetailsDict {
+    for (NSString *key in stopDetailsDict) {
+        NSArray *lenseItems = [stopDetailsDict objectForKey:key];
+        TourLense *lense = [TourLense lenseWithItems:lenseItems ofLenseType:key];
+        [self addLensesObject:lense];
+    }
+}
+
 + (TourStop *)stopWithDictionary:(NSDictionary *)stopDict order:(NSInteger)order {
     TourStop *stop = [[CoreDataManager sharedManager] getObjectForEntity:TourStopEntityName attribute:@"id" value:[stopDict objectForKey:@"id"]];
     
@@ -52,12 +62,12 @@
     }
     
     stop.order = [NSNumber numberWithInt:order];
-    stop.latitude = [stopDict objectForKey:@"lat"];
-    stop.longitude = [stopDict objectForKey:@"lon"];
-    stop.subtitle = [stopDict objectForKey:@"subtitle"];
-    stop.title = [stopDict objectForKey:@"title"];
-    stop.photo = [TourMediaItem mediaItemForURL:[stopDict objectForKey:@"photo"]];
-    stop.thumbnail = [TourMediaItem mediaItemForURL:[stopDict objectForKey:@"thumbnail"]];
+    stop.latitude = [stopDict numberForKey:@"lat"];
+    stop.longitude = [stopDict numberForKey:@"lon"];
+    stop.subtitle = [stopDict stringForKey:@"subtitle" nilIfEmpty:NO];
+    stop.title = [stopDict stringForKey:@"title" nilIfEmpty:NO];
+    stop.photo = [TourMediaItem mediaItemForURL:[stopDict stringForKey:@"photo" nilIfEmpty:NO]];
+    stop.thumbnail = [TourMediaItem mediaItemForURL:[stopDict stringForKey:@"thumbnail" nilIfEmpty:NO]];
     return stop;
                     
 }

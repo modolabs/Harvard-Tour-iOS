@@ -5,8 +5,10 @@
 @interface TourSlide : NSManagedObject {
 @private
 }
-@property (nonatomic, retain) NSString * order;
+@property (nonatomic, retain) NSNumber * order;
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSManagedObject * photo;
+
++ (TourSlide *)slideWithDictionary:(NSDictionary *)slideDict;
 
 @end

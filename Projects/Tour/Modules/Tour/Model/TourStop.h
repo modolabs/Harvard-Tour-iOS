@@ -25,5 +25,6 @@
 @property (nonatomic, retain) NSManagedObject * photo;
 
 + (TourStop *)stopWithDictionary:(NSDictionary *)stopDict order:(NSInteger)integer;
+- (void)updateStopDetailsWithDictionary:(NSDictionary *)stopDetailsDict;
 
 @end

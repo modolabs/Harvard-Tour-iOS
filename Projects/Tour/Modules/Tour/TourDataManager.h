@@ -1,11 +1,3 @@
-//
-//  TourDataManager.h
-//  Tour
-//
-//  Created by Brian Patt on 5/24/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 
 #import "TourStop.h"
@@ -13,10 +5,16 @@
 
 @interface TourDataManager : NSObject {
     BOOL stopSummarysLoaded;
+    NSInteger stopsCount;
 }
 
 + (TourDataManager *)sharedManager;
 - (void)loadStopSummarys;
 - (TourStop *)getFirstStop;
 - (NSArray *)getAllTourStops;
+
+- (TourStop *)lastTourStopForFirstTourStop:(TourStop *)startingTourStop;
+- (TourStop *)previousStopForTourStop:(TourStop *)stop;
+- (TourStop *)nextStopForTourStop:(TourStop *)stop;
+
 @end
