@@ -4,6 +4,7 @@
 @interface TourMapController (Private) 
 - (void)showSelectedStop;
 - (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops;
+- (MKCoordinateRegion)upcomingStopRegion;
 - (void)deallocViews;
 @end
 
@@ -12,6 +13,8 @@
 @synthesize imageViewControl;
 @synthesize mapView;
 @synthesize showMapTip;
+@synthesize mapInitialFocusMode;
+@synthesize upcomingStop;
 @synthesize stopTitleLabel;
 @synthesize mapTipLabel;
 
@@ -49,7 +52,12 @@
     }
     [self showSelectedStop];
     NSArray *tourStops = [[TourDataManager sharedManager] getAllTourStops];
-    MKCoordinateRegion initialRegion = [self stopsRegion:tourStops];
+    MKCoordinateRegion initialRegion;
+    if(self.mapInitialFocusMode == MapInitialFocusModeAllStops) {
+        initialRegion = [self stopsRegion:tourStops];
+    } else if(self.mapInitialFocusMode == MapInitialFocusModeUpcomingStop) {
+        initialRegion = [self upcomingStopRegion];
+    }
     [self.mapView setRegion:initialRegion animated:NO];
     [self.mapView addAnnotations:tourStops];
 }
@@ -124,6 +132,11 @@
     }];
 }
 
+- (MKCoordinateRegion)upcomingStopRegion {
+    TourStop *previousStop = [[TourDataManager sharedManager] previousStopForTourStop:self.upcomingStop];
+    return [self stopsRegion:[NSArray arrayWithObjects:self.upcomingStop, previousStop, nil]];
+}
+
 - (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops {
     if (tourStops.count == 0) {
          [NSException raise:@"Invalid Region" format:@"attempting to compute a region for zero points"];
@@ -155,9 +168,10 @@
         }
     }
     
+    CGFloat marginFactor = 1.1;
     return MKCoordinateRegionMake(
         CLLocationCoordinate2DMake(0.5*(minLatitude+maxLatitude), 0.5*(minLongitude+maxLongitude)),
-        MKCoordinateSpanMake(maxLatitude - minLatitude, maxLongitude - minLongitude));
+        MKCoordinateSpanMake(marginFactor * (maxLatitude - minLatitude), marginFactor * (maxLongitude - minLongitude)));
 }
 
 #pragma MKMapViewDelegate methods

@@ -9,6 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 
+typedef enum {
+    MapInitialFocusModeAllStops,
+    MapInitialFocusModeUpcomingStop,
+} MapInitialFocusMode;
+
 @class TourStop;
 @class TourDataManager;
 
@@ -29,6 +34,9 @@
 @property (nonatomic, retain) IBOutlet UILabel *stopTitleLabel;
 @property (nonatomic, retain) IBOutlet UILabel *mapTipLabel;
 @property (nonatomic) BOOL showMapTip;
+
+@property (nonatomic, assign) MapInitialFocusMode mapInitialFocusMode;
+@property (nonatomic, retain) TourStop *upcomingStop;
 
 - (IBAction)photoTapped:(id)sender;
 

@@ -1,18 +1,27 @@
 #import "TourWalkingPathViewController.h"
+#import "TourMapController.h"
 #import "TourDataManager.h"
 
 @interface TourWalkingPathViewController (Private)
 - (void)deallocViews;
 - (void)refreshUI;
+- (void)loadMapControllerForCurrentStop;
+
+- (CGRect)frameForContent;
+- (CGRect)frameForPreviousContent;
+- (CGRect)frameForNextContent;
 @end
 
 @implementation TourWalkingPathViewController
+@synthesize contentView;
 @synthesize titleButton;
 @synthesize previousBarItem;
 @synthesize nextBarItem;
 @synthesize initialStop;
 @synthesize currentStop;
 @synthesize tourStopMode;
+
+@synthesize tourMapController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,6 +54,9 @@
 {
     [super viewDidLoad];
     [self refreshUI];
+    [self loadMapControllerForCurrentStop];
+    self.tourMapController.view.frame = [self frameForContent];
+    [self.contentView addSubview:self.tourMapController.view];
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -106,5 +118,15 @@
     [self refreshUI];
 }
 
+- (void)loadMapControllerForCurrentStop {
+    self.tourMapController = [[[TourMapController alloc] initWithNibName:@"TourMapController" bundle:nil] autorelease];
+    self.tourMapController.upcomingStop = self.currentStop;
+    self.tourMapController.selectedStop = self.currentStop;
+    self.tourMapController.mapInitialFocusMode = MapInitialFocusModeUpcomingStop;
+}
+
+- (CGRect)frameForContent {
+    return self.contentView.bounds;
+}
 
 @end
