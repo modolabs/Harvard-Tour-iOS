@@ -77,7 +77,7 @@
 - (void)populateTourStopDetails:(TourStop *)tourStop {
     if(tourStop.lenses.count == 0) {
         NSString *stopDetailsJsonPath = [[[NSBundle mainBundle] bundlePath] 
-            stringByAppendingPathComponent:[NSString stringWithFormat:@"data/%@/content.json", tourStop.id]];
+            stringByAppendingPathComponent:[NSString stringWithFormat:@"data/stops/%@/content.json", tourStop.id]];
         NSData *stopDetailsJsonBytes = [NSData dataWithContentsOfFile:stopDetailsJsonPath];
         SBJsonParser *jsonParser = [[[SBJsonParser alloc] init] autorelease];
         NSDictionary *tourStopDetailsDict = [jsonParser objectWithData:stopDetailsJsonBytes];

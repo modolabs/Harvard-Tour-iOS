@@ -10,6 +10,8 @@
 
 + (TourDataManager *)sharedManager;
 - (void)loadStopSummarys;
+- (void)populateTourStopDetails:(TourStop *)tourStop;
+
 - (TourStop *)getFirstStop;
 - (NSArray *)getAllTourStops;
 

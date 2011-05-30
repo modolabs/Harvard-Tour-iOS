@@ -46,8 +46,9 @@
 }
 
 - (void)updateStopDetailsWithDictionary:(NSDictionary *)stopDetailsDict {
-    for (NSString *key in stopDetailsDict) {
-        NSArray *lenseItems = [stopDetailsDict objectForKey:key];
+    NSDictionary *lensesDict = [stopDetailsDict objectForKey:@"lenses"];
+    for (NSString *key in lensesDict) {
+        NSArray *lenseItems = [lensesDict objectForKey:key];
         TourLense *lense = [TourLense lenseWithItems:lenseItems ofLenseType:key];
         [self addLensesObject:lense];
     }

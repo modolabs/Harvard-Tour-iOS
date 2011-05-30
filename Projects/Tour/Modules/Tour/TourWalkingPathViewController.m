@@ -121,7 +121,7 @@
     previousView.frame = [self frameForPreviousContent];
     [self.contentView addSubview:previousView];
     
-    [UIView animateWithDuration:0.75 animations:^(void) {
+    [UIView animateWithDuration:0.25 animations:^(void) {
         previousView.frame = [self frameForContent];
         self.currentContent.frame = [self frameForNextContent];
     } completion:^(BOOL finished) {
@@ -146,7 +146,7 @@
     }
     nextView.frame = [self frameForNextContent];
     [self.contentView addSubview:nextView];
-    [UIView animateWithDuration:0.75 animations:^(void) {
+    [UIView animateWithDuration:0.25 animations:^(void) {
         nextView.frame = [self frameForContent];
         self.currentContent.frame = [self frameForPreviousContent];
     } completion:^(BOOL finished) {
@@ -165,6 +165,7 @@
 
 - (void)loadStopDetailsControllerForCurrentStop {
     self.tourStopDetailsController = [[[TourStopDetailsViewController alloc] initWithNibName:@"TourStopDetailsViewController" bundle:nil] autorelease];
+    self.tourStopDetailsController.tourStop = self.currentStop;
 }
 
 - (CGRect)frameForContent {

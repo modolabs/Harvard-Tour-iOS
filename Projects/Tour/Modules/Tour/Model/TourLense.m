@@ -61,11 +61,12 @@
         else if([lenseItemType isEqualToString:@"video"]) {
             lenseItem = [TourLenseVideoItem itemWithDictionary:lenseItemDict];
         }
-        else if([lenseItemType isEqualToString:@"slides"]) {
+        else if([lenseItemType isEqualToString:@"slideshow"]) {
             lenseItem = [TourLenseSlideShowItem itemWithDictionary:lenseItemDict];
         }
         
         lenseItem.order = [NSNumber numberWithInt:index];
+        lenseItem.type = lenseItemType;
         [lense addLenseItemsObject:lenseItem];
     }
     return lense;

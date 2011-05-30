@@ -11,7 +11,7 @@
 
 + (TourLenseVideoItem *)itemWithDictionary:(NSDictionary *)itemDict {
     TourLenseVideoItem *item = [[CoreDataManager sharedManager] 
-                                insertNewObjectForEntityForName:TourLensePhotoItemEntityName];
+                                insertNewObjectForEntityForName:TourLenseVideoItemEntityName];
     item.title = [itemDict stringForKey:@"title" nilIfEmpty:NO];
     item.video = [TourMediaItem mediaItemForURL:[itemDict stringForKey:@"url" nilIfEmpty:NO]];
     return item;
