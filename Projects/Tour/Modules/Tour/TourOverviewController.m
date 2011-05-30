@@ -164,8 +164,8 @@
 
 - (void)startTour {
     TourWalkingPathViewController *walkingPathViewController = [[TourWalkingPathViewController alloc] initWithNibName:@"TourWalkingPathViewController" bundle:nil];
-    walkingPathViewController.initialStop = self.selectedStop;
-    walkingPathViewController.currentStop = self.selectedStop;
+    walkingPathViewController.initialStop = self.tourMapController.selectedStop;
+    walkingPathViewController.currentStop = self.tourMapController.selectedStop;
     [self.navigationController pushViewController:walkingPathViewController animated:YES];
 }
 @end
