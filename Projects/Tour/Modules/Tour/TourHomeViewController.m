@@ -61,7 +61,6 @@
     [_tourOverviewController release];
     _tourOverviewController = [[TourOverviewController alloc] initWithNibName:@"TourOverviewController" bundle:nil];
     _tourOverviewController.selectedStop = [[TourDataManager sharedManager] getFirstStop];
-    [_welcomeView removeFromSuperview];
-    [self.view addSubview:_tourOverviewController.view];
+    [self.navigationController pushViewController:_tourOverviewController animated:YES];
 }
 @end

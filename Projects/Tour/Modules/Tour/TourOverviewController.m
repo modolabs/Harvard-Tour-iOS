@@ -166,21 +166,6 @@
     TourWalkingPathViewController *walkingPathViewController = [[TourWalkingPathViewController alloc] initWithNibName:@"TourWalkingPathViewController" bundle:nil];
     walkingPathViewController.initialStop = self.selectedStop;
     walkingPathViewController.currentStop = self.selectedStop;
-    
-    //slide transition;
-    CGRect newViewFinalFrame = self.view.frame;
-    CGRect newViewInitialFrame = self.view.frame;
-    newViewInitialFrame.origin.x = self.view.frame.origin.x + self.view.frame.size.width;
-    CGRect oldViewFinalFrame = self.view.frame;
-    oldViewFinalFrame.origin.x = self.view.frame.origin.x - self.view.frame.size.width;
-    walkingPathViewController.view.frame = newViewInitialFrame;
-    [[self.view superview] addSubview:walkingPathViewController.view];
-    
-    [UIView animateWithDuration:0.25 animations:^(void) {
-        walkingPathViewController.view.frame = newViewFinalFrame;
-        self.view.frame = oldViewFinalFrame;
-    } completion:^(BOOL finished) {
-        [self.view removeFromSuperview]; 
-    }];
+    [self.navigationController pushViewController:walkingPathViewController animated:YES];
 }
 @end

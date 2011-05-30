@@ -24,7 +24,9 @@
     [[TourDataManager sharedManager] loadStopSummarys];
     
     if([pageName isEqualToString:LocalPathPageNameHome]) {
-        vc = [[[TourHomeViewController alloc] initWithNibName:@"TourHomeViewController" bundle:nil] autorelease];
+        TourHomeViewController *tourHomeVC = [[[TourHomeViewController alloc] initWithNibName:@"TourHomeViewController" bundle:nil] autorelease];
+        vc = [[UINavigationController alloc] initWithRootViewController:tourHomeVC];
+        [(UINavigationController *)vc setNavigationBarHidden:YES];
     }
     return vc;
 }
