@@ -7,6 +7,7 @@ typedef enum {
 } TourStopMode;
 
 @class TourMapController;
+@class TourStopDetailsViewController;
 @interface TourWalkingPathViewController : UIViewController {
     
 }
@@ -18,9 +19,10 @@ typedef enum {
 @property (nonatomic, retain) IBOutlet UIBarItem *nextBarItem;
 @property (nonatomic, retain) IBOutlet UIButton *titleButton;  //not used as a button
 @property (nonatomic, retain) IBOutlet UIView *contentView;
+@property (nonatomic, retain) UIView *currentContent;
 
 @property (nonatomic, retain) TourMapController *tourMapController;
-
+@property (nonatomic, retain) TourStopDetailsViewController *tourStopDetailsController;
 
 - (IBAction)previous;
 - (IBAction)next;

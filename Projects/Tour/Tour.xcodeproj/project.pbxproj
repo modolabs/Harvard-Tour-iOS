@@ -44,6 +44,8 @@
 		4BCA3BE7138EFE2E0077D6ED /* TourLenseVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCA3BE6138EFE2D0077D6ED /* TourLenseVideoItem.m */; };
 		4BCA3BEA138F01750077D6ED /* TourLensePhotoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCA3BE9138F01740077D6ED /* TourLensePhotoItem.m */; };
 		4BCA3BF0138F0F7C0077D6ED /* TourLense.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCA3BEF138F0F7C0077D6ED /* TourLense.m */; };
+		4BCA3BF4139436BA0077D6ED /* TourStopDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCA3BF2139436AC0077D6ED /* TourStopDetailsViewController.m */; };
+		4BCA3BF5139436BA0077D6ED /* TourStopDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCA3BF3139436B30077D6ED /* TourStopDetailsViewController.xib */; };
 		4BD493691349144400891968 /* EmergencyContactsSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD493681349144400891968 /* EmergencyContactsSection.m */; };
 		4BD4936C1349146900891968 /* EmergencyContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD4936B1349146900891968 /* EmergencyContact.m */; };
 		4BD4936F13492C2400891968 /* EmergencyContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD4936E13492C2400891968 /* EmergencyContactsViewController.m */; };
@@ -347,6 +349,9 @@
 		4BCA3BE9138F01740077D6ED /* TourLensePhotoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourLensePhotoItem.m; sourceTree = "<group>"; };
 		4BCA3BEE138F0F7B0077D6ED /* TourLense.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourLense.h; sourceTree = "<group>"; };
 		4BCA3BEF138F0F7C0077D6ED /* TourLense.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourLense.m; sourceTree = "<group>"; };
+		4BCA3BF1139436A90077D6ED /* TourStopDetailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourStopDetailsViewController.h; sourceTree = "<group>"; };
+		4BCA3BF2139436AC0077D6ED /* TourStopDetailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourStopDetailsViewController.m; sourceTree = "<group>"; };
+		4BCA3BF3139436B30077D6ED /* TourStopDetailsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TourStopDetailsViewController.xib; sourceTree = "<group>"; };
 		4BD493671349144400891968 /* EmergencyContactsSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyContactsSection.h; sourceTree = "<group>"; };
 		4BD493681349144400891968 /* EmergencyContactsSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergencyContactsSection.m; sourceTree = "<group>"; };
 		4BD4936A1349146900891968 /* EmergencyContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyContact.h; sourceTree = "<group>"; };
@@ -828,6 +833,9 @@
 				4BCA3BD7138EB54C0077D6ED /* TourWalkingPathViewController.h */,
 				4BCA3BD8138EB54C0077D6ED /* TourWalkingPathViewController.m */,
 				4BCA3BD9138EB54C0077D6ED /* TourWalkingPathViewController.xib */,
+				4BCA3BF1139436A90077D6ED /* TourStopDetailsViewController.h */,
+				4BCA3BF2139436AC0077D6ED /* TourStopDetailsViewController.m */,
+				4BCA3BF3139436B30077D6ED /* TourStopDetailsViewController.xib */,
 			);
 			path = Tour;
 			sourceTree = "<group>";
@@ -1543,6 +1551,7 @@
 				4B29B3B4138D575B001B3A1E /* TourOverviewController.xib in Resources */,
 				4B29B3BE138DAC62001B3A1E /* TourStopCell.xib in Resources */,
 				4BCA3BDB138EB54D0077D6ED /* TourWalkingPathViewController.xib in Resources */,
+				4BCA3BF5139436BA0077D6ED /* TourStopDetailsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1729,6 +1738,7 @@
 				4BCA3BE7138EFE2E0077D6ED /* TourLenseVideoItem.m in Sources */,
 				4BCA3BEA138F01750077D6ED /* TourLensePhotoItem.m in Sources */,
 				4BCA3BF0138F0F7C0077D6ED /* TourLense.m in Sources */,
+				4BCA3BF4139436BA0077D6ED /* TourStopDetailsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
