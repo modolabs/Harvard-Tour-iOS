@@ -14,7 +14,8 @@
 
 - (void)deallocViews;
 - (void)setupLenseTabs;
-- (void)displayLenseContent;
+- (void)displayContentForTabIndex:(NSInteger)tabIndex;
+- (void)displayLenseContent:(TourLense *)lense;
 
 @end
 
@@ -59,13 +60,16 @@
     [super viewDidLoad]; 
     [[TourDataManager sharedManager] populateTourStopDetails:self.tourStop];
     [self setupLenseTabs];
-    [self displayLenseContent];
+    self.tabControl.selectedTabIndex = 0;
+    [self displayContentForTabIndex:0];
+    self.tabControl.delegate = self;
     
     //[self.tabControl setMinimumWidth:mininumTabWidth forTabAtIndex:3];
     // Do any additional setup after loading the view from its nib.
 }
 
 - (void)deallocViews {
+    self.tabControl.delegate = nil;
     self.tabControl = nil;
     self.lenseContentView = nil;
     self.scrollView = nil;
@@ -92,19 +96,25 @@
     self.tabControl.tabSpacing = 0.0;
     NSInteger totalTabs = 5;
     CGFloat mininumTabWidth = self.tabControl.frame.size.width / totalTabs;
+    for (NSInteger tabIndex = 0; tabIndex < [[self.tourStop orderedLenses] count]; tabIndex++) {
+        [self.tabControl insertTabWithImage:[UIImage imageWithPathName:@"modules/map/map-button-location"] atIndex:0 animated:NO];
+    }
     
-    [self.tabControl insertTabWithImage:[UIImage imageWithPathName:@"modules/map/map-button-location"] atIndex:0 animated:NO];
-    [self.tabControl insertTabWithImage:[UIImage imageWithPathName:@"modules/map/map-button-location"] atIndex:0 animated:NO];
-    [self.tabControl insertTabWithImage:[UIImage imageWithPathName:@"modules/map/map-button-location"] atIndex:0 animated:NO];
-    [self.tabControl insertTabWithImage:[UIImage imageWithPathName:@"modules/map/map-button-location"] atIndex:0 animated:NO];
-    
-    [self.tabControl setMinimumWidth:mininumTabWidth forTabAtIndex:0];
-    [self.tabControl setMinimumWidth:mininumTabWidth forTabAtIndex:1];
-    [self.tabControl setMinimumWidth:mininumTabWidth forTabAtIndex:2];
-    [self.tabControl setMinimumWidth:mininumTabWidth forTabAtIndex:3];
+    for (NSInteger tabIndex = 0; tabIndex < [[self.tourStop orderedLenses] count]; tabIndex++) {
+        [self.tabControl setMinimumWidth:mininumTabWidth forTabAtIndex:tabIndex];
+    }
 }
 
-- (void)displayLenseContent {
+- (void)tabbedControl:(KGOTabbedControl *)control didSwitchToTabAtIndex:(NSInteger)index {
+    [self displayContentForTabIndex:index];
+}
+
+- (void)displayContentForTabIndex:(NSInteger)tabIndex {
+    TourLense *lense = [[self.tourStop orderedLenses] objectAtIndex:tabIndex];
+    [self displayLenseContent:lense];
+}
+
+- (void)displayLenseContent:(TourLense *)aLense; {
     CGFloat lenseContentHeight = 0;
     // remove old content
     self.webView.delegate = nil;
@@ -114,7 +124,6 @@
         [subview removeFromSuperview];
     }
     
-    TourLense *aLense = [self.tourStop.lenses anyObject];
     for (TourLenseItem *lenseItem in [aLense orderedItems]) {
         if([lenseItem isKindOfClass:[TourLenseHtmlItem class]]) {
             TourLenseHtmlItem *lenseHtmlItem = (TourLenseHtmlItem *)lenseItem;

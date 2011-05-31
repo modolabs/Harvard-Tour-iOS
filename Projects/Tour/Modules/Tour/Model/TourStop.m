@@ -73,6 +73,21 @@
                     
 }
 
+- (NSArray *)orderedLenses {
+    NSArray *lenseTypes = [NSArray arrayWithObjects:@"info", @"insideout", @"fastfacts", @"innovation", @"history", nil];
+    
+    NSMutableArray *lenses = [NSMutableArray array];
+    for (NSString *lenseType in lenseTypes) {
+        for (TourLense *lense in self.lenses) {
+            if([lense.lenseType isEqualToString:lenseType]) {
+                [lenses addObject:lense];
+                break;
+            }
+        }
+    }
+    return lenses;
+}
+
 - (CLLocationCoordinate2D)coordinate {
     return CLLocationCoordinate2DMake([self.latitude floatValue], [self.longitude floatValue]);
 }

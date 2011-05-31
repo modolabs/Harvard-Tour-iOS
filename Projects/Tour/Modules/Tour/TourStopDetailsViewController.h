@@ -1,8 +1,9 @@
 #import <UIKit/UIKit.h>
+#import "KGOTabbedControl.h"
 
 @class TourStop;
 @class KGOTabbedControl;
-@interface TourStopDetailsViewController : UIViewController <UIWebViewDelegate> {
+@interface TourStopDetailsViewController : UIViewController <UIWebViewDelegate, KGOTabbedControlDelegate> {
     
 }
 

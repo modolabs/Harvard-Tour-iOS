@@ -27,4 +27,6 @@
 + (TourStop *)stopWithDictionary:(NSDictionary *)stopDict order:(NSInteger)integer;
 - (void)updateStopDetailsWithDictionary:(NSDictionary *)stopDetailsDict;
 
+- (NSArray *)orderedLenses;
+
 @end
