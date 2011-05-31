@@ -16,4 +16,6 @@
 
 + (TourLenseSlideShowItem *)itemWithDictionary:(NSDictionary *)slideShowDict;
 
+- (NSArray *)orderedSlides;
+
 @end

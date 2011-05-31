@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "TourMediaItem.h"
 
 
 @interface TourSlide : NSManagedObject {
@@ -7,7 +8,7 @@
 }
 @property (nonatomic, retain) NSNumber * order;
 @property (nonatomic, retain) NSString * title;
-@property (nonatomic, retain) NSManagedObject * photo;
+@property (nonatomic, retain) TourMediaItem * photo;
 
 + (TourSlide *)slideWithDictionary:(NSDictionary *)slideDict;
 

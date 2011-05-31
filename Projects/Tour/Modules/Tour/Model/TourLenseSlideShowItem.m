@@ -49,4 +49,8 @@
     return slideShow;
 }
 
+- (NSArray *)orderedSlides {
+    return [self.slides sortedArrayUsingDescriptors:
+            [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"order" ascending:YES]]];
+}
 @end
