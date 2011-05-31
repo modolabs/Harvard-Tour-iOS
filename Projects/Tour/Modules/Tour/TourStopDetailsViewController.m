@@ -22,8 +22,10 @@
 @synthesize tabControl;
 @synthesize tourStop;
 
-@synthesize scollView;
+@synthesize scrollView;
 @synthesize lenseContentView;
+@synthesize webView;
+@synthesize html;
 @synthesize lenseItemPhotoView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -66,7 +68,9 @@
 - (void)deallocViews {
     self.tabControl = nil;
     self.lenseContentView = nil;
-    self.scollView = nil;
+    self.scrollView = nil;
+    self.webView.delegate = nil;
+    self.webView = nil;
 }
 
 - (void)viewDidUnload
@@ -103,6 +107,9 @@
 - (void)displayLenseContent {
     CGFloat lenseContentHeight = 0;
     // remove old content
+    self.webView.delegate = nil;
+    self.webView = nil;
+    self.html = @"";
     for(UIView *subview in self.lenseContentView.subviews) {
         [subview removeFromSuperview];
     }
@@ -111,11 +118,7 @@
     for (TourLenseItem *lenseItem in [aLense orderedItems]) {
         if([lenseItem isKindOfClass:[TourLenseHtmlItem class]]) {
             TourLenseHtmlItem *lenseHtmlItem = (TourLenseHtmlItem *)lenseItem;
-            CGRect webviewFrame = CGRectMake(0, lenseContentHeight, self.lenseContentView.frame.size.width, 250);
-            lenseContentHeight += 250;
-            UIWebView *webView = [[[UIWebView alloc] initWithFrame:webviewFrame] autorelease];
-            [webView loadHTMLString:lenseHtmlItem.html baseURL:nil];
-            [self.lenseContentView addSubview:webView];
+            self.html = [self.html stringByAppendingString:lenseHtmlItem.html];
         }
         else if([lenseItem isKindOfClass:[TourLensePhotoItem class]]) {
             TourLensePhotoItem *lensePhotoItem = (TourLensePhotoItem *)lenseItem;
@@ -136,11 +139,44 @@
         }
     }
     
+    if([self.html length]) {
+        CGFloat dummyInitialHeight = 200;
+        CGRect webviewFrame = CGRectMake(0, lenseContentHeight, self.lenseContentView.frame.size.width, dummyInitialHeight);
+        lenseContentHeight += dummyInitialHeight;
+        self.webView = [[[UIWebView alloc] initWithFrame:webviewFrame] autorelease];
+        self.webView.delegate = self;
+        [self.webView loadHTMLString:self.html baseURL:nil];
+        [self.lenseContentView addSubview:self.webView]; 
+    }
+    
+    
     CGRect contentViewFrame = self.lenseContentView.frame;
     contentViewFrame.size.height = lenseContentHeight;
     self.lenseContentView.frame = contentViewFrame;
-    self.scollView.contentSize = CGSizeMake(
-        self.scollView.frame.size.width,
+    self.scrollView.contentSize = CGSizeMake(
+        self.scrollView.frame.size.width,
         self.lenseContentView.frame.origin.y + lenseContentHeight);
 }
+
+#pragma mark UIWebView delegate
+- (void)webViewDidFinishLoad:(UIWebView *)aWebView {
+    if(aWebView.superview) {
+        CGSize size = [aWebView sizeThatFits:CGSizeZero];
+        CGRect frame = aWebView.frame;
+        CGFloat addedHeight = size.height - frame.size.height;
+        frame.size.height = size.height;
+        aWebView.frame = frame;
+    
+        // change scrollview height by how much the webview height changed
+        CGSize contentSize = self.scrollView.contentSize;
+        contentSize.height = contentSize.height + addedHeight;
+        self.scrollView.contentSize = contentSize;
+        
+        // change lense content view height
+        CGRect contentFrame = self.lenseContentView.frame;
+        contentFrame.size.height = contentFrame.size.height + addedHeight;
+        self.lenseContentView.frame = contentFrame;
+    }
+}
+
 @end
