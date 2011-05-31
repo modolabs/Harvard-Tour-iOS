@@ -4,6 +4,7 @@
 @class TourStop;
 @class KGOTabbedControl;
 @interface TourStopDetailsViewController : UIViewController <UIWebViewDelegate, KGOTabbedControlDelegate> {
+    NSMutableArray *moviePlayers;
     
 }
 
@@ -16,6 +17,8 @@
 
 // placeholders used to construct lense item views from nib files
 @property (nonatomic, retain) IBOutlet UIView *lenseItemPhotoView;
+@property (nonatomic, retain) IBOutlet UIView *lenseItemVideoView;
 
 @property (nonatomic, retain) TourStop *tourStop;
+
 @end

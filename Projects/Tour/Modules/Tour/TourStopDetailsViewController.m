@@ -5,10 +5,14 @@
 #import "TourLense.h"
 #import "TourLenseItem.h"
 #import "TourLensePhotoItem.h"
+#import "TourLenseVideoItem.h"
 #import "TourLenseHtmlItem.h"
+#import <MediaPlayer/MediaPlayer.h>
 
 #define LenseItemPhotoImageTag 100
 #define LenseItemPhotoCaptionTag 101
+#define LenseItemVideoViewContainer 200
+#define LenseItemVideoCaptionTag 201
 
 @interface TourStopDetailsViewController (Private)
 
@@ -28,12 +32,14 @@
 @synthesize webView;
 @synthesize html;
 @synthesize lenseItemPhotoView;
+@synthesize lenseItemVideoView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        moviePlayers = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -41,6 +47,7 @@
 - (void)dealloc
 {
     self.tourStop = nil;
+    [moviePlayers release];
     [self deallocViews];
     [super dealloc];
 }
@@ -120,6 +127,7 @@
     self.webView.delegate = nil;
     self.webView = nil;
     self.html = @"";
+    [moviePlayers removeAllObjects];
     for(UIView *subview in self.lenseContentView.subviews) {
         [subview removeFromSuperview];
     }
@@ -145,6 +153,30 @@
             
             [self.lenseContentView addSubview:photoView];
             self.lenseItemPhotoView = nil;
+        }
+        else if([lenseItem isKindOfClass:[TourLenseVideoItem class]]) {
+            TourLenseVideoItem *lenseVideoItem = (TourLenseVideoItem *)lenseItem;
+            [[NSBundle mainBundle] loadNibNamed:@"TourLenseVideoView" owner:self options:nil];
+            UIView *videoView = self.lenseItemVideoView;
+            CGRect videoViewFrame = videoView.frame;
+            videoViewFrame.origin.y = lenseContentHeight;
+            videoView.frame = videoViewFrame;
+            lenseContentHeight += videoView.frame.size.height;
+            
+            UIView *videoContainerView = [videoView viewWithTag:LenseItemVideoViewContainer];
+            NSURL *videoURL = [NSURL fileURLWithPath:[lenseVideoItem.video mediaFilePath]];
+            MPMoviePlayerController *player = [[[MPMoviePlayerController alloc] initWithContentURL:videoURL] autorelease];
+            player.shouldAutoplay = NO;
+            [moviePlayers addObject:player];
+            [player.view setFrame:videoContainerView.bounds];
+            [player.view setAutoresizingMask:videoContainerView.autoresizingMask];
+            [videoContainerView addSubview:player.view];
+                               
+            UILabel *captionLabel = (UILabel *)[videoView viewWithTag:LenseItemVideoCaptionTag];
+            captionLabel.text = lenseVideoItem.title;
+            
+            [self.lenseContentView addSubview:videoView];
+            self.lenseItemVideoView = nil;
         }
     }
     
