@@ -4,11 +4,10 @@
 @class TourDataManager;
 
 @interface TourHomeViewController : UIViewController {
-    IBOutlet UIView *_welcomeView;
     TourOverviewController *_tourOverviewController;
 }
 
-@property (nonatomic, retain) IBOutlet UIView *welcomeView;
+@property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
 
 - (IBAction) startTour:(id)sender;
 

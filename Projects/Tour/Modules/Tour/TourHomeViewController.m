@@ -1,18 +1,11 @@
-//
-//  TourHomeViewController.m
-//  Tour
-//
-//  Created by Brian Patt on 5/24/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
-//
-
 #import "TourHomeViewController.h"
 #import "TourOverviewController.h"
 #import "TourDataManager.h"
+#import "UIKit+KGOAdditions.h"
 
 
 @implementation TourHomeViewController
-@synthesize welcomeView = _welcomeView;
+@synthesize scrollView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -25,6 +18,7 @@
 
 - (void)dealloc
 {
+    self.scrollView = nil;
     [super dealloc];
 }
 
@@ -41,12 +35,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.frame.size.height + 25);
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageWithPathName:@"modules/tour/welcome-background.jpg"]];
     // Do any additional setup after loading the view from its nib.
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    self.scrollView = nil;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
