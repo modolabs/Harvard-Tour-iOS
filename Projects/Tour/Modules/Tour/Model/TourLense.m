@@ -72,5 +72,9 @@
     return lense;
 }
 
+- (NSArray *)orderedItems {
+        return [self.lenseItems sortedArrayUsingDescriptors:
+                [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"order" ascending:YES]]];
+}
 
 @end

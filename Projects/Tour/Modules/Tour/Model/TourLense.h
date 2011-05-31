@@ -20,4 +20,6 @@
 
 + (TourLense *)lenseWithItems:(NSArray *)lenseItems ofLenseType:(NSString *)lenseType;
 
+- (NSArray *)orderedItems;
+
 @end

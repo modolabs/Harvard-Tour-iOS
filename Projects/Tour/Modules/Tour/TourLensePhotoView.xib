@@ -12,9 +12,10 @@
 		</object>
 		<object class="NSArray" key="IBDocument.IntegratedClassDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<string>IBProxyObject</string>
+			<string>IBUIImageView</string>
 			<string>IBUIView</string>
-			<string>IBUIScrollView</string>
+			<string>IBUILabel</string>
+			<string>IBProxyObject</string>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -37,49 +38,57 @@
 				<string key="IBProxiedObjectIdentifier">IBFirstResponder</string>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
-			<object class="IBUIView" id="191373211">
+			<object class="IBUIView" id="1018855860">
 				<reference key="NSNextResponder"/>
-				<int key="NSvFlags">274</int>
+				<int key="NSvFlags">290</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
-					<object class="IBUIView" id="414512040">
-						<reference key="NSNextResponder" ref="191373211"/>
+					<object class="IBUIImageView" id="594458490">
+						<reference key="NSNextResponder" ref="1018855860"/>
 						<int key="NSvFlags">290</int>
-						<string key="NSFrameSize">{320, 50}</string>
-						<reference key="NSSuperview" ref="191373211"/>
+						<string key="NSFrame">{{2, 2}, {316, 211}}</string>
+						<reference key="NSSuperview" ref="1018855860"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="228641898"/>
-						<object class="NSColor" key="IBUIBackgroundColor">
-							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MQA</bytes>
-							<object class="NSColorSpace" key="NSCustomColorSpace" id="1061169327">
-								<int key="NSID">2</int>
-							</object>
-						</object>
+						<reference key="NSNextKeyView" ref="321358158"/>
+						<int key="IBUITag">100</int>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
-					<object class="IBUIScrollView" id="228641898">
-						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">274</int>
-						<string key="NSFrame">{{0, 50}, {320, 410}}</string>
-						<reference key="NSSuperview" ref="191373211"/>
+					<object class="IBUILabel" id="321358158">
+						<reference key="NSNextResponder" ref="1018855860"/>
+						<int key="NSvFlags">290</int>
+						<string key="NSFrame">{{0, 211}, {320, 21}}</string>
+						<reference key="NSSuperview" ref="1018855860"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView"/>
+						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
-						<bool key="IBUIMultipleTouchEnabled">YES</bool>
+						<int key="IBUIContentMode">7</int>
+						<int key="IBUITag">101</int>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<string key="IBUIText">Caption</string>
+						<object class="NSColor" key="IBUITextColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MCAwIDAAA</bytes>
+						</object>
+						<nil key="IBUIHighlightedColor"/>
+						<int key="IBUIBaselineAdjustment">1</int>
+						<float key="IBUIMinimumFontSize">10</float>
+						<int key="IBUITextAlignment">1</int>
 					</object>
 				</object>
-				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
+				<string key="NSFrameSize">{320, 233}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="414512040"/>
+				<reference key="NSNextKeyView" ref="594458490"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MQA</bytes>
-					<reference key="NSCustomColorSpace" ref="1061169327"/>
+					<object class="NSColorSpace" key="NSCustomColorSpace">
+						<int key="NSID">2</int>
+					</object>
 				</object>
-				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 		</object>
@@ -88,35 +97,11 @@
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">view</string>
+						<string key="label">lenseItemPhotoView</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="191373211"/>
+						<reference key="destination" ref="1018855860"/>
 					</object>
-					<int key="connectionID">3</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">tabControl</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="414512040"/>
-					</object>
-					<int key="connectionID">6</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">lenseContentView</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="228641898"/>
-					</object>
-					<int key="connectionID">8</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">scollView</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="191373211"/>
-					</object>
-					<int key="connectionID">9</int>
+					<int key="connectionID">7</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -127,16 +112,6 @@
 						<reference key="object" ref="0"/>
 						<reference key="children" ref="1000"/>
 						<nil key="parent"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">1</int>
-						<reference key="object" ref="191373211"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="414512040"/>
-							<reference ref="228641898"/>
-						</object>
-						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">-1</int>
@@ -150,17 +125,24 @@
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">5</int>
-						<reference key="object" ref="414512040"/>
+						<int key="objectID">4</int>
+						<reference key="object" ref="1018855860"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="594458490"/>
+							<reference ref="321358158"/>
 						</object>
-						<reference key="parent" ref="191373211"/>
+						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">7</int>
-						<reference key="object" ref="228641898"/>
-						<reference key="parent" ref="191373211"/>
+						<int key="objectID">5</int>
+						<reference key="object" ref="594458490"/>
+						<reference key="parent" ref="1018855860"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">6</int>
+						<reference key="object" ref="321358158"/>
+						<reference key="parent" ref="1018855860"/>
 					</object>
 				</object>
 			</object>
@@ -170,21 +152,15 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>-1.CustomClassName</string>
 					<string>-2.CustomClassName</string>
-					<string>1.CustomClassName</string>
-					<string>1.IBEditorWindowLastContentRect</string>
-					<string>1.IBPluginDependency</string>
-					<string>5.CustomClassName</string>
+					<string>4.IBPluginDependency</string>
 					<string>5.IBPluginDependency</string>
-					<string>7.IBPluginDependency</string>
+					<string>6.IBPluginDependency</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>TourStopDetailsViewController</string>
 					<string>UIResponder</string>
-					<string>UIScrollView</string>
-					<string>{{556, 412}, {320, 480}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>KGOTabbedControl</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				</object>
@@ -201,7 +177,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">9</int>
+			<int key="maxID">7</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -223,14 +199,12 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>lenseContentView</string>
 							<string>lenseItemPhotoView</string>
-							<string>scollView</string>
 							<string>tabControl</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>UIView</string>
-							<string>UIView</string>
 							<string>UIScrollView</string>
+							<string>UIView</string>
 							<string>KGOTabbedControl</string>
 						</object>
 					</object>
@@ -240,22 +214,17 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>lenseContentView</string>
 							<string>lenseItemPhotoView</string>
-							<string>scollView</string>
 							<string>tabControl</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBToOneOutletInfo">
 								<string key="name">lenseContentView</string>
-								<string key="candidateClassName">UIView</string>
+								<string key="candidateClassName">UIScrollView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">lenseItemPhotoView</string>
 								<string key="candidateClassName">UIView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">scollView</string>
-								<string key="candidateClassName">UIScrollView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">tabControl</string>
