@@ -19,6 +19,7 @@
 @synthesize mapInitialFocusMode;
 @synthesize upcomingStop;
 @synthesize stopTitleLabel;
+@synthesize stopCaptionLabel;
 @synthesize lenseIconsContainer;
 @synthesize mapTipLabel;
 
@@ -71,6 +72,7 @@
     self.thumbnailView = nil;
     self.zoomInOutIcon = nil;
     self.stopTitleLabel = nil;
+    self.stopCaptionLabel = nil;
     self.lenseIconsContainer = nil;
     self.mapTipLabel = nil;
     self.mapView = nil;
@@ -110,6 +112,20 @@
     _thumbnailView.image = [(TourMediaItem *)_selectedStop.thumbnail image]; 
     self.zoomInOutIcon.image = [UIImage imageWithPathName:@"modules/tour/zoomicon-in"];
     self.stopTitleLabel.text = _selectedStop.title;
+    self.stopCaptionLabel.text = _selectedStop.subtitle;
+    /*
+    CGRect captionFrame = self.stopCaptionLabel.frame;
+    CGSize captionSize = [_selectedStop.subtitle 
+                          sizeWithFont:self.stopCaptionLabel.font forWidth:captionFrame.size.width
+                          lineBreakMode:UILineBreakModeWordWrap];
+    
+    CGSize singleLineSize = [@"A" sizeWithFont:self.stopCaptionLabel.font];
+    if (captionSize.height > singleLineSize.height * self.stopCaptionLabel.numberOfLines) {
+        captionSize.height = singleLineSize.height * self.stopCaptionLabel.numberOfLines;
+    }
+    captionFrame.size.height = captionSize.height;
+    self.stopCaptionLabel.frame = captionFrame;
+    */
     
     [[TourDataManager sharedManager] populateTourStopDetails:_selectedStop];
     for(UIView *subviews in self.lenseIconsContainer.subviews) {

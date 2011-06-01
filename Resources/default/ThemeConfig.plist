@@ -110,6 +110,24 @@
 			<key>size</key>
 			<integer>-3</integer>
 		</dict>
+		<key>ScrollTab</key>
+		<dict>
+			<key>bold</key>
+			<true/>
+			<key>color</key>
+			<string>#FFFFFF</string>
+			<key>size</key>
+			<integer>-1</integer>
+		</dict>
+		<key>ScrollTabSelected</key>
+		<dict>
+			<key>bold</key>
+			<true/>
+			<key>color</key>
+			<string>#FFFFFF</string>
+			<key>size</key>
+			<integer>-1</integer>
+		</dict>
 		<key>SectionHeader</key>
 		<dict>
 			<key>bold</key>
@@ -144,15 +162,6 @@
 			<key>size</key>
 			<integer>-2</integer>
 		</dict>
-		<key>ScrollTab</key>
-		<dict>
-			<key>bold</key>
-			<true/>
-			<key>color</key>
-			<string>#FFFFFF</string>
-			<key>size</key>
-			<integer>-1</integer>
-		</dict>
 		<key>TabSelected</key>
 		<dict>
 			<key>bold</key>
@@ -161,15 +170,6 @@
 			<string>#505050</string>
 			<key>size</key>
 			<integer>-2</integer>
-		</dict>
-		<key>ScrollTabSelected</key>
-		<dict>
-			<key>bold</key>
-			<true/>
-			<key>color</key>
-			<string>#FFFFFF</string>
-			<key>size</key>
-			<integer>-1</integer>
 		</dict>
 	</dict>
 	<key>HomeScreen</key>
@@ -192,7 +192,7 @@
 		<key>ModuleListSpacing</key>
 		<string>9 32</string>
 		<key>NavigationStyle</key>
-		<string>Springboard</string>
+		<string>Custom</string>
 		<key>SecondaryModuleIconSize</key>
 		<string>52 52</string>
 		<key>SecondaryModuleLabelFont</key>
