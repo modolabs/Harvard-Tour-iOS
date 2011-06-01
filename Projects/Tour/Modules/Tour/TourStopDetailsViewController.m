@@ -117,11 +117,14 @@
     self.tabControl.tabSpacing = 0.0;
     NSInteger totalTabs = 5;
     CGFloat mininumTabWidth = self.tabControl.frame.size.width / totalTabs;
-    for (NSInteger tabIndex = 0; tabIndex < [[self.tourStop orderedLenses] count]; tabIndex++) {
-        [self.tabControl insertTabWithImage:[UIImage imageWithPathName:@"modules/map/map-button-location"] atIndex:0 animated:NO];
+    NSArray *orderedLenses = [self.tourStop orderedLenses];
+    for (NSInteger tabIndex = 0; tabIndex < [orderedLenses count]; tabIndex++) {
+        NSString *lenseType = [[orderedLenses objectAtIndex:tabIndex] lenseType];
+        UIImage *lenseImage = [UIImage imageWithPathName:[NSString stringWithFormat:@"modules/tour/lens-%@", lenseType]];
+        [self.tabControl insertTabWithImage:lenseImage atIndex:tabIndex animated:NO];
     }
     
-    for (NSInteger tabIndex = 0; tabIndex < [[self.tourStop orderedLenses] count]; tabIndex++) {
+    for (NSInteger tabIndex = 0; tabIndex < [orderedLenses count]; tabIndex++) {
         [self.tabControl setMinimumWidth:mininumTabWidth forTabAtIndex:tabIndex];
     }
 }
