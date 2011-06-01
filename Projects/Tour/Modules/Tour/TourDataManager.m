@@ -74,6 +74,14 @@
                                              sortDescriptors:[NSArray arrayWithObject:sort]];
 }
 
+- (void)markAllStopsUnvisited {
+    NSArray *stops = [[CoreDataManager sharedManager] objectsForEntity:TourStopEntityName matchingPredicate:nil];
+    for(TourStop *stop in stops) {
+        stop.visited = [NSNumber numberWithBool:NO];
+    }
+    [[CoreDataManager sharedManager] saveData];
+}
+
 - (void)populateTourStopDetails:(TourStop *)tourStop {
     if(tourStop.lenses.count == 0) {
         NSString *stopDetailsJsonPath = [[[NSBundle mainBundle] bundlePath] 

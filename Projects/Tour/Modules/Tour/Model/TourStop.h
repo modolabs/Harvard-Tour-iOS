@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSString * id;
 @property (nonatomic, retain) NSNumber * longitude;
 @property (nonatomic, retain) NSString * title;
+@property (nonatomic, retain) NSNumber * visited;
 @property (nonatomic, retain) NSNumber * order;
 @property (nonatomic, retain) NSNumber * latitude;
 @property (nonatomic, retain) NSManagedObject * thumbnail;
@@ -28,5 +29,7 @@
 - (void)updateStopDetailsWithDictionary:(NSDictionary *)stopDetailsDict;
 
 - (NSArray *)orderedLenses;
+
+- (void)markVisited;
 
 @end

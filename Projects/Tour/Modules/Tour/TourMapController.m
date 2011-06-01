@@ -209,12 +209,16 @@
 #pragma mark - MKMapViewDelegate methods
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
-    self.selectedStop = (TourStop *)view.annotation;
     // old selected annotation
-    self.selectedAnnotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
+    if([self.selectedStop.visited boolValue]) {
+        self.selectedAnnotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin-past.png"];
+    } else {
+        self.selectedAnnotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
+    }
     // new selected annotation
     view.image = [UIImage imageWithPathName:@"modules/tour/map-pin-current.png"]; 
     self.selectedAnnotationView = view;
+    self.selectedStop = (TourStop *)view.annotation;
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)aMapView viewForAnnotation:(id <MKAnnotation>)annotation {
@@ -228,7 +232,12 @@
         annotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin-current.png"];
         self.selectedAnnotationView = annotationView;
     } else {
-        annotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
+        TourStop *stop = (TourStop *)annotation;
+        if([stop.visited boolValue]) {
+            annotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin-past.png"];
+        } else {
+            annotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
+        }
     }
     return annotationView;
 }

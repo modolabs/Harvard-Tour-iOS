@@ -78,12 +78,13 @@
 {
     [super viewDidLoad]; 
     [[TourDataManager sharedManager] populateTourStopDetails:self.tourStop];
+    [self.tourStop markVisited];
     [self setupLenseTabs];
     self.tabControl.selectedTabIndex = 0;
     [self displayContentForTabIndex:0];
     self.tabControl.delegate = self;
     
-    //[self.tabControl setMinimumWidth:mininumTabWidth forTabAtIndex:3];
+    
     // Do any additional setup after loading the view from its nib.
 }
 

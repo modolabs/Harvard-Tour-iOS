@@ -14,6 +14,7 @@
 
 - (TourStop *)getFirstStop;
 - (NSArray *)getAllTourStops;
+- (void)markAllStopsUnvisited;
 
 - (TourStop *)lastTourStopForFirstTourStop:(TourStop *)startingTourStop;
 - (TourStop *)previousStopForTourStop:(TourStop *)stop;

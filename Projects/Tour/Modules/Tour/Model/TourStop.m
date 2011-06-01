@@ -10,6 +10,7 @@
 @dynamic id;
 @dynamic longitude;
 @dynamic title;
+@dynamic visited;
 @dynamic order;
 @dynamic latitude;
 @dynamic thumbnail;
@@ -90,5 +91,9 @@
 
 - (CLLocationCoordinate2D)coordinate {
     return CLLocationCoordinate2DMake([self.latitude floatValue], [self.longitude floatValue]);
+}
+
+- (void)markVisited {
+    self.visited = [NSNumber numberWithBool:YES];
 }
 @end
