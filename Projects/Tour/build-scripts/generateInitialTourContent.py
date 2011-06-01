@@ -48,6 +48,9 @@ stops = json.loads(stopsJson)['response']
 jsonOutFile = open('Resources/data/stops.json', 'w')
 jsonOutFile.write(json.dumps(stops))
 jsonOutFile.close
+
+downloadMedia.basePath = 'http://' + host
+
 for stop in stops:
     stopJson = urllib2.urlopen(apiFullPath + '/tour/stop?id=' + urllib2.quote(stop['id'])).read()
     stop = json.loads(stopJson)['response']
