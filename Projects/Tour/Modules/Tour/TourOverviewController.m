@@ -1,4 +1,5 @@
 #import "KGOToolbar.h"
+#import "UIKit+KGOAdditions.h"
 #import "TourOverviewController.h"
 #import "TourMapController.h"
 #import "TourDataManager.h"
@@ -139,8 +140,14 @@
     toolbar.barStyle = UIBarStyleDefault;
     toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     if(self.mode == TourOverviewModeStart) {
-        UIBarItem *startButton = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStyleBordered target:self action:@selector(startTour)];
+        UIButton *startButtonView = [UIButton buttonWithType:UIButtonTypeCustom];
+        [startButtonView setImage:[UIImage imageWithPathName:@"modules/tour/toolbar-next.png"] forState:UIControlStateNormal];
+        startButtonView.frame = CGRectMake(0, 0, 44, 44);        
+        UIBarButtonItem *startButton = [[UIBarButtonItem alloc] initWithCustomView:startButtonView];
+        [startButtonView addTarget:self action:@selector(startTour) forControlEvents:UIControlEventTouchUpInside];
+        
         UIBarItem *leftMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        
         toolbar.items = [NSArray arrayWithObjects:leftMargin, startButton, nil];
     } else if(self.mode == TourOverviewModeContinue) {
         UIBarItem *previousButton = [[UIBarButtonItem alloc] initWithTitle:@"Previous" style:UIBarButtonItemStyleBordered target:nil action:nil];
