@@ -33,6 +33,8 @@ typedef enum {
 @property (nonatomic, assign) MapInitialFocusMode mapInitialFocusMode;
 @property (nonatomic, retain) TourStop *upcomingStop;
 
+@property (nonatomic, retain) MKAnnotationView *selectedAnnotationView;
+
 - (IBAction)photoTapped:(id)sender;
 
 @end

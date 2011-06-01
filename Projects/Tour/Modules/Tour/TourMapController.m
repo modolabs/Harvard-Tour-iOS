@@ -15,6 +15,7 @@
 @synthesize imageViewControl;
 @synthesize zoomInOutIcon;
 @synthesize mapView;
+@synthesize selectedAnnotationView;
 @synthesize showMapTip;
 @synthesize mapInitialFocusMode;
 @synthesize upcomingStop;
@@ -113,19 +114,6 @@
     self.zoomInOutIcon.image = [UIImage imageWithPathName:@"modules/tour/zoomicon-in"];
     self.stopTitleLabel.text = _selectedStop.title;
     self.stopCaptionLabel.text = _selectedStop.subtitle;
-    /*
-    CGRect captionFrame = self.stopCaptionLabel.frame;
-    CGSize captionSize = [_selectedStop.subtitle 
-                          sizeWithFont:self.stopCaptionLabel.font forWidth:captionFrame.size.width
-                          lineBreakMode:UILineBreakModeWordWrap];
-    
-    CGSize singleLineSize = [@"A" sizeWithFont:self.stopCaptionLabel.font];
-    if (captionSize.height > singleLineSize.height * self.stopCaptionLabel.numberOfLines) {
-        captionSize.height = singleLineSize.height * self.stopCaptionLabel.numberOfLines;
-    }
-    captionFrame.size.height = captionSize.height;
-    self.stopCaptionLabel.frame = captionFrame;
-    */
     
     [[TourDataManager sharedManager] populateTourStopDetails:_selectedStop];
     for(UIView *subviews in self.lenseIconsContainer.subviews) {
@@ -218,9 +206,31 @@
         MKCoordinateSpanMake(marginFactor * (maxLatitude - minLatitude), marginFactor * (maxLongitude - minLongitude)));
 }
 
-#pragma MKMapViewDelegate methods
+#pragma mark - MKMapViewDelegate methods
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     self.selectedStop = (TourStop *)view.annotation;
+    // old selected annotation
+    self.selectedAnnotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
+    // new selected annotation
+    view.image = [UIImage imageWithPathName:@"modules/tour/map-pin-current.png"]; 
+    self.selectedAnnotationView = view;
 }
+
+- (MKAnnotationView *)mapView:(MKMapView *)aMapView viewForAnnotation:(id <MKAnnotation>)annotation {
+    MKAnnotationView *annotationView = [aMapView dequeueReusableAnnotationViewWithIdentifier:@"pins"];
+    if (!annotationView) {
+        annotationView = [[[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pins"] autorelease];
+        annotationView.canShowCallout = YES;
+    }
+    annotationView.annotation = annotation;
+    if (annotation == _selectedStop) {
+        annotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin-current.png"];
+        self.selectedAnnotationView = annotationView;
+    } else {
+        annotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
+    }
+    return annotationView;
+}
+
 @end
