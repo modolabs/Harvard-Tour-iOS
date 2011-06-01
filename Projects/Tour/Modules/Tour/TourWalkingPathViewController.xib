@@ -72,9 +72,11 @@
 						<object class="NSMutableArray" key="IBUIItems">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBUIBarButtonItem" id="818434339">
-								<string key="IBUITitle">prev</string>
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">modules/tour/toolbar-previous.png</string>
+								</object>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<int key="IBUIStyle">1</int>
 								<reference key="IBUIToolbar" ref="555935926"/>
 							</object>
 							<object class="IBUIBarButtonItem" id="347712">
@@ -83,9 +85,11 @@
 								<int key="IBUISystemItemIdentifier">5</int>
 							</object>
 							<object class="IBUIBarButtonItem" id="633215381">
-								<string key="IBUITitle">map</string>
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">modules/tour/toolbar-map.png</string>
+								</object>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<int key="IBUIStyle">1</int>
 								<reference key="IBUIToolbar" ref="555935926"/>
 							</object>
 							<object class="IBUIBarButtonItem" id="683902095">
@@ -94,9 +98,11 @@
 								<int key="IBUISystemItemIdentifier">5</int>
 							</object>
 							<object class="IBUIBarButtonItem" id="429383494">
-								<string key="IBUITitle">help</string>
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">modules/tour/toolbar-help.png</string>
+								</object>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<int key="IBUIStyle">1</int>
 								<reference key="IBUIToolbar" ref="555935926"/>
 							</object>
 							<object class="IBUIBarButtonItem" id="569088566">
@@ -105,9 +111,11 @@
 								<int key="IBUISystemItemIdentifier">5</int>
 							</object>
 							<object class="IBUIBarButtonItem" id="416166317">
-								<string key="IBUITitle">camera</string>
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">modules/tour/toolbar-camera.png</string>
+								</object>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<int key="IBUIStyle">1</int>
 								<reference key="IBUIToolbar" ref="555935926"/>
 							</object>
 							<object class="IBUIBarButtonItem" id="205676882">
@@ -116,9 +124,11 @@
 								<int key="IBUISystemItemIdentifier">5</int>
 							</object>
 							<object class="IBUIBarButtonItem" id="655621365">
-								<string key="IBUITitle">next</string>
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">modules/tour/toolbar-next.png</string>
+								</object>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<int key="IBUIStyle">1</int>
 								<reference key="IBUIToolbar" ref="555935926"/>
 							</object>
 						</object>
@@ -443,6 +453,25 @@
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
+		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<bool key="EncodedWithXMLCoder">YES</bool>
+			<object class="NSArray" key="dict.sortedKeys">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+				<string>modules/tour/toolbar-camera.png</string>
+				<string>modules/tour/toolbar-help.png</string>
+				<string>modules/tour/toolbar-map.png</string>
+				<string>modules/tour/toolbar-next.png</string>
+				<string>modules/tour/toolbar-previous.png</string>
+			</object>
+			<object class="NSMutableArray" key="dict.values">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+				<string>{16, 16}</string>
+				<string>{16, 16}</string>
+				<string>{16, 16}</string>
+				<string>{16, 16}</string>
+				<string>{16, 16}</string>
+			</object>
+		</object>
 		<string key="IBCocoaTouchPluginVersion">301</string>
 	</data>
 </archive>
