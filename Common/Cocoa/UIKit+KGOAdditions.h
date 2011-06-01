@@ -5,6 +5,7 @@
 @interface UIImage (KGOAdditions)
 
 + (UIImage *)imageWithPathName:(NSString *)pathName;
++ (UIImage *)blankImageOfSize:(CGSize)size;
 
 @end
 
@@ -21,11 +22,14 @@
 
 @end
 
-@interface UILabel (KGOAdditions)
+@interface UIButton (KGOAdditions)
 
-+ (UILabel *)multilineLabelWithText:(NSString *)text font:(UIFont *)font width:(CGFloat)width;
++ (UIButton *)genericButtonWithTitle:(NSString *)title;
++ (UIButton *)genericButtonWithImage:(UIImage *)image;
 
 @end
+
+
 
 @interface UIWebView (KGOAdditions)
 

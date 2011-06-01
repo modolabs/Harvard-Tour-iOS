@@ -4,8 +4,6 @@
 #import "Foundation+KGOAdditions.h"
 #import "KGOAppDelegate.h"
 
-#import "CoreDataManager.h"
-
 NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
 
 @interface KGORequest (Private)
@@ -20,7 +18,7 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
 @implementation KGORequest
 
 @synthesize url, module, path, getParams, postParams, format, delegate, cachePolicy, timeout;
-@synthesize expectedResponseType, handler;
+@synthesize expectedResponseType, handler, result = _result;
 
 + (KGORequestErrorCode)internalCodeForNSError:(NSError *)error
 {
@@ -123,6 +121,7 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
 - (void)cancel {
 	// we still may be retained by other objects
 	self.delegate = nil;
+    self.result = nil;
 	
 	[_data release];
 	_data = nil;
@@ -138,6 +137,7 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
 
 - (void)dealloc {
 	self.delegate = nil;
+    self.result = nil;
 	[_data release];
     if (_connection) {
         DLog(@"Warning: KGORequest is not retained but has a connection reference. This should never happen.");
@@ -183,8 +183,6 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
     
     [KGO_SHARED_APP_DELEGATE() hideNetworkActivityIndicator];
 	
-	id result = nil;
-    
 	if (!self.format || [self.format isEqualToString:@"json"]) {
         
 		NSString *jsonString = [[[NSString alloc] initWithData:_data encoding:NSUTF8StringEncoding] autorelease];
@@ -226,14 +224,14 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
             ;
         }
         
-		result = [resultDict objectForKey:@"response"];
+		self.result = [resultDict objectForKey:@"response"];
 		
 	} else {
-		result = [_data autorelease];
+		self.result = [_data autorelease];
 		_data = nil;
 	}
 	
-	BOOL canProceed = [result isKindOfClass:self.expectedResponseType];
+	BOOL canProceed = [self.result isKindOfClass:self.expectedResponseType];
 	if (!canProceed) {
 		NSDictionary *errorInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"result type does not match expected response type", @"message", nil];
 		[self terminateWithErrorCode:KGORequestErrorBadResponse userInfo:errorInfo];
@@ -242,12 +240,12 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
     
 	if (self.handler != nil) {
         NSLog(@"%@", self.delegate);
-        _thread = [[NSThread alloc] initWithTarget:self selector:@selector(runHandlerOnResult:) object:result];
+        _thread = [[NSThread alloc] initWithTarget:self selector:@selector(runHandlerOnResult:) object:self.result];
 		[self performSelector:@selector(setHandler:) onThread:_thread withObject:self.handler waitUntilDone:NO];
 		[_thread start];
 	} else {
 		if ([self.delegate respondsToSelector:@selector(request:didReceiveResult:)]) {
-			[self.delegate request:self didReceiveResult:result];
+			[self.delegate request:self didReceiveResult:self.result];
 		}
 		
 		[self.delegate requestWillTerminate:self];
@@ -294,8 +292,6 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
 - (void)runHandlerOnResult:(id)result {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSInteger num = self.handler(result);
-    // TODO: see if it's safe to remove this (and the CoreDataManager import)
-    [[CoreDataManager sharedManager] saveDataWithTemporaryMergePolicy:NSOverwriteMergePolicy];
 	[self performSelectorOnMainThread:@selector(handlerDidFinish:) withObject:[NSNumber numberWithInt:num] waitUntilDone:YES];
 	[pool release];
 }

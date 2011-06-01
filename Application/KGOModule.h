@@ -5,11 +5,12 @@
 
 @interface KGOModule : NSObject {
     
+    id<KGOSearchResultsHolder> _searchDelegate;
+
+@private
     BOOL _launched;
     BOOL _active;
     BOOL _visible;
-    
-    id<KGOSearchResultsHolder> _searchDelegate;
 }
 
 // generally subclasses will not override this
@@ -23,6 +24,8 @@
  */
 
 #pragma mark API properties
+
+- (BOOL)requiresKurogoServer;
 
 // allow the server to change module title (longName, shortName), api versions
 // (apiMinVersion, apiMaxVersion), and access control status (hasAccess).
@@ -72,6 +75,7 @@
 #pragma mark Data
 
 - (NSArray *)objectModelNames;
+- (void)clearCachedData;
 
 #pragma mark Module state
 
@@ -84,17 +88,34 @@
  */
 
 @property (readonly) BOOL isLaunched; // true if anything controlled by the module (other than self) is retained.
-- (void)launch;     // called if necessary components (e.g. data managers) of the module are needed.
-- (void)terminate;  // called if module is launched and no aspects of the module are needed (views, data managers, etc.)
-                    // module must be safe to release after this is called.
+- (void)willLaunch;  // called if necessary components (e.g. data managers) of the module are needed.
+- (void)didLaunch;
+
+- (void)willTerminate; // called if module is launched and no aspects of the module are needed (views, data managers, etc.)
+- (void)didTerminate;  // module must be safe to release after this is called.
 
 @property (readonly) BOOL isActive;   // true if any views controlled by the module are currently retained.
 - (void)willBecomeActive;  // called when view resources need to be set up.
-- (void)willBecomeDormant; // called when view resources are no longer needed, but other aspects (e.g. data managers) may be retained.
+- (void)didBecomeActive;
+
+- (void)willBecomeInactive; // called when view resources are no longer needed, but other aspects (e.g. data managers) may be retained.
+- (void)didBecomeInactive;
 
 @property (readonly) BOOL isVisible;  // true if any views controlled by the module is currently visible to the user.
 - (void)willBecomeVisible; // called if the module is about to be shown.
+- (void)didBecomeVisible;
+
 - (void)willBecomeHidden;  // called on visible module when (an)other module(s) will take up all of the visible screen.
+- (void)didBecomeHidden;
+
+// don't override the following
+
+- (void)launch;
+- (void)terminate;
+- (void)becomeActive;
+- (void)becomeInactive;
+- (void)becomeVisible;
+- (void)becomeHidden;
 
 #pragma mark Application state
 
@@ -109,14 +130,30 @@
 
 #pragma mark Notifications
 
-- (void)handleNotification:(KGONotification *)aNotification;
+- (void)handleRemoteNotification:(KGONotification *)aNotification;
+- (void)handleLocalNotification:(KGONotification *)aNotification;
+
+// remote notification tags that this module needs to handle
+- (NSSet *)notificationTagNames;
+
+// if the server hello returns a payload for this module, evaluate it
+- (void)handleInitialPayload:(NSDictionary *)payload;
+
+#pragma mark Settings
 
 // notification names that get sent by activities within the app that affect
-// the settings module.
+// the settings module.  for example, suppose we are an ipad app with a twitter
+// widget from which the user is able to log into twitter.  if this widget is in
+// the foreground but the settings module is in the background and still
+// visible, we need the settings module to listen for such changes to the login
+// status.  this is not a desirable way to update the settings module.
 - (NSArray *)applicationStateNotificationNames;
 
-// names of keys saved in user defaults which get wiped on logout.
-- (NSArray *)userDefaults;
+// an array of KGOUserSetting objects
+@property (nonatomic, retain) NSArray *userSettings;
+- (NSArray *)userSettings;
+
+- (void)resetUserSettings:(BOOL)hard;
 
 #pragma mark Social media
 

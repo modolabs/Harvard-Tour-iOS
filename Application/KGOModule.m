@@ -1,12 +1,15 @@
 #import "UIKit+KGOAdditions.h"
 #import "KGOModule.h"
 #import "Foundation+KGOAdditions.h"
+#import "KGORequestManager.h"
+#import "KGOUserSettingsManager.h"
 
 @implementation KGOModule
 
 @synthesize tag = _tag, shortName = _shortName, longName = _longName;
 @synthesize enabled, hidden, badgeValue, tabBarImage, iconImage, listViewImage, secondary, apiMaxVersion, apiMinVersion, hasAccess;
 @synthesize searchDelegate;
+@synthesize userSettings;
 
 - (id)initWithDictionary:(NSDictionary *)moduleDict {
     NSLog(@"%@", moduleDict);
@@ -17,30 +20,31 @@
         
         self.hidden = [moduleDict boolForKey:@"hidden"];
         self.secondary = [[moduleDict objectForKey:@"secondary"] boolValue];
-        self.tag = [moduleDict objectForKey:@"tag"];
-
-        [self updateWithDictionary:moduleDict];
-         
-        NSString *imageName = [moduleDict objectForKey:@"tabBarImage"];
-        if (!imageName) {
-            imageName = [NSString stringWithFormat:@"modules/home/tab-%@", self.tag];
+        NSString *tag = [moduleDict objectForKey:@"tag"];
+        if (tag) {
+            self.tag = tag;
         }
+
+        //NSString *imageName = [moduleDict objectForKey:@"tabBarImage"];
+        NSString *imageName = nil;
+        //if (!imageName) {
+            imageName = [NSString stringWithFormat:@"modules/home/tab-%@", self.tag];
+        //}
         self.tabBarImage = [UIImage imageWithPathName:imageName];
         
-        imageName = [moduleDict objectForKey:@"iconImage"];
-        if (!imageName) {
+        //imageName = [moduleDict objectForKey:@"iconImage"];
+        //if (!imageName) {
             imageName = [NSString stringWithFormat:@"modules/home/%@", self.tag];
-        }
+        //}
         self.iconImage = [UIImage imageWithPathName:imageName];
         
-        imageName = [moduleDict objectForKey:@"listViewImage"];
-        if (!imageName) {
+        //imageName = [moduleDict objectForKey:@"listViewImage"];
+        //if (!imageName) {
             imageName = [NSString stringWithFormat:@"modules/home/%@-tiny", self.tag];
-        }
+        //}
         self.listViewImage = [UIImage imageWithPathName:imageName];
         
-        
-        self.enabled = YES; // TODO: decide what this means or don't use it
+        [self updateWithDictionary:moduleDict];
     }
     return self;
 }
@@ -53,9 +57,6 @@
     if (title) {
         self.shortName = title;
         self.longName = title;
-    } else {        
-        self.shortName = [moduleDict objectForKey:@"shortName"];
-        self.longName = [moduleDict objectForKey:@"longName"];
     }
     
     self.hasAccess = [moduleDict boolForKey:@"access"];
@@ -66,7 +67,21 @@
     
     if (!self.apiMaxVersion) self.apiMaxVersion = 1;
     if (!self.apiMinVersion) self.apiMinVersion = 1;
+    
+    self.enabled = [[KGORequestManager sharedManager] isReachable] || ![self requiresKurogoServer];
+    
+    NSDictionary *payload = [moduleDict dictionaryForKey:@"payload"];
+    if (payload) {
+        [self handleInitialPayload:payload];
+    }
 }
+
+- (BOOL)requiresKurogoServer
+{
+    return YES;
+}
+
+#pragma Appearance
 
 - (NSArray *)widgetViews {
     return nil;
@@ -111,64 +126,163 @@
     return _launched;
 }
 
-- (void)launch {
-    @synchronized(self) {
-        _launched = YES;
-    }
-}
-
-- (void)terminate {
-    if ([self isActive]) {
-        [self willBecomeDormant];
-    }
-    
-    @synchronized(self) {
-        _launched = NO;
-    }
-}
-
 - (BOOL)isActive {
     return _active;
-}
-
-- (void)willBecomeActive {
-    if (![self isLaunched]) {
-        [self launch];
-    }
-    
-    @synchronized(self) {
-        _active = YES;
-    }
-}
-
-- (void)willBecomeDormant {
-    if ([self isVisible]) {
-        [self willBecomeHidden];
-    }
-    
-    @synchronized(self) {
-        _active = NO;
-    }
 }
 
 - (BOOL)isVisible {
     return _visible;
 }
 
-- (void)willBecomeVisible {
-    if (![self isActive]) {
-        [self willBecomeActive];
+- (void)willLaunch
+{
+}
+
+- (void)didLaunch
+{
+}
+
+- (void)launch
+{
+    if ([self isLaunched]) {
+        return;
     }
+    
+    [self willLaunch];
+    
+    @synchronized(self) {
+        _launched = YES;
+    }
+    
+    [self didLaunch];
+}
+
+- (void)willTerminate
+{
+}
+
+- (void)didTerminate
+{
+}
+
+- (void)terminate
+{
+    if (![self isLaunched]) {
+        return;
+    }
+    
+    if ([self isActive]) {
+        [self becomeInactive];
+    }
+    
+    [self willTerminate];
+    
+    @synchronized(self) {
+        _launched = NO;
+    }
+    
+    [self didTerminate];
+}
+
+- (void)willBecomeActive {
+}
+
+- (void)didBecomeActive
+{
+}
+
+- (void)becomeActive
+{
+    if ([self isActive]) {
+        return;
+    }
+    
+    if (![self isLaunched]) {
+        [self launch];
+    }
+
+    [self willBecomeActive];
+
+    @synchronized(self) {
+        _active = YES;
+    }
+
+    [self didBecomeActive];
+}
+
+- (void)willBecomeInactive
+{
+}
+
+- (void)didBecomeInactive
+{
+}
+
+- (void)becomeInactive
+{
+    if (![self isActive]) {
+        return;
+    }
+    
+    if ([self isVisible]) {
+        [self becomeHidden];
+    }
+
+    [self willBecomeInactive];
+    
+    @synchronized(self) {
+        _active = NO;
+    }
+    
+    [self didBecomeInactive];
+}
+
+- (void)willBecomeVisible {
+}
+
+- (void)didBecomeVisible
+{
+}
+
+- (void)becomeVisible
+{
+    if ([self isVisible]) {
+        return;
+    }
+    
+    if (![self isActive]) {
+        [self becomeActive];
+    }
+    
+    [self willBecomeVisible];
     
     @synchronized(self) {
         _visible = YES;
     }
+    
+    [self didBecomeVisible];
 }
 
 - (void)willBecomeHidden {
+}
+
+- (void)didBecomeHidden
+{
+}
+
+- (void)becomeHidden
+{
+    if (![self isVisible]) {
+        return;
+    }
+    
+    [self willBecomeHidden];
+    
     @synchronized(self) {
         _visible = NO;
     }
+    
+    [self didBecomeHidden];
 }
 
 
@@ -193,17 +307,41 @@
 
 #pragma mark Notifications
 
-- (void)handleNotification:(KGONotification *)aNotification {
+- (void)handleRemoteNotification:(KGONotification *)aNotification
+{
 }
+
+- (void)handleLocalNotification:(KGONotification *)aNotification
+{
+}
+
+- (NSSet *)notificationTagNames
+{
+    return nil;
+}
+
+- (void)handleInitialPayload:(NSDictionary *)payload
+{
+}
+
+#pragma mark Settings
 
 - (NSArray *)applicationStateNotificationNames
 {
     return nil;
 }
 
-- (NSArray *)userDefaults
+- (NSArray *)userSettings
 {
     return nil;
+}
+
+- (void)resetUserSettings:(BOOL)hard
+{
+}
+
+- (void)clearCachedData
+{
 }
 
 #pragma mark Social media
@@ -217,6 +355,21 @@
     // specify if your app uses extra setup arguments
     // for Facebook, enter a list of permissions requested
     return nil;
+}
+
+#pragma mark NSObject
+
+- (NSString *)description
+{
+    NSMutableArray *params = [NSMutableArray arrayWithObject:[NSString stringWithFormat:@"tag = %@", self.tag]];
+    if (!self.hasAccess) {
+        [params addObject:@"hasAccess = NO"];
+    }
+    if (self.hidden) {
+        [params addObject:@"hidden = YES"];
+    }
+    
+    return [NSString stringWithFormat:@"<%@: %p; %@>", [self class], self, [params componentsJoinedByString:@"; "]];
 }
 
 @end

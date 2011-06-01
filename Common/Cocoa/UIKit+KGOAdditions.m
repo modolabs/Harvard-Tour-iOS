@@ -19,6 +19,20 @@
     return image;
 }
 
++ (UIImage *)blankImageOfSize:(CGSize)size
+{
+    UIGraphicsBeginImageContextWithOptions(size, NO, 1.0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetRGBFillColor(context, 0, 0, 0, 0);
+    
+    CGContextFillRect(context, CGRectMake(0, 0, size.width, size.height));
+    
+	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+    
+    return image;
+}
+
 @end
 
 @implementation UIColor (KGOAdditions)
@@ -107,23 +121,56 @@
 @end
 
 
-@implementation UILabel (KGOAdditions)
 
-+ (UILabel *)multilineLabelWithText:(NSString *)text font:(UIFont *)font width:(CGFloat)width {
-	CGSize labelSize = [text sizeWithFont:font
-                        constrainedToSize:CGSizeMake(width, 1000)
-                            lineBreakMode:UILineBreakModeWordWrap];
-    UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(0, 0, width, labelSize.height)] autorelease];
-    label.text = text;
-    label.font = font;
-    label.numberOfLines = 0;
-    label.lineBreakMode = UILineBreakModeWordWrap;
-    label.backgroundColor = [UIColor clearColor];
+@implementation UIButton (KGOAdditions)
 
-    return label;
++ (UIButton *)genericButtonWithTitle:(NSString *)title
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitle:title forState:UIControlStateHighlighted];
+    
+    UIImage *background = [UIImage imageWithPathName:@"common/generic-button-background"];
+    UIImage *pressedBackground = [UIImage imageWithPathName:@"common/generic-button-background-pressed"];
+    
+    [button setBackgroundImage:[background stretchableImageWithLeftCapWidth:8 topCapHeight:8]
+                      forState:UIControlStateNormal];
+    [button setBackgroundImage:[pressedBackground stretchableImageWithLeftCapWidth:8 topCapHeight:8]
+                      forState:UIControlStateHighlighted];
+
+    // TODO: use font config
+    UIFont *font = [UIFont boldSystemFontOfSize:13];
+    
+    CGSize size = [title sizeWithFont:font];
+    button.frame = CGRectMake(0, 0, size.width + 16, background.size.height);
+    button.titleLabel.font = font;
+    
+    return button;
+}
+
++ (UIButton *)genericButtonWithImage:(UIImage *)image
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [button setImage:image forState:UIControlStateNormal];
+    [button setImage:image forState:UIControlStateHighlighted];
+    
+    UIImage *background = [UIImage imageWithPathName:@"common/generic-button-background"];
+    UIImage *pressedBackground = [UIImage imageWithPathName:@"common/generic-button-background-pressed"];
+    
+    [button setBackgroundImage:[background stretchableImageWithLeftCapWidth:8 topCapHeight:8]
+                      forState:UIControlStateNormal];
+    [button setBackgroundImage:[pressedBackground stretchableImageWithLeftCapWidth:8 topCapHeight:8]
+                      forState:UIControlStateHighlighted];
+    
+    button.frame = CGRectMake(0, 0, image.size.width + 10, image.size.height + 10);
+    
+    return button;
 }
 
 @end
+
 
 @implementation UIWebView (KGOAdditions)
 

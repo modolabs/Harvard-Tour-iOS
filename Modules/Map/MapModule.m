@@ -20,7 +20,7 @@ NSString * const MapTypePreferenceChanged = @"MapTypeChanged";
 	[super dealloc];
 }
 /*
-- (void)launch {
+- (void)willLaunch {
 #ifdef DEBUG
     if (![self isActive]) {
         NSLog(@"deleting map categories");
@@ -35,10 +35,6 @@ NSString * const MapTypePreferenceChanged = @"MapTypeChanged";
     [super launch];
 }
 */
-- (NSArray *)userDefaults
-{
-    return [NSArray arrayWithObjects:MapTypePreference, nil];
-}
 
 
 #pragma mark Search

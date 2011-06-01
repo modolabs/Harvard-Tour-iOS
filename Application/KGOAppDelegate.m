@@ -22,6 +22,9 @@
     networkActivityRefCount = 0;
     showingAlertView = NO;
     
+    _modulesByTag = [[NSMutableDictionary alloc] init];
+    _modules = [[NSMutableArray alloc] init];
+    
     [[KGORequestManager sharedManager] requestSessionInfo];
     [self loadHomeModule];
     [self loadNavigationContainer]; // adds theNavController.view to self.window
@@ -105,7 +108,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     for (KGOModule *aModule in self.modules) {
-        [aModule willBecomeDormant];
+        [aModule becomeInactive];
         [aModule applicationDidEnterBackground];
     }
 }
@@ -239,12 +242,12 @@
     KGONotification *latestNotification = [_unreadNotifications lastObject];
 	
     KGOModule *module = [self moduleForTag:latestNotification.moduleName];
-	[module handleNotification:latestNotification];
+	[module handleRemoteNotification:latestNotification];
 
     NSString *viewTitle = NSLocalizedString(@"View", nil);
     
     if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:viewTitle]) {
-        [module willBecomeVisible];
+        [module becomeVisible];
         // TODO: show the module
     }
     
@@ -325,8 +328,8 @@
         [_unreadNotifications addObject:notification];
         
         KGOModule *module = [self moduleForTag:notification.moduleName];
-		[module handleNotification:notification];
-        [module willBecomeVisible];
+		[module handleRemoteNotification:notification];
+        [module becomeVisible];
 		NSLog(@"Application opened in response to notification=%@", notification);
 	}	
 }

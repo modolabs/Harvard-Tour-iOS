@@ -4,20 +4,19 @@
 #import "NewsStory.h"
 #import "NewsImage.h"
 
-typedef NSString* NewsCategoryId;
-
 @protocol NewsDataDelegate <NSObject>
 
 @optional
+
 - (void)categoriesUpdated:(NSArray *)categories;
 
 - (void)storiesUpdated:(NSArray *)stories forCategory:(NewsCategory *)category;
 
-- (void)storiesDidMakeProgress:(CGFloat)progress forCategoryId:(NewsCategoryId)categoryId;
+- (void)storiesDidMakeProgress:(CGFloat)progress forCategoryId:(NSString *)categoryId;
 
-- (void)storiesDidFailWithCategoryId:(NewsCategoryId)categoryId;
+- (void)storiesDidFailWithCategoryId:(NSString *)categoryId;
 
-- (void)searchResults:(NSArray *)results forSearchTerms:(NSString *)searchTerms;
+- (void)didReceiveSearchResults:(NSArray *)results forSearchTerms:(NSString *)searchTerms;
 
 @end
 
@@ -27,21 +26,15 @@ typedef NSString* NewsCategoryId;
     NSMutableSet *searchRequests;
 }
 
-+ (NewsDataManager *)sharedManager;
-
 - (void)requestCategories;
 
-- (void)requestStoriesForCategory:(NewsCategoryId)categoryID loadMore:(BOOL)loadMore forceRefresh:(BOOL)forceRefresh;
+- (void)requestStoriesForCategory:(NSString *)categoryID loadMore:(BOOL)loadMore forceRefresh:(BOOL)forceRefresh;
 
 - (void) search:(NSString *)searchTerms;
 
 - (NSArray *)searchableCategories;
 
-- (void)registerDelegate:(id<NewsDataDelegate>)delegate;
-
-- (void)unregisterDelegate:(id<NewsDataDelegate>)delegate;
-
-- (NSInteger)loadMoreStoriesQuantityForCategoryId:(NewsCategoryId)categoryID;
+- (NSInteger)loadMoreStoriesQuantityForCategoryId:(NSString *)categoryID;
 
 - (BOOL)busy;
 
@@ -51,7 +44,11 @@ typedef NSString* NewsCategoryId;
 
 - (NSArray *)bookmarkedStories;
 
+@property (nonatomic, assign) id<NewsDataDelegate> delegate;
+
 @property (nonatomic, retain) KGORequest *storiesRequest;
 @property (nonatomic, retain) NSMutableSet *searchRequests;
+
+@property (nonatomic, retain) NSString *moduleTag;
 
 @end

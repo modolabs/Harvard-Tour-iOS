@@ -10,6 +10,7 @@
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "KGORequestManager.h"
 #import "Foundation+KGOAdditions.h"
+#import "KGOUserSettingsManager.h"
 
 @interface KGOHomeScreenViewController (Private)
 
@@ -163,7 +164,13 @@
                                              selector:@selector(logoutDidComplete:)
                                                  name:KGODidLogoutNotification
                                                object:nil];
-    [self hideLoadingView];
+    
+    if (self.homeModule.hasAccess) {
+        [self hideLoadingView];
+        
+    } else {
+        [self standbyForServerHello];
+    }
 }
 
 - (void)logoutDidComplete:(NSNotification *)aNotification
@@ -607,7 +614,8 @@
             self.homeModule = aModule;
         }
 
-        if (aModule.hidden) {
+        if (aModule.hidden || !aModule.hasAccess) {
+            DLog(@"skipping module %@", aModule);
             continue;
         }
 
@@ -624,10 +632,29 @@
     }
 
     [_secondaryModules release];
-    _secondaryModules = [secondary copy];
+    
+    NSDictionary *modulePreference = [[KGOUserSettingsManager sharedManager] selectedValueDictForSetting:@"Modules"];
+    NSArray *moduleOrder = [modulePreference objectForKey:@"items"];
+    
+    _secondaryModules = [[secondary sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        NSInteger order1 = [moduleOrder indexOfObject:[(KGOModule *)obj1 tag]];
+        NSInteger order2 = [moduleOrder indexOfObject:[(KGOModule *)obj2 tag]];
+        if (order1 > order2)
+            return NSOrderedDescending;
+        else
+            return (order1 < order2) ? NSOrderedAscending : NSOrderedSame;
+    }] retain];
     
     [_primaryModules release];
-    _primaryModules = [primary copy];
+
+    _primaryModules = [[primary sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        NSInteger order1 = [moduleOrder indexOfObject:[(KGOModule *)obj1 tag]];
+        NSInteger order2 = [moduleOrder indexOfObject:[(KGOModule *)obj2 tag]];
+        if (order1 > order2)
+            return NSOrderedDescending;
+        else
+            return (order1 < order2) ? NSOrderedAscending : NSOrderedSame;
+    }] retain];
 }
 
 + (GridPadding)paddingWithArgs:(NSArray *)args {
