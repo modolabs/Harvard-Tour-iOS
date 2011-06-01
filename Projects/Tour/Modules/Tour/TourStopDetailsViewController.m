@@ -43,6 +43,7 @@
 @synthesize slideShowScrollView;
 @synthesize slides;
 @synthesize slidesPageControl;
+@synthesize displayedPageIndex;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -247,7 +248,10 @@
 }
 
 - (void)pageChanged {
-    [self loadSlideAtIndex:self.slidesPageControl.currentPage];
+    int deltaPage = self.slidesPageControl.currentPage - self.displayedPageIndex;
+    int pageOffset = (self.displayedPageIndex == 0) ? deltaPage : deltaPage + 1;
+    CGFloat newOffset = self.slideShowScrollView.frame.size.width * pageOffset;
+    [self.slideShowScrollView scrollRectToVisible:CGRectMake(newOffset, 0, self.slideShowScrollView.frame.size.width, self.slideShowScrollView.frame.size.height) animated:YES];
 }
 
 - (void)loadSlideAtIndex:(NSInteger)slideIndex {
@@ -274,6 +278,12 @@
     
     self.slideShowScrollView.contentSize = CGSizeMake(currentSlideHorizontalOffset, self.slideShowScrollView.frame.size.height);
     self.slidesPageControl.currentPage = slideIndex;
+    self.displayedPageIndex = slideIndex;
+}
+
+#pragma UIScrollView delegate methods
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    [self loadSlideAtIndex:self.slidesPageControl.currentPage];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)aScrollView {

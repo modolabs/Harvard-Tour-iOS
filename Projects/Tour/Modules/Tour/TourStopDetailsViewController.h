@@ -15,6 +15,7 @@
 @property (nonatomic, retain) UIScrollView *slideShowScrollView;
 @property (nonatomic, retain) NSArray *slides;
 @property (nonatomic, retain) UIPageControl *slidesPageControl;
+@property (nonatomic, assign) NSInteger displayedPageIndex;
 
 @property (nonatomic, retain) UIWebView *webView;
 @property (nonatomic, retain) NSString *html;
