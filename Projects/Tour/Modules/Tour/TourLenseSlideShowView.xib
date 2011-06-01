@@ -58,6 +58,7 @@
 						<bool key="IBUIMultipleTouchEnabled">YES</bool>
 						<int key="IBUITag">300</int>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<bool key="IBUIPagingEnabled">YES</bool>
 					</object>
 					<object class="IBUIPageControl" id="115556394">
 						<reference key="NSNextResponder" ref="146723528"/>
@@ -66,7 +67,6 @@
 						<string key="NSFrame">{{0, 233}, {320, 36}}</string>
 						<reference key="NSSuperview" ref="146723528"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>

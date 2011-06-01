@@ -276,21 +276,7 @@
     self.slidesPageControl.currentPage = slideIndex;
 }
 
-- (void)snapToSlide {
-    CGFloat pageWidth = self.slideShowScrollView.frame.size.width;
-    int page = floor((self.slideShowScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1; 
-    CGFloat remainder = self.slideShowScrollView.contentOffset.x - page * pageWidth;
-    CGFloat epsilon = 1.0; // if remainder is small do not animate the scroll
-                           // animating small scroll is not gaurenteed to call scrollViewDidEndScrolling
-                           // so simulate the animated scrolling instead
-    if (-epsilon < remainder && remainder < epsilon) {
-        [self scrollViewDidEndScrollingAnimation:self.slideShowScrollView];
-    } else {
-        [self.slideShowScrollView scrollRectToVisible:CGRectMake(pageWidth * page, 0, pageWidth, self.slideShowScrollView.frame.size.height) animated:YES]; 
-    }
-}
-
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)aScrollView {
     CGFloat pageWidth = self.slideShowScrollView.frame.size.width;
     int page = floor((self.slideShowScrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1; 
     
@@ -303,15 +289,6 @@
     [self loadSlideAtIndex:self.slidesPageControl.currentPage + deltaPage];
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
-    if(!decelerate) {
-        [self snapToSlide];
-    }    
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)aScrollView {
-    [self snapToSlide];
-}
 
 #pragma mark UIWebView delegate
 - (void)webViewDidFinishLoad:(UIWebView *)aWebView {
