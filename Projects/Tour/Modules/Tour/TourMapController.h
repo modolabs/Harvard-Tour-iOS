@@ -1,11 +1,3 @@
-//
-//  TourOverviewController.h
-//  Tour
-//
-//  Created by Brian Patt on 5/24/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 
@@ -33,6 +25,7 @@ typedef enum {
 @property (nonatomic, retain) IBOutlet UIImageView *thumbnailView;
 @property (nonatomic, retain) IBOutlet UIImageView *zoomInOutIcon;
 @property (nonatomic, retain) IBOutlet UILabel *stopTitleLabel;
+@property (nonatomic, retain) IBOutlet UIView *lenseIconsContainer;
 @property (nonatomic, retain) IBOutlet UILabel *mapTipLabel;
 @property (nonatomic) BOOL showMapTip;
 

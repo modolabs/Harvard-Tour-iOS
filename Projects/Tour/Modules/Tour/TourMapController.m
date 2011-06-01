@@ -1,5 +1,6 @@
 #import "TourMapController.h"
 #import "TourDataManager.h"
+#import "TourLense.h"
 #import "UIKit+KGOAdditions.h"
 
 @interface TourMapController (Private) 
@@ -18,6 +19,7 @@
 @synthesize mapInitialFocusMode;
 @synthesize upcomingStop;
 @synthesize stopTitleLabel;
+@synthesize lenseIconsContainer;
 @synthesize mapTipLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -69,6 +71,7 @@
     self.thumbnailView = nil;
     self.zoomInOutIcon = nil;
     self.stopTitleLabel = nil;
+    self.lenseIconsContainer = nil;
     self.mapTipLabel = nil;
     self.mapView = nil;
 }
@@ -107,6 +110,23 @@
     _thumbnailView.image = [(TourMediaItem *)_selectedStop.thumbnail image]; 
     self.zoomInOutIcon.image = [UIImage imageWithPathName:@"modules/tour/zoomicon-in"];
     self.stopTitleLabel.text = _selectedStop.title;
+    
+    [[TourDataManager sharedManager] populateTourStopDetails:_selectedStop];
+    for(UIView *subviews in self.lenseIconsContainer.subviews) {
+        [subviews removeFromSuperview];
+    }
+    
+    CGFloat rightEdge = self.lenseIconsContainer.frame.size.width;
+    for(TourLense *lense in [[_selectedStop orderedLenses] reverseObjectEnumerator]) {
+        // icons are 17x17
+        CGRect iconFrame = CGRectMake(rightEdge-17, 0, 17, 17);
+        UIImageView *iconView = [[[UIImageView alloc] initWithFrame:iconFrame] autorelease];
+        iconView.contentMode = UIViewContentModeScaleAspectFit;
+        iconView.image = [UIImage 
+                          imageWithPathName:[NSString stringWithFormat:@"modules/tour/lens-%@", lense.lenseType]];
+        [self.lenseIconsContainer addSubview:iconView];
+        rightEdge -= 17;
+    }
 }
 
 - (IBAction)photoTapped:(id)sender {
