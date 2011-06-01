@@ -213,6 +213,8 @@
 	</dict>
 	<key>Images</key>
 	<dict>
+		<key>ToolbarBackground</key>
+		<string>common/toolbar-background</string>
 		<key>NavBarTitle</key>
 		<string>modules/home/logo-home.png</string>
 		<key>SearchBarBackground</key>
