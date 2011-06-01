@@ -17,7 +17,6 @@
 @implementation TourWalkingPathViewController
 @synthesize contentView;
 @synthesize currentContent;
-@synthesize titleButton;
 @synthesize previousBarItem;
 @synthesize nextBarItem;
 @synthesize initialStop;
@@ -61,6 +60,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // this gets rid of the back button
+    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] 
+                                              initWithCustomView:[[[UIView alloc] initWithFrame:CGRectZero] autorelease]] autorelease];
     [self refreshUI];
     [self loadMapControllerForCurrentStop];
     self.tourMapController.view.frame = [self frameForContent];
@@ -72,7 +74,6 @@
 - (void)deallocViews {
     self.previousBarItem = nil;
     self.nextBarItem = nil;
-    self.titleButton = nil;
 }
 
 - (void)viewDidUnload
@@ -90,19 +91,17 @@
 }
 
 - (void)refreshUI {
-    NSString *titleText;
     if (self.tourStopMode == TourStopModeApproach) {
-        titleText = [NSString stringWithFormat:@"Walk to %@", self.currentStop.title];
+        self.title = [NSString stringWithFormat:@"Walk to %@", self.currentStop.title];
         self.nextBarItem.enabled = YES;
         self.previousBarItem.enabled = (self.currentStop != self.initialStop);
     }
     else if(self.tourStopMode == TourStopModeLenses) {
-        titleText = self.currentStop.title;
+        self.title = self.currentStop.title;
         self.previousBarItem.enabled = YES;
         TourStop *lastStop = [[TourDataManager sharedManager] lastTourStopForFirstTourStop:self.initialStop];
         self.nextBarItem.enabled = (self.currentStop != lastStop);
     }
-    [self.titleButton setTitle:titleText forState:UIControlStateNormal];
 }
 
 - (IBAction)previous {

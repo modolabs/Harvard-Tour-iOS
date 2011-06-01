@@ -1,3 +1,4 @@
+#import "KGOToolbar.h"
 #import "TourOverviewController.h"
 #import "TourMapController.h"
 #import "TourDataManager.h"
@@ -70,6 +71,17 @@
     }
     self.tourMapController.selectedStop = self.selectedStop;
     [self showMapAnimated:NO];
+    
+    if (self.mode == TourOverviewModeStart) {
+        self.title = @"Pick a Starting Point";
+    } else if(self.mode == TourOverviewModeContinue) {
+        self.title = @"Tour Overview";
+    }
+    UISegmentedControl *mapList = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"map", @"list", nil]];
+    [mapList addTarget:self action:@selector(mapListToggled:) forControlEvents:UIControlEventValueChanged];
+    mapList.segmentedControlStyle = UISegmentedControlStyleBar;
+    mapList.selectedSegmentIndex = 0;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:mapList];
 }
 
 - (void)deallocViews {
@@ -123,9 +135,9 @@
 }
 
 - (UIToolbar *)mapToolbar {
-    UIToolbar *toolbar = [[[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 100, 44)] autorelease];
+    UIToolbar *toolbar = [[[KGOToolbar alloc] initWithFrame:CGRectMake(0, 0, 100, 44)] autorelease];
     toolbar.barStyle = UIBarStyleDefault;
-    toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     if(self.mode == TourOverviewModeStart) {
         UIBarItem *startButton = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStyleBordered target:self action:@selector(startTour)];
         UIBarItem *leftMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];

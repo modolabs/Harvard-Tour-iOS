@@ -58,6 +58,7 @@
     [_tourOverviewController release];
     _tourOverviewController = [[TourOverviewController alloc] initWithNibName:@"TourOverviewController" bundle:nil];
     _tourOverviewController.selectedStop = [[TourDataManager sharedManager] getFirstStop];
+    self.navigationController.navigationBarHidden = NO;
     [self.navigationController pushViewController:_tourOverviewController animated:YES];
 }
 @end

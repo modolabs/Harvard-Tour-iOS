@@ -17,7 +17,6 @@ typedef enum {
 @property (nonatomic, retain) TourStop *initialStop;
 @property (nonatomic, retain) IBOutlet UIBarItem *previousBarItem;
 @property (nonatomic, retain) IBOutlet UIBarItem *nextBarItem;
-@property (nonatomic, retain) IBOutlet UIButton *titleButton;  //not used as a button
 @property (nonatomic, retain) IBOutlet UIView *contentView;
 @property (nonatomic, retain) UIView *currentContent;
 
