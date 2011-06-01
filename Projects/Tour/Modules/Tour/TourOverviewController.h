@@ -25,5 +25,7 @@ typedef enum  {
 
 - (IBAction)mapListToggled:(id)sender;
 
++ (void)layoutLensesLegend:(UIView *)legendView forStop:(TourStop *)stop withIconSize:(CGFloat)size;
+
 
 @end

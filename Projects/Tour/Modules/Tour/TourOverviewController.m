@@ -4,8 +4,12 @@
 #import "TourMapController.h"
 #import "TourDataManager.h"
 #import "TourWalkingPathViewController.h"
+#import "TourLense.h"
 
 #define CellThumbnailViewTag 1
+#define CellLegendViewTag 2
+#define CellStopTitleTag 3
+#define CellStopSubtitleTag 4
 
 @interface TourOverviewController (Private)
 - (void)showMapAnimated:(BOOL)animated;
@@ -158,7 +162,7 @@
     return toolbar;
 }
 
-# pragma TableView dataSource
+# pragma mark - TableView dataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *tourStopCellIdentifier = @"TourStepCell";
@@ -167,11 +171,19 @@
         [[NSBundle mainBundle] loadNibNamed:@"TourStopCell" owner:self options:nil];
         cell = self.stopCell;
         self.stopCell = nil;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
     UIImageView *thumbnailView = (UIImageView *)[cell viewWithTag:CellThumbnailViewTag];
     TourStop *stop = [self.tourStops objectAtIndex:indexPath.row];
     thumbnailView.image = [(TourMediaItem *)stop.thumbnail image];
+    UILabel *stopTitleLabel = (UILabel *)[cell viewWithTag:CellStopTitleTag];
+    stopTitleLabel.text = stop.title;
+    UILabel *stopSubtitleLabel = (UILabel *)[cell viewWithTag:CellStopSubtitleTag];
+    stopSubtitleLabel.text = stop.subtitle;
+    
+    UIView *legendView = [cell viewWithTag:CellLegendViewTag];
+    [[self class] layoutLensesLegend:legendView forStop:stop withIconSize:10];
     return cell;    
 }
 
@@ -179,7 +191,26 @@
     return self.tourStops.count;
 }
 
-# pragma user actions
+# pragma mark - class methods used by the map and list controller
++ (void)layoutLensesLegend:(UIView *)legendView forStop:(TourStop *)stop withIconSize:(CGFloat)size {
+    [[TourDataManager sharedManager] populateTourStopDetails:stop];
+    for(UIView *subviews in legendView.subviews) {
+        [subviews removeFromSuperview];
+    }
+    
+    CGFloat rightEdge = legendView.frame.size.width;
+    for(TourLense *lense in [[stop orderedLenses] reverseObjectEnumerator]) {
+        CGRect iconFrame = CGRectMake(rightEdge-size, 0, size, size);
+        UIImageView *iconView = [[[UIImageView alloc] initWithFrame:iconFrame] autorelease];
+        iconView.contentMode = UIViewContentModeScaleAspectFit;
+        iconView.image = [UIImage 
+                          imageWithPathName:[NSString stringWithFormat:@"modules/tour/lens-%@", lense.lenseType]];
+        [legendView addSubview:iconView];
+        rightEdge -= size;
+    }
+}
+
+# pragma mark - user actions
 
 - (void)startTour {
     TourWalkingPathViewController *walkingPathViewController = [[TourWalkingPathViewController alloc] initWithNibName:@"TourWalkingPathViewController" bundle:nil];
@@ -187,4 +218,5 @@
     walkingPathViewController.currentStop = self.tourMapController.selectedStop;
     [self.navigationController pushViewController:walkingPathViewController animated:YES];
 }
+
 @end
