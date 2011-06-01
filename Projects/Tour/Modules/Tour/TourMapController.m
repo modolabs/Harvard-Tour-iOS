@@ -1,5 +1,6 @@
 #import "TourMapController.h"
 #import "TourDataManager.h"
+#import "UIKit+KGOAdditions.h"
 
 @interface TourMapController (Private) 
 - (void)showSelectedStop;
@@ -11,6 +12,7 @@
 @implementation TourMapController
 @synthesize thumbnailView = _thumbnailView;
 @synthesize imageViewControl;
+@synthesize zoomInOutIcon;
 @synthesize mapView;
 @synthesize showMapTip;
 @synthesize mapInitialFocusMode;
@@ -65,6 +67,7 @@
 - (void)deallocViews {
     self.imageViewControl = nil;
     self.thumbnailView = nil;
+    self.zoomInOutIcon = nil;
     self.stopTitleLabel = nil;
     self.mapTipLabel = nil;
     self.mapView = nil;
@@ -102,6 +105,7 @@
         approachPhotoZoomedIn = NO;
     }
     _thumbnailView.image = [(TourMediaItem *)_selectedStop.thumbnail image]; 
+    self.zoomInOutIcon.image = [UIImage imageWithPathName:@"modules/tour/zoomicon-in"];
     self.stopTitleLabel.text = _selectedStop.title;
 }
 
@@ -115,6 +119,7 @@
             CGFloat height = width / photoZoomedOutFrame.size.width * photoZoomedOutFrame.size.height;
             photoZoomedInFrame = photoZoomedOutFrame;
             photoZoomedInFrame.size = CGSizeMake(width, height);
+            photoZoomedInFrame.origin.y = photoZoomedOutFrame.origin.y + photoZoomedOutFrame.size.height - height;
         }
     }
     
@@ -128,6 +133,9 @@
     } completion:^(BOOL finished) {
         if (!approachPhotoZoomedIn) {
             _thumbnailView.image = [(TourMediaItem *)self.selectedStop.thumbnail image];
+            self.zoomInOutIcon.image = [UIImage imageWithPathName:@"modules/tour/zoomicon-in"];
+        } else {
+            self.zoomInOutIcon.image = [UIImage imageWithPathName:@"modules/tour/zoomicon-out"];
         }
     }];
 }
