@@ -17,6 +17,7 @@
 - (void)deallocViews;
 - (UIToolbar *)mapToolbar;
 
+- (void)startTourAtStop:(TourStop *)stop;
 - (void)startTour;
 @end
 
@@ -191,6 +192,10 @@
     return self.tourStops.count;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self startTourAtStop:[self.tourStops objectAtIndex:indexPath.row]];
+}
+
 # pragma mark - class methods used by the map and list controller
 + (void)layoutLensesLegend:(UIView *)legendView forStop:(TourStop *)stop withIconSize:(CGFloat)size {
     [[TourDataManager sharedManager] populateTourStopDetails:stop];
@@ -211,12 +216,15 @@
 }
 
 # pragma mark - user actions
+- (void)startTourAtStop:(TourStop *)stop {
+    TourWalkingPathViewController *walkingPathViewController = [[TourWalkingPathViewController alloc] initWithNibName:@"TourWalkingPathViewController" bundle:nil];
+    walkingPathViewController.initialStop = stop;
+    walkingPathViewController.currentStop = stop;
+    [self.navigationController pushViewController:walkingPathViewController animated:YES]; 
+}
 
 - (void)startTour {
-    TourWalkingPathViewController *walkingPathViewController = [[TourWalkingPathViewController alloc] initWithNibName:@"TourWalkingPathViewController" bundle:nil];
-    walkingPathViewController.initialStop = self.tourMapController.selectedStop;
-    walkingPathViewController.currentStop = self.tourMapController.selectedStop;
-    [self.navigationController pushViewController:walkingPathViewController animated:YES];
+    [self startTourAtStop:self.tourMapController.selectedStop];
 }
 
 @end
