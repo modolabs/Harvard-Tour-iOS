@@ -35,7 +35,7 @@ else:
 
 if serverConfig.has_key('PathExtension'):
     pathExtension = serverConfig['PathExtension']
-    if len(pathExtension) > 0 and (not pathExtension.endsWith('/')):
+    if len(pathExtension) > 0 and (not pathExtension.endswith('/')):
         pathExtension += '/'
 else:
     raise Exception("No path extension found for server configuration of %s" % server)
