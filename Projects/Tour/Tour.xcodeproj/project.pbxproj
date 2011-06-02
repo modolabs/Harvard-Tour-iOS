@@ -1612,8 +1612,8 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "python build-scripts/generateInitialTourContent.py \"$CONFIGURATION\"";
+			shellPath = /bin/bash;
+			shellScript = "if [ -e .skipContentDownload ]; then\n   echo \"skipping downloading tour content\"\n   exit\nfi\n\npython build-scripts/generateInitialTourContent.py \"$CONFIGURATION\"";
 		};
 		829673B111F798380098F2A3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
