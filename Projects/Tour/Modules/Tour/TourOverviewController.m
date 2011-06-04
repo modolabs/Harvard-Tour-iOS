@@ -19,6 +19,7 @@
 
 - (void)startTourAtStop:(TourStop *)stop;
 - (void)startTour;
+- (void)continueTourAtStop:(TourStop *)stop;
 - (void)continueTour;
 
 - (void)previousStop;
@@ -212,7 +213,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self startTourAtStop:[self.tourStops objectAtIndex:indexPath.row]];
+    TourStop *stop = [self.tourStops objectAtIndex:indexPath.row];
+    if (self.mode == TourOverviewModeStart) {
+        [self startTourAtStop:stop];
+    } else if (self.mode == TourOverviewModeContinue) {
+        [self continueTourAtStop:stop];
+    }
 }
 
 # pragma mark - class methods used by the map and list controller
@@ -246,8 +252,11 @@
     [self startTourAtStop:self.tourMapController.selectedStop];
 }
 
+- (void)continueTourAtStop:(TourStop *)stop {
+    [self.delegate stopWasSelected:stop];
+}
 - (void)continueTour {
-    [self.delegate stopWasSelected:self.tourMapController.selectedStop];
+    [self continueTourAtStop:self.tourMapController.selectedStop];
 }
 
 - (void)nextStop {
