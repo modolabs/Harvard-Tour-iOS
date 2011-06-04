@@ -19,6 +19,7 @@
 
 - (void)startTourAtStop:(TourStop *)stop;
 - (void)startTour;
+- (void)continueTour;
 
 - (void)previousStop;
 - (void)nextStop;
@@ -34,6 +35,7 @@
 @synthesize stopsTableView = _stopsTableView;
 @synthesize stopCell;
 @synthesize mapContainerView;
+@synthesize delegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -48,6 +50,7 @@
 - (void)dealloc
 {
     [self deallocViews];
+    self.delegate = nil;
     [super dealloc];
 }
 
@@ -86,12 +89,13 @@
         self.title = @"Pick a Starting Point";
     } else if(self.mode == TourOverviewModeContinue) {
         self.title = @"Tour Overview";
+        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(continueTour)] autorelease];
     }
     UISegmentedControl *mapList = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"map", @"list", nil]];
     [mapList addTarget:self action:@selector(mapListToggled:) forControlEvents:UIControlEventValueChanged];
     mapList.segmentedControlStyle = UISegmentedControlStyleBar;
     mapList.selectedSegmentIndex = 0;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:mapList];
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:mapList] autorelease];
 }
 
 - (void)deallocViews {
@@ -240,6 +244,10 @@
 
 - (void)startTour {
     [self startTourAtStop:self.tourMapController.selectedStop];
+}
+
+- (void)continueTour {
+    [self.delegate stopWasSelected:self.tourMapController.selectedStop];
 }
 
 - (void)nextStop {

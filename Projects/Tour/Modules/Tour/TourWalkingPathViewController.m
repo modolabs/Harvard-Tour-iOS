@@ -156,10 +156,23 @@
     }];
 }
 
+- (void)stopWasSelected:(TourStop *)stop {
+    self.tourStopMode = TourStopModeApproach;
+    self.currentStop = stop;
+    [self.currentContent removeFromSuperview];
+    [self loadMapControllerForCurrentStop];
+    self.currentContent = self.tourMapController.view;
+    self.currentContent.frame = [self frameForContent];
+    [self.contentView addSubview:self.currentContent];
+    [self refreshUI];
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 - (IBAction)tourOverview {
     TourOverviewController *tourOverController = [[[TourOverviewController alloc] initWithNibName:@"TourOverviewController" bundle:nil] autorelease];
     tourOverController.mode = TourOverviewModeContinue;
     tourOverController.selectedStop = self.currentStop;
+    tourOverController.delegate = self;
     UINavigationController *dummyNavController = [[[UINavigationController alloc] initWithRootViewController:tourOverController] autorelease];
     [self presentModalViewController:dummyNavController animated:YES];
 }

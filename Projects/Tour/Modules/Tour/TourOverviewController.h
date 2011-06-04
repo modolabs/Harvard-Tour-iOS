@@ -7,6 +7,10 @@ typedef enum  {
     TourOverviewModeContinue
 } TourOverviewMode;
 
+@protocol TourOverviewDelegate
+- (void)stopWasSelected:(TourStop *)stop;
+@end
+
 @interface TourOverviewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
     UIView *_contentView;
     UITableView *_stopsTableView;
@@ -22,6 +26,8 @@ typedef enum  {
 @property (nonatomic, retain) NSArray *tourStops;
 
 @property (nonatomic) TourOverviewMode mode;
+
+@property (nonatomic, retain) id<TourOverviewDelegate> delegate;
 
 - (IBAction)mapListToggled:(id)sender;
 

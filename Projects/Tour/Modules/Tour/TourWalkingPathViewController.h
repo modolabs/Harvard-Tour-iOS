@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 #import "TourStop.h"
+#import "TourOverviewController.h"
 
 typedef enum {
     TourStopModeApproach,
@@ -8,7 +9,7 @@ typedef enum {
 
 @class TourMapController;
 @class TourStopDetailsViewController;
-@interface TourWalkingPathViewController : UIViewController {
+@interface TourWalkingPathViewController : UIViewController <TourOverviewDelegate> {
     
 }
 
