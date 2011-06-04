@@ -25,5 +25,6 @@ typedef enum {
 
 - (IBAction)previous;
 - (IBAction)next;
+- (IBAction)tourOverview;
 
 @end

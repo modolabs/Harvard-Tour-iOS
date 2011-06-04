@@ -1,5 +1,6 @@
 #import "TourWalkingPathViewController.h"
 #import "TourStopDetailsViewController.h"
+#import "TourOverviewController.h"
 #import "TourMapController.h"
 #import "TourDataManager.h"
 
@@ -153,6 +154,14 @@
         self.currentContent = nextView;
         [self refreshUI];
     }];
+}
+
+- (IBAction)tourOverview {
+    TourOverviewController *tourOverController = [[[TourOverviewController alloc] initWithNibName:@"TourOverviewController" bundle:nil] autorelease];
+    tourOverController.mode = TourOverviewModeContinue;
+    tourOverController.selectedStop = self.currentStop;
+    UINavigationController *dummyNavController = [[[UINavigationController alloc] initWithRootViewController:tourOverController] autorelease];
+    [self presentModalViewController:dummyNavController animated:YES];
 }
 
 - (void)loadMapControllerForCurrentStop {

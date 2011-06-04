@@ -159,7 +159,6 @@
 		EB1637CC13690476003C69E2 /* KGOFoursquareEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1637C413690476003C69E2 /* KGOFoursquareEngine.m */; };
 		EB1637CD13690476003C69E2 /* KGOFoursquareService.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1637C613690476003C69E2 /* KGOFoursquareService.m */; };
 		EB1637CE13690476003C69E2 /* KGOTwitterService.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1637C913690476003C69E2 /* KGOTwitterService.m */; };
-		EB163ABA136CFB2F003C69E2 /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EB163AB9136CFB2F003C69E2 /* Default-Portrait~ipad.png */; };
 		EB181F88131EDECA003728FF /* KGOPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = EB181F76131EDECA003728FF /* KGOPerson.m */; };
 		EB181F8A131EDECA003728FF /* KGOPersonWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = EB181F78131EDECA003728FF /* KGOPersonWrapper.m */; };
 		EB181F8B131EDECA003728FF /* PeopleDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EB181F79131EDECA003728FF /* PeopleDataModel.xcdatamodeld */; };
@@ -569,7 +568,6 @@
 		EB1637C813690476003C69E2 /* KGOTwitterService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOTwitterService.h; sourceTree = "<group>"; };
 		EB1637C913690476003C69E2 /* KGOTwitterService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KGOTwitterService.m; sourceTree = "<group>"; };
 		EB1637CA13690476003C69E2 /* TwitterViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterViewControllerDelegate.h; sourceTree = "<group>"; };
-		EB163AB9136CFB2F003C69E2 /* Default-Portrait~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait~ipad.png"; path = "Resources/Default-Portrait~ipad.png"; sourceTree = "<group>"; };
 		EB181F75131EDECA003728FF /* KGOPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOPerson.h; sourceTree = "<group>"; };
 		EB181F76131EDECA003728FF /* KGOPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KGOPerson.m; sourceTree = "<group>"; };
 		EB181F77131EDECA003728FF /* KGOPersonWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOPersonWrapper.h; sourceTree = "<group>"; };
@@ -736,7 +734,6 @@
 				EBAE863E1215FB0D00F370BE /* Icon.png */,
 				EBAE863F1215FB0D00F370BE /* Icon@2x.png */,
 				DED3CCE810418F5F003D3B74 /* Default.png */,
-				EB163AB9136CFB2F003C69E2 /* Default-Portrait~ipad.png */,
 				DEE6B1CC111774300037F03C /* Entitlements.plist */,
 			);
 			name = Resources;
@@ -1584,7 +1581,6 @@
 				EB46A346134EB942005796E4 /* ThemeConfig-iPad.plist in Resources */,
 				EB46A348134EB97C005796E4 /* MainWindow-iPad.xib in Resources */,
 				EB46A4B413501A80005796E4 /* Icon-72.png in Resources */,
-				EB163ABA136CFB2F003C69E2 /* Default-Portrait~ipad.png in Resources */,
 				4B3C4CE7138C24EC00034B17 /* data in Resources */,
 				4B29B3AA138C5130001B3A1E /* TourHomeViewController.xib in Resources */,
 				4B29B3AF138C5601001B3A1E /* TourMapController.xib in Resources */,

@@ -19,6 +19,10 @@
 
 - (void)startTourAtStop:(TourStop *)stop;
 - (void)startTour;
+
+- (void)previousStop;
+- (void)nextStop;
+
 @end
 
 @implementation TourOverviewController
@@ -148,16 +152,27 @@
         UIButton *startButtonView = [UIButton buttonWithType:UIButtonTypeCustom];
         [startButtonView setImage:[UIImage imageWithPathName:@"modules/tour/toolbar-next.png"] forState:UIControlStateNormal];
         startButtonView.frame = CGRectMake(0, 0, 44, 44);        
-        UIBarButtonItem *startButton = [[UIBarButtonItem alloc] initWithCustomView:startButtonView];
+        UIBarButtonItem *startButton = [[[UIBarButtonItem alloc] initWithCustomView:startButtonView] autorelease];
         [startButtonView addTarget:self action:@selector(startTour) forControlEvents:UIControlEventTouchUpInside];
         
         UIBarItem *leftMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
         
         toolbar.items = [NSArray arrayWithObjects:leftMargin, startButton, nil];
     } else if(self.mode == TourOverviewModeContinue) {
-        UIBarItem *previousButton = [[UIBarButtonItem alloc] initWithTitle:@"Previous" style:UIBarButtonItemStyleBordered target:nil action:nil];
-        UIBarItem *middleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        UIBarItem *nextButton = [[UIBarButtonItem alloc] initWithTitle:@"Next" style:UIBarButtonItemStyleBordered target:nil action:nil];
+        UIButton *previousButtonView = [UIButton buttonWithType:UIButtonTypeCustom];
+        [previousButtonView setImage:[UIImage imageWithPathName:@"modules/tour/toolbar-previous.png"] forState:UIControlStateNormal];
+        [previousButtonView addTarget:self action:@selector(previousStop) forControlEvents:UIControlEventTouchUpInside];
+        previousButtonView.frame = CGRectMake(0, 0, 44, 44);            
+        UIBarItem *previousButton = [[[UIBarButtonItem alloc] initWithCustomView:previousButtonView] autorelease];
+        
+        UIBarItem *middleSpace = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil] autorelease];
+        
+        UIButton *nextButtonView = [UIButton buttonWithType:UIButtonTypeCustom];
+        [nextButtonView setImage:[UIImage imageWithPathName:@"modules/tour/toolbar-next.png"] forState:UIControlStateNormal];
+        [nextButtonView addTarget:self action:@selector(nextStop) forControlEvents:UIControlEventTouchUpInside];
+        nextButtonView.frame = CGRectMake(0, 0, 44, 44);  
+        UIBarItem *nextButton = [[[UIBarButtonItem alloc] initWithCustomView:nextButtonView] autorelease];
+        
         toolbar.items = [NSArray arrayWithObjects:previousButton, middleSpace, nextButton, nil];
     }
     return toolbar;
@@ -226,5 +241,16 @@
 - (void)startTour {
     [self startTourAtStop:self.tourMapController.selectedStop];
 }
+
+- (void)nextStop {
+    TourStop *nextStop = [[TourDataManager sharedManager] nextStopForTourStop:self.tourMapController.selectedStop];
+    self.tourMapController.selectedStop = nextStop;
+}
+
+- (void)previousStop {
+    TourStop *previousStop = [[TourDataManager sharedManager] previousStopForTourStop:self.tourMapController.selectedStop];
+    self.tourMapController.selectedStop = previousStop;
+}
+
 
 @end

@@ -117,6 +117,14 @@
     self.stopCaptionLabel.text = _selectedStop.subtitle;
 
     [TourOverviewController layoutLensesLegend:self.lenseIconsContainer forStop:_selectedStop withIconSize:12];
+    
+    // make sure annotation is visible
+    NSSet *visibleAnnotations = [mapView annotationsInMapRect:[mapView visibleMapRect]];
+    if(![visibleAnnotations containsObject:_selectedStop]) {
+        // move annotation into view
+        [mapView setCenterCoordinate:_selectedStop.coordinate animated:YES];
+    }
+    [mapView selectAnnotation:_selectedStop animated:YES];
 }
 
 - (IBAction)photoTapped:(id)sender {
@@ -211,7 +219,7 @@
     MKAnnotationView *annotationView = [aMapView dequeueReusableAnnotationViewWithIdentifier:@"pins"];
     if (!annotationView) {
         annotationView = [[[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"pins"] autorelease];
-        annotationView.canShowCallout = YES;
+        annotationView.canShowCallout = NO;
     }
     annotationView.annotation = annotation;
     if (annotation == _selectedStop) {
