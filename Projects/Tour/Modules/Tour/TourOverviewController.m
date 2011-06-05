@@ -140,6 +140,7 @@
 
 - (void)showListAnimated:(BOOL)animated {
     if([self.stopsTableView superview] != _contentView) {
+        self.stopsTableView.frame = _contentView.bounds;
         NSTimeInterval duration = animated ? 0.75 : -1;
         [UIView transitionFromView:self.mapContainerView
                             toView:_stopsTableView
