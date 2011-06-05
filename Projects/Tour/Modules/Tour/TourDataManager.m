@@ -74,6 +74,16 @@
                                              sortDescriptors:[NSArray arrayWithObject:sort]];
 }
 
+- (NSArray *)getTourStopsForInitialStop:(TourStop *)stop {
+    NSArray *allStops = [self getAllTourStops];
+    NSInteger firstStopIndex = [[stop order] intValue];
+    NSRange rangeOfFirstStops = NSMakeRange(firstStopIndex, allStops.count - firstStopIndex);
+    NSRange rangeOfLastStops = NSMakeRange(0, firstStopIndex);
+    NSArray *firstStops = [allStops subarrayWithRange:rangeOfFirstStops];
+    NSArray *lastStops = [allStops subarrayWithRange:rangeOfLastStops];
+    return [firstStops arrayByAddingObjectsFromArray:lastStops];
+}
+
 - (void)markAllStopsUnvisited {
     NSArray *stops = [[CoreDataManager sharedManager] objectsForEntity:TourStopEntityName matchingPredicate:nil];
     for(TourStop *stop in stops) {

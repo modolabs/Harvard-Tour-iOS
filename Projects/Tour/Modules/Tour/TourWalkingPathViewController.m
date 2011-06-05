@@ -169,11 +169,12 @@
 }
 
 - (IBAction)tourOverview {
-    TourOverviewController *tourOverController = [[[TourOverviewController alloc] initWithNibName:@"TourOverviewController" bundle:nil] autorelease];
-    tourOverController.mode = TourOverviewModeContinue;
-    tourOverController.selectedStop = self.currentStop;
-    tourOverController.delegate = self;
-    UINavigationController *dummyNavController = [[[UINavigationController alloc] initWithRootViewController:tourOverController] autorelease];
+    TourOverviewController *tourOverviewController = [[[TourOverviewController alloc] initWithNibName:@"TourOverviewController" bundle:nil] autorelease];
+    tourOverviewController.mode = TourOverviewModeContinue;
+    tourOverviewController.selectedStop = self.currentStop;
+    tourOverviewController.tourStops = [[TourDataManager sharedManager] getTourStopsForInitialStop:self.initialStop];
+    tourOverviewController.delegate = self;
+    UINavigationController *dummyNavController = [[[UINavigationController alloc] initWithRootViewController:tourOverviewController] autorelease];
     [self presentModalViewController:dummyNavController animated:YES];
 }
 
