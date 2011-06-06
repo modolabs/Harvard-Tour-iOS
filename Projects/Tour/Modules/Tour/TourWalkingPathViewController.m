@@ -3,6 +3,8 @@
 #import "TourOverviewController.h"
 #import "TourMapController.h"
 #import "TourDataManager.h"
+#import <MobileCoreServices/MobileCoreServices.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @interface TourWalkingPathViewController (Private)
 - (void)deallocViews;
@@ -45,6 +47,7 @@
     self.tourStopDetailsController = nil;
     self.contentView = nil;
     self.currentContent = nil;
+    
     [super dealloc];
 }
 
@@ -178,6 +181,21 @@
     
 }
 
+- (IBAction)cameraButtonTapped:(id)sender {
+    if ([UIImagePickerController 
+         isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;        
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        picker.mediaTypes =
+        [UIImagePickerController availableMediaTypesForSourceType:
+         UIImagePickerControllerSourceTypeCamera];        
+        [self presentModalViewController:picker animated:YES];   
+        [picker release];
+    }
+}
+
 #pragma - mark UIActionSheet delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex != actionSheet.cancelButtonIndex) {
@@ -254,5 +272,38 @@
 - (TourStop *)currentStop {
     return _currentStop;
 }
+
+
+#pragma mark UIImagePickerControllerDelegate
+
+- (void)imagePickerController:(UIImagePickerController *)picker 
+didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    // Save the image or video to the Photo Library.
+    ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
+    
+    if ([[info objectForKey:UIImagePickerControllerMediaType] 
+         isEqualToString:(NSString *)kUTTypeImage]) {
+        UIImage *image = 
+        [info objectForKey:UIImagePickerControllerOriginalImage];
+        [assetsLibrary 
+         writeImageToSavedPhotosAlbum:image.CGImage
+         metadata:[info objectForKey:UIImagePickerControllerMediaMetadata]
+         completionBlock:nil];        
+    }
+    else if ([[info objectForKey:UIImagePickerControllerMediaType] 
+              isEqualToString:(NSString *)kUTTypeMovie]) {
+        [assetsLibrary writeVideoAtPathToSavedPhotosAlbum:
+         [info objectForKey:UIImagePickerControllerMediaURL]
+                                          completionBlock:nil];
+    }
+    [assetsLibrary release];
+    
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 
 @end

@@ -9,7 +9,9 @@ typedef enum {
 
 @class TourMapController;
 @class TourStopDetailsViewController;
-@interface TourWalkingPathViewController : UIViewController <TourOverviewDelegate, UIActionSheetDelegate> {
+@interface TourWalkingPathViewController : UIViewController 
+<TourOverviewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate,
+UINavigationControllerDelegate> {
     TourStop *_initialStop;
     TourStop *_currentStop;    
 }
@@ -29,5 +31,6 @@ typedef enum {
 - (IBAction)previous;
 - (IBAction)next;
 - (IBAction)tourOverview;
+- (IBAction)cameraButtonTapped:(id)sender;
 
 @end

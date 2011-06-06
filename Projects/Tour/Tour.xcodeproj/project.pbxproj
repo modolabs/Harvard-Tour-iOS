@@ -69,6 +69,8 @@
 		A627E6BB134A662200403110 /* VideoTag.m in Sources */ = {isa = PBXBuildFile; fileRef = A627E6B8134A662200403110 /* VideoTag.m */; };
 		A6484128134B9272006649D8 /* Video.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A6484127134B9272006649D8 /* Video.xcdatamodeld */; };
 		A6C19893134B95B3009A163B /* Video.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = A6C19892134B95B3009A163B /* Video.xcdatamodel */; };
+		A6CDC9E0139D88560068D12A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6CDC9DF139D88560068D12A /* MobileCoreServices.framework */; };
+		A6CDC9E2139D8B3A0068D12A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6CDC9E1139D8B3A0068D12A /* AssetsLibrary.framework */; };
 		A6F2F81B134BAC75009F597D /* VideoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F2F819134BAC75009F597D /* VideoDetailViewController.m */; };
 		A6F2F83D134BAEDD009F597D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F2F83C134BAEDD009F597D /* MediaPlayer.framework */; };
 		A6F2FA21134BE23F009F597D /* VideoWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F2FA20134BE23F009F597D /* VideoWebViewController.m */; };
@@ -398,6 +400,8 @@
 		A627E6B7134A662200403110 /* VideoTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoTag.h; path = ../../Modules/Video/Model/VideoTag.h; sourceTree = SOURCE_ROOT; };
 		A627E6B8134A662200403110 /* VideoTag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoTag.m; path = ../../Modules/Video/Model/VideoTag.m; sourceTree = SOURCE_ROOT; };
 		A6C19892134B95B3009A163B /* Video.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = Video.xcdatamodel; sourceTree = "<group>"; };
+		A6CDC9DF139D88560068D12A /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		A6CDC9E1139D8B3A0068D12A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		A6F2F818134BAC75009F597D /* VideoDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoDetailViewController.h; path = ../../Modules/Video/VideoDetailViewController.h; sourceTree = SOURCE_ROOT; };
 		A6F2F819134BAC75009F597D /* VideoDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoDetailViewController.m; path = ../../Modules/Video/VideoDetailViewController.m; sourceTree = SOURCE_ROOT; };
 		A6F2F83C134BAEDD009F597D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -667,6 +671,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6CDC9E2139D8B3A0068D12A /* AssetsLibrary.framework in Frameworks */,
+				A6CDC9E0139D88560068D12A /* MobileCoreServices.framework in Frameworks */,
 				EBB121ED13392F3300A4BD1D /* EventKit.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
@@ -708,6 +714,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				A6CDC9E1139D8B3A0068D12A /* AssetsLibrary.framework */,
 				EB1441361309EF7B00396753 /* Application */,
 				EB1387B912F22DF7004DBB7C /* Contrib */,
 				DE715445102FE468005E6111 /* Modules */,
@@ -764,6 +771,7 @@
 				29366C19118E401C009D6863 /* libxml2.dylib */,
 				29366C1D118E4151009D6863 /* Security.framework */,
 				EB6D02A811E3784100B65CE3 /* MapKit.framework */,
+				A6CDC9DF139D88560068D12A /* MobileCoreServices.framework */,
 				A6F2F83C134BAEDD009F597D /* MediaPlayer.framework */,
 			);
 			name = Frameworks;
