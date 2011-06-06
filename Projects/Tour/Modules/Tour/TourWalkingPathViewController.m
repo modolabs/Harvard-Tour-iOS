@@ -20,8 +20,6 @@
 @synthesize currentContent;
 @synthesize previousBarItem;
 @synthesize nextBarItem;
-@synthesize initialStop;
-@synthesize currentStop;
 @synthesize actionSheetStop;
 @synthesize tourStopMode;
 
@@ -231,6 +229,30 @@
     CGRect previousContentFrame = self.contentView.bounds;
     previousContentFrame.origin.x -= self.contentView.bounds.size.width;
     return previousContentFrame;
+}
+
+- (void)setInitialStop:(TourStop *)stop {
+    if (_initialStop != stop) {
+        [_initialStop release];
+        _initialStop = [stop retain];
+        [[TourDataManager sharedManager] saveInitialStop:_initialStop];
+    }
+}
+
+- (TourStop *)initialStop {
+    return _initialStop;
+}
+
+- (void)setCurrentStop:(TourStop *)stop {
+    if (_currentStop != stop) {
+        [_currentStop release];
+        _currentStop = [stop retain];
+        [[TourDataManager sharedManager] saveCurrentStop:_currentStop];
+    }
+}
+
+- (TourStop *)currentStop {
+    return _currentStop;
 }
 
 @end

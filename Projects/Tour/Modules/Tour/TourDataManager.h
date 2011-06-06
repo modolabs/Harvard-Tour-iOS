@@ -12,6 +12,11 @@
 - (void)loadStopSummarys;
 - (void)populateTourStopDetails:(TourStop *)tourStop;
 
+- (void)saveInitialStop:(TourStop *)tourStop;
+- (TourStop *)getInitialStop;
+- (void)saveCurrentStop:(TourStop *)tourStop;
+- (TourStop *)getCurrentStop;
+
 - (TourStop *)getFirstStop;
 - (NSArray *)getAllTourStops;
 - (NSArray *)getTourStopsForInitialStop:(TourStop *)stop;

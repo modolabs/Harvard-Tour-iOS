@@ -10,7 +10,8 @@ typedef enum {
 @class TourMapController;
 @class TourStopDetailsViewController;
 @interface TourWalkingPathViewController : UIViewController <TourOverviewDelegate, UIActionSheetDelegate> {
-    
+    TourStop *_initialStop;
+    TourStop *_currentStop;    
 }
 
 @property (nonatomic) TourStopMode tourStopMode;

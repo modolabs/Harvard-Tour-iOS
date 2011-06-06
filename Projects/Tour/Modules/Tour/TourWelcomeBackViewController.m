@@ -1,11 +1,10 @@
+#import "TourWelcomeBackViewController.h"
 #import "TourHomeViewController.h"
-#import "TourOverviewController.h"
+#import "TourWalkingPathViewController.h"
 #import "TourDataManager.h"
-#import "UIKit+KGOAdditions.h"
 
 
-@implementation TourHomeViewController
-@synthesize scrollView;
+@implementation TourWelcomeBackViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -18,7 +17,6 @@
 
 - (void)dealloc
 {
-    self.scrollView = nil;
     [super dealloc];
 }
 
@@ -35,20 +33,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [[TourDataManager sharedManager] markAllStopsUnvisited];
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.frame.size.height + 25);
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageWithPathName:@"modules/tour/welcome-background.jpg"]];
     // Do any additional setup after loading the view from its nib.
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [self.navigationController setNavigationBarHidden:YES];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    self.scrollView = nil;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -59,11 +49,15 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (IBAction)startTour:(id)sender {
-    [_tourOverviewController release];
-    _tourOverviewController = [[TourOverviewController alloc] initWithNibName:@"TourOverviewController" bundle:nil];
-    _tourOverviewController.selectedStop = [[TourDataManager sharedManager] getFirstStop];
-    self.navigationController.navigationBarHidden = NO;
-    [self.navigationController pushViewController:_tourOverviewController animated:YES];
+- (IBAction)startOver {
+    UIViewController *vc = [[[TourHomeViewController alloc] initWithNibName:@"TourHomeViewController" bundle:nil] autorelease];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (IBAction)resumeTour {
+    TourWalkingPathViewController *walkingPathVC = [[[TourWalkingPathViewController alloc] initWithNibName:@"TourWalkingPathViewController" bundle:nil] autorelease];
+    walkingPathVC.initialStop = [[TourDataManager sharedManager] getInitialStop];
+    walkingPathVC.currentStop = [[TourDataManager sharedManager] getCurrentStop];
+    [self.navigationController pushViewController:walkingPathVC animated:YES];
 }
 @end

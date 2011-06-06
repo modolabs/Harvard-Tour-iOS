@@ -37,6 +37,8 @@
 		4B48FFF5138C05BB004952AF /* TourMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B48FFEE138C05BB004952AF /* TourMediaItem.m */; };
 		4B48FFF6138C05BB004952AF /* TourSlide.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B48FFF0138C05BB004952AF /* TourSlide.m */; };
 		4B48FFF7138C05BB004952AF /* TourStop.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B48FFF2138C05BB004952AF /* TourStop.m */; };
+		4B5F1849139C52B200B76E28 /* TourWelcomeBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B5F1847139C52B100B76E28 /* TourWelcomeBackViewController.m */; };
+		4B5F184A139C52B200B76E28 /* TourWelcomeBackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B5F1848139C52B100B76E28 /* TourWelcomeBackViewController.xib */; };
 		4B6CFFD41396D1AA007EADF1 /* KGOHTMLTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6CFFD11396D1AA007EADF1 /* KGOHTMLTemplate.m */; };
 		4B6CFFD51396D1AA007EADF1 /* KGOTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6CFFD31396D1AA007EADF1 /* KGOTheme.m */; };
 		4B6CFFDB1396D1F1007EADF1 /* KGOUserSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6CFFD81396D1F1007EADF1 /* KGOUserSetting.m */; };
@@ -341,6 +343,9 @@
 		4B48FFF0138C05BB004952AF /* TourSlide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourSlide.m; sourceTree = "<group>"; };
 		4B48FFF1138C05BB004952AF /* TourStop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourStop.h; sourceTree = "<group>"; };
 		4B48FFF2138C05BB004952AF /* TourStop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourStop.m; sourceTree = "<group>"; };
+		4B5F1846139C52B100B76E28 /* TourWelcomeBackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourWelcomeBackViewController.h; sourceTree = "<group>"; };
+		4B5F1847139C52B100B76E28 /* TourWelcomeBackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourWelcomeBackViewController.m; sourceTree = "<group>"; };
+		4B5F1848139C52B100B76E28 /* TourWelcomeBackViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TourWelcomeBackViewController.xib; sourceTree = "<group>"; };
 		4B6CFFD01396D1AA007EADF1 /* KGOHTMLTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOHTMLTemplate.h; sourceTree = "<group>"; };
 		4B6CFFD11396D1AA007EADF1 /* KGOHTMLTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KGOHTMLTemplate.m; sourceTree = "<group>"; };
 		4B6CFFD21396D1AA007EADF1 /* KGOTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOTheme.h; sourceTree = "<group>"; };
@@ -872,6 +877,9 @@
 				4BCA3BF8139458A10077D6ED /* TourLensePhotoView.xib */,
 				4BCA3BFD139542D30077D6ED /* TourLenseVideoView.xib */,
 				4BCA3C05139561E90077D6ED /* TourLenseSlideShowView.xib */,
+				4B5F1846139C52B100B76E28 /* TourWelcomeBackViewController.h */,
+				4B5F1847139C52B100B76E28 /* TourWelcomeBackViewController.m */,
+				4B5F1848139C52B100B76E28 /* TourWelcomeBackViewController.xib */,
 			);
 			path = Tour;
 			sourceTree = "<group>";
@@ -1591,6 +1599,7 @@
 				4BCA3BFA139458A30077D6ED /* TourLensePhotoView.xib in Resources */,
 				4BCA3BFF139542D70077D6ED /* TourLenseVideoView.xib in Resources */,
 				4BCA3C07139561ED0077D6ED /* TourLenseSlideShowView.xib in Resources */,
+				4B5F184A139C52B200B76E28 /* TourWelcomeBackViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1781,6 +1790,7 @@
 				4B6CFFDB1396D1F1007EADF1 /* KGOUserSetting.m in Sources */,
 				4B6CFFDC1396D1F1007EADF1 /* KGOUserSettingsManager.m in Sources */,
 				4B6CFFDF1396D24B007EADF1 /* KGOLabel.m in Sources */,
+				4B5F1849139C52B200B76E28 /* TourWelcomeBackViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -4,6 +4,9 @@
 #import "CoreDataManager.h"
 #import "JSON.h"
 
+#define CURRENT_TOUR_STOP_KEY @"currentTourStop"
+#define INITIAL_TOUR_STOP_KEY @"initialTourStop"
+
 @interface TourDataManager (Private)
 - (NSInteger)countStops;
 - (TourStop *)stopForIndex:(NSInteger)index;
@@ -101,6 +104,38 @@
         NSDictionary *tourStopDetailsDict = [jsonParser objectWithData:stopDetailsJsonBytes];
         [tourStop updateStopDetailsWithDictionary:tourStopDetailsDict];
         [[CoreDataManager sharedManager] saveData];
+    }
+}
+
+- (void)saveInitialStop:(TourStop *)tourStop {
+    [[NSUserDefaults standardUserDefaults] setValue:tourStop.id forKey:INITIAL_TOUR_STOP_KEY];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)saveCurrentStop:(TourStop *)tourStop {
+    [[NSUserDefaults standardUserDefaults] setValue:tourStop.id forKey:CURRENT_TOUR_STOP_KEY];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (TourStop *)getStopByID:(NSString *)id {
+    return [[CoreDataManager sharedManager] getObjectForEntity:TourStopEntityName attribute:@"id" value:id];
+}
+
+- (TourStop *)getCurrentStop {
+    NSString *currentStopID = [[NSUserDefaults standardUserDefaults] objectForKey:CURRENT_TOUR_STOP_KEY];
+    if (currentStopID) {
+        return [self getStopByID:currentStopID];
+    } else {
+        return nil;
+    }
+}
+
+- (TourStop *)getInitialStop {
+    NSString *initialStopID = [[NSUserDefaults standardUserDefaults] objectForKey:INITIAL_TOUR_STOP_KEY];
+    if (initialStopID) {
+        return [self getStopByID:initialStopID];
+    } else {
+        return nil;
     }
 }
 

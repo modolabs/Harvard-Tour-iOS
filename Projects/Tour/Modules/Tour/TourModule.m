@@ -1,5 +1,6 @@
 #import "TourModule.h"
 #import "TourHomeViewController.h"
+#import "TourWelcomeBackViewController.h"
 #import "TourDataManager.h"
 
 @implementation TourModule
@@ -24,9 +25,13 @@
     [[TourDataManager sharedManager] loadStopSummarys];
     
     if([pageName isEqualToString:LocalPathPageNameHome]) {
-        TourHomeViewController *tourHomeVC = [[[TourHomeViewController alloc] initWithNibName:@"TourHomeViewController" bundle:nil] autorelease];
-        vc = [[UINavigationController alloc] initWithRootViewController:tourHomeVC];
-        [(UINavigationController *)vc setNavigationBarHidden:YES];
+        UIViewController *rootVC;
+        if([[TourDataManager sharedManager] getCurrentStop] == nil) {
+            rootVC = [[[TourHomeViewController alloc] initWithNibName:@"TourHomeViewController" bundle:nil] autorelease];
+        } else {
+            rootVC = [[[TourWelcomeBackViewController alloc] initWithNibName:@"TourWelcomeBackViewController" bundle:nil] autorelease];
+        }
+        vc = [[UINavigationController alloc] initWithRootViewController:rootVC];
     }
     return vc;
 }
