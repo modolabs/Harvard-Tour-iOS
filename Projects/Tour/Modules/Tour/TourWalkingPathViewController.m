@@ -22,6 +22,7 @@
 @synthesize nextBarItem;
 @synthesize initialStop;
 @synthesize currentStop;
+@synthesize actionSheetStop;
 @synthesize tourStopMode;
 
 @synthesize tourMapController;
@@ -41,6 +42,7 @@
     [self deallocViews];
     self.currentStop = nil;
     self.initialStop = nil;
+    self.actionSheetStop = nil;
     self.tourMapController = nil;
     self.tourStopDetailsController = nil;
     self.contentView = nil;
@@ -156,15 +158,40 @@
     }];
 }
 
-- (void)stopWasSelected:(TourStop *)stop {
-    self.tourStopMode = TourStopModeApproach;
-    self.currentStop = stop;
-    [self.currentContent removeFromSuperview];
-    [self loadMapControllerForCurrentStop];
-    self.currentContent = self.tourMapController.view;
-    self.currentContent.frame = [self frameForContent];
-    [self.contentView addSubview:self.currentContent];
-    [self refreshUI];
+- (void)tourOverview:(TourOverviewController *)tourOverview stopWasSelected:(TourStop *)stop {
+    if([stop isEqual:self.currentStop]) {
+        [self dismissModalViewControllerAnimated:YES];
+        return;
+    }
+    NSArray *tourStops = [[TourDataManager sharedManager] getTourStopsForInitialStop:self.initialStop];
+    NSInteger currentIndex = [tourStops indexOfObject:self.currentStop];
+    NSInteger selectedIndex = [tourStops indexOfObject:stop];
+    
+    NSString *title;
+    if (currentIndex < selectedIndex) {
+        title = [NSString stringWithFormat:@"Are you sure you want to jump ahead %i stops", selectedIndex-currentIndex];
+    } else {
+        title = [NSString stringWithFormat:@"Are you sure you want to go back %i stops", currentIndex-selectedIndex];
+    }
+    
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:@"NO" destructiveButtonTitle:nil otherButtonTitles:@"YES", nil];
+    self.actionSheetStop = stop;
+    [actionSheet showInView:tourOverview.view];
+    
+}
+
+#pragma - mark UIActionSheet delegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != actionSheet.cancelButtonIndex) {
+        self.tourStopMode = TourStopModeApproach;
+        self.currentStop = self.actionSheetStop;
+        [self.currentContent removeFromSuperview];
+        [self loadMapControllerForCurrentStop];
+        self.currentContent = self.tourMapController.view;
+        self.currentContent.frame = [self frameForContent];
+        [self.contentView addSubview:self.currentContent];
+        [self refreshUI];
+    }
     [self dismissModalViewControllerAnimated:YES];
 }
 

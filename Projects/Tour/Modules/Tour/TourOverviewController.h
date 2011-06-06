@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 @class TourStop;
 @class TourMapController;
+@class TourOverviewController;
 
 typedef enum  {
     TourOverviewModeStart,
@@ -8,7 +9,7 @@ typedef enum  {
 } TourOverviewMode;
 
 @protocol TourOverviewDelegate
-- (void)stopWasSelected:(TourStop *)stop;
+- (void)tourOverview:(TourOverviewController *)tourOverview stopWasSelected:(TourStop *)stop;
 @end
 
 @interface TourOverviewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {

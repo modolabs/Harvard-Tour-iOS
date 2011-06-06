@@ -254,8 +254,9 @@
 }
 
 - (void)continueTourAtStop:(TourStop *)stop {
-    [self.delegate stopWasSelected:stop];
+    [self.delegate tourOverview:self stopWasSelected:stop];
 }
+
 - (void)continueTour {
     [self continueTourAtStop:self.tourMapController.selectedStop];
 }
