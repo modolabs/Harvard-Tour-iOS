@@ -71,6 +71,8 @@
 		A6C19893134B95B3009A163B /* Video.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = A6C19892134B95B3009A163B /* Video.xcdatamodel */; };
 		A6CDC9E0139D88560068D12A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6CDC9DF139D88560068D12A /* MobileCoreServices.framework */; };
 		A6CDC9E2139D8B3A0068D12A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6CDC9E1139D8B3A0068D12A /* AssetsLibrary.framework */; };
+		A6CDCA1E139EB8260068D12A /* TourSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CDCA1C139EB8240068D12A /* TourSettingsViewController.m */; };
+		A6CDCA1F139EB8260068D12A /* TourSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6CDCA1D139EB8250068D12A /* TourSettingsViewController.xib */; };
 		A6F2F81B134BAC75009F597D /* VideoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F2F819134BAC75009F597D /* VideoDetailViewController.m */; };
 		A6F2F83D134BAEDD009F597D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F2F83C134BAEDD009F597D /* MediaPlayer.framework */; };
 		A6F2FA21134BE23F009F597D /* VideoWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F2FA20134BE23F009F597D /* VideoWebViewController.m */; };
@@ -402,6 +404,9 @@
 		A6C19892134B95B3009A163B /* Video.xcdatamodel */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.xcdatamodel; path = Video.xcdatamodel; sourceTree = "<group>"; };
 		A6CDC9DF139D88560068D12A /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		A6CDC9E1139D8B3A0068D12A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		A6CDCA1B139EB8240068D12A /* TourSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourSettingsViewController.h; sourceTree = "<group>"; };
+		A6CDCA1C139EB8240068D12A /* TourSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourSettingsViewController.m; sourceTree = "<group>"; };
+		A6CDCA1D139EB8250068D12A /* TourSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TourSettingsViewController.xib; sourceTree = "<group>"; };
 		A6F2F818134BAC75009F597D /* VideoDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoDetailViewController.h; path = ../../Modules/Video/VideoDetailViewController.h; sourceTree = SOURCE_ROOT; };
 		A6F2F819134BAC75009F597D /* VideoDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoDetailViewController.m; path = ../../Modules/Video/VideoDetailViewController.m; sourceTree = SOURCE_ROOT; };
 		A6F2F83C134BAEDD009F597D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -888,6 +893,9 @@
 				4B5F1846139C52B100B76E28 /* TourWelcomeBackViewController.h */,
 				4B5F1847139C52B100B76E28 /* TourWelcomeBackViewController.m */,
 				4B5F1848139C52B100B76E28 /* TourWelcomeBackViewController.xib */,
+				A6CDCA1B139EB8240068D12A /* TourSettingsViewController.h */,
+				A6CDCA1C139EB8240068D12A /* TourSettingsViewController.m */,
+				A6CDCA1D139EB8250068D12A /* TourSettingsViewController.xib */,
 			);
 			path = Tour;
 			sourceTree = "<group>";
@@ -1608,6 +1616,7 @@
 				4BCA3BFF139542D70077D6ED /* TourLenseVideoView.xib in Resources */,
 				4BCA3C07139561ED0077D6ED /* TourLenseSlideShowView.xib in Resources */,
 				4B5F184A139C52B200B76E28 /* TourWelcomeBackViewController.xib in Resources */,
+				A6CDCA1F139EB8260068D12A /* TourSettingsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1799,6 +1808,7 @@
 				4B6CFFDC1396D1F1007EADF1 /* KGOUserSettingsManager.m in Sources */,
 				4B6CFFDF1396D24B007EADF1 /* KGOLabel.m in Sources */,
 				4B5F1849139C52B200B76E28 /* TourWelcomeBackViewController.m in Sources */,
+				A6CDCA1E139EB8260068D12A /* TourSettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

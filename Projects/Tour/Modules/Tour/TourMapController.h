@@ -36,5 +36,6 @@ typedef enum {
 @property (nonatomic, retain) MKAnnotationView *selectedAnnotationView;
 
 - (IBAction)photoTapped:(id)sender;
+- (void)syncMapType;
 
 @end

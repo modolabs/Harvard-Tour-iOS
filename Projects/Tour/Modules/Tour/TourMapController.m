@@ -5,10 +5,12 @@
 #import "UIKit+KGOAdditions.h"
 
 @interface TourMapController (Private) 
+
 - (void)showSelectedStop;
 - (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops;
 - (MKCoordinateRegion)upcomingStopRegion;
 - (void)deallocViews;
+
 @end
 
 @implementation TourMapController
@@ -54,12 +56,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+        
     if(!showMapTip) {
         self.mapTipLabel.hidden = YES;
     }
     [self showSelectedStop];
     NSArray *tourStops = [[TourDataManager sharedManager] getAllTourStops];
-    MKCoordinateRegion initialRegion;
+    MKCoordinateRegion initialRegion = { { 0.0f , 0.0f }, {90, 90} };
     if(self.mapInitialFocusMode == MapInitialFocusModeAllStops) {
         initialRegion = [self stopsRegion:tourStops];
     } else if(self.mapInitialFocusMode == MapInitialFocusModeUpcomingStop) {
@@ -78,6 +81,11 @@
     self.lenseIconsContainer = nil;
     self.mapTipLabel = nil;
     self.mapView = nil;
+}
+
+- (void)syncMapType {
+    self.mapView.mapType = 
+    [[NSUserDefaults standardUserDefaults] integerForKey:@"mapType"];
 }
 
 - (void)viewDidUnload

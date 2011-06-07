@@ -7,6 +7,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "TourModule.h"
+#import "TourSettingsViewController.h"
 
 @interface TourWalkingPathViewController (Private)
 - (void)deallocViews;
@@ -85,6 +86,10 @@
     [self.contentView addSubview:self.tourMapController.view];
     self.currentContent = self.tourMapController.view;
     // Do any additional setup after loading the view from its nib.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self.tourMapController syncMapType];
 }
 
 - (void)deallocViews {
@@ -267,7 +272,13 @@
 }
 
 - (void)settingsButtonTapped:(id)sender {
-    
+    TourSettingsViewController *settingsController = 
+    [[TourSettingsViewController alloc] 
+     initWithNibName:@"TourSettingsViewController" 
+     bundle:[NSBundle mainBundle]];
+    [self.navigationController 
+     pushViewController:settingsController animated:YES];
+    [settingsController release];
 }
 
 - (void)setInitialStop:(TourStop *)stop {
