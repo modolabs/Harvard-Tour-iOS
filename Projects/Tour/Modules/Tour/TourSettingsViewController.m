@@ -19,6 +19,7 @@ typedef enum {
 @interface TourSettingsViewController (Private)
 
 - (IBAction)segmentedControlChanged:(id)sender;
+- (void)doneTapped:(id)sender;
 
 @end
 
@@ -37,10 +38,12 @@ typedef enum {
             break;
         default:
             break;
-    }
-    
-    [[NSUserDefaults standardUserDefaults] 
-     setInteger:mapType forKey:@"mapType"];
+    }    
+    [[NSUserDefaults standardUserDefaults] setInteger:mapType forKey:@"mapType"];
+}
+
+- (void)doneTapped:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 @end
@@ -55,6 +58,7 @@ typedef enum {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     }
     return self;
 }
@@ -79,6 +83,10 @@ typedef enum {
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.navigationItem.leftBarButtonItem = 
+    [[[UIBarButtonItem alloc] 
+      initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+      target:self action:@selector(doneTapped:)] autorelease];
     
     // Sync the segmented control to the map type.
     NSInteger mapType = 

@@ -276,9 +276,13 @@
     [[TourSettingsViewController alloc] 
      initWithNibName:@"TourSettingsViewController" 
      bundle:[NSBundle mainBundle]];
-    [self.navigationController 
-     pushViewController:settingsController animated:YES];
+    UINavigationController *modalNavController = 
+    [[UINavigationController alloc] 
+     initWithRootViewController:settingsController];
     [settingsController release];
+    [self.navigationController 
+     presentModalViewController:modalNavController animated:YES];
+    [modalNavController release];
 }
 
 - (void)setInitialStop:(TourStop *)stop {
