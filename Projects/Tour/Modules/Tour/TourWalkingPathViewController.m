@@ -5,6 +5,8 @@
 #import "TourDataManager.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "KGOAppDelegate+ModuleAdditions.h"
+#import "TourModule.h"
 
 @interface TourWalkingPathViewController (Private)
 - (void)deallocViews;
@@ -15,6 +17,8 @@
 - (CGRect)frameForContent;
 - (CGRect)frameForPreviousContent;
 - (CGRect)frameForNextContent;
+- (void)settingsButtonTapped:(id)sender;
+
 @end
 
 @implementation TourWalkingPathViewController
@@ -64,9 +68,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+        
     // this gets rid of the back button
     self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] 
                                               initWithCustomView:[[[UIView alloc] initWithFrame:CGRectZero] autorelease]] autorelease];
+    
+    self.navigationItem.rightBarButtonItem = 
+    [[[UIBarButtonItem alloc] 
+      initWithImage:[UIImage imageNamed:@"common/button-icon-settings"] 
+      style:UIBarButtonItemStyleBordered 
+      target:self action:@selector(settingsButtonTapped:)] autorelease];
+    
     [self refreshUI];
     [self loadMapControllerForCurrentStop];
     self.tourMapController.view.frame = [self frameForContent];
@@ -96,7 +108,12 @@
 
 - (void)refreshUI {
     if (self.tourStopMode == TourStopModeApproach) {
-        self.title = [NSString stringWithFormat:@"Walk to %@", self.currentStop.title];
+        
+        TourModule *module = 
+        (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
+        [module setUpNavBarTitle:[NSString stringWithFormat:@"Walk to %@", 
+                                  self.currentStop.title]
+                         navItem:self.navigationItem];        
         self.nextBarItem.enabled = YES;
         self.previousBarItem.enabled = (self.currentStop != self.initialStop);
     }
@@ -247,6 +264,10 @@
     CGRect previousContentFrame = self.contentView.bounds;
     previousContentFrame.origin.x -= self.contentView.bounds.size.width;
     return previousContentFrame;
+}
+
+- (void)settingsButtonTapped:(id)sender {
+    
 }
 
 - (void)setInitialStop:(TourStop *)stop {

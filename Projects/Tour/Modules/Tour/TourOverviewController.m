@@ -5,6 +5,8 @@
 #import "TourDataManager.h"
 #import "TourWalkingPathViewController.h"
 #import "TourLense.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
+#import "TourModule.h"
 
 #define CellThumbnailViewTag 1
 #define CellLegendViewTag 2
@@ -85,13 +87,18 @@
     }
     self.tourMapController.selectedStop = self.selectedStop;
     [self showMapAnimated:NO];
-    
+
+    NSString *title = @"";
     if (self.mode == TourOverviewModeStart) {
-        self.title = @"Pick a Starting Point";
+        title = @"Pick a Starting Point";
     } else if(self.mode == TourOverviewModeContinue) {
-        self.title = @"Tour Overview";
+        title = @"Tour Overview";
         self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(continueTour)] autorelease];
     }
+    TourModule *module = 
+    (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
+    [module setUpNavBarTitle:title navItem:self.navigationItem];
+    
     UISegmentedControl *mapList = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"map", @"list", nil]];
     [mapList addTarget:self action:@selector(mapListToggled:) forControlEvents:UIControlEventValueChanged];
     mapList.segmentedControlStyle = UISegmentedControlStyleBar;

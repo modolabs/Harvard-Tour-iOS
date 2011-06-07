@@ -31,9 +31,38 @@
         } else {
             rootVC = [[[TourWelcomeBackViewController alloc] initWithNibName:@"TourWelcomeBackViewController" bundle:nil] autorelease];
         }
-        vc = [[UINavigationController alloc] initWithRootViewController:rootVC];
+        vc = [[UINavigationController alloc] initWithRootViewController:rootVC];        
     }
     return vc;
+}
+
+@end
+
+@implementation TourModule (UINavigationBarModification)
+
+- (void)setUpNavigationBar:(UINavigationBar *)navBar {
+    // Set the background tint color.
+    navBar.tintColor = [UIColor colorWithWhite:0.85f alpha:1.0];    
+}
+
+- (void)setUpNavBarTitle:(NSString *)title navItem:(UINavigationItem *)navItem {
+    // Set up the nav view with a title label so that the text color can be 
+    // changed to dark gray.
+    
+    // http://stackoverflow.com/questions/599405/iphone-navigation-bar-title-text-color/621185#621185
+    // this will appear as the title in the navigation bar
+    CGRect frame = CGRectMake(0, 0, 400, 44);
+    UILabel *label = [[[UILabel alloc] initWithFrame:frame] autorelease];
+    label.backgroundColor = [UIColor clearColor];
+    label.font = [UIFont boldSystemFontOfSize:20.0f];
+    //label.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
+    label.numberOfLines = 1;
+    label.adjustsFontSizeToFitWidth = YES;
+    label.textAlignment = UITextAlignmentCenter;
+    label.textColor = [UIColor colorWithWhite:0.25f alpha:1.0f];
+    navItem.titleView = label;
+    label.text = title;
+    [label sizeToFit];
 }
 
 @end

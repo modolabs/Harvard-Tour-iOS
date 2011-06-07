@@ -2,7 +2,8 @@
 #import "TourOverviewController.h"
 #import "TourDataManager.h"
 #import "UIKit+KGOAdditions.h"
-
+#import "KGOAppDelegate+ModuleAdditions.h"
+#import "TourModule.h"
 
 @implementation TourHomeViewController
 @synthesize scrollView;
@@ -35,10 +36,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
     [[TourDataManager sharedManager] markAllStopsUnvisited];
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.frame.size.height + 25);
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageWithPathName:@"modules/tour/welcome-background.jpg"]];
-    // Do any additional setup after loading the view from its nib.
+    
+    // TourModule's module tag in the config and app delegate is "home".    
+    TourModule *module = 
+    (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
+    [module setUpNavigationBar:self.navigationController.navigationBar];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
