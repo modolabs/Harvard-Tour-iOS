@@ -31,7 +31,9 @@
         } else {
             rootVC = [[[TourWelcomeBackViewController alloc] initWithNibName:@"TourWelcomeBackViewController" bundle:nil] autorelease];
         }
-        vc = [[UINavigationController alloc] initWithRootViewController:rootVC];        
+        vc = 
+        [[[UINavigationController alloc] initWithRootViewController:rootVC]
+         autorelease];
     }
     return vc;
 }

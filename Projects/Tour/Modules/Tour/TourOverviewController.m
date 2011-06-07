@@ -99,7 +99,10 @@
     (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
     [module setUpNavBarTitle:title navItem:self.navigationItem];
     
-    UISegmentedControl *mapList = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:@"map", @"list", nil]];
+    UISegmentedControl *mapList = 
+    [[[UISegmentedControl alloc] 
+      initWithItems:[NSArray arrayWithObjects:@"map", @"list", nil]]
+     autorelease];
     [mapList addTarget:self action:@selector(mapListToggled:) forControlEvents:UIControlEventValueChanged];
     mapList.segmentedControlStyle = UISegmentedControlStyleBar;
     mapList.selectedSegmentIndex = 0;
@@ -168,7 +171,11 @@
         UIBarButtonItem *startButton = [[[UIBarButtonItem alloc] initWithCustomView:startButtonView] autorelease];
         [startButtonView addTarget:self action:@selector(startTour) forControlEvents:UIControlEventTouchUpInside];
         
-        UIBarItem *leftMargin = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+        UIBarItem *leftMargin = 
+        [[[UIBarButtonItem alloc] 
+          initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace 
+          target:nil action:nil]
+         autorelease];
         
         toolbar.items = [NSArray arrayWithObjects:leftMargin, startButton, nil];
     } else if(self.mode == TourOverviewModeContinue) {
@@ -254,6 +261,7 @@
     walkingPathViewController.initialStop = stop;
     walkingPathViewController.currentStop = stop;
     [self.navigationController pushViewController:walkingPathViewController animated:YES]; 
+    [walkingPathViewController release];
 }
 
 - (void)startTour {

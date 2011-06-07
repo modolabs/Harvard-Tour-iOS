@@ -61,7 +61,9 @@
         else if([lenseItemType isEqualToString:@"video"]) {
             lenseItem = [TourLenseVideoItem itemWithDictionary:lenseItemDict];
         }
-        else if([lenseItemType isEqualToString:@"slideshow"]) {
+        else // if([lenseItemType isEqualToString:@"slideshow"]) 
+        {
+            // Must be a slideshow, if it's not anything else.
             lenseItem = [TourLenseSlideShowItem itemWithDictionary:lenseItemDict];
         }
         

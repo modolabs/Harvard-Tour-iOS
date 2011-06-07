@@ -131,7 +131,7 @@
 }
 
 - (IBAction)previous {
-    UIView *previousView;
+    UIView *previousView = nil;
     if (self.tourStopMode == TourStopModeLenses) {
         self.tourStopMode = TourStopModeApproach;
         [self loadMapControllerForCurrentStop];
@@ -157,7 +157,7 @@
 }
 
 - (IBAction)next {
-    UIView *nextView;
+    UIView *nextView = nil;
     if (self.tourStopMode == TourStopModeApproach) {
         self.tourStopMode = TourStopModeLenses;
         [self loadStopDetailsControllerForCurrentStop];
@@ -200,7 +200,7 @@
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:@"NO" destructiveButtonTitle:nil otherButtonTitles:@"YES", nil];
     self.actionSheetStop = stop;
     [actionSheet showInView:tourOverview.view];
-    
+    [actionSheet release];
 }
 
 - (IBAction)cameraButtonTapped:(id)sender {

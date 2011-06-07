@@ -34,6 +34,7 @@
         [request setIncludesSubentities:NO];
         NSError *error = nil;
         stopsCount = [context countForFetchRequest:request error:&error];
+        [request release];
     }
     return stopsCount;
 }
