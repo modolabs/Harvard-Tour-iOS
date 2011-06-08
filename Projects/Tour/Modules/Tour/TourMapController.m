@@ -27,6 +27,9 @@
 @synthesize stopCaptionLabel;
 @synthesize lenseIconsContainer;
 @synthesize mapTipLabel;
+@synthesize locationManager;
+@synthesize directionBeamAnnotationView;
+@synthesize beamAnnotation;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,6 +43,7 @@
 
 - (void)dealloc
 {
+    [locationManager release];
     [self deallocViews];
     [super dealloc];
 }
@@ -57,7 +61,23 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-        
+    
+    // Set up compass.
+    self.locationManager = [[[CLLocationManager alloc] init] autorelease];    
+    // check if the hardware has a compass
+    if ([CLLocationManager headingAvailable] == NO) {
+        // No compass is available. This application cannot function without a compass, 
+        // so a dialog will be displayed and no magnetic data will be measured.
+        self.locationManager = nil;
+    } else {
+        // heading service configuration
+        self.locationManager.headingFilter = kCLHeadingFilterNone;        
+        // setup delegate callbacks
+        self.locationManager.delegate = self;        
+        // start the compass
+        [self.locationManager startUpdatingHeading];
+    }    
+    
     if(!showMapTip) {
         self.mapTipLabel.hidden = YES;
     }
@@ -82,6 +102,7 @@
     self.lenseIconsContainer = nil;
     self.mapTipLabel = nil;
     self.mapView = nil;
+    self.directionBeamAnnotationView = nil;
 }
 
 - (void)syncMapType {
@@ -258,9 +279,31 @@
 
 #pragma mark - MKMapViewDelegate methods
 
-- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
+- (void)mapView:(MKMapView *)mapView 
+didUpdateUserLocation:(MKUserLocation *)userLocation {
+    // Update the region.
     receivedUserLocation = YES;
     [self.mapView setRegion:[self upcomingStopRegion] animated:NO];
+    
+    // Update the direction beam annotation.
+    if (!self.directionBeamAnnotationView) {
+        self.directionBeamAnnotationView = 
+        [self.mapView dequeueReusableAnnotationViewWithIdentifier:@"beam"];
+        if (!self.directionBeamAnnotationView) {
+            self.beamAnnotation = [[[BeamAnnotation alloc] init] autorelease];
+            [self.mapView addAnnotation:self.beamAnnotation];
+            
+            self.directionBeamAnnotationView = 
+            [[[MKAnnotationView alloc] initWithAnnotation:self.beamAnnotation 
+                                          reuseIdentifier:@"beam"] autorelease];
+            self.directionBeamAnnotationView.canShowCallout = NO;
+            self.directionBeamAnnotationView.image = 
+            [UIImage imageNamed:@"modules/tour/map-compass-beam"];
+        }
+    }
+    // Update position of the beam annotation.
+    self.beamAnnotation.latitude = userLocation.coordinate.latitude;
+    self.beamAnnotation.longitude = userLocation.coordinate.longitude;
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
@@ -288,7 +331,7 @@
         self.selectedAnnotationView = annotationView;
     }
     else if (annotation == mapView.userLocation) {
-        return nil; //default to blue dot
+        annotationView = nil; //default to blue dot
     }
     else if ([annotation isKindOfClass:[TourStop class]]) {
         TourStop *stop = (TourStop *)annotation;
@@ -300,8 +343,33 @@
             [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
         }
     }
+    else if ([annotation isKindOfClass:[BeamAnnotation class]]) {
+        annotationView = self.directionBeamAnnotationView;
+    }
 
     return annotationView;
+}
+
+#pragma mark CLLocationManagerDelegate
+- (void)locationManager:(CLLocationManager *)manager 
+       didUpdateHeading:(CLHeading *)heading {
+    // Update the labels with the raw x, y, and z values.
+    DLog(@"New heading: (%.1f, %.1f, %.1f)", heading.x, heading.y, heading.z);
+    
+    CLLocationDirection magneticDirection = heading.magneticHeading;
+    
+    // Compute the magnitude (size or strength) of the vector.
+    //      magnitude = sqrt(x^2 + y^2 + z^2)
+    CGFloat magnitude = 
+    sqrt(heading.x*heading.x + heading.y*heading.y /*+ heading.z*heading.z*/);
+    DLog(@"Magnitude: %.1f", magnitude);
+    
+    // Update rotation of the beam annotation.
+    CGAffineTransform transform = 
+    CGAffineTransformMake(heading.x/magnitude, -heading.y/magnitude, 
+                          heading.y/magnitude, heading.x/magnitude, 
+                          0, 0);
+    self.directionBeamAnnotationView.transform = transform;
 }
 
 @end

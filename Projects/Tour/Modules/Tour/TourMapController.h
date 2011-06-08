@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import "BeamAnnotation.h"
 
 typedef enum {
     MapInitialFocusModeAllStops,
@@ -9,7 +10,7 @@ typedef enum {
 @class TourStop;
 @class TourDataManager;
 
-@interface TourMapController : UIViewController {
+@interface TourMapController : UIViewController <CLLocationManagerDelegate> {
     NSInteger numberOfStops;
     TourStop *_selectedStop;
     UIImageView *_thumbnailView;
@@ -35,6 +36,9 @@ typedef enum {
 @property (nonatomic, retain) TourStop *upcomingStop;
 
 @property (nonatomic, retain) MKAnnotationView *selectedAnnotationView;
+@property (nonatomic, retain) CLLocationManager *locationManager;
+@property (nonatomic, retain) MKAnnotationView *directionBeamAnnotationView;
+@property (nonatomic, retain) BeamAnnotation *beamAnnotation;
 
 - (IBAction)photoTapped:(id)sender;
 - (void)syncMapType;

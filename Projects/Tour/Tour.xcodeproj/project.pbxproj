@@ -73,6 +73,7 @@
 		A6CDC9E2139D8B3A0068D12A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6CDC9E1139D8B3A0068D12A /* AssetsLibrary.framework */; };
 		A6CDCA1E139EB8260068D12A /* TourSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CDCA1C139EB8240068D12A /* TourSettingsViewController.m */; };
 		A6CDCA1F139EB8260068D12A /* TourSettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6CDCA1D139EB8250068D12A /* TourSettingsViewController.xib */; };
+		A6CDCA7613A01D110068D12A /* BeamAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CDCA7513A01D110068D12A /* BeamAnnotation.m */; };
 		A6F2F81B134BAC75009F597D /* VideoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F2F819134BAC75009F597D /* VideoDetailViewController.m */; };
 		A6F2F83D134BAEDD009F597D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F2F83C134BAEDD009F597D /* MediaPlayer.framework */; };
 		A6F2FA21134BE23F009F597D /* VideoWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F2FA20134BE23F009F597D /* VideoWebViewController.m */; };
@@ -407,6 +408,8 @@
 		A6CDCA1B139EB8240068D12A /* TourSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourSettingsViewController.h; sourceTree = "<group>"; };
 		A6CDCA1C139EB8240068D12A /* TourSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourSettingsViewController.m; sourceTree = "<group>"; };
 		A6CDCA1D139EB8250068D12A /* TourSettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TourSettingsViewController.xib; sourceTree = "<group>"; };
+		A6CDCA7413A01D110068D12A /* BeamAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BeamAnnotation.h; sourceTree = "<group>"; };
+		A6CDCA7513A01D110068D12A /* BeamAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BeamAnnotation.m; sourceTree = "<group>"; };
 		A6F2F818134BAC75009F597D /* VideoDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoDetailViewController.h; path = ../../Modules/Video/VideoDetailViewController.h; sourceTree = SOURCE_ROOT; };
 		A6F2F819134BAC75009F597D /* VideoDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoDetailViewController.m; path = ../../Modules/Video/VideoDetailViewController.m; sourceTree = SOURCE_ROOT; };
 		A6F2F83C134BAEDD009F597D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -857,6 +860,8 @@
 				4B48FFF0138C05BB004952AF /* TourSlide.m */,
 				4B48FFF1138C05BB004952AF /* TourStop.h */,
 				4B48FFF2138C05BB004952AF /* TourStop.m */,
+				A6CDCA7413A01D110068D12A /* BeamAnnotation.h */,
+				A6CDCA7513A01D110068D12A /* BeamAnnotation.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1809,6 +1814,7 @@
 				4B6CFFDF1396D24B007EADF1 /* KGOLabel.m in Sources */,
 				4B5F1849139C52B200B76E28 /* TourWelcomeBackViewController.m in Sources */,
 				A6CDCA1E139EB8260068D12A /* TourSettingsViewController.m in Sources */,
+				A6CDCA7613A01D110068D12A /* BeamAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
