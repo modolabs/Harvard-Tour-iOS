@@ -9,6 +9,7 @@
 - (void)showSelectedStop;
 - (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops;
 - (MKCoordinateRegion)upcomingStopRegion;
+- (MKCoordinateRegion)regionEnclosingUserLocationAndStop:(TourStop *)stop;
 - (void)deallocViews;
 
 @end
@@ -167,8 +168,55 @@
 }
 
 - (MKCoordinateRegion)upcomingStopRegion {
-    TourStop *previousStop = [[TourDataManager sharedManager] previousStopForTourStop:self.upcomingStop];
-    return [self stopsRegion:[NSArray arrayWithObjects:self.upcomingStop, previousStop, nil]];
+    // Show the user location and the upcoming stop if possible.
+    // If not, show the previous stop and the upcoming stop.
+    
+    // mapView.userLocation.updating doesn't seem to be reliable. It seems to 
+    // be YES all the time.
+    if (receivedUserLocation) {
+        return [self regionEnclosingUserLocationAndStop:self.upcomingStop];        
+    }
+    else {
+        TourStop *previousStop = [[TourDataManager sharedManager] 
+                                  previousStopForTourStop:self.upcomingStop];
+        return [self stopsRegion:[NSArray arrayWithObjects:self.upcomingStop, 
+                                  previousStop, nil]];
+    }
+}
+
+- (MKCoordinateRegion)regionEnclosingUserLocationAndStop:(TourStop *)stop {
+    CLLocationDegrees minLatitude = [stop.latitude floatValue];
+    CLLocationDegrees maxLatitude = [stop.latitude floatValue];
+    CLLocationDegrees minLongitude = [stop.longitude floatValue];
+    CLLocationDegrees maxLongitude = [stop.longitude floatValue];
+    
+    CLLocationDegrees latitude = self.mapView.userLocation.coordinate.latitude;
+    CLLocationDegrees longitude = self.mapView.userLocation.coordinate.longitude;
+    
+    if (latitude > maxLatitude) {
+        maxLatitude = latitude;
+    }
+    
+    if (latitude < minLatitude) {
+        minLatitude = latitude;
+    }
+    
+    if (longitude > maxLongitude) {
+        maxLongitude = longitude;
+    }
+    
+    if (longitude < minLongitude) {
+        minLongitude = longitude;
+    }
+
+    CGFloat marginFactor = 1.1;
+    return 
+    MKCoordinateRegionMake(CLLocationCoordinate2DMake(0.5*(minLatitude+maxLatitude), 
+                                                      0.5*(minLongitude+maxLongitude)),
+                           MKCoordinateSpanMake(marginFactor * 
+                                                (maxLatitude - minLatitude), 
+                                                marginFactor * 
+                                                (maxLongitude - minLongitude)));    
 }
 
 - (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops {
@@ -210,6 +258,11 @@
 
 #pragma mark - MKMapViewDelegate methods
 
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
+    receivedUserLocation = YES;
+    [self.mapView setRegion:[self upcomingStopRegion] animated:NO];
+}
+
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     // old selected annotation
     if([self.selectedStop.visited boolValue]) {
@@ -233,14 +286,21 @@
     if (annotation == _selectedStop) {
         annotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin-current.png"];
         self.selectedAnnotationView = annotationView;
-    } else {
+    }
+    else if (annotation == mapView.userLocation) {
+        return nil; //default to blue dot
+    }
+    else if ([annotation isKindOfClass:[TourStop class]]) {
         TourStop *stop = (TourStop *)annotation;
         if([stop.visited boolValue]) {
-            annotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin-past.png"];
+            annotationView.image = 
+            [UIImage imageWithPathName:@"modules/tour/map-pin-past.png"];
         } else {
-            annotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
+            annotationView.image = 
+            [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
         }
     }
+
     return annotationView;
 }
 
