@@ -109,6 +109,18 @@
     }
 }
 
+- (NSArray *) retrieveAndAssignWelcomeText {
+    
+    NSString *pagesJsonPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"data/pages.json"];
+    NSData *pagesJsonData = [NSData dataWithContentsOfFile:pagesJsonPath];
+    SBJsonParser *jsonParser = [[[SBJsonParser alloc] init] autorelease];        
+    NSDictionary *pagesDict = [jsonParser objectWithData:pagesJsonData];
+    
+    NSDictionary * pagesDetailsDict = [pagesDict objectForKey:@"pages"];
+    NSArray * welcomeArray = [pagesDetailsDict objectForKey:@"welcome"];
+    return welcomeArray;
+}
+
 - (void)saveInitialStop:(TourStop *)tourStop {
     [[NSUserDefaults standardUserDefaults] setValue:tourStop.id forKey:INITIAL_TOUR_STOP_KEY];
     [[NSUserDefaults standardUserDefaults] synchronize];

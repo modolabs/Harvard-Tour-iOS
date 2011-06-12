@@ -45,8 +45,14 @@ apiFullPath = 'http://' + host + '/' + pathExtension + apiPath
 stopsJson = urllib2.urlopen(apiFullPath + '/tour/tour').read()
 tourResponse = json.loads(stopsJson)['response']
 stops = tourResponse['stops']
+tourPages = tourResponse['details']
+
 jsonOutFile = open('Resources/data/stops.json', 'w')
 jsonOutFile.write(json.dumps(stops))
+jsonOutFile.close
+
+jsonOutFile = open('Resources/data/pages.json', 'w')
+jsonOutFile.write(json.dumps(tourPages))
 jsonOutFile.close
 
 downloadMedia.basePath = 'http://' + host
@@ -66,9 +72,6 @@ for stop in stops:
     downloadMedia.retrieveAndSave(stopDetails['thumbnail'])
     for lenseId in stop['lenses']:
         lense = stop['lenses'][lenseId]
-        OF = open('Resources/data/sample.json', 'w')
-        OF.write(json.dumps(stop['lenses']))
-        OF.close
         lenseContents = lense['contents']
         for lenseItem in lenseContents:
             if lenseItem['type'] == u'photo' or lenseItem['type'] == u'video':

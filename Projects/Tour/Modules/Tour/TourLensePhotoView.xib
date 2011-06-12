@@ -60,7 +60,6 @@
 						<string key="NSFrame">{{0, 211}, {320, 21}}</string>
 						<reference key="NSSuperview" ref="1018855860"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">7</int>
@@ -199,12 +198,18 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>lenseContentView</string>
 							<string>lenseItemPhotoView</string>
+							<string>lenseItemSlideShowView</string>
+							<string>lenseItemVideoView</string>
+							<string>scrollView</string>
 							<string>tabControl</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>UIScrollView</string>
 							<string>UIView</string>
+							<string>UIView</string>
+							<string>UIView</string>
+							<string>UIView</string>
+							<string>UIScrollView</string>
 							<string>KGOTabbedControl</string>
 						</object>
 					</object>
@@ -214,17 +219,32 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>lenseContentView</string>
 							<string>lenseItemPhotoView</string>
+							<string>lenseItemSlideShowView</string>
+							<string>lenseItemVideoView</string>
+							<string>scrollView</string>
 							<string>tabControl</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBToOneOutletInfo">
 								<string key="name">lenseContentView</string>
-								<string key="candidateClassName">UIScrollView</string>
+								<string key="candidateClassName">UIView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">lenseItemPhotoView</string>
 								<string key="candidateClassName">UIView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">lenseItemSlideShowView</string>
+								<string key="candidateClassName">UIView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">lenseItemVideoView</string>
+								<string key="candidateClassName">UIView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">scrollView</string>
+								<string key="candidateClassName">UIScrollView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">tabControl</string>

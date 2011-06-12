@@ -45,6 +45,9 @@
     TourModule *module = 
     (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
     [module setUpNavigationBar:self.navigationController.navigationBar];
+    
+    [self assignTexts];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -71,5 +74,96 @@
     _tourOverviewController.selectedStop = [[TourDataManager sharedManager] getFirstStop];
     self.navigationController.navigationBarHidden = NO;
     [self.navigationController pushViewController:_tourOverviewController animated:YES];
+}
+
+- (void) assignTexts {
+    
+    if ((nil == welcomeText) || 
+        (nil == topicText1) || (nil == topicTextDetails1) ||
+        (nil == topicLabel2) || (nil == topicLabelDetails2) ||
+        (nil == topicLabel3) || (nil == topicLabelDetails3) ||
+        (nil == topicLabel4) || (nil == topicLabelDetails4)) {
+        NSArray * welcomeTextArray =  [[TourDataManager sharedManager] retrieveAndAssignWelcomeText];
+        
+        welcomeText = [self stripHTMLTags:[welcomeTextArray objectAtIndex:0]]; // first string
+        
+        if ([welcomeTextArray count] > 1) {
+            
+            if ([[welcomeTextArray objectAtIndex:1] isKindOfClass:[NSArray class]]) {
+                NSArray * topics = [welcomeTextArray objectAtIndex:1];
+                
+                for (int count=0; count < [topics count]; count++) {
+                    NSDictionary * topicDict = [topics objectAtIndex:count];
+                    
+                    if (count == 0){
+                        topicText1 = [self stripHTMLTags:[topicDict objectForKey:@"name"]];
+                        topicTextDetails1 = [self stripHTMLTags:[topicDict objectForKey:@"description"]];
+                    }
+                    
+                    else if (count == 1){
+                        topicText2 = [self stripHTMLTags:[topicDict objectForKey:@"name"]];
+                        topicTextDetails2 = [self stripHTMLTags:[topicDict objectForKey:@"description"]];
+                    }
+                    
+                    else if (count == 2){
+                        topicText3 = [self stripHTMLTags:[topicDict objectForKey:@"name"]];
+                        topicTextDetails3 = [self stripHTMLTags:[topicDict objectForKey:@"description"]];
+                    }
+                    
+                    else if (count == 3){
+                        topicText4 = [self stripHTMLTags:[topicDict objectForKey:@"name"]];
+                        topicTextDetails4 = [self stripHTMLTags:[topicDict objectForKey:@"description"]];
+                    }
+                }
+                
+            }
+        }
+            
+        if ([welcomeTextArray count] > 2) {
+            
+            if ([[welcomeTextArray objectAtIndex:2] isKindOfClass:[NSString class]])
+                welcomeDisclaimerText = [self stripHTMLTags:[welcomeTextArray objectAtIndex:2]];
+        }
+        
+    }
+    
+    welcomeTextLabel.text = welcomeText;
+    welcomeDisclaimerTextLabel.text = welcomeDisclaimerText;
+    
+    topicLabel1.text = topicText1;
+    topicLabel2.text = topicText2;
+    topicLabel3.text = topicText3;
+    topicLabel4.text = topicText4;
+    
+    topicLabelDetails1.text = topicTextDetails1;
+    topicLabelDetails2.text = topicTextDetails2;
+    topicLabelDetails3.text = topicTextDetails3;
+    topicLabelDetails4.text = topicTextDetails4;
+    
+}
+
+- (NSString *) stripHTMLTags:(NSString *)str
+{
+    NSMutableString *html = [NSMutableString stringWithCapacity:[str length]];
+    
+    NSScanner *scanner = [NSScanner scannerWithString:str];
+    NSString *tempText = nil;
+    
+    while (![scanner isAtEnd])
+    {
+        [scanner scanUpToString:@"<" intoString:&tempText];
+        
+        if (tempText != nil)
+            [html appendString:tempText];
+        
+        [scanner scanUpToString:@">" intoString:NULL];
+        
+        if (![scanner isAtEnd])
+            [scanner setScanLocation:[scanner scanLocation] + 1];
+        
+        tempText = nil;
+    }
+    
+    return html;
 }
 @end
