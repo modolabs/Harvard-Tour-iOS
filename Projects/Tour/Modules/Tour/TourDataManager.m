@@ -53,7 +53,8 @@
                               
         for(NSInteger i = 0; i < [stopDicts count]; i++) {
             NSDictionary *stopDict = [stopDicts objectAtIndex:i];
-            [TourStop stopWithDictionary:stopDict order:i];
+            NSDictionary *stopDetailsDict = [stopDict objectForKey:@"details"];
+            [TourStop stopWithDictionary:stopDetailsDict order:i];
         }
         [[CoreDataManager sharedManager] saveData];
     }
