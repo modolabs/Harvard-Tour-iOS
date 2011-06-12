@@ -42,9 +42,9 @@ else:
 
 
 apiFullPath = 'http://' + host + '/' + pathExtension + apiPath
-
-stopsJson = urllib2.urlopen(apiFullPath + '/tour/stops').read()
-stops = json.loads(stopsJson)['response']
+stopsJson = urllib2.urlopen(apiFullPath + '/tour/tour').read()
+tourResponse = json.loads(stopsJson)['response']
+stops = tourResponse['stops']
 jsonOutFile = open('Resources/data/stops.json', 'w')
 jsonOutFile.write(json.dumps(stops))
 jsonOutFile.close
@@ -52,19 +52,25 @@ jsonOutFile.close
 downloadMedia.basePath = 'http://' + host
 
 for stop in stops:
-    stopJson = urllib2.urlopen(apiFullPath + '/tour/stop?id=' + urllib2.quote(stop['id'])).read()
+    stopJson = urllib2.urlopen(apiFullPath + '/tour/stop?id=' + urllib2.quote(stop['details']['id'])).read()
     stop = json.loads(stopJson)['response']
-    if not os.path.exists('Resources/data/stops/' + stop['id']):
-        os.mkdir('Resources/data/stops/' + stop['id'])
+    stopDetails = stop['details']
+    if not os.path.exists('Resources/data/stops/' + stopDetails['id']):
+        os.mkdir('Resources/data/stops/' + stopDetails['id'])
     
-    jsonOutFile = open('Resources/data/stops/' + stop['id'] + '/content.json', 'w')
+    jsonOutFile = open('Resources/data/stops/' + stopDetails['id'] + '/content.json', 'w')
     jsonOutFile.write(json.dumps(stop))
     
     # retrieve media content (photos and video)
-    downloadMedia.retrieveAndSave(stop['photo'])
-    downloadMedia.retrieveAndSave(stop['thumbnail'])
-    for lense in stop['lenses'].values():
-        for lenseItem in lense:
+    downloadMedia.retrieveAndSave(stopDetails['photo'])
+    downloadMedia.retrieveAndSave(stopDetails['thumbnail'])
+    for lenseId in stop['lenses']:
+        lense = stop['lenses'][lenseId]
+        OF = open('Resources/data/sample.json', 'w')
+        OF.write(json.dumps(stop['lenses']))
+        OF.close
+        lenseContents = lense['contents']
+        for lenseItem in lenseContents:
             if lenseItem['type'] == u'photo' or lenseItem['type'] == u'video':
                 downloadMedia.retrieveAndSave(lenseItem['url'])
             elif lenseItem['type'] == u'slideshow':
