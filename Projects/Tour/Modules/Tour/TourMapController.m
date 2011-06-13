@@ -353,22 +353,10 @@ didUpdateUserLocation:(MKUserLocation *)userLocation {
 #pragma mark CLLocationManagerDelegate
 - (void)locationManager:(CLLocationManager *)manager 
        didUpdateHeading:(CLHeading *)heading {
-    // Update the labels with the raw x, y, and z values.
-    DLog(@"New heading: (%.1f, %.1f, %.1f)", heading.x, heading.y, heading.z);
-    
-    CLLocationDirection magneticDirection = heading.magneticHeading;
-    
-    // Compute the magnitude (size or strength) of the vector.
-    //      magnitude = sqrt(x^2 + y^2 + z^2)
-    CGFloat magnitude = 
-    sqrt(heading.x*heading.x + heading.y*heading.y /*+ heading.z*heading.z*/);
-    DLog(@"Magnitude: %.1f", magnitude);
     
     // Update rotation of the beam annotation.
     CGAffineTransform transform = 
-    CGAffineTransformMake(heading.x/magnitude, -heading.y/magnitude, 
-                          heading.y/magnitude, heading.x/magnitude, 
-                          0, 0);
+    CGAffineTransformMakeRotation(heading.trueHeading * M_PI / 180.0f);
     self.directionBeamAnnotationView.transform = transform;
 }
 
