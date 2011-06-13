@@ -10,6 +10,7 @@
 - (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops;
 - (MKCoordinateRegion)upcomingStopRegion;
 - (MKCoordinateRegion)regionEnclosingUserLocationAndStop:(TourStop *)stop;
++ (BOOL)userLocationIsValid:(MKUserLocation *)location;
 - (void)deallocViews;
 
 @end
@@ -192,8 +193,6 @@
     // Show the user location and the upcoming stop if possible.
     // If not, show the previous stop and the upcoming stop.
     
-    // mapView.userLocation.updating doesn't seem to be reliable. It seems to 
-    // be YES all the time.
     if (receivedUserLocation) {
         return [self regionEnclosingUserLocationAndStop:self.upcomingStop];        
     }
@@ -273,37 +272,52 @@
     
     CGFloat marginFactor = 1.1;
     return MKCoordinateRegionMake(
-        CLLocationCoordinate2DMake(0.5*(minLatitude+maxLatitude), 0.5*(minLongitude+maxLongitude)),
-        MKCoordinateSpanMake(marginFactor * (maxLatitude - minLatitude), marginFactor * (maxLongitude - minLongitude)));
+        CLLocationCoordinate2DMake(0.5*(minLatitude+maxLatitude), 
+                                   0.5*(minLongitude+maxLongitude)),
+        MKCoordinateSpanMake(marginFactor * (maxLatitude - minLatitude), 
+                             marginFactor * (maxLongitude - minLongitude)));
+}
+
++ (BOOL)userLocationIsValid:(MKUserLocation *)userLocation {
+    return 
+    userLocation.location &&
+    (userLocation.location.coordinate.latitude > -180.001f) && 
+    (userLocation.location.coordinate.longitude > -180.001f);
 }
 
 #pragma mark - MKMapViewDelegate methods
 
 - (void)mapView:(MKMapView *)mapView 
 didUpdateUserLocation:(MKUserLocation *)userLocation {
-    // Update the region.
-    receivedUserLocation = YES;
-    [self.mapView setRegion:[self upcomingStopRegion] animated:NO];
-    
-    // Update the direction beam annotation.
-    if (!self.directionBeamAnnotationView) {
-        self.directionBeamAnnotationView = 
-        [self.mapView dequeueReusableAnnotationViewWithIdentifier:@"beam"];
+    if ([[self class] userLocationIsValid:userLocation]) {
+        // Update the region.
+        receivedUserLocation = YES;
+        self.mapView.showsUserLocation = YES;
+        MKCoordinateRegion region = [self upcomingStopRegion];
+        
+        [self.mapView setRegion:region animated:NO];
+        
+        // Update the direction beam annotation.
         if (!self.directionBeamAnnotationView) {
-            self.beamAnnotation = [[[BeamAnnotation alloc] init] autorelease];
-            [self.mapView addAnnotation:self.beamAnnotation];
-            
             self.directionBeamAnnotationView = 
-            [[[MKAnnotationView alloc] initWithAnnotation:self.beamAnnotation 
-                                          reuseIdentifier:@"beam"] autorelease];
-            self.directionBeamAnnotationView.canShowCallout = NO;
-            self.directionBeamAnnotationView.image = 
-            [UIImage imageNamed:@"modules/tour/map-compass-beam"];
+            [self.mapView dequeueReusableAnnotationViewWithIdentifier:@"beam"];
+            if (!self.directionBeamAnnotationView) {
+                self.beamAnnotation = [[[BeamAnnotation alloc] init] autorelease];
+                [self.mapView addAnnotation:self.beamAnnotation];
+                
+                self.directionBeamAnnotationView = 
+                [[[MKAnnotationView alloc] 
+                  initWithAnnotation:self.beamAnnotation 
+                  reuseIdentifier:@"beam"] autorelease];
+                self.directionBeamAnnotationView.canShowCallout = NO;
+                self.directionBeamAnnotationView.image = 
+                [UIImage imageNamed:@"modules/tour/map-compass-beam"];
+            }
         }
+        // Update position of the beam annotation.
+        self.beamAnnotation.latitude = userLocation.coordinate.latitude;
+        self.beamAnnotation.longitude = userLocation.coordinate.longitude;
     }
-    // Update position of the beam annotation.
-    self.beamAnnotation.latitude = userLocation.coordinate.latitude;
-    self.beamAnnotation.longitude = userLocation.coordinate.longitude;
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
@@ -360,4 +374,5 @@ didUpdateUserLocation:(MKUserLocation *)userLocation {
     self.directionBeamAnnotationView.transform = transform;
 }
 
+                        
 @end
