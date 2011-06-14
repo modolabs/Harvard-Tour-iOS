@@ -11,7 +11,8 @@
 + (TourDataManager *)sharedManager;
 - (void)loadStopSummarys;
 - (void)populateTourStopDetails:(TourStop *)tourStop;
-- (NSArray *) retrieveAndAssignWelcomeText;
+- (NSArray *)retrieveWelcomeText;
+- (NSArray *)finishText;
 
 - (void)saveInitialStop:(TourStop *)tourStop;
 - (TourStop *)getInitialStop;
@@ -26,5 +27,7 @@
 - (TourStop *)lastTourStopForFirstTourStop:(TourStop *)startingTourStop;
 - (TourStop *)previousStopForTourStop:(TourStop *)stop;
 - (TourStop *)nextStopForTourStop:(TourStop *)stop;
+
++ (NSString *)stripHTMLTagsFromString:(NSString *)rawString;
 
 @end

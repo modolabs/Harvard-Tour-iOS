@@ -9,6 +9,8 @@ typedef enum {
 
 @class TourMapController;
 @class TourStopDetailsViewController;
+@class TourFinishViewController;
+
 @interface TourWalkingPathViewController : UIViewController 
 <TourOverviewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate,
 UINavigationControllerDelegate> {
@@ -27,6 +29,7 @@ UINavigationControllerDelegate> {
 
 @property (nonatomic, retain) TourMapController *tourMapController;
 @property (nonatomic, retain) TourStopDetailsViewController *tourStopDetailsController;
+@property (nonatomic, retain) TourFinishViewController *tourFinishController;
 
 - (IBAction)previous;
 - (IBAction)next;

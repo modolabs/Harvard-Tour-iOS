@@ -109,7 +109,7 @@
     }
 }
 
-- (NSArray *) retrieveAndAssignWelcomeText {
+- (NSArray *)retrieveWelcomeText {
     
     NSString *pagesJsonPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"data/pages.json"];
     NSData *pagesJsonData = [NSData dataWithContentsOfFile:pagesJsonPath];
@@ -119,6 +119,18 @@
     NSDictionary * pagesDetailsDict = [pagesDict objectForKey:@"pages"];
     NSArray * welcomeArray = [pagesDetailsDict objectForKey:@"welcome"];
     return welcomeArray;
+}
+
+- (NSArray *)finishText {    
+    NSString *pagesJsonPath = 
+    [[[NSBundle mainBundle] bundlePath] 
+     stringByAppendingPathComponent:@"data/pages.json"];
+    NSData *pagesJsonData = [NSData dataWithContentsOfFile:pagesJsonPath];
+    SBJsonParser *jsonParser = [[[SBJsonParser alloc] init] autorelease];        
+    NSDictionary *pagesDict = [jsonParser objectWithData:pagesJsonData];
+    
+    NSDictionary * pagesDetailsDict = [pagesDict objectForKey:@"pages"];
+    return [pagesDetailsDict objectForKey:@"finish"];
 }
 
 - (void)saveInitialStop:(TourStop *)tourStop {
@@ -177,6 +189,35 @@
     } else {
         return [self stopForIndex:index+1];
     }   
+}
+
++ (NSString *)stripHTMLTagsFromString:(NSString *)str {  
+    NSMutableString *stripped = 
+    [NSMutableString stringWithCapacity:[str length]];
+    
+    NSScanner *scanner = [NSScanner scannerWithString:str];
+    NSString *tempText = nil;
+    
+    while (![scanner isAtEnd])
+    {
+        [scanner scanUpToString:@"<" intoString:&tempText];
+        
+        if (tempText != nil)
+            [stripped appendString:tempText];
+        
+        NSString *tag = nil;
+        [scanner scanUpToString:@">" intoString:&tag];
+        if ([tag isEqualToString:@"</p"]) {
+            [stripped appendString:@"\n\n"];
+        }
+        
+        if (![scanner isAtEnd])
+            [scanner setScanLocation:[scanner scanLocation] + 1];
+        
+        tempText = nil;
+    }
+    
+    return stripped;
 }
 
 @end

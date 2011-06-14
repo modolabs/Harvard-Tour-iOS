@@ -39,6 +39,5 @@
 - (IBAction) startTour:(id)sender;
 
 - (void) assignTexts;
-- (NSString *) stripHTMLTags:(NSString *)str;
 
 @end

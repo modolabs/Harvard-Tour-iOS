@@ -8,12 +8,14 @@
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "TourModule.h"
 #import "TourSettingsViewController.h"
+#import "TourFinishViewController.h"
 
 @interface TourWalkingPathViewController (Private)
 - (void)deallocViews;
 - (void)refreshUI;
 - (void)loadMapControllerForCurrentStop;
 - (void)loadStopDetailsControllerForCurrentStop;
+- (BOOL)isLastStop;
 
 - (CGRect)frameForContent;
 - (CGRect)frameForPreviousContent;
@@ -29,7 +31,7 @@
 @synthesize nextBarItem;
 @synthesize actionSheetStop;
 @synthesize tourStopMode;
-
+@synthesize tourFinishController;
 @synthesize tourMapController;
 @synthesize tourStopDetailsController;
 
@@ -52,6 +54,7 @@
     self.tourStopDetailsController = nil;
     self.contentView = nil;
     self.currentContent = nil;
+    self.tourFinishController = nil;
     
     [super dealloc];
 }
@@ -112,6 +115,8 @@
 }
 
 - (void)refreshUI {
+    self.nextBarItem.enabled = (self.tourFinishController == nil);
+    
     if (self.tourStopMode == TourStopModeApproach) {
         
         TourModule *module = 
@@ -119,19 +124,18 @@
         [module setUpNavBarTitle:[NSString stringWithFormat:@"Walk to %@", 
                                   self.currentStop.title]
                          navItem:self.navigationItem];        
-        self.nextBarItem.enabled = YES;
         self.previousBarItem.enabled = (self.currentStop != self.initialStop);
     }
     else if(self.tourStopMode == TourStopModeLenses) {
         self.title = self.currentStop.title;
         self.previousBarItem.enabled = YES;
-        TourStop *lastStop = [[TourDataManager sharedManager] lastTourStopForFirstTourStop:self.initialStop];
-        self.nextBarItem.enabled = (self.currentStop != lastStop);
     }
 }
 
 - (IBAction)previous {
     UIView *previousView = nil;
+    self.tourFinishController = nil;
+    
     if (self.tourStopMode == TourStopModeLenses) {
         self.tourStopMode = TourStopModeApproach;
         [self loadMapControllerForCurrentStop];
@@ -158,16 +162,29 @@
 
 - (IBAction)next {
     UIView *nextView = nil;
+    
     if (self.tourStopMode == TourStopModeApproach) {
         self.tourStopMode = TourStopModeLenses;
         [self loadStopDetailsControllerForCurrentStop];
         nextView = self.tourStopDetailsController.view;
     }
     else if(self.tourStopMode == TourStopModeLenses) {
-        self.tourStopMode = TourStopModeApproach;
-        self.currentStop = [[TourDataManager sharedManager] nextStopForTourStop:self.currentStop];
-        [self loadMapControllerForCurrentStop];
-        nextView = self.tourMapController.view;
+        if ([self isLastStop]) {
+            self.tourStopMode = TourStopModeLenses;
+            self.tourFinishController = 
+            [[[TourFinishViewController alloc] 
+              initWithNibName:@"TourFinishViewController" 
+              bundle:[NSBundle mainBundle]]
+             autorelease];
+            nextView = self.tourFinishController.view;
+        }
+        else {
+            self.tourStopMode = TourStopModeApproach;
+            self.currentStop = [[TourDataManager sharedManager] 
+                                nextStopForTourStop:self.currentStop];
+            [self loadMapControllerForCurrentStop];
+            nextView = self.tourMapController.view;
+        }
     }
     nextView.frame = [self frameForNextContent];
     [self.contentView addSubview:nextView];
@@ -254,6 +271,13 @@
     self.tourStopDetailsController = [[[TourStopDetailsViewController alloc] initWithNibName:@"TourStopDetailsViewController" bundle:nil] autorelease];
     self.tourStopDetailsController.tourStop = self.currentStop;
 }
+
+- (BOOL)isLastStop {
+    TourStop *lastStop = [[TourDataManager sharedManager] 
+                          lastTourStopForFirstTourStop:self.initialStop];
+    return (self.currentStop == lastStop);    
+}
+
 
 - (CGRect)frameForContent {
     return self.contentView.bounds;

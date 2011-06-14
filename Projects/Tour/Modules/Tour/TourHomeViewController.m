@@ -83,9 +83,10 @@
         (nil == topicLabel2) || (nil == topicLabelDetails2) ||
         (nil == topicLabel3) || (nil == topicLabelDetails3) ||
         (nil == topicLabel4) || (nil == topicLabelDetails4)) {
-        NSArray * welcomeTextArray =  [[TourDataManager sharedManager] retrieveAndAssignWelcomeText];
+        NSArray * welcomeTextArray =  [[TourDataManager sharedManager] retrieveWelcomeText];
         
-        welcomeText = [self stripHTMLTags:[welcomeTextArray objectAtIndex:0]]; // first string
+        welcomeText = [TourDataManager stripHTMLTagsFromString:
+                       [welcomeTextArray objectAtIndex:0]]; // first string
         
         if ([welcomeTextArray count] > 1) {
             
@@ -96,23 +97,40 @@
                     NSDictionary * topicDict = [topics objectAtIndex:count];
                     
                     if (count == 0){
-                        topicText1 = [self stripHTMLTags:[topicDict objectForKey:@"name"]];
-                        topicTextDetails1 = [self stripHTMLTags:[topicDict objectForKey:@"description"]];
+                        topicText1 = [TourDataManager stripHTMLTagsFromString:
+                                      [topicDict objectForKey:@"name"]];
+                        topicTextDetails1 = 
+                        [TourDataManager stripHTMLTagsFromString:
+                         [topicDict objectForKey:@"description"]];
                     }
                     
                     else if (count == 1){
-                        topicText2 = [self stripHTMLTags:[topicDict objectForKey:@"name"]];
-                        topicTextDetails2 = [self stripHTMLTags:[topicDict objectForKey:@"description"]];
+                        topicText2 = 
+                        [TourDataManager stripHTMLTagsFromString:
+                         [topicDict objectForKey:@"name"]];
+                        topicTextDetails2 = 
+                        [TourDataManager stripHTMLTagsFromString:
+                         [topicDict objectForKey:@"description"]];
                     }
                     
                     else if (count == 2){
-                        topicText3 = [self stripHTMLTags:[topicDict objectForKey:@"name"]];
-                        topicTextDetails3 = [self stripHTMLTags:[topicDict objectForKey:@"description"]];
+                        topicText3 = 
+                        [TourDataManager stripHTMLTagsFromString:
+                         [topicDict objectForKey:@"name"]];
+                        topicTextDetails3 = 
+                        [TourDataManager stripHTMLTagsFromString:
+                         [topicDict objectForKey:@"description"]];
                     }
                     
                     else if (count == 3){
-                        topicText4 = [self stripHTMLTags:[topicDict objectForKey:@"name"]];
-                        topicTextDetails4 = [self stripHTMLTags:[topicDict objectForKey:@"description"]];
+                        topicText4 = 
+                        [TourDataManager 
+                         stripHTMLTagsFromString:
+                         [topicDict objectForKey:@"name"]];
+                        topicTextDetails4 = 
+                        [TourDataManager 
+                         stripHTMLTagsFromString:
+                         [topicDict objectForKey:@"description"]];
                     }
                 }
                 
@@ -122,7 +140,9 @@
         if ([welcomeTextArray count] > 2) {
             
             if ([[welcomeTextArray objectAtIndex:2] isKindOfClass:[NSString class]])
-                welcomeDisclaimerText = [self stripHTMLTags:[welcomeTextArray objectAtIndex:2]];
+                welcomeDisclaimerText = 
+                [TourDataManager stripHTMLTagsFromString:
+                 [welcomeTextArray objectAtIndex:2]];
         }
         
     }
@@ -142,28 +162,5 @@
     
 }
 
-- (NSString *) stripHTMLTags:(NSString *)str
-{
-    NSMutableString *html = [NSMutableString stringWithCapacity:[str length]];
-    
-    NSScanner *scanner = [NSScanner scannerWithString:str];
-    NSString *tempText = nil;
-    
-    while (![scanner isAtEnd])
-    {
-        [scanner scanUpToString:@"<" intoString:&tempText];
-        
-        if (tempText != nil)
-            [html appendString:tempText];
-        
-        [scanner scanUpToString:@">" intoString:NULL];
-        
-        if (![scanner isAtEnd])
-            [scanner setScanLocation:[scanner scanLocation] + 1];
-        
-        tempText = nil;
-    }
-    
-    return html;
-}
+
 @end
