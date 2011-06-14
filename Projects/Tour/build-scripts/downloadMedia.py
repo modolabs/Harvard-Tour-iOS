@@ -14,7 +14,11 @@ def retrieveAndSave(url):
     else:  
         fullURL = url
 
-    response = urllib2.urlopen(fullURL)
+    try:
+        response = urllib2.urlopen(fullURL)
+    except urllib2.HTTPError:
+        print 'error downloading: ' + url
+        raise
     rawMedia = response.read()
     
     parts = url.split('.')
