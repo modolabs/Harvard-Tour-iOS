@@ -14,6 +14,11 @@ def retrieveAndSave(url):
     else:  
         fullURL = url
 
+    # this is a bit of a hack, probably should remove this (if the server changes)
+    fullURLParts = fullURL.split('/')
+    fullURLParts[-1] = urllib2.quote(fullURLParts[-1])
+    fullURL = '/'.join(fullURLParts)
+
     try:
         response = urllib2.urlopen(fullURL)
     except urllib2.HTTPError:
