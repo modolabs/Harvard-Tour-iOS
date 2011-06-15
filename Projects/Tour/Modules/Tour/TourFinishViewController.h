@@ -13,6 +13,9 @@
 @interface TourFinishViewController : UIViewController 
 {
     IBOutlet UILabel *thankYouLabel;
+    IBOutlet UIScrollView *scrollView;
 }
+
+@property (nonatomic, retain) NSMutableArray *linkLaunchers;
 
 @end

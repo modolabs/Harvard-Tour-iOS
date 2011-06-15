@@ -64,6 +64,7 @@
 		562F4B7B133EFA10000B9344 /* ContentWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562F4B78133EFA10000B9344 /* ContentWebViewController.m */; };
 		A627310E13A7F953006E66EE /* TourFinishViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A627310C13A7F953006E66EE /* TourFinishViewController.m */; };
 		A627310F13A7F953006E66EE /* TourFinishViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A627310D13A7F953006E66EE /* TourFinishViewController.xib */; };
+		A627311313A92A90006E66EE /* LinkLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = A627311213A92A90006E66EE /* LinkLauncher.m */; };
 		A627E6B0134A65FD00403110 /* VideoDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A627E6AB134A65FD00403110 /* VideoDataManager.m */; };
 		A627E6B1134A65FD00403110 /* VideoListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A627E6AD134A65FD00403110 /* VideoListViewController.m */; };
 		A627E6B2134A65FD00403110 /* VideoModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A627E6AF134A65FD00403110 /* VideoModule.m */; };
@@ -397,6 +398,8 @@
 		A627310C13A7F953006E66EE /* TourFinishViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourFinishViewController.m; sourceTree = "<group>"; };
 		A627310D13A7F953006E66EE /* TourFinishViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TourFinishViewController.xib; sourceTree = "<group>"; };
 		A627311013A7F979006E66EE /* TourFinishViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourFinishViewController.h; sourceTree = "<group>"; };
+		A627311113A92A90006E66EE /* LinkLauncher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkLauncher.h; sourceTree = "<group>"; };
+		A627311213A92A90006E66EE /* LinkLauncher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinkLauncher.m; sourceTree = "<group>"; };
 		A627E6AA134A65FD00403110 /* VideoDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoDataManager.h; path = ../../Modules/Video/VideoDataManager.h; sourceTree = SOURCE_ROOT; };
 		A627E6AB134A65FD00403110 /* VideoDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoDataManager.m; path = ../../Modules/Video/VideoDataManager.m; sourceTree = SOURCE_ROOT; };
 		A627E6AC134A65FD00403110 /* VideoListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoListViewController.h; path = ../../Modules/Video/VideoListViewController.h; sourceTree = SOURCE_ROOT; };
@@ -909,6 +912,8 @@
 				A627310C13A7F953006E66EE /* TourFinishViewController.m */,
 				A627311013A7F979006E66EE /* TourFinishViewController.h */,
 				A627310D13A7F953006E66EE /* TourFinishViewController.xib */,
+				A627311113A92A90006E66EE /* LinkLauncher.h */,
+				A627311213A92A90006E66EE /* LinkLauncher.m */,
 			);
 			path = Tour;
 			sourceTree = "<group>";
@@ -1825,6 +1830,7 @@
 				A6CDCA1E139EB8260068D12A /* TourSettingsViewController.m in Sources */,
 				A6CDCA7613A01D110068D12A /* BeamAnnotation.m in Sources */,
 				A627310E13A7F953006E66EE /* TourFinishViewController.m in Sources */,
+				A627311313A92A90006E66EE /* LinkLauncher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
