@@ -116,11 +116,13 @@
 
 - (void)refreshUI {
     self.nextBarItem.enabled = (self.tourFinishController == nil);
+    TourModule *module = 
+    (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
     
-    if (self.tourStopMode == TourStopModeApproach) {
-        
-        TourModule *module = 
-        (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
+    if (self.tourFinishController != nil) {
+        [module setUpNavBarTitle:@"Thank You" navItem:self.navigationItem];        
+    }
+    else if (self.tourStopMode == TourStopModeApproach) {        
         [module setUpNavBarTitle:[NSString stringWithFormat:@"Walk to %@", 
                                   self.currentStop.title]
                          navItem:self.navigationItem];        

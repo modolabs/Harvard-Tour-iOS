@@ -38,13 +38,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    // Do any additional setup after loading the view from its nib.    
     NSArray *finishTextArray = [[TourDataManager sharedManager] finishText];
     NSString *message = @"";
     if (finishTextArray.count > 0) {
         message = [finishTextArray objectAtIndex:0];
-    }    
+    }
     thankYouLabel.text = [TourDataManager stripHTMLTagsFromString:message];
+    [thankYouLabel sizeToFit];
     
     // Add links.
 }
