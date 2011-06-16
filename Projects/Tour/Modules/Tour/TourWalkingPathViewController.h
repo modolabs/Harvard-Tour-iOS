@@ -1,19 +1,21 @@
 #import <UIKit/UIKit.h>
 #import "TourStop.h"
 #import "TourOverviewController.h"
+#import "TourMapController.h"
 
 typedef enum {
     TourStopModeApproach,
     TourStopModeLenses
 } TourStopMode;
 
-@class TourMapController;
+typedef void(^StopChoiceCompletionBlock)(TourStop *destStop);
+
 @class TourStopDetailsViewController;
 @class TourFinishViewController;
 
 @interface TourWalkingPathViewController : UIViewController 
 <TourOverviewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate,
-UINavigationControllerDelegate> {
+UINavigationControllerDelegate, TourMapControllerDelegate> {
     TourStop *_initialStop;
     TourStop *_currentStop;    
 }
@@ -30,6 +32,8 @@ UINavigationControllerDelegate> {
 @property (nonatomic, retain) TourMapController *tourMapController;
 @property (nonatomic, retain) TourStopDetailsViewController *tourStopDetailsController;
 @property (nonatomic, retain) TourFinishViewController *tourFinishController;
+@property (nonatomic, retain) TourStop *alternateCurrentStop;
+@property (nonatomic, retain) StopChoiceCompletionBlock stopChoiceBlock;
 
 - (IBAction)previous;
 - (IBAction)next;

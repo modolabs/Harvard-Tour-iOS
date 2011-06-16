@@ -16,7 +16,11 @@
 - (void)loadMapControllerForCurrentStop;
 - (void)loadStopDetailsControllerForCurrentStop;
 - (BOOL)isLastStop;
-
+- (void)skipToStop:(TourStop *)stop;
+- (void)navigateToCurrentStopWithoutPromptingUserShouldAnimate:(BOOL)animated;
+- (void)promptUserAboutSkippingToStop:(TourStop *)stop 
+                   actualSkippingCode:(StopChoiceCompletionBlock)skipBlock;
+- (void)navigateToCurrentStopWithoutPromptingUserShouldAnimate:(BOOL)animated;
 - (CGRect)frameForContent;
 - (CGRect)frameForPreviousContent;
 - (CGRect)frameForNextContent;
@@ -34,6 +38,8 @@
 @synthesize tourFinishController;
 @synthesize tourMapController;
 @synthesize tourStopDetailsController;
+@synthesize alternateCurrentStop;
+@synthesize stopChoiceBlock;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -55,6 +61,8 @@
     self.contentView = nil;
     self.currentContent = nil;
     self.tourFinishController = nil;
+    self.alternateCurrentStop = nil;
+    self.stopChoiceBlock = nil;
     
     [super dealloc];
 }
@@ -122,15 +130,15 @@
     if (self.tourFinishController != nil) {
         [module setUpNavBarTitle:@"Thank You" navItem:self.navigationItem];        
     }
-    else if (self.tourStopMode == TourStopModeApproach) {        
-        [module setUpNavBarTitle:[NSString stringWithFormat:@"Walk to %@", 
-                                  self.currentStop.title]
-                         navItem:self.navigationItem];        
-        self.previousBarItem.enabled = (self.currentStop != self.initialStop);
-    }
-    else if(self.tourStopMode == TourStopModeLenses) {
-        self.title = self.currentStop.title;
-        self.previousBarItem.enabled = YES;
+    else {
+        [module updateNavBarTitle:self.currentStop.title
+                          navItem:self.navigationItem];                
+        if (self.tourStopMode == TourStopModeApproach) {                
+            self.previousBarItem.enabled = (self.currentStop != self.initialStop);
+        }
+        else if(self.tourStopMode == TourStopModeLenses) {
+            self.previousBarItem.enabled = YES;
+        }
     }
 }
 
@@ -163,6 +171,24 @@
 }
 
 - (IBAction)next {
+    if (self.alternateCurrentStop) {
+        // Ask if the user wants to go to this stop instead.
+        [self promptUserAboutSkippingToStop:self.alternateCurrentStop 
+                         actualSkippingCode:
+         ^(TourStop *stop) {
+             self.currentStop = stop;
+             [self navigateToCurrentStopWithoutPromptingUserShouldAnimate:YES];
+         }];
+    }
+    else {
+        [self navigateToCurrentStopWithoutPromptingUserShouldAnimate:YES];
+    }
+}
+
+// Navigate to stop without prompting the user about anything. Do your 
+// user-asking before calling this.
+- (void)navigateToCurrentStopWithoutPromptingUserShouldAnimate:(BOOL)animated {
+    
     UIView *nextView = nil;
     
     if (self.tourStopMode == TourStopModeApproach) {
@@ -188,37 +214,80 @@
             nextView = self.tourMapController.view;
         }
     }
-    nextView.frame = [self frameForNextContent];
-    [self.contentView addSubview:nextView];
-    [UIView animateWithDuration:0.25 animations:^(void) {
-        nextView.frame = [self frameForContent];
-        self.currentContent.frame = [self frameForPreviousContent];
-    } completion:^(BOOL finished) {
+    
+    void (^completionBlock)(BOOL) = ^(BOOL finished) {
         [self.currentContent removeFromSuperview];
         self.currentContent = nextView;
         [self refreshUI];
-    }];
+        // Clear alternate stop.
+        self.alternateCurrentStop = nil;
+    };
+    
+    if (animated) {
+        nextView.frame = [self frameForNextContent];
+        [self.contentView addSubview:nextView];
+        [UIView animateWithDuration:0.25 animations:^(void) {
+            nextView.frame = [self frameForContent];
+            self.currentContent.frame = [self frameForPreviousContent];
+        } 
+                         completion:completionBlock];
+    }
+    else {
+        completionBlock(YES);
+    }    
 }
 
-- (void)tourOverview:(TourOverviewController *)tourOverview stopWasSelected:(TourStop *)stop {
-    if([stop isEqual:self.currentStop]) {
+- (void)tourOverview:(TourOverviewController *)tourOverview 
+     stopWasSelected:(TourStop *)stop {
+    if ([stop isEqual:self.currentStop]) {
         [self dismissModalViewControllerAnimated:YES];
         return;
     }
-    NSArray *tourStops = [[TourDataManager sharedManager] getTourStopsForInitialStop:self.initialStop];
+    [self promptUserAboutSkippingToStop:stop 
+                     actualSkippingCode:
+     ^(TourStop *stop) {
+         // TODO: Make navigateToCurrentStopWithoutPromptingUserShouldAnimate 
+         // and this share code.
+         self.tourStopMode = TourStopModeApproach;
+         self.currentStop = stop;
+         [self.currentContent removeFromSuperview];
+         [self loadMapControllerForCurrentStop];
+         self.currentContent = self.tourMapController.view;
+         self.currentContent.frame = [self frameForContent];
+         [self.contentView addSubview:self.currentContent];
+         [self refreshUI];         
+     }];
+}
+
+// stop: The stop that we intend to skip to if the user says yes.
+// actualSkippingCode: The 
+- (void)promptUserAboutSkippingToStop:(TourStop *)stop 
+                   actualSkippingCode:(StopChoiceCompletionBlock)skipBlock {
+    
+    NSArray *tourStops = 
+    [[TourDataManager sharedManager] getTourStopsForInitialStop:self.initialStop];
     NSInteger currentIndex = [tourStops indexOfObject:self.currentStop];
     NSInteger selectedIndex = [tourStops indexOfObject:stop];
     
     NSString *title;
     if (currentIndex < selectedIndex) {
-        title = [NSString stringWithFormat:@"Are you sure you want to jump ahead %i stops", selectedIndex-currentIndex];
+        title = [NSString stringWithFormat:
+                 @"Are you sure you want to jump ahead %i stops?", 
+                 selectedIndex-currentIndex];
     } else {
-        title = [NSString stringWithFormat:@"Are you sure you want to go back %i stops", currentIndex-selectedIndex];
+        title = [NSString stringWithFormat:
+                 @"Are you sure you want to go back %i stops?", 
+                 currentIndex-selectedIndex];
     }
     
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:@"NO" destructiveButtonTitle:nil otherButtonTitles:@"YES", nil];
+    UIActionSheet *actionSheet = 
+    [[UIActionSheet alloc] 
+     initWithTitle:title delegate:self cancelButtonTitle:@"NO" 
+     destructiveButtonTitle:nil otherButtonTitles:@"YES", nil];
+    
+    self.stopChoiceBlock = [[skipBlock copy] autorelease];
     self.actionSheetStop = stop;
-    [actionSheet showInView:tourOverview.view];
+    [actionSheet showInView:self.contentView];
     [actionSheet release];
 }
 
@@ -240,14 +309,10 @@
 #pragma - mark UIActionSheet delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex != actionSheet.cancelButtonIndex) {
-        self.tourStopMode = TourStopModeApproach;
-        self.currentStop = self.actionSheetStop;
-        [self.currentContent removeFromSuperview];
-        [self loadMapControllerForCurrentStop];
-        self.currentContent = self.tourMapController.view;
-        self.currentContent.frame = [self frameForContent];
-        [self.contentView addSubview:self.currentContent];
-        [self refreshUI];
+        if (self.stopChoiceBlock) {
+            self.stopChoiceBlock(self.actionSheetStop);
+            self.stopChoiceBlock = nil;
+        }
     }
     [self dismissModalViewControllerAnimated:YES];
 }
@@ -263,7 +328,11 @@
 }
 
 - (void)loadMapControllerForCurrentStop {
-    self.tourMapController = [[[TourMapController alloc] initWithNibName:@"TourMapController" bundle:nil] autorelease];
+    self.tourMapController = 
+    [[[TourMapController alloc] initWithNibName:@"TourMapController" bundle:nil] 
+     autorelease];
+    
+    self.tourMapController.delegate = self;
     self.tourMapController.upcomingStop = self.currentStop;
     self.tourMapController.selectedStop = self.currentStop;
     self.tourMapController.mapInitialFocusMode = MapInitialFocusModeUpcomingStop;
@@ -367,5 +436,16 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [self dismissModalViewControllerAnimated:YES];
 }
 
+#pragma mark TourMapControllerDelegate
+- (void)mapController:(TourMapController *)controller 
+    didSelectTourStop:(TourStop *)stop {
+    if (stop != self.currentStop) {
+        // Update title.
+        TourModule *module = 
+        (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
+        [module updateNavBarTitle:stop.title navItem:self.navigationItem];
+        self.alternateCurrentStop = stop;
+    }
+}
 
 @end

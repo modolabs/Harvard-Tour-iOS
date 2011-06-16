@@ -3,6 +3,11 @@
 #import "TourDataManager.h"
 #import "TourLense.h"
 #import "UIKit+KGOAdditions.h"
+#import "TourModule.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
+
+
+static const CGFloat kRequiredLocationAccuracy = 100.0f;
 
 @interface TourMapController (Private) 
 
@@ -31,6 +36,7 @@
 @synthesize locationManager;
 @synthesize directionBeamAnnotationView;
 @synthesize beamAnnotation;
+@synthesize delegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -281,6 +287,8 @@
 + (BOOL)userLocationIsValid:(MKUserLocation *)userLocation {
     return 
     userLocation.location &&
+    (userLocation.location.horizontalAccuracy > 0.0f) &&
+    (userLocation.location.horizontalAccuracy <= kRequiredLocationAccuracy) &&
     (userLocation.location.coordinate.latitude > -180.001f) && 
     (userLocation.location.coordinate.longitude > -180.001f);
 }
@@ -323,14 +331,19 @@ didUpdateUserLocation:(MKUserLocation *)userLocation {
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     // old selected annotation
     if([self.selectedStop.visited boolValue]) {
-        self.selectedAnnotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin-past.png"];
+        self.selectedAnnotationView.image = 
+        [UIImage imageWithPathName:@"modules/tour/map-pin-past.png"];
     } else {
-        self.selectedAnnotationView.image = [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
+        self.selectedAnnotationView.image = 
+        [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
     }
     // new selected annotation
     view.image = [UIImage imageWithPathName:@"modules/tour/map-pin-current.png"]; 
     self.selectedAnnotationView = view;
     self.selectedStop = (TourStop *)view.annotation;
+    if (self.delegate) {
+        [self.delegate mapController:self didSelectTourStop:self.selectedStop];
+    }
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)aMapView viewForAnnotation:(id <MKAnnotation>)annotation {

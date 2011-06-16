@@ -10,6 +10,13 @@ typedef enum {
 @class TourStop;
 @class TourDataManager;
 
+@protocol TourMapControllerDelegate
+
+- (void)mapController:(TourMapController *)controller 
+    didSelectTourStop:(TourStop *)stop;
+
+@end
+
 @interface TourMapController : UIViewController <CLLocationManagerDelegate> {
     NSInteger numberOfStops;
     TourStop *_selectedStop;
@@ -39,6 +46,7 @@ typedef enum {
 @property (nonatomic, retain) CLLocationManager *locationManager;
 @property (nonatomic, retain) MKAnnotationView *directionBeamAnnotationView;
 @property (nonatomic, retain) BeamAnnotation *beamAnnotation;
+@property (assign) id<TourMapControllerDelegate> delegate;
 
 - (IBAction)photoTapped:(id)sender;
 - (void)syncMapType;

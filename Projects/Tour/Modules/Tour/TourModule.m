@@ -67,4 +67,13 @@
     [label sizeToFit];
 }
 
+- (void)updateNavBarTitle:(NSString *)title navItem:(UINavigationItem *)navItem {
+    UILabel *label = (UILabel *)navItem.titleView;
+    if (!label) {
+        [self setUpNavBarTitle:title navItem:navItem];
+        label = (UILabel *)navItem.titleView;
+    }
+    label.text = title;
+}
+
 @end
