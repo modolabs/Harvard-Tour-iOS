@@ -75,7 +75,7 @@
 			<key>APIPath</key>
 			<string>rest</string>
 			<key>Host</key>
-			<string>kurogo.hq.modolabs.com</string>
+			<string>tour-demo.modolabs.com</string>
 			<key>PathExtension</key>
 			<string></string>
 			<key>UseHTTPS</key>
