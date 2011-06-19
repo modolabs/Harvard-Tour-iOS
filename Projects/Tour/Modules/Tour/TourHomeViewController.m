@@ -7,6 +7,7 @@
 
 @implementation TourHomeViewController
 @synthesize scrollView;
+@synthesize webView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,7 +39,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [[TourDataManager sharedManager] markAllStopsUnvisited];
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.frame.size.height + 25);
+
     self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageWithPathName:@"modules/tour/welcome-background.jpg"]];
     
     // TourModule's module tag in the config and app delegate is "home".    
@@ -46,8 +47,7 @@
     (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
     [module setUpNavigationBar:self.navigationController.navigationBar];
     
-    [self assignTexts];
-
+    [self setupWebViewLayout];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -76,91 +76,74 @@
     [self.navigationController pushViewController:_tourOverviewController animated:YES];
 }
 
-- (void) assignTexts {
+- (void) setupWebViewLayout {
     
-    if ((nil == welcomeText) || 
-        (nil == topicText1) || (nil == topicTextDetails1) ||
-        (nil == topicLabel2) || (nil == topicLabelDetails2) ||
-        (nil == topicLabel3) || (nil == topicLabelDetails3) ||
-        (nil == topicLabel4) || (nil == topicLabelDetails4)) {
-        NSArray * welcomeTextArray =  [[TourDataManager sharedManager] retrieveWelcomeText];
+    NSString * htmlString;
+    
+    // optional CSS
+    NSString * htmlHead = @"<html><head><style type=\"text/css\">img.middle {vertical-align:middle;}</style></head>";
+    
+    //font for WelcomeText in HTML
+    NSString * htmlWelcomeString = @"<body><font size=\"2\" type=\"helvetica\">";
+    
+    htmlString = [htmlHead stringByAppendingString:htmlWelcomeString];
+    
+    NSArray * welcomeTextArray =  [[TourDataManager sharedManager] retrieveWelcomeText];
+    
+    welcomeText = [welcomeTextArray objectAtIndex:0]; // first string (welcome)s
+    htmlString = [htmlString stringByAppendingString:welcomeText];
+    htmlString = [htmlString stringByAppendingString:@"</font>"];
+    
+    if ([welcomeTextArray count] > 1) {
         
-        welcomeText = [TourDataManager stripHTMLTagsFromString:
-                       [welcomeTextArray objectAtIndex:0]]; // first string
-        
-        if ([welcomeTextArray count] > 1) {
+        if ([[welcomeTextArray objectAtIndex:1] isKindOfClass:[NSArray class]]) {
+            NSArray * topics = [welcomeTextArray objectAtIndex:1];
             
-            if ([[welcomeTextArray objectAtIndex:1] isKindOfClass:[NSArray class]]) {
-                NSArray * topics = [welcomeTextArray objectAtIndex:1];
+            NSString * dlString = @"<dl>";
+            for (int count=0; count < [topics count]; count++) {
+                NSDictionary * topicDict = [topics objectAtIndex:count];
                 
-                for (int count=0; count < [topics count]; count++) {
-                    NSDictionary * topicDict = [topics objectAtIndex:count];
-                    
-                    if (count == 0){
-                        topicText1 = [TourDataManager stripHTMLTagsFromString:
-                                      [topicDict objectForKey:@"name"]];
-                        topicTextDetails1 = 
-                        [TourDataManager stripHTMLTagsFromString:
-                         [topicDict objectForKey:@"description"]];
-                    }
-                    
-                    else if (count == 1){
-                        topicText2 = 
-                        [TourDataManager stripHTMLTagsFromString:
-                         [topicDict objectForKey:@"name"]];
-                        topicTextDetails2 = 
-                        [TourDataManager stripHTMLTagsFromString:
-                         [topicDict objectForKey:@"description"]];
-                    }
-                    
-                    else if (count == 2){
-                        topicText3 = 
-                        [TourDataManager stripHTMLTagsFromString:
-                         [topicDict objectForKey:@"name"]];
-                        topicTextDetails3 = 
-                        [TourDataManager stripHTMLTagsFromString:
-                         [topicDict objectForKey:@"description"]];
-                    }
-                    
-                    else if (count == 3){
-                        topicText4 = 
-                        [TourDataManager 
-                         stripHTMLTagsFromString:
-                         [topicDict objectForKey:@"name"]];
-                        topicTextDetails4 = 
-                        [TourDataManager 
-                         stripHTMLTagsFromString:
-                         [topicDict objectForKey:@"description"]];
-                    }
-                }
+                NSString * topicId = [topicDict objectForKey:@"id"];
+                NSString * topicText = [topicDict objectForKey:@"name"];
+                NSString * topicTextDetails = [topicDict objectForKey:@"description"];
+                
+                // <Image> [Lens-Name]: [Lens-Description] in HTML
+                NSString * formatString = [NSString stringWithFormat:@"<dt><img class=\"middle\" src=\"modules/tour/lens-%@.png\" alt=\"topicText\" width=\"34\" height=\"34\" /><b>%@:</b><font size=\"2\" >%@</font></dt>", topicId, topicText, topicTextDetails];
+                
+                dlString = [dlString stringByAppendingString:formatString];
                 
             }
-        }
             
-        if ([welcomeTextArray count] > 2) {
-            
-            if ([[welcomeTextArray objectAtIndex:2] isKindOfClass:[NSString class]])
-                welcomeDisclaimerText = 
-                [TourDataManager stripHTMLTagsFromString:
-                 [welcomeTextArray objectAtIndex:2]];
+            // end of <dl> and also font for Disclaimer Text
+            dlString = [dlString stringByAppendingString:@"</dl><font size=\"2\" type=\"helvetica\">"];
+            htmlString = [htmlString stringByAppendingString:dlString];
         }
-        
     }
     
-    welcomeTextLabel.text = welcomeText;
-    welcomeDisclaimerTextLabel.text = welcomeDisclaimerText;
+    if ([welcomeTextArray count] > 2) {
+        
+        // Disclaimer Text in HTML
+        if ([[welcomeTextArray objectAtIndex:2] isKindOfClass:[NSString class]])
+            welcomeDisclaimerText = [welcomeTextArray objectAtIndex:2];
+        
+        htmlString = [htmlString stringByAppendingString:welcomeDisclaimerText];
+    }
     
-    topicLabel1.text = topicText1;
-    topicLabel2.text = topicText2;
-    topicLabel3.text = topicText3;
-    topicLabel4.text = topicText4;
+    // close <font> and <html> tags
+    htmlString = [htmlString stringByAppendingString:@"</font></html>"];
+   
+    // resize the scrollview and webView from the defaults in the Nib file
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, self.scrollView.frame.size.height + 100);
+    self.webView.frame = CGRectMake(self.webView.frame.origin.x, 
+                                    self.webView.frame.origin.y, 
+                                    self.view.frame.size.width, 
+                                    self.webView.frame.size.height+100);
     
-    topicLabelDetails1.text = topicTextDetails1;
-    topicLabelDetails2.text = topicTextDetails2;
-    topicLabelDetails3.text = topicTextDetails3;
-    topicLabelDetails4.text = topicTextDetails4;
     
+    // this is critical to ensure there is no conflict between UIWebView and UIScrollView scrolling
+    self.webView.userInteractionEnabled = NO; 
+    
+    self.webView.backgroundColor = [UIColor clearColor];
+    [self.webView loadHTMLString:htmlString baseURL:[[NSBundle mainBundle] resourceURL]];
 }
-
-
 @end
