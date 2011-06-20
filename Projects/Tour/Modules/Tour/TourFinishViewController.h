@@ -10,12 +10,12 @@
 #import "TourWalkingPathViewController.h"
 //#import "KGOTabbedControl.h"
 
-@interface TourFinishViewController : UIViewController 
+@interface TourFinishViewController : UIViewController <UIWebViewDelegate>
 {
-    IBOutlet UILabel *thankYouLabel;
     IBOutlet UIScrollView *scrollView;
 }
 
 @property (nonatomic, retain) NSMutableArray *linkLaunchers;
+@property (nonatomic, retain) IBOutlet UIWebView * webView;
 
 @end
