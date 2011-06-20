@@ -11,6 +11,7 @@
 #import "TourFinishViewController.h"
 
 @interface TourWalkingPathViewController (Private)
+
 - (void)deallocViews;
 - (void)refreshUI;
 - (void)loadMapControllerForCurrentStop;
@@ -20,7 +21,6 @@
 - (void)navigateToCurrentStopWithoutPromptingUserShouldAnimate:(BOOL)animated;
 - (void)promptUserAboutSkippingToStop:(TourStop *)stop 
                    actualSkippingCode:(StopChoiceCompletionBlock)skipBlock;
-- (void)navigateToCurrentStopWithoutPromptingUserShouldAnimate:(BOOL)animated;
 - (CGRect)frameForContent;
 - (CGRect)frameForPreviousContent;
 - (CGRect)frameForNextContent;
@@ -53,6 +53,7 @@
 - (void)dealloc
 {
     [self deallocViews];
+    
     self.currentStop = nil;
     self.initialStop = nil;
     self.actionSheetStop = nil;
@@ -371,6 +372,7 @@
     [[TourSettingsViewController alloc] 
      initWithNibName:@"TourSettingsViewController" 
      bundle:[NSBundle mainBundle]];
+    settingsController.delegate = self;
     UINavigationController *modalNavController = 
     [[UINavigationController alloc] 
      initWithRootViewController:settingsController];
@@ -446,6 +448,17 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
         [module updateNavBarTitle:stop.title navItem:self.navigationItem];
         self.alternateCurrentStop = stop;
     }
+}
+
+#pragma mark TourSettingsControllerDelegate
+- (void)endTour {
+    // Set up the state that usually causes the controller to move on to the 
+    // finish view.
+    self.tourStopMode = TourStopModeLenses;
+    self.currentStop = [[TourDataManager sharedManager] 
+                        lastTourStopForFirstTourStop:self.initialStop];
+    // Move on to the finish view.
+    [self navigateToCurrentStopWithoutPromptingUserShouldAnimate:NO];
 }
 
 @end

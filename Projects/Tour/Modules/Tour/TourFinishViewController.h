@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TourWalkingPathViewController.h"
+//#import "TourWalkingPathViewController.h"
 //#import "KGOTabbedControl.h"
 
 @interface TourFinishViewController : UIViewController <UIWebViewDelegate>
