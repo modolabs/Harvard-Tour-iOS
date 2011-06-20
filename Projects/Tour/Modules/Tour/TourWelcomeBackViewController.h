@@ -7,4 +7,9 @@
 
 - (IBAction)startOver;
 - (IBAction)resumeTour;
+
+@property(nonatomic, retain) IBOutlet UIWebView * webView;
+
+- (void) setupWebViewLayout;
+
 @end
