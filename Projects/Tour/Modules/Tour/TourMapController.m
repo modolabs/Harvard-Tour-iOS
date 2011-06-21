@@ -8,14 +8,20 @@
 
 
 static const CGFloat kRequiredLocationAccuracy = 100.0f;
+static BOOL maxRegionSet = NO;
+static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
 
 @interface TourMapController (Private) 
 
 - (void)showSelectedStop;
-- (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops;
+- (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops 
+                     marginFactor:(CGFloat)marginFactor;
 - (MKCoordinateRegion)upcomingStopRegion;
 - (MKCoordinateRegion)regionEnclosingUserLocationAndStop:(TourStop *)stop;
+- (MKCoordinateRegion)getMaxRegion;
 + (BOOL)userLocationIsValid:(MKUserLocation *)location;
++ (MKCoordinateRegion)smallerOfRegion1:(MKCoordinateRegion)region1 
+                               region2:(MKCoordinateRegion)region2;
 - (void)deallocViews;
 
 @end
@@ -92,7 +98,7 @@ static const CGFloat kRequiredLocationAccuracy = 100.0f;
     NSArray *tourStops = [[TourDataManager sharedManager] getAllTourStops];
     MKCoordinateRegion initialRegion = { { 0.0f , 0.0f }, {90, 90} };
     if(self.mapInitialFocusMode == MapInitialFocusModeAllStops) {
-        initialRegion = [self stopsRegion:tourStops];
+        initialRegion = [self stopsRegion:tourStops marginFactor:1.1f];
     } else if(self.mapInitialFocusMode == MapInitialFocusModeUpcomingStop) {
         initialRegion = [self upcomingStopRegion];
     }
@@ -206,7 +212,8 @@ static const CGFloat kRequiredLocationAccuracy = 100.0f;
         TourStop *previousStop = [[TourDataManager sharedManager] 
                                   previousStopForTourStop:self.upcomingStop];
         return [self stopsRegion:[NSArray arrayWithObjects:self.upcomingStop, 
-                                  previousStop, nil]];
+                                  previousStop, nil]
+                    marginFactor:1.1f];
     }
 }
 
@@ -236,18 +243,22 @@ static const CGFloat kRequiredLocationAccuracy = 100.0f;
     }
 
     CGFloat marginFactor = 1.1;
-    return 
+    MKCoordinateRegion region =
     MKCoordinateRegionMake(CLLocationCoordinate2DMake(0.5*(minLatitude+maxLatitude), 
                                                       0.5*(minLongitude+maxLongitude)),
                            MKCoordinateSpanMake(marginFactor * 
                                                 (maxLatitude - minLatitude), 
                                                 marginFactor * 
-                                                (maxLongitude - minLongitude)));    
+                                                (maxLongitude - minLongitude)));
+    
+    return [[self class] smallerOfRegion1:region region2:[self getMaxRegion]];
 }
 
-- (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops {
+- (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops 
+                     marginFactor:(CGFloat)marginFactor {
     if (tourStops.count == 0) {
-         [NSException raise:@"Invalid Region" format:@"attempting to compute a region for zero points"];
+         [NSException raise:@"Invalid Region" 
+                     format:@"attempting to compute a region for zero points"];
     }
     
     TourStop *firstPoint = [tourStops objectAtIndex:0];
@@ -276,12 +287,23 @@ static const CGFloat kRequiredLocationAccuracy = 100.0f;
         }
     }
     
-    CGFloat marginFactor = 1.1;
+//    CGFloat marginFactor = 1.1;
     return MKCoordinateRegionMake(
         CLLocationCoordinate2DMake(0.5*(minLatitude+maxLatitude), 
                                    0.5*(minLongitude+maxLongitude)),
         MKCoordinateSpanMake(marginFactor * (maxLatitude - minLatitude), 
                              marginFactor * (maxLongitude - minLongitude)));
+}
+
+// We can never zoom out further than this region.
+- (MKCoordinateRegion)getMaxRegion {
+    if (!maxRegionSet) {
+        maxRegion = 
+        [self stopsRegion:[[TourDataManager sharedManager] getAllTourStops] 
+             marginFactor:1.25f];
+        maxRegionSet = YES;
+    }
+    return maxRegion;
 }
 
 + (BOOL)userLocationIsValid:(MKUserLocation *)userLocation {
@@ -291,6 +313,20 @@ static const CGFloat kRequiredLocationAccuracy = 100.0f;
     (userLocation.location.horizontalAccuracy <= kRequiredLocationAccuracy) &&
     (userLocation.location.coordinate.latitude > -180.001f) && 
     (userLocation.location.coordinate.longitude > -180.001f);
+}
+
++ (MKCoordinateRegion)smallerOfRegion1:(MKCoordinateRegion)region1 
+                               region2:(MKCoordinateRegion)region2 {
+    CGFloat region1Area = 
+    region1.span.latitudeDelta * region1.span.longitudeDelta;
+    CGFloat region2Area = 
+    region2.span.latitudeDelta * region2.span.longitudeDelta;
+    if (region1Area < region2Area) {
+        return region1;
+    }
+    else {
+        return region2;
+    }
 }
 
 #pragma mark - MKMapViewDelegate methods
