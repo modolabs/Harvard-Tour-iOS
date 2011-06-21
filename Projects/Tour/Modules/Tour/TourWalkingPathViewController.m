@@ -315,6 +315,12 @@
             self.stopChoiceBlock = nil;
         }
     }
+    else {
+        // Don't move on. Change the selection to the designated current stop.
+        self.alternateCurrentStop = nil;
+        [self.tourMapController.mapView 
+         selectAnnotation:self.currentStop animated:YES];
+    }
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -441,11 +447,11 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 #pragma mark TourMapControllerDelegate
 - (void)mapController:(TourMapController *)controller 
     didSelectTourStop:(TourStop *)stop {
+    // Update title.
+    TourModule *module = 
+    (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
+    [module updateNavBarTitle:stop.title navItem:self.navigationItem];
     if (stop != self.currentStop) {
-        // Update title.
-        TourModule *module = 
-        (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
-        [module updateNavBarTitle:stop.title navItem:self.navigationItem];
         self.alternateCurrentStop = stop;
     }
 }
