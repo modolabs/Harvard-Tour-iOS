@@ -88,7 +88,7 @@
     
     htmlString = [htmlHead stringByAppendingString:htmlWelcomeString];
     
-    NSArray * welcomeTextArray =  [[TourDataManager sharedManager] retrieveWelcomeText];
+    NSArray *welcomeTextArray = [[TourDataManager sharedManager] retrieveWelcomeText];
     
     welcomeText = [welcomeTextArray objectAtIndex:0]; // first string (welcome)s
     htmlString = [htmlString stringByAppendingString:welcomeText];

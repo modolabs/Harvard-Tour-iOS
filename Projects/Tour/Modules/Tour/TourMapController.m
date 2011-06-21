@@ -37,7 +37,6 @@ static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
 @synthesize upcomingStop;
 @synthesize stopTitleLabel;
 @synthesize stopCaptionLabel;
-@synthesize lenseIconsContainer;
 @synthesize mapTipLabel;
 @synthesize locationManager;
 @synthesize directionBeamAnnotationView;
@@ -112,7 +111,6 @@ static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
     self.zoomInOutIcon = nil;
     self.stopTitleLabel = nil;
     self.stopCaptionLabel = nil;
-    self.lenseIconsContainer = nil;
     self.mapTipLabel = nil;
     self.mapView = nil;
     self.directionBeamAnnotationView = nil;
@@ -158,8 +156,6 @@ static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
     self.zoomInOutIcon.image = [UIImage imageWithPathName:@"modules/tour/zoomicon-in"];
     self.stopTitleLabel.text = _selectedStop.title;
     self.stopCaptionLabel.text = _selectedStop.subtitle;
-
-    [TourOverviewController layoutLensesLegend:self.lenseIconsContainer forStop:_selectedStop withIconSize:12];
     
     // make sure annotation is visible
     NSSet *visibleAnnotations = [mapView annotationsInMapRect:[mapView visibleMapRect]];

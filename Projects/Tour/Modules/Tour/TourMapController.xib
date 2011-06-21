@@ -61,19 +61,6 @@
 						<int key="NSvFlags">266</int>
 						<object class="NSMutableArray" key="NSSubviews">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBUIView" id="172514466">
-								<reference key="NSNextResponder" ref="308894989"/>
-								<int key="NSvFlags">289</int>
-								<string key="NSFrame">{{233, 2}, {85, 17}}</string>
-								<reference key="NSSuperview" ref="308894989"/>
-								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="875782274"/>
-								<object class="NSColor" key="IBUIBackgroundColor">
-									<int key="NSColorSpace">3</int>
-									<bytes key="NSWhite">MCAwAA</bytes>
-								</object>
-								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							</object>
 							<object class="IBUILabel" id="812929627">
 								<reference key="NSNextResponder" ref="308894989"/>
 								<int key="NSvFlags">292</int>
@@ -106,7 +93,7 @@
 								<string key="NSFrame">{{77, 18}, {237, 30}}</string>
 								<reference key="NSSuperview" ref="308894989"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="172514466"/>
+								<reference key="NSNextKeyView"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">7</int>
@@ -260,14 +247,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">lenseIconsContainer</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="172514466"/>
-					</object>
-					<int key="connectionID">22</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">stopCaptionLabel</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="875017470"/>
@@ -317,7 +296,6 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="812929627"/>
-							<reference ref="172514466"/>
 							<reference ref="875017470"/>
 						</object>
 						<reference key="parent" ref="191373211"/>
@@ -349,11 +327,6 @@
 						<reference key="parent" ref="875782274"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">21</int>
-						<reference key="object" ref="172514466"/>
-						<reference key="parent" ref="308894989"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">25</int>
 						<reference key="object" ref="875017470"/>
 						<reference key="parent" ref="308894989"/>
@@ -373,7 +346,6 @@
 					<string>14.IBPluginDependency</string>
 					<string>18.IBPluginDependency</string>
 					<string>19.IBPluginDependency</string>
-					<string>21.IBPluginDependency</string>
 					<string>25.CustomClassName</string>
 					<string>25.IBPluginDependency</string>
 					<string>4.IBPluginDependency</string>
@@ -387,7 +359,6 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>UIControl</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>

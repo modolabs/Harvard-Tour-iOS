@@ -14,7 +14,6 @@
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<string>IBUITableViewCell</string>
 			<string>IBUIImageView</string>
-			<string>IBUIView</string>
 			<string>IBUILabel</string>
 			<string>IBProxyObject</string>
 		</object>
@@ -82,7 +81,7 @@
 								<string key="NSFrame">{{77, 15}, {240, 31}}</string>
 								<reference key="NSSuperview" ref="484414536"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="67880686"/>
+								<reference key="NSNextKeyView"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">7</int>
@@ -101,20 +100,6 @@
 								<float key="IBUIMinimumFontSize">10</float>
 								<int key="IBUINumberOfLines">2</int>
 							</object>
-							<object class="IBUIView" id="67880686">
-								<reference key="NSNextResponder" ref="484414536"/>
-								<int key="NSvFlags">289</int>
-								<string key="NSFrame">{{235, -0}, {85, 17}}</string>
-								<reference key="NSSuperview" ref="484414536"/>
-								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
-								<object class="NSColor" key="IBUIBackgroundColor" id="728484395">
-									<int key="NSColorSpace">3</int>
-									<bytes key="NSWhite">MCAwAA</bytes>
-								</object>
-								<int key="IBUITag">2</int>
-								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-							</object>
 							<object class="IBUIImageView" id="609945066">
 								<reference key="NSNextResponder" ref="484414536"/>
 								<int key="NSvFlags">292</int>
@@ -131,7 +116,10 @@
 						<reference key="NSSuperview" ref="741457292"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="609945066"/>
-						<reference key="IBUIBackgroundColor" ref="728484395"/>
+						<object class="NSColor" key="IBUIBackgroundColor">
+							<int key="NSColorSpace">3</int>
+							<bytes key="NSWhite">MCAwAA</bytes>
+						</object>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<int key="IBUIContentMode">4</int>
@@ -190,7 +178,6 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="609945066"/>
-							<reference ref="67880686"/>
 							<reference ref="642253699"/>
 							<reference ref="578292271"/>
 						</object>
@@ -199,14 +186,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">5</int>
 						<reference key="object" ref="609945066"/>
-						<reference key="parent" ref="741457292"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">7</int>
-						<reference key="object" ref="67880686"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
 						<reference key="parent" ref="741457292"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -229,7 +208,6 @@
 					<string>-2.CustomClassName</string>
 					<string>4.IBPluginDependency</string>
 					<string>5.IBPluginDependency</string>
-					<string>7.IBPluginDependency</string>
 					<string>8.IBPluginDependency</string>
 					<string>9.CustomClassName</string>
 					<string>9.IBPluginDependency</string>
@@ -238,7 +216,6 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>TourOverviewController</string>
 					<string>UIResponder</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
