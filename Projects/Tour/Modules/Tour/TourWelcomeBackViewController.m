@@ -13,7 +13,9 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.title = @"Harvard Yard Tour";
+        TourModule *module = 
+        (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];        
+        [module setUpNavBarTitle:@"Harvard Yard Tour" navItem:self.navigationItem];        
     }
     return self;
 }
