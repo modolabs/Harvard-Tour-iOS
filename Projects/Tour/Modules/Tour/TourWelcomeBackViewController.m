@@ -6,6 +6,7 @@
 #import "TourModule.h"
 
 @implementation TourWelcomeBackViewController
+
 @synthesize webView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -35,58 +36,22 @@
 }
 
 - (void)setupWebViewLayout {
-
-    NSURL *baseURL = 
-    [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath] isDirectory:YES];
-    baseURL = [baseURL URLByAppendingPathComponent:@"modules/tour"];
-    NSURL *fileURL = 
-    [NSURL URLWithString:@"welcome_template.html" relativeToURL:baseURL];
-    NSError *error = nil;    
-    NSString *htmlString = 
-    [NSString 
-     stringWithContentsOfURL:fileURL 
-     encoding:NSUTF8StringEncoding error:&error];
-    
-//    NSString * htmlInfoAboutStops = @"<p><font size=\"2\" type=\"helvetica\" />Each stop on the tour includes information on one or more of the following topics:</font></p>";    
-//    htmlString = [htmlString stringByAppendingString:htmlInfoAboutStops];
-    
-    NSArray * welcomeTextArray =  [[TourDataManager sharedManager] retrieveWelcomeText];
-    
-    NSString *welcomeText = [welcomeTextArray objectAtIndex:0]; // first string (welcome)s
-    htmlString = [htmlString stringByAppendingString:welcomeText];
-    htmlString = [htmlString stringByAppendingString:@"</font>"];
-    
-    if ([welcomeTextArray count] > 1) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         
-        if ([[welcomeTextArray objectAtIndex:1] isKindOfClass:[NSArray class]]) {
-            NSArray * topics = [welcomeTextArray objectAtIndex:1];
-            
-            NSString * dlString = @"<dl>";
-            for (int count=0; count < [topics count]; count++) {
-                NSDictionary * topicDict = [topics objectAtIndex:count];
-                
-                NSString * topicId = [topicDict objectForKey:@"id"];
-                NSString * topicText = [topicDict objectForKey:@"name"];
-                NSString * topicTextDetails = [topicDict objectForKey:@"description"];
-                
-                // <Image> [Lens-Name]: [Lens-Description] in HTML
-                NSString * formatString = [NSString stringWithFormat:@"<dt><img class=\"middle\" src=\"modules/tour/lens-%@.png\" alt=\"topicText\" width=\"34\" height=\"34\" /><b>%@:</b><font size=\"2\" >%@</font></dt>", topicId, topicText, topicTextDetails];
-                
-                dlString = [dlString stringByAppendingString:formatString];
-                
-            }
-            
-            // end of <dl> and also </body> and </html>
-            dlString = [dlString stringByAppendingString:@"</dl></body></html>"];
-            htmlString = [htmlString stringByAppendingString:dlString];
-        }
+    NSArray *welcomeTextArray = 
+    [[TourDataManager sharedManager] retrieveWelcomeText];
+    if ((welcomeTextArray.count > 1) && 
+        [[welcomeTextArray objectAtIndex:1] isKindOfClass:[NSArray class]]) {
+        
+        NSString *htmlString = 
+        [TourModule 
+         htmlForPageTemplateFileName:@"welcome_template.html" 
+         welcomeText:[welcomeTextArray objectAtIndex:0] 
+         topicDictionaries:[welcomeTextArray objectAtIndex:1]];
+        [self.webView 
+         loadHTMLString:htmlString baseURL:[[NSBundle mainBundle] resourceURL]];
     }
-    
-    // close <font> and <html> tags
-    htmlString = [htmlString stringByAppendingString:@"</font></html>"];
-    
-    [self.webView loadHTMLString:htmlString baseURL:[[NSBundle mainBundle] resourceURL]];
-    
+    [pool release];
 }
 
 #pragma mark - View lifecycle

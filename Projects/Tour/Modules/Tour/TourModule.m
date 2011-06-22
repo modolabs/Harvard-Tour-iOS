@@ -38,6 +38,77 @@
     return vc;
 }
 
++ (NSString *)fillOutTemplate:(NSString *)templateString 
+                   withValues:(NSArray *)values forKeys:(NSArray *)keys {
+    
+    NSMutableString *mutableString = 
+    [NSMutableString stringWithString:templateString];
+    
+    for (NSInteger i = 0; i < [keys count]; i++) {
+		NSString *key = [keys objectAtIndex:i];
+		NSString *value = [NSString string];
+		if (values.count > i) {
+            value = [values objectAtIndex:i];
+		}		
+        [mutableString 
+         replaceOccurrencesOfString:key
+         withString:value
+         options:NSLiteralSearch 
+         range:NSMakeRange(0, [mutableString length])];
+    }
+    return mutableString;        
+}
+
++ (NSString *)htmlForPageTemplateFileName:(NSString *)pageTemplateFilename
+                              welcomeText:(NSString *)welcomeText
+                        topicDictionaries:(NSArray *)topicDicts {
+    
+    NSError *error = nil;
+    NSURL *baseURL = 
+    [[NSURL 
+      fileURLWithPath:[[NSBundle mainBundle] resourcePath] isDirectory:YES]
+     URLByAppendingPathComponent:@"modules/tour/"];
+    NSString *pageTemplate = 
+    [NSString 
+     stringWithContentsOfURL:
+     [baseURL URLByAppendingPathComponent:pageTemplateFilename] 
+     encoding:NSUTF8StringEncoding error:&error];
+    
+    NSMutableString *topicsString = [NSMutableString string];
+    
+    NSString *topicTemplate = 
+    [NSString 
+     stringWithContentsOfURL:
+     [baseURL URLByAppendingPathComponent:@"topic_template.html"] 
+     encoding:NSUTF8StringEncoding error:&error];
+    
+    for (NSDictionary *topicDict in topicDicts) {
+        NSAutoreleasePool *innerPool = [[NSAutoreleasePool alloc] init];
+        
+        NSString *topicId = [topicDict objectForKey:@"id"];
+        NSString *topicText = [topicDict objectForKey:@"name"];
+        NSString *topicTextDetails = [topicDict objectForKey:@"description"];
+        
+        // <Image> [Lens-Name]: [Lens-Description] in HTML
+        [topicsString appendString:
+         [TourModule 
+          fillOutTemplate:topicTemplate 
+          withValues:[NSArray arrayWithObjects:topicId, topicText, 
+                      topicTextDetails, nil]
+          forKeys:[NSArray arrayWithObjects:@"__TOPIC_ID__", 
+                   @"__TOPIC_TEXT__", @"__TOPIC_DEFAILS__", nil]]];
+        [innerPool release];
+    }
+    
+    NSString *htmlString = 
+    [[self class] 
+     fillOutTemplate:pageTemplate 
+     withValues:[NSArray arrayWithObjects: welcomeText, topicsString, nil]
+     forKeys:[NSArray arrayWithObjects:
+              @"__WELCOME_TEXT__", @"__TOPICS__", nil]];
+    return htmlString;
+}
+
 @end
 
 @implementation TourModule (UINavigationBarModification)
