@@ -10,6 +10,9 @@
 static const CGFloat kRequiredLocationAccuracy = 100.0f;
 static BOOL maxRegionSet = NO;
 static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
+static const CGFloat kOverviewMapMarginFactor = 1.1f;
+
+typedef MKCoordinateRegion(^RegionCalculator)();
 
 @interface TourMapController (Private) 
 
@@ -17,11 +20,14 @@ static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
 - (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops 
                      marginFactor:(CGFloat)marginFactor;
 - (MKCoordinateRegion)upcomingStopRegion;
-- (MKCoordinateRegion)regionEnclosingUserLocationAndStop:(TourStop *)stop;
+- (MKCoordinateRegion)allStopsRegion;
+- (MKCoordinateRegion)regionEnclosingUserLocationAndStops:(NSArray *)stops 
+                                             marginFactor:(CGFloat)marginFactor
+                                 fallbackRegionCalculator:(RegionCalculator)fallbackBlock;
 - (MKCoordinateRegion)getMaxRegion;
 + (BOOL)userLocationIsValid:(MKUserLocation *)location;
-+ (MKCoordinateRegion)smallerOfRegion1:(MKCoordinateRegion)region1 
-                               region2:(MKCoordinateRegion)region2;
++ (BOOL)region1:(MKCoordinateRegion)region1 
+isGreaterThanRegion2:(MKCoordinateRegion)region2;
 - (void)deallocViews;
 
 @end
@@ -97,7 +103,7 @@ static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
     NSArray *tourStops = [[TourDataManager sharedManager] getAllTourStops];
     MKCoordinateRegion initialRegion = { { 0.0f , 0.0f }, {90, 90} };
     if(self.mapInitialFocusMode == MapInitialFocusModeAllStops) {
-        initialRegion = [self stopsRegion:tourStops marginFactor:1.1f];
+        initialRegion = [self allStopsRegion];
     } else if(self.mapInitialFocusMode == MapInitialFocusModeUpcomingStop) {
         initialRegion = [self upcomingStopRegion];
     }
@@ -200,45 +206,79 @@ static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
 - (MKCoordinateRegion)upcomingStopRegion {
     // Show the user location and the upcoming stop if possible.
     // If not, show the previous stop and the upcoming stop.
-    
-    if (receivedUserLocation) {
-        return [self regionEnclosingUserLocationAndStop:self.upcomingStop];        
-    }
-    else {
+    RegionCalculator previousAndCurrentStopsRegionBlock = 
+    ^() {
         TourStop *previousStop = [[TourDataManager sharedManager] 
                                   previousStopForTourStop:self.upcomingStop];
         return [self stopsRegion:[NSArray arrayWithObjects:self.upcomingStop, 
                                   previousStop, nil]
-                    marginFactor:1.1f];
+                    marginFactor:kOverviewMapMarginFactor];
+    };
+    
+    if (receivedUserLocation) {
+        return 
+        [self 
+         regionEnclosingUserLocationAndStops:
+         [NSArray arrayWithObject:self.upcomingStop]
+         marginFactor:kOverviewMapMarginFactor
+         fallbackRegionCalculator:previousAndCurrentStopsRegionBlock];
+    }
+    else {
+        return previousAndCurrentStopsRegionBlock();
     }
 }
 
-- (MKCoordinateRegion)regionEnclosingUserLocationAndStop:(TourStop *)stop {
-    CLLocationDegrees minLatitude = [stop.latitude floatValue];
-    CLLocationDegrees maxLatitude = [stop.latitude floatValue];
-    CLLocationDegrees minLongitude = [stop.longitude floatValue];
-    CLLocationDegrees maxLongitude = [stop.longitude floatValue];
-    
-    CLLocationDegrees latitude = self.mapView.userLocation.coordinate.latitude;
-    CLLocationDegrees longitude = self.mapView.userLocation.coordinate.longitude;
-    
-    if (latitude > maxLatitude) {
-        maxLatitude = latitude;
+- (MKCoordinateRegion)allStopsRegion {
+    NSArray *tourStops = [[TourDataManager sharedManager] getAllTourStops];
+    RegionCalculator allStopsRegionBlock = 
+    ^() {             
+        return [self stopsRegion:tourStops marginFactor:kOverviewMapMarginFactor];
+    };
+
+    if (receivedUserLocation) {
+        return 
+        [self 
+         regionEnclosingUserLocationAndStops:tourStops 
+         marginFactor:kOverviewMapMarginFactor
+         fallbackRegionCalculator:allStopsRegionBlock];
     }
-    
-    if (latitude < minLatitude) {
-        minLatitude = latitude;
+    else {
+        return allStopsRegionBlock();
     }
+}
+
+- (MKCoordinateRegion)regionEnclosingUserLocationAndStops:(NSArray *)stops 
+                                             marginFactor:(CGFloat)marginFactor
+                                 fallbackRegionCalculator:(RegionCalculator)fallbackBlock
+{
+    CLLocationDegrees minLatitude = 
+    self.mapView.userLocation.coordinate.latitude;
+    CLLocationDegrees maxLatitude = minLatitude;
+    CLLocationDegrees minLongitude = 
+    self.mapView.userLocation.coordinate.longitude;
+    CLLocationDegrees maxLongitude = minLongitude;
     
-    if (longitude > maxLongitude) {
-        maxLongitude = longitude;
-    }
-    
-    if (longitude < minLongitude) {
-        minLongitude = longitude;
+    for (TourStop *stop in stops) {    
+        CLLocationDegrees latitude = stop.coordinate.latitude;
+        CLLocationDegrees longitude = stop.coordinate.longitude;
+        
+        if (latitude > maxLatitude) {
+            maxLatitude = latitude;
+        }
+        
+        if (latitude < minLatitude) {
+            minLatitude = latitude;
+        }
+        
+        if (longitude > maxLongitude) {
+            maxLongitude = longitude;
+        }
+        
+        if (longitude < minLongitude) {
+            minLongitude = longitude;
+        }
     }
 
-    CGFloat marginFactor = 1.1;
     MKCoordinateRegion region =
     MKCoordinateRegionMake(CLLocationCoordinate2DMake(0.5*(minLatitude+maxLatitude), 
                                                       0.5*(minLongitude+maxLongitude)),
@@ -247,7 +287,17 @@ static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
                                                 marginFactor * 
                                                 (maxLongitude - minLongitude)));
     
-    return [[self class] smallerOfRegion1:region region2:[self getMaxRegion]];
+    if ([[self class] region1:region isGreaterThanRegion2:[self getMaxRegion]]) {
+        if (fallbackBlock) {
+            return fallbackBlock();
+        }
+        else {
+            return maxRegion;
+        }
+    }
+    else {
+        return region;
+    }
 }
 
 - (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops 
@@ -311,18 +361,13 @@ static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
     (userLocation.location.coordinate.longitude > -180.001f);
 }
 
-+ (MKCoordinateRegion)smallerOfRegion1:(MKCoordinateRegion)region1 
-                               region2:(MKCoordinateRegion)region2 {
++ (BOOL)region1:(MKCoordinateRegion)region1 
+isGreaterThanRegion2:(MKCoordinateRegion)region2 {    
     CGFloat region1Area = 
     region1.span.latitudeDelta * region1.span.longitudeDelta;
     CGFloat region2Area = 
     region2.span.latitudeDelta * region2.span.longitudeDelta;
-    if (region1Area < region2Area) {
-        return region1;
-    }
-    else {
-        return region2;
-    }
+    return (region1Area > region2Area);
 }
 
 #pragma mark - MKMapViewDelegate methods
@@ -333,7 +378,13 @@ didUpdateUserLocation:(MKUserLocation *)userLocation {
         // Update the region.
         receivedUserLocation = YES;
         self.mapView.showsUserLocation = YES;
-        MKCoordinateRegion region = [self upcomingStopRegion];
+        MKCoordinateRegion region = {{0, 0}, {0, 0}};
+        if (self.mapInitialFocusMode == MapInitialFocusModeUpcomingStop) {
+            region = [self upcomingStopRegion];
+        }
+        else {
+            region = [self allStopsRegion];
+        }
         
         [self.mapView setRegion:region animated:NO];
         
