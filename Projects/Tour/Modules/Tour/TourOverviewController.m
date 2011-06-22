@@ -52,7 +52,6 @@
 
 - (void)dealloc
 {
-    self.tourMapController.showingOverview = NO;
     [self deallocViews];
     self.delegate = nil;
     [super dealloc];
@@ -121,16 +120,6 @@
     [self deallocViews];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    self.tourMapController.showingOverview = YES;
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    self.tourMapController.showingOverview = NO;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
