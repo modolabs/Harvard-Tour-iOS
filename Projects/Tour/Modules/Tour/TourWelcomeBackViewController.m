@@ -34,11 +34,18 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+- (void)setupWebViewLayout {
 
-- (void) setupWebViewLayout {
-    
+    NSURL *baseURL = 
+    [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath] isDirectory:YES];
+    baseURL = [baseURL URLByAppendingPathComponent:@"modules/tour"];
+    NSURL *fileURL = 
+    [NSURL URLWithString:@"welcome_template.html" relativeToURL:baseURL];
+    NSError *error = nil;    
     NSString *htmlString = 
-    @"<html><head><style type=\"text/css\">img.middle {vertical-align:middle;}</style></head>";
+    [NSString 
+     stringWithContentsOfURL:fileURL 
+     encoding:NSUTF8StringEncoding error:&error];
     
 //    NSString * htmlInfoAboutStops = @"<p><font size=\"2\" type=\"helvetica\" />Each stop on the tour includes information on one or more of the following topics:</font></p>";    
 //    htmlString = [htmlString stringByAppendingString:htmlInfoAboutStops];
