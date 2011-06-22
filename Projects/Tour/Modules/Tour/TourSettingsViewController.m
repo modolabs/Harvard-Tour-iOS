@@ -123,8 +123,8 @@ typedef enum {
 }
 
 - (IBAction)endTourButtonTapped:(id)sender {
-    [self.delegate endTour];
     [self dismissModalViewControllerAnimated:YES];
+    [self.delegate endTour];
 }
 
 @end

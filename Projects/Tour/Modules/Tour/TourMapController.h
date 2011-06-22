@@ -35,7 +35,6 @@ typedef enum {
 @property (nonatomic, retain) IBOutlet UIImageView *zoomInOutIcon;
 @property (nonatomic, retain) IBOutlet UILabel *stopTitleLabel;
 @property (nonatomic, retain) IBOutlet UILabel *stopCaptionLabel;
-@property (nonatomic, retain) IBOutlet UIView *lenseIconsContainer;
 @property (nonatomic, retain) IBOutlet UILabel *mapTipLabel;
 @property (nonatomic) BOOL showMapTip;
 

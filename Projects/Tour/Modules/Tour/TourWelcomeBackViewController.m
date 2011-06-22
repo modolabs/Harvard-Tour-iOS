@@ -13,7 +13,9 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.title = @"Harvard Yard Tour";
+        TourModule *module = 
+        (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];        
+        [module setUpNavBarTitle:@"Harvard Yard Tour" navItem:self.navigationItem];        
     }
     return self;
 }
@@ -35,13 +37,17 @@
 
 - (void) setupWebViewLayout {
     
-    NSString * htmlString = @"<html><head><style type=\"text/css\">img.middle {vertical-align:middle;}</style></head><body><p>Welcome back! This is temporary text and should be replaced by the actual finalized text when ready</p>";
+    NSString *htmlString = 
+    @"<html><head><style type=\"text/css\">img.middle {vertical-align:middle;}</style></head>";
     
-    NSString * htmlInfoAboutStops = @"<p><font size=\"2\" type=\"helvetica\" />Each stop on the tour includes information on one or more of the following topics:</font></p>";
-    
-    htmlString = [htmlString stringByAppendingString:htmlInfoAboutStops];
+//    NSString * htmlInfoAboutStops = @"<p><font size=\"2\" type=\"helvetica\" />Each stop on the tour includes information on one or more of the following topics:</font></p>";    
+//    htmlString = [htmlString stringByAppendingString:htmlInfoAboutStops];
     
     NSArray * welcomeTextArray =  [[TourDataManager sharedManager] retrieveWelcomeText];
+    
+    NSString *welcomeText = [welcomeTextArray objectAtIndex:0]; // first string (welcome)s
+    htmlString = [htmlString stringByAppendingString:welcomeText];
+    htmlString = [htmlString stringByAppendingString:@"</font>"];
     
     if ([welcomeTextArray count] > 1) {
         
@@ -68,6 +74,9 @@
             htmlString = [htmlString stringByAppendingString:dlString];
         }
     }
+    
+    // close <font> and <html> tags
+    htmlString = [htmlString stringByAppendingString:@"</font></html>"];
     
     [self.webView loadHTMLString:htmlString baseURL:[[NSBundle mainBundle] resourceURL]];
     
