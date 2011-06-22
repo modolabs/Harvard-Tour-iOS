@@ -114,7 +114,13 @@
 }
 
 - (void)setupLenseTabs {
-    self.tabControl.tabPadding = 1.0;
+    UIView *background = 
+    [[UIImageView alloc] 
+     initWithImage:[UIImage imageNamed:@"modules/tour/tabs-background.png"]];
+    [self.tabControl addSubview:background];
+    [self.tabControl sendSubviewToBack:background];
+    [background release];
+    
     self.tabControl.tabSpacing = 0.0;
     NSInteger totalTabs = 5;
     CGFloat mininumTabWidth = self.tabControl.frame.size.width / totalTabs;
@@ -139,7 +145,7 @@
     [self displayLenseContent:lense];
 }
 
-- (void)displayLenseContent:(TourLense *)aLense; {
+- (void)displayLenseContent:(TourLense *)aLense {
     CGFloat lenseContentHeight = 0;
     // remove old content
     self.webView.delegate = nil;
@@ -148,7 +154,7 @@
     [moviePlayers removeAllObjects];
     for(UIView *subview in self.lenseContentView.subviews) {
         [subview removeFromSuperview];
-    }
+    }        
     
     for (TourLenseItem *lenseItem in [aLense orderedItems]) {
         if([lenseItem isKindOfClass:[TourLenseHtmlItem class]]) {

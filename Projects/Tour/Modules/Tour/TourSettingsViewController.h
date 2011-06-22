@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol TourSettingsControllerDelegate
+
+- (void)endTour;
+
+@end
 
 @interface TourSettingsViewController : UIViewController {
 
@@ -15,5 +20,8 @@
 }
 
 @property (nonatomic, retain) UISegmentedControl *segmentedControl;
+@property (assign) id<TourSettingsControllerDelegate> delegate;
+
+- (IBAction)endTourButtonTapped:(id)sender;
 
 @end

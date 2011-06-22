@@ -11,6 +11,7 @@
 #import "TourFinishViewController.h"
 
 @interface TourWalkingPathViewController (Private)
+
 - (void)deallocViews;
 - (void)refreshUI;
 - (void)loadMapControllerForCurrentStop;
@@ -20,7 +21,6 @@
 - (void)navigateToCurrentStopWithoutPromptingUserShouldAnimate:(BOOL)animated;
 - (void)promptUserAboutSkippingToStop:(TourStop *)stop 
                    actualSkippingCode:(StopChoiceCompletionBlock)skipBlock;
-- (void)navigateToCurrentStopWithoutPromptingUserShouldAnimate:(BOOL)animated;
 - (CGRect)frameForContent;
 - (CGRect)frameForPreviousContent;
 - (CGRect)frameForNextContent;
@@ -53,6 +53,7 @@
 - (void)dealloc
 {
     [self deallocViews];
+    
     self.currentStop = nil;
     self.initialStop = nil;
     self.actionSheetStop = nil;
@@ -314,6 +315,12 @@
             self.stopChoiceBlock = nil;
         }
     }
+    else {
+        // Don't move on. Change the selection to the designated current stop.
+        self.alternateCurrentStop = nil;
+        [self.tourMapController.mapView 
+         selectAnnotation:self.currentStop animated:YES];
+    }
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -371,6 +378,7 @@
     [[TourSettingsViewController alloc] 
      initWithNibName:@"TourSettingsViewController" 
      bundle:[NSBundle mainBundle]];
+    settingsController.delegate = self;
     UINavigationController *modalNavController = 
     [[UINavigationController alloc] 
      initWithRootViewController:settingsController];
@@ -439,13 +447,24 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
 #pragma mark TourMapControllerDelegate
 - (void)mapController:(TourMapController *)controller 
     didSelectTourStop:(TourStop *)stop {
+    // Update title.
+    TourModule *module = 
+    (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
+    [module updateNavBarTitle:stop.title navItem:self.navigationItem];
     if (stop != self.currentStop) {
-        // Update title.
-        TourModule *module = 
-        (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
-        [module updateNavBarTitle:stop.title navItem:self.navigationItem];
         self.alternateCurrentStop = stop;
     }
+}
+
+#pragma mark TourSettingsControllerDelegate
+- (void)endTour {
+    // Set up the state that usually causes the controller to move on to the 
+    // finish view.
+    self.tourStopMode = TourStopModeLenses;
+    self.currentStop = [[TourDataManager sharedManager] 
+                        lastTourStopForFirstTourStop:self.initialStop];
+    // Move on to the finish view.
+    [self navigateToCurrentStopWithoutPromptingUserShouldAnimate:NO];
 }
 
 @end

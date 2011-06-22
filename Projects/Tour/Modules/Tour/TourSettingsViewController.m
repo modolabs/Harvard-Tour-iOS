@@ -52,6 +52,8 @@ typedef enum {
 @implementation TourSettingsViewController
 
 @synthesize segmentedControl;
+@synthesize delegate;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -118,6 +120,11 @@ typedef enum {
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (IBAction)endTourButtonTapped:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
+    [self.delegate endTour];
 }
 
 @end

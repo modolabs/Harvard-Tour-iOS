@@ -9,6 +9,8 @@
 #import "TourFinishViewController.h"
 #import "TourDataManager.h"
 #import "LinkLauncher.h"
+#import "TourUnderLineLabel.h"
+#import "UIKit+KGOAdditions.h"
 
 static const CGFloat kDefaultLinkLabelHeight = 44.0f;
 static const CGFloat kSpaceBetweenLinkLabels = 4.0f;
@@ -30,7 +32,7 @@ static const CGFloat kSpaceBetweenLinkLabels = 4.0f;
         UILabel *linkLabel = 
         [self 
          linkLabelForLinkDefinition:linkDefinition 
-         withInitialFrame:CGRectMake(0, 
+         withInitialFrame:CGRectMake(5, 
                                      topY, 
                                      self.view.frame.size.width, 
                                      kDefaultLinkLabelHeight)];
@@ -42,9 +44,11 @@ static const CGFloat kSpaceBetweenLinkLabels = 4.0f;
 
 - (UILabel *)linkLabelForLinkDefinition:(NSDictionary *)linkDefinition
                        withInitialFrame:(CGRect)frame {
-    UILabel *label = [[[UILabel alloc] initWithFrame:frame] autorelease];
+    TourUnderLineLabel *label = [[[TourUnderLineLabel alloc] initWithFrame:frame] autorelease];
     label.backgroundColor = [UIColor clearColor];
+    
     label.text = [linkDefinition objectForKey:@"title"];
+    label.textColor = [UIColor colorWithHexString:@"#800000"];
     [label sizeToFit];
     NSString *urlString = [linkDefinition objectForKey:@"url"];
     if (urlString.length > 0) {
@@ -64,6 +68,7 @@ static const CGFloat kSpaceBetweenLinkLabels = 4.0f;
 @implementation TourFinishViewController
        
 @synthesize linkLaunchers;
+@synthesize webView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -78,6 +83,7 @@ static const CGFloat kSpaceBetweenLinkLabels = 4.0f;
 - (void)dealloc
 {
     [linkLaunchers release];
+    [self.webView release];
     [super dealloc];
 }
 
@@ -96,25 +102,27 @@ static const CGFloat kSpaceBetweenLinkLabels = 4.0f;
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.    
     NSArray *finishTextArray = [[TourDataManager sharedManager] finishText];
-    NSString *message = @"";
+    NSString *htmlString = @"<html><body>";
     if (finishTextArray.count > 0) {
-        message = [finishTextArray objectAtIndex:0];
+        htmlString = [htmlString stringByAppendingString:[finishTextArray objectAtIndex:0]];
+        //htmlString = [htmlString stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     }
-    thankYouLabel.text = [TourDataManager stripHTMLTagsFromString:message];
-    [thankYouLabel sizeToFit];
+    //thankYouLabel.text = [TourDataManager stripHTMLTagsFromString:message];
+    htmlString = [htmlString stringByAppendingString:@"</body></html>"];
     
-    // Add links.
-    if (finishTextArray.count > 1) {
-        [self 
-         addLinksFromArray:[finishTextArray objectAtIndex:1] 
-         startingAtY:thankYouLabel.frame.size.height + kSpaceBetweenLinkLabels];
-    }
-    scrollView.contentSize = CGSizeMake(280, 640);
+    self.webView.delegate = self;
+    self.webView.backgroundColor = [UIColor clearColor];
+    self.webView.userInteractionEnabled = NO;
+    self.webView.opaque = NO;
+    [self.webView loadHTMLString:htmlString baseURL:[[NSBundle mainBundle] resourceURL]];
+    
+    // Add links only when the webView has finished loading (in the webViewDelegate function below
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    self.webView = nil;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -123,6 +131,57 @@ static const CGFloat kSpaceBetweenLinkLabels = 4.0f;
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+#pragma mark UIWebView Delegate
+
+- (BOOL)webView:(UIWebView *)webView
+    shouldStartLoadWithRequest:(NSURLRequest *)request
+    navigationType:(UIWebViewNavigationType)navigationType
+{
+   // if ([[[request URL] absoluteString]
+     //   return YES;
+    
+    NSRange rangeHTTP = [[[request URL] absoluteString] rangeOfString:@"http"];
+    NSRange rangeWWW = [[[request URL] absoluteString] rangeOfString:@"www"];
+    
+    if ((rangeHTTP.location != NSNotFound) || (rangeWWW.location != NSNotFound))
+    {
+        [[UIApplication sharedApplication] openURL:[request URL]];
+        
+        return NO;
+    }
+    
+    return YES;
+    //NSLog(@"\nResource URL: %@\n", [[[NSBundle mainBundle] resourceURL] absoluteString]);
+    //NSLog(@"request URL: %@\n", [[request URL] absoluteString]);
+    
+
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    
+    // Re-sizing webView to fit the content. THis only works if the webView 
+    //is set to minimum height (1) right before calling sizeThatFits
+    
+    CGRect frame = self.webView.frame;
+    frame.size.height = 1;
+    self.webView.frame = frame;
+    CGSize fittingSize = [self.webView sizeThatFits:CGSizeZero];
+    frame.size = fittingSize;
+    self.webView.frame = frame;
+    
+    // noew place the links in the right places
+    NSArray *finishTextArray = [[TourDataManager sharedManager] finishText];
+    
+    // Add links.
+    if (finishTextArray.count > 1) {
+        [self 
+         addLinksFromArray:[finishTextArray objectAtIndex:1] 
+         startingAtY:self.webView.frame.size.height + kSpaceBetweenLinkLabels];
+    }
+    scrollView.contentSize = CGSizeMake(280, 640);
+    
 }
 
 @end
