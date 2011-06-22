@@ -46,6 +46,7 @@ typedef enum {
 @property (nonatomic, retain) MKAnnotationView *directionBeamAnnotationView;
 @property (nonatomic, retain) BeamAnnotation *beamAnnotation;
 @property (assign) id<TourMapControllerDelegate> delegate;
+@property (assign) BOOL showingOverview;
 
 - (IBAction)photoTapped:(id)sender;
 - (void)syncMapType;

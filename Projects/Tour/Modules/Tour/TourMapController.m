@@ -42,6 +42,7 @@ static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
 @synthesize directionBeamAnnotationView;
 @synthesize beamAnnotation;
 @synthesize delegate;
+@synthesize showingOverview;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -328,11 +329,11 @@ static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
 #pragma mark - MKMapViewDelegate methods
 
 - (void)mapView:(MKMapView *)mapView 
-didUpdateUserLocation:(MKUserLocation *)userLocation {
-    if ([[self class] userLocationIsValid:userLocation]) {
+didUpdateUserLocation:(MKUserLocation *)userLocation {    
+    if (!self.showingOverview && 
+        [[self class] userLocationIsValid:userLocation]) {
         // Update the region.
         receivedUserLocation = YES;
-        self.mapView.showsUserLocation = YES;
         MKCoordinateRegion region = [self upcomingStopRegion];
         
         [self.mapView setRegion:region animated:NO];
@@ -360,7 +361,8 @@ didUpdateUserLocation:(MKUserLocation *)userLocation {
     }
 }
 
-- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+- (void)mapView:(MKMapView *)mapView 
+didSelectAnnotationView:(MKAnnotationView *)view {
     // old selected annotation
     if([self.selectedStop.visited boolValue]) {
         self.selectedAnnotationView.image = 
