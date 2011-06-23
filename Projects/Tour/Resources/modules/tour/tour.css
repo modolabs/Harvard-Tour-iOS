@@ -1,3 +1,35 @@
-img.middle {
-    vertical-align:middle;
+body {
+	margin: 0;
+	padding: 0;
+	background: #eee url(modules/tour/welcome-background.jpg) ;	
+}
+#content {
+	padding: 10px;
+	font: 11pt/1.4em "Helvetica Neue", Helvetica, sans-serif;
+	color: #333;
+}
+#content p {
+	padding: 0;
+	margin: 0 0 1em 0;
+}
+.lens-legend {
+	list-style-type: none;
+	line-height: 24px;
+	margin: 0 0 1em 0;
+	padding: 0;
+}
+.lens-legend li {
+	clear: both;
+	padding: 0;
+	margin: 0 0 0.25em 0;
+}
+.lens-legend img {
+	float: left;
+	padding-right: 2px;
+	vertical-align: middle;
+}
+.lens-legend strong {
+	padding-right: 4px;
+	font-weight: bold;
+	color: #000;
 }
