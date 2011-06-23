@@ -1,0 +1,593 @@
+diff --git a/Contrib/Facebook/Facebook.xcodeproj/project.pbxproj b/Contrib/Facebook/Facebook.xcodeproj/project.pbxproj
+index 3450ba2..63df827 100644
+--- a/Contrib/Facebook/Facebook.xcodeproj/project.pbxproj
++++ b/Contrib/Facebook/Facebook.xcodeproj/project.pbxproj
+@@ -7,16 +7,16 @@
+ 	objects = {
+ 
+ /* Begin PBXBuildFile section */
+-		AA747D9F0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch */; };
++		AA747D9F0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch */; settings = {ATTRIBUTES = (); }; };
+ 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+-		AEA93B0A11D5293B000A4545 /* FBConnect.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0111D5293B000A4545 /* FBConnect.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		AEA93B0B11D5293B000A4545 /* FBRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0211D5293B000A4545 /* FBRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
++		AEA93B0A11D5293B000A4545 /* FBConnect.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0111D5293B000A4545 /* FBConnect.h */; settings = {ATTRIBUTES = (); }; };
++		AEA93B0B11D5293B000A4545 /* FBRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0211D5293B000A4545 /* FBRequest.h */; settings = {ATTRIBUTES = (); }; };
+ 		AEA93B0C11D5293B000A4545 /* FBRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B0311D5293B000A4545 /* FBRequest.m */; };
+ 		AEA93B0D11D5293B000A4545 /* Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B0411D5293B000A4545 /* Facebook.m */; };
+-		AEA93B0E11D5293B000A4545 /* Facebook.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0511D5293B000A4545 /* Facebook.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		AEA93B0F11D5293B000A4545 /* FBLoginDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0611D5293B000A4545 /* FBLoginDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
++		AEA93B0E11D5293B000A4545 /* Facebook.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0511D5293B000A4545 /* Facebook.h */; settings = {ATTRIBUTES = (); }; };
++		AEA93B0F11D5293B000A4545 /* FBLoginDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0611D5293B000A4545 /* FBLoginDialog.h */; settings = {ATTRIBUTES = (); }; };
+ 		AEA93B1011D5293B000A4545 /* FBLoginDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B0711D5293B000A4545 /* FBLoginDialog.m */; };
+-		AEA93B1111D5293B000A4545 /* FBDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0811D5293B000A4545 /* FBDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
++		AEA93B1111D5293B000A4545 /* FBDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0811D5293B000A4545 /* FBDialog.h */; settings = {ATTRIBUTES = (); }; };
+ 		AEA93B1211D5293B000A4545 /* FBDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B0911D5293B000A4545 /* FBDialog.m */; };
+ /* End PBXBuildFile section */
+ 
+@@ -211,7 +211,7 @@
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "if [ \"${DEPLOYMENT_LOCATION}\" = \"YES\" ]; then\n    cp -r ${DSTROOT}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\nelse\n    cp -r ${CONFIGURATION_BUILD_DIR}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\nfi";
++			shellScript = "#if [ \"${DEPLOYMENT_LOCATION}\" = \"YES\" ]; then\n#cp -r ${DSTROOT}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\n#else\n#cp -r ${CONFIGURATION_BUILD_DIR}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\n#fi";
+ 		};
+ /* End PBXShellScriptBuildPhase section */
+ 
+@@ -277,6 +277,7 @@
+ 				OTHER_LDFLAGS = "-ObjC";
+ 				PREBINDING = NO;
+ 				SDKROOT = iphoneos;
++				SKIP_INSTALL = YES;
+ 			};
+ 			name = Debug;
+ 		};
+@@ -290,6 +291,7 @@
+ 				OTHER_LDFLAGS = "-ObjC";
+ 				PREBINDING = NO;
+ 				SDKROOT = iphoneos;
++				SKIP_INSTALL = YES;
+ 			};
+ 			name = Release;
+ 		};
+diff --git a/Contrib/JSON/JSON.xcodeproj/project.pbxproj b/Contrib/JSON/JSON.xcodeproj/project.pbxproj
+index 765ead6..1a7fc42 100644
+--- a/Contrib/JSON/JSON.xcodeproj/project.pbxproj
++++ b/Contrib/JSON/JSON.xcodeproj/project.pbxproj
+@@ -22,24 +22,24 @@
+ /* End PBXAggregateTarget section */
+ 
+ /* Begin PBXBuildFile section */
+-		5351577A0F6E3BE100C8AABD /* SBJsonParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 535157780F6E3BE100C8AABD /* SBJsonParser.h */; settings = {ATTRIBUTES = (Private, ); }; };
++		5351577A0F6E3BE100C8AABD /* SBJsonParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 535157780F6E3BE100C8AABD /* SBJsonParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		5351577B0F6E3BE100C8AABD /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 535157790F6E3BE100C8AABD /* SBJsonParser.m */; };
+-		535157A50F6EE4A800C8AABD /* SBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 535157A30F6EE4A800C8AABD /* SBJsonWriter.h */; settings = {ATTRIBUTES = (Private, ); }; };
++		535157A50F6EE4A800C8AABD /* SBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 535157A30F6EE4A800C8AABD /* SBJsonWriter.h */; settings = {ATTRIBUTES = (); }; };
+ 		535157A60F6EE4A800C8AABD /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 535157A40F6EE4A800C8AABD /* SBJsonWriter.m */; };
+-		BC651A70125A502700280F5C /* SBJsonStreamWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = BC651A6C125A502700280F5C /* SBJsonStreamWriter.h */; settings = {ATTRIBUTES = (Private, ); }; };
++		BC651A70125A502700280F5C /* SBJsonStreamWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = BC651A6C125A502700280F5C /* SBJsonStreamWriter.h */; settings = {ATTRIBUTES = (); }; };
+ 		BC651A71125A502700280F5C /* SBJsonStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = BC651A6D125A502700280F5C /* SBJsonStreamWriter.m */; };
+-		BC9602B912A452CF0024BDA2 /* SBJsonStreamParserAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = BC9602B512A452CF0024BDA2 /* SBJsonStreamParserAdapter.h */; settings = {ATTRIBUTES = (Private, ); }; };
++		BC9602B912A452CF0024BDA2 /* SBJsonStreamParserAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = BC9602B512A452CF0024BDA2 /* SBJsonStreamParserAdapter.h */; settings = {ATTRIBUTES = (); }; };
+ 		BC9602BA12A452CF0024BDA2 /* SBJsonStreamParserAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = BC9602B612A452CF0024BDA2 /* SBJsonStreamParserAdapter.m */; };
+-		BCA822CC127D68F600DD3FD0 /* SBJsonTokeniser.h in Headers */ = {isa = PBXBuildFile; fileRef = BCA822C8127D68F600DD3FD0 /* SBJsonTokeniser.h */; settings = {ATTRIBUTES = (Private, ); }; };
++		BCA822CC127D68F600DD3FD0 /* SBJsonTokeniser.h in Headers */ = {isa = PBXBuildFile; fileRef = BCA822C8127D68F600DD3FD0 /* SBJsonTokeniser.h */; settings = {ATTRIBUTES = (); }; };
+ 		BCA822CD127D68F600DD3FD0 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA822C9127D68F600DD3FD0 /* SBJsonTokeniser.m */; };
+-		BCCEBEFF12B3E14500263D0F /* SBJsonStreamWriterState.h in Headers */ = {isa = PBXBuildFile; fileRef = BCCEBEFB12B3E14500263D0F /* SBJsonStreamWriterState.h */; };
++		BCCEBEFF12B3E14500263D0F /* SBJsonStreamWriterState.h in Headers */ = {isa = PBXBuildFile; fileRef = BCCEBEFB12B3E14500263D0F /* SBJsonStreamWriterState.h */; settings = {ATTRIBUTES = (); }; };
+ 		BCCEBF0012B3E14500263D0F /* SBJsonStreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = BCCEBEFC12B3E14500263D0F /* SBJsonStreamWriterState.m */; };
+-		BCE5E289129C7D3300C156C0 /* SBJsonStreamParser.h in Headers */ = {isa = PBXBuildFile; fileRef = BCE5E287129C7D3300C156C0 /* SBJsonStreamParser.h */; settings = {ATTRIBUTES = (Private, ); }; };
++		BCE5E289129C7D3300C156C0 /* SBJsonStreamParser.h in Headers */ = {isa = PBXBuildFile; fileRef = BCE5E287129C7D3300C156C0 /* SBJsonStreamParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		BCE5E2AE129C809700C156C0 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = BCE5E2AB129C809700C156C0 /* SBJsonStreamParser.m */; };
+-		BCE5E2AF129C809700C156C0 /* SBJsonStreamParserState.h in Headers */ = {isa = PBXBuildFile; fileRef = BCE5E2AC129C809700C156C0 /* SBJsonStreamParserState.h */; };
++		BCE5E2AF129C809700C156C0 /* SBJsonStreamParserState.h in Headers */ = {isa = PBXBuildFile; fileRef = BCE5E2AC129C809700C156C0 /* SBJsonStreamParserState.h */; settings = {ATTRIBUTES = (); }; };
+ 		BCE5E2B0129C809700C156C0 /* SBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = BCE5E2AD129C809700C156C0 /* SBJsonStreamParserState.m */; };
+-		FE2BBD860D8B0D6000184787 /* JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 53D2299A0C96129800276605 /* JSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		FE2BBD870D8B0D6000184787 /* NSObject+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = E75716430C96DB530084A449 /* NSObject+JSON.h */; settings = {ATTRIBUTES = (Private, ); }; };
++		FE2BBD860D8B0D6000184787 /* JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 53D2299A0C96129800276605 /* JSON.h */; settings = {ATTRIBUTES = (); }; };
++		FE2BBD870D8B0D6000184787 /* NSObject+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = E75716430C96DB530084A449 /* NSObject+JSON.h */; settings = {ATTRIBUTES = (); }; };
+ 		FE2BBD880D8B0D6000184787 /* NSObject+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = E75716440C96DB530084A449 /* NSObject+JSON.m */; };
+ /* End PBXBuildFile section */
+ 
+@@ -430,16 +430,16 @@
+ 			isa = PBXHeadersBuildPhase;
+ 			buildActionMask = 2147483647;
+ 			files = (
+-				FE2BBD860D8B0D6000184787 /* JSON.h in Headers */,
+ 				FE2BBD870D8B0D6000184787 /* NSObject+JSON.h in Headers */,
+ 				5351577A0F6E3BE100C8AABD /* SBJsonParser.h in Headers */,
+ 				535157A50F6EE4A800C8AABD /* SBJsonWriter.h in Headers */,
++				FE2BBD860D8B0D6000184787 /* JSON.h in Headers */,
+ 				BC651A70125A502700280F5C /* SBJsonStreamWriter.h in Headers */,
+ 				BCA822CC127D68F600DD3FD0 /* SBJsonTokeniser.h in Headers */,
+ 				BCE5E289129C7D3300C156C0 /* SBJsonStreamParser.h in Headers */,
+ 				BCE5E2AF129C809700C156C0 /* SBJsonStreamParserState.h in Headers */,
+-				BC9602B912A452CF0024BDA2 /* SBJsonStreamParserAdapter.h in Headers */,
+ 				BCCEBEFF12B3E14500263D0F /* SBJsonStreamWriterState.h in Headers */,
++				BC9602B912A452CF0024BDA2 /* SBJsonStreamParserAdapter.h in Headers */,
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 		};
+@@ -560,7 +560,7 @@
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "if [ \"${DEPLOYMENT_LOCATION}\" = \"YES\" ]; then\n    cp -r ${DSTROOT}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\nelse\n    cp -r ${CONFIGURATION_BUILD_DIR}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\nfi";
++			shellScript = "#if [ \"${DEPLOYMENT_LOCATION}\" = \"YES\" ]; then\n#cp -r ${DSTROOT}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\n#else\n#cp -r ${CONFIGURATION_BUILD_DIR}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\n#fi";
+ 		};
+ /* End PBXShellScriptBuildPhase section */
+ 
+@@ -651,6 +651,7 @@
+ 				PRODUCT_NAME = json;
+ 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+ 				SDKROOT = iphoneos;
++				SKIP_INSTALL = YES;
+ 			};
+ 			name = Debug;
+ 		};
+@@ -678,7 +679,7 @@
+ 				PRODUCT_NAME = json;
+ 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include;
+ 				SDKROOT = iphoneos;
+-				SKIP_INSTALL = NO;
++				SKIP_INSTALL = YES;
+ 			};
+ 			name = Release;
+ 		};
+diff --git a/Contrib/MGTwitterEngine b/Contrib/MGTwitterEngine
+--- a/Contrib/MGTwitterEngine
++++ b/Contrib/MGTwitterEngine
+@@ -1 +1 @@
+-Subproject commit e40658fb839da6ed437cadd494d15a1bdbdc815a
++Subproject commit e40658fb839da6ed437cadd494d15a1bdbdc815a-dirty
+diff --git a/Contrib/OAuth/OAuthConsumer.xcodeproj/project.pbxproj b/Contrib/OAuth/OAuthConsumer.xcodeproj/project.pbxproj
+index ab4fd4d..432cc6b 100644
+--- a/Contrib/OAuth/OAuthConsumer.xcodeproj/project.pbxproj
++++ b/Contrib/OAuth/OAuthConsumer.xcodeproj/project.pbxproj
+@@ -9,23 +9,23 @@
+ /* Begin PBXBuildFile section */
+ 		EB1391B612F26F6A004DBB7C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB1391B512F26F6A004DBB7C /* Foundation.framework */; };
+ 		EB1391B912F26F75004DBB7C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB1391B812F26F75004DBB7C /* Security.framework */; };
+-		EB1391C512F26FC9004DBB7C /* OASignatureProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = FC98DD570CD15F0400453F6C /* OASignatureProviding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391C612F26FD5004DBB7C /* NSString+URLEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF35E0CC9E73200C52F82 /* NSString+URLEncoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391C712F26FD5004DBB7C /* NSMutableURLRequest+Parameters.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF3CA0CCA69D600C52F82 /* NSMutableURLRequest+Parameters.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391C812F26FD5004DBB7C /* NSURL+Base.h in Headers */ = {isa = PBXBuildFile; fileRef = FC98DF550CD19A7C00453F6C /* NSURL+Base.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391C912F27010004DBB7C /* OADataFetcherTest.h in Headers */ = {isa = PBXBuildFile; fileRef = FCF317ED0CE181A30023F60C /* OADataFetcherTest.h */; };
+-		EB1391CA12F2703E004DBB7C /* OAuthConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = FC53ABB20CD99348001B1B99 /* OAuthConsumer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391CB12F2703E004DBB7C /* OAToken.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF07E0CC95E6A00C52F82 /* OAToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391CC12F2703E004DBB7C /* OAConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF2120CC9846D00C52F82 /* OAConsumer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391CD12F2703E004DBB7C /* OAMutableURLRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF3C50CC9F5B500C52F82 /* OAMutableURLRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391CE12F2703E004DBB7C /* OAHMAC_SHA1SignatureProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF3590CC9E32E00C52F82 /* OAHMAC_SHA1SignatureProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391CF12F2703E004DBB7C /* OAPlaintextSignatureProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = FC98DE010CD1659000453F6C /* OAPlaintextSignatureProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391D012F2703E004DBB7C /* OARequestParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF3BB0CC9F06C00C52F82 /* OARequestParameter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391D112F2703E004DBB7C /* OAServiceTicket.h in Headers */ = {isa = PBXBuildFile; fileRef = FCB87CA70CDFF1A000C75049 /* OAServiceTicket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391D212F2703E004DBB7C /* OADataFetcher.h in Headers */ = {isa = PBXBuildFile; fileRef = FCB87CB00CDFF40A00C75049 /* OADataFetcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391D312F2703E004DBB7C /* OAAsynchronousDataFetcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DFA860F0EFCF7B200F849D3 /* OAAsynchronousDataFetcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391D412F2703E004DBB7C /* OAToken_KeychainExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4571A8900DAC51A900E2A30E /* OAToken_KeychainExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB1391D512F27093004DBB7C /* Base64Transcoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4571A8850DAC519C00E2A30E /* Base64Transcoder.h */; };
++		EB1391C512F26FC9004DBB7C /* OASignatureProviding.h in Headers */ = {isa = PBXBuildFile; fileRef = FC98DD570CD15F0400453F6C /* OASignatureProviding.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391C612F26FD5004DBB7C /* NSString+URLEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF35E0CC9E73200C52F82 /* NSString+URLEncoding.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391C712F26FD5004DBB7C /* NSMutableURLRequest+Parameters.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF3CA0CCA69D600C52F82 /* NSMutableURLRequest+Parameters.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391C812F26FD5004DBB7C /* NSURL+Base.h in Headers */ = {isa = PBXBuildFile; fileRef = FC98DF550CD19A7C00453F6C /* NSURL+Base.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391C912F27010004DBB7C /* OADataFetcherTest.h in Headers */ = {isa = PBXBuildFile; fileRef = FCF317ED0CE181A30023F60C /* OADataFetcherTest.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391CA12F2703E004DBB7C /* OAuthConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = FC53ABB20CD99348001B1B99 /* OAuthConsumer.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391CB12F2703E004DBB7C /* OAToken.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF07E0CC95E6A00C52F82 /* OAToken.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391CC12F2703E004DBB7C /* OAConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF2120CC9846D00C52F82 /* OAConsumer.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391CD12F2703E004DBB7C /* OAMutableURLRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF3C50CC9F5B500C52F82 /* OAMutableURLRequest.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391CE12F2703E004DBB7C /* OAHMAC_SHA1SignatureProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF3590CC9E32E00C52F82 /* OAHMAC_SHA1SignatureProvider.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391CF12F2703E004DBB7C /* OAPlaintextSignatureProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = FC98DE010CD1659000453F6C /* OAPlaintextSignatureProvider.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391D012F2703E004DBB7C /* OARequestParameter.h in Headers */ = {isa = PBXBuildFile; fileRef = FCAAF3BB0CC9F06C00C52F82 /* OARequestParameter.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391D112F2703E004DBB7C /* OAServiceTicket.h in Headers */ = {isa = PBXBuildFile; fileRef = FCB87CA70CDFF1A000C75049 /* OAServiceTicket.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391D212F2703E004DBB7C /* OADataFetcher.h in Headers */ = {isa = PBXBuildFile; fileRef = FCB87CB00CDFF40A00C75049 /* OADataFetcher.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391D312F2703E004DBB7C /* OAAsynchronousDataFetcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DFA860F0EFCF7B200F849D3 /* OAAsynchronousDataFetcher.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391D412F2703E004DBB7C /* OAToken_KeychainExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 4571A8900DAC51A900E2A30E /* OAToken_KeychainExtensions.h */; settings = {ATTRIBUTES = (); }; };
++		EB1391D512F27093004DBB7C /* Base64Transcoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4571A8850DAC519C00E2A30E /* Base64Transcoder.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB1391D712F270BF004DBB7C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
+ 		EB1391D912F270EA004DBB7C /* OAToken.m in Sources */ = {isa = PBXBuildFile; fileRef = FCAAF07F0CC95E6A00C52F82 /* OAToken.m */; };
+ 		EB1391DA12F270EA004DBB7C /* OAConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = FCAAF2130CC9846D00C52F82 /* OAConsumer.m */; };
+@@ -293,16 +293,16 @@
+ 				EB1391C612F26FD5004DBB7C /* NSString+URLEncoding.h in Headers */,
+ 				EB1391C712F26FD5004DBB7C /* NSMutableURLRequest+Parameters.h in Headers */,
+ 				EB1391C812F26FD5004DBB7C /* NSURL+Base.h in Headers */,
++				EB1391C912F27010004DBB7C /* OADataFetcherTest.h in Headers */,
++				EB1391D512F27093004DBB7C /* Base64Transcoder.h in Headers */,
+ 				EB1391C512F26FC9004DBB7C /* OASignatureProviding.h in Headers */,
+ 				EB1391CE12F2703E004DBB7C /* OAHMAC_SHA1SignatureProvider.h in Headers */,
+ 				EB1391CF12F2703E004DBB7C /* OAPlaintextSignatureProvider.h in Headers */,
+ 				EB1391D012F2703E004DBB7C /* OARequestParameter.h in Headers */,
+ 				EB1391D112F2703E004DBB7C /* OAServiceTicket.h in Headers */,
+ 				EB1391D212F2703E004DBB7C /* OADataFetcher.h in Headers */,
+-				EB1391C912F27010004DBB7C /* OADataFetcherTest.h in Headers */,
+ 				EB1391D312F2703E004DBB7C /* OAAsynchronousDataFetcher.h in Headers */,
+ 				EB1391D412F2703E004DBB7C /* OAToken_KeychainExtensions.h in Headers */,
+-				EB1391D512F27093004DBB7C /* Base64Transcoder.h in Headers */,
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 		};
+@@ -392,7 +392,7 @@
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "[ ! -d ../usr/local/include/OAuthConsumer ] || rm -r ../usr/local/include/OAuthConsumer\n\nif [ \"${DEPLOYMENT_LOCATION}\" = \"YES\" ]; then\n    cp -r ${DSTROOT}${PUBLIC_HEADERS_FOLDER_PATH} ../usr/local/include/OAuthConsumer\nelse\n    cp -r ${CONFIGURATION_BUILD_DIR}${PUBLIC_HEADERS_FOLDER_PATH} ../usr/local/include/OAuthConsumer\nfi\n";
++			shellScript = "#[ ! -d ../usr/local/include/OAuthConsumer ] || rm -r ../usr/local/include/OAuthConsumer\n#\n#if [ \"${DEPLOYMENT_LOCATION}\" = \"YES\" ]; then\n#    cp -r ${DSTROOT}${PUBLIC_HEADERS_FOLDER_PATH} ../usr/local/include/OAuthConsumer\n#else\n#    cp -r ${CONFIGURATION_BUILD_DIR}${PUBLIC_HEADERS_FOLDER_PATH} ../usr/local/include/OAuthConsumer\n#fi\n";
+ 		};
+ /* End PBXShellScriptBuildPhase section */
+ 
+@@ -441,6 +441,7 @@
+ 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+ 				GCC_WARN_UNUSED_VARIABLE = YES;
+ 				PREBINDING = NO;
++				SKIP_INSTALL = YES;
+ 			};
+ 			name = Debug;
+ 		};
+@@ -453,6 +454,7 @@
+ 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+ 				GCC_WARN_UNUSED_VARIABLE = YES;
+ 				PREBINDING = NO;
++				SKIP_INSTALL = YES;
+ 			};
+ 			name = Release;
+ 		};
+diff --git a/Contrib/SFHFKeychainUtils/SFHFKeychainUtils.xcodeproj/project.pbxproj b/Contrib/SFHFKeychainUtils/SFHFKeychainUtils.xcodeproj/project.pbxproj
+index 07c682c..405265f 100644
+--- a/Contrib/SFHFKeychainUtils/SFHFKeychainUtils.xcodeproj/project.pbxproj
++++ b/Contrib/SFHFKeychainUtils/SFHFKeychainUtils.xcodeproj/project.pbxproj
+@@ -7,9 +7,9 @@
+ 	objects = {
+ 
+ /* Begin PBXBuildFile section */
+-		AA747D9F0F9514B9006C5449 /* SFHFKeychainUtils_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* SFHFKeychainUtils_Prefix.pch */; };
++		AA747D9F0F9514B9006C5449 /* SFHFKeychainUtils_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* SFHFKeychainUtils_Prefix.pch */; settings = {ATTRIBUTES = (); }; };
+ 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+-		EBAA858A12F7280F00B743C3 /* SFHFKeychainUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = EBAA858812F7280F00B743C3 /* SFHFKeychainUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
++		EBAA858A12F7280F00B743C3 /* SFHFKeychainUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = EBAA858812F7280F00B743C3 /* SFHFKeychainUtils.h */; settings = {ATTRIBUTES = (); }; };
+ 		EBAA858B12F7280F00B743C3 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAA858912F7280F00B743C3 /* SFHFKeychainUtils.m */; };
+ /* End PBXBuildFile section */
+ 
+@@ -147,7 +147,7 @@
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "if [ \"${DEPLOYMENT_LOCATION}\" = \"YES\" ]; then\ncp -r ${DSTROOT}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\nelse\ncp -r ${CONFIGURATION_BUILD_DIR}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\nfi\n\n";
++			shellScript = "#if [ \"${DEPLOYMENT_LOCATION}\" = \"YES\" ]; then\n#cp -r ${DSTROOT}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\n#else\n#cp -r ${CONFIGURATION_BUILD_DIR}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\n#fi\n\n";
+ 		};
+ /* End PBXShellScriptBuildPhase section */
+ 
+@@ -206,6 +206,7 @@
+ 				OTHER_LDFLAGS = "-ObjC";
+ 				PREBINDING = NO;
+ 				SDKROOT = iphoneos;
++				SKIP_INSTALL = YES;
+ 			};
+ 			name = Debug;
+ 		};
+@@ -219,6 +220,7 @@
+ 				OTHER_LDFLAGS = "-ObjC";
+ 				PREBINDING = NO;
+ 				SDKROOT = iphoneos;
++				SKIP_INSTALL = YES;
+ 			};
+ 			name = Release;
+ 		};
+diff --git a/Contrib/Twitter/Twitter.xcodeproj/project.pbxproj b/Contrib/Twitter/Twitter.xcodeproj/project.pbxproj
+index 25f62ce..528b085 100644
+--- a/Contrib/Twitter/Twitter.xcodeproj/project.pbxproj
++++ b/Contrib/Twitter/Twitter.xcodeproj/project.pbxproj
+@@ -7,45 +7,45 @@
+ 	objects = {
+ 
+ /* Begin PBXBuildFile section */
+-		AA747D9F0F9514B9006C5449 /* Twitter_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* Twitter_Prefix.pch */; };
++		AA747D9F0F9514B9006C5449 /* Twitter_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* Twitter_Prefix.pch */; settings = {ATTRIBUTES = (); }; };
+ 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
+-		EB13903912F26C52004DBB7C /* MGTwitterEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = EB138FFB12F26C52004DBB7C /* MGTwitterEngine.h */; settings = {ATTRIBUTES = (Public, ); }; };
++		EB13903912F26C52004DBB7C /* MGTwitterEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = EB138FFB12F26C52004DBB7C /* MGTwitterEngine.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13903A12F26C52004DBB7C /* MGTwitterEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = EB138FFC12F26C52004DBB7C /* MGTwitterEngine.m */; };
+-		EB13903C12F26C52004DBB7C /* MGTwitterEngineDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900112F26C52004DBB7C /* MGTwitterEngineDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB13903D12F26C52004DBB7C /* MGTwitterEngineGlobalHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900212F26C52004DBB7C /* MGTwitterEngineGlobalHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB13903E12F26C52004DBB7C /* MGTwitterHTTPURLConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900312F26C52004DBB7C /* MGTwitterHTTPURLConnection.h */; };
++		EB13903C12F26C52004DBB7C /* MGTwitterEngineDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900112F26C52004DBB7C /* MGTwitterEngineDelegate.h */; settings = {ATTRIBUTES = (); }; };
++		EB13903D12F26C52004DBB7C /* MGTwitterEngineGlobalHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900212F26C52004DBB7C /* MGTwitterEngineGlobalHeader.h */; settings = {ATTRIBUTES = (); }; };
++		EB13903E12F26C52004DBB7C /* MGTwitterHTTPURLConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900312F26C52004DBB7C /* MGTwitterHTTPURLConnection.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13903F12F26C52004DBB7C /* MGTwitterHTTPURLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13900412F26C52004DBB7C /* MGTwitterHTTPURLConnection.m */; };
+-		EB13904012F26C52004DBB7C /* MGTwitterLibXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900512F26C52004DBB7C /* MGTwitterLibXMLParser.h */; };
++		EB13904012F26C52004DBB7C /* MGTwitterLibXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900512F26C52004DBB7C /* MGTwitterLibXMLParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13904112F26C52004DBB7C /* MGTwitterLibXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13900612F26C52004DBB7C /* MGTwitterLibXMLParser.m */; };
+-		EB13904212F26C52004DBB7C /* MGTwitterMessagesLibXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900712F26C52004DBB7C /* MGTwitterMessagesLibXMLParser.h */; };
++		EB13904212F26C52004DBB7C /* MGTwitterMessagesLibXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900712F26C52004DBB7C /* MGTwitterMessagesLibXMLParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13904312F26C52004DBB7C /* MGTwitterMessagesLibXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13900812F26C52004DBB7C /* MGTwitterMessagesLibXMLParser.m */; };
+-		EB13904412F26C52004DBB7C /* MGTwitterMessagesParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900912F26C52004DBB7C /* MGTwitterMessagesParser.h */; };
++		EB13904412F26C52004DBB7C /* MGTwitterMessagesParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900912F26C52004DBB7C /* MGTwitterMessagesParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13904512F26C52004DBB7C /* MGTwitterMessagesParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13900A12F26C52004DBB7C /* MGTwitterMessagesParser.m */; };
+-		EB13904812F26C52004DBB7C /* MGTwitterMiscLibXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900D12F26C52004DBB7C /* MGTwitterMiscLibXMLParser.h */; };
++		EB13904812F26C52004DBB7C /* MGTwitterMiscLibXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900D12F26C52004DBB7C /* MGTwitterMiscLibXMLParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13904912F26C52004DBB7C /* MGTwitterMiscLibXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13900E12F26C52004DBB7C /* MGTwitterMiscLibXMLParser.m */; };
+-		EB13904A12F26C52004DBB7C /* MGTwitterMiscParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900F12F26C52004DBB7C /* MGTwitterMiscParser.h */; };
++		EB13904A12F26C52004DBB7C /* MGTwitterMiscParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13900F12F26C52004DBB7C /* MGTwitterMiscParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13904B12F26C52004DBB7C /* MGTwitterMiscParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13901012F26C52004DBB7C /* MGTwitterMiscParser.m */; };
+-		EB13904E12F26C52004DBB7C /* MGTwitterParserDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13901312F26C52004DBB7C /* MGTwitterParserDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB13904F12F26C52004DBB7C /* MGTwitterRequestTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13901412F26C52004DBB7C /* MGTwitterRequestTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
+-		EB13905212F26C52004DBB7C /* MGTwitterSocialGraphLibXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13901712F26C52004DBB7C /* MGTwitterSocialGraphLibXMLParser.h */; };
++		EB13904E12F26C52004DBB7C /* MGTwitterParserDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13901312F26C52004DBB7C /* MGTwitterParserDelegate.h */; settings = {ATTRIBUTES = (); }; };
++		EB13904F12F26C52004DBB7C /* MGTwitterRequestTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13901412F26C52004DBB7C /* MGTwitterRequestTypes.h */; settings = {ATTRIBUTES = (); }; };
++		EB13905212F26C52004DBB7C /* MGTwitterSocialGraphLibXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13901712F26C52004DBB7C /* MGTwitterSocialGraphLibXMLParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13905312F26C52004DBB7C /* MGTwitterSocialGraphLibXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13901812F26C52004DBB7C /* MGTwitterSocialGraphLibXMLParser.m */; };
+-		EB13905412F26C52004DBB7C /* MGTwitterSocialGraphParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13901912F26C52004DBB7C /* MGTwitterSocialGraphParser.h */; };
++		EB13905412F26C52004DBB7C /* MGTwitterSocialGraphParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13901912F26C52004DBB7C /* MGTwitterSocialGraphParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13905512F26C52004DBB7C /* MGTwitterSocialGraphParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13901A12F26C52004DBB7C /* MGTwitterSocialGraphParser.m */; };
+-		EB13905612F26C52004DBB7C /* MGTwitterStatusesLibXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13901B12F26C52004DBB7C /* MGTwitterStatusesLibXMLParser.h */; };
++		EB13905612F26C52004DBB7C /* MGTwitterStatusesLibXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13901B12F26C52004DBB7C /* MGTwitterStatusesLibXMLParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13905712F26C52004DBB7C /* MGTwitterStatusesLibXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13901C12F26C52004DBB7C /* MGTwitterStatusesLibXMLParser.m */; };
+-		EB13905812F26C52004DBB7C /* MGTwitterStatusesParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13901D12F26C52004DBB7C /* MGTwitterStatusesParser.h */; };
++		EB13905812F26C52004DBB7C /* MGTwitterStatusesParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13901D12F26C52004DBB7C /* MGTwitterStatusesParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13905912F26C52004DBB7C /* MGTwitterStatusesParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13901E12F26C52004DBB7C /* MGTwitterStatusesParser.m */; };
+-		EB13905E12F26C52004DBB7C /* MGTwitterUserListsParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13902312F26C52004DBB7C /* MGTwitterUserListsParser.h */; };
++		EB13905E12F26C52004DBB7C /* MGTwitterUserListsParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13902312F26C52004DBB7C /* MGTwitterUserListsParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13905F12F26C52004DBB7C /* MGTwitterUserListsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13902412F26C52004DBB7C /* MGTwitterUserListsParser.m */; };
+-		EB13906012F26C52004DBB7C /* MGTwitterUsersLibXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13902512F26C52004DBB7C /* MGTwitterUsersLibXMLParser.h */; };
++		EB13906012F26C52004DBB7C /* MGTwitterUsersLibXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13902512F26C52004DBB7C /* MGTwitterUsersLibXMLParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13906112F26C52004DBB7C /* MGTwitterUsersLibXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13902612F26C52004DBB7C /* MGTwitterUsersLibXMLParser.m */; };
+-		EB13906212F26C52004DBB7C /* MGTwitterUsersParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13902712F26C52004DBB7C /* MGTwitterUsersParser.h */; };
++		EB13906212F26C52004DBB7C /* MGTwitterUsersParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13902712F26C52004DBB7C /* MGTwitterUsersParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13906312F26C52004DBB7C /* MGTwitterUsersParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13902812F26C52004DBB7C /* MGTwitterUsersParser.m */; };
+-		EB13906612F26C52004DBB7C /* MGTwitterXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13902B12F26C52004DBB7C /* MGTwitterXMLParser.h */; };
++		EB13906612F26C52004DBB7C /* MGTwitterXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13902B12F26C52004DBB7C /* MGTwitterXMLParser.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13906712F26C52004DBB7C /* MGTwitterXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13902C12F26C52004DBB7C /* MGTwitterXMLParser.m */; };
+-		EB13906A12F26C52004DBB7C /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13902F12F26C52004DBB7C /* NSData+Base64.h */; };
++		EB13906A12F26C52004DBB7C /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13902F12F26C52004DBB7C /* NSData+Base64.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13906B12F26C52004DBB7C /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13903012F26C52004DBB7C /* NSData+Base64.m */; };
+-		EB13906C12F26C52004DBB7C /* NSString+UUID.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13903112F26C52004DBB7C /* NSString+UUID.h */; };
++		EB13906C12F26C52004DBB7C /* NSString+UUID.h in Headers */ = {isa = PBXBuildFile; fileRef = EB13903112F26C52004DBB7C /* NSString+UUID.h */; settings = {ATTRIBUTES = (); }; };
+ 		EB13906D12F26C52004DBB7C /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = EB13903212F26C52004DBB7C /* NSString+UUID.m */; };
+ 		EB99B01012F3698D0065EE93 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB99B00F12F3698D0065EE93 /* libxml2.dylib */; };
+ /* End PBXBuildFile section */
+@@ -234,17 +234,17 @@
+ 			buildActionMask = 2147483647;
+ 			files = (
+ 				AA747D9F0F9514B9006C5449 /* Twitter_Prefix.pch in Headers */,
++				EB13903E12F26C52004DBB7C /* MGTwitterHTTPURLConnection.h in Headers */,
+ 				EB13903912F26C52004DBB7C /* MGTwitterEngine.h in Headers */,
+ 				EB13903C12F26C52004DBB7C /* MGTwitterEngineDelegate.h in Headers */,
+ 				EB13903D12F26C52004DBB7C /* MGTwitterEngineGlobalHeader.h in Headers */,
+-				EB13903E12F26C52004DBB7C /* MGTwitterHTTPURLConnection.h in Headers */,
++				EB13904E12F26C52004DBB7C /* MGTwitterParserDelegate.h in Headers */,
++				EB13904F12F26C52004DBB7C /* MGTwitterRequestTypes.h in Headers */,
+ 				EB13904012F26C52004DBB7C /* MGTwitterLibXMLParser.h in Headers */,
+ 				EB13904212F26C52004DBB7C /* MGTwitterMessagesLibXMLParser.h in Headers */,
+ 				EB13904412F26C52004DBB7C /* MGTwitterMessagesParser.h in Headers */,
+ 				EB13904812F26C52004DBB7C /* MGTwitterMiscLibXMLParser.h in Headers */,
+ 				EB13904A12F26C52004DBB7C /* MGTwitterMiscParser.h in Headers */,
+-				EB13904E12F26C52004DBB7C /* MGTwitterParserDelegate.h in Headers */,
+-				EB13904F12F26C52004DBB7C /* MGTwitterRequestTypes.h in Headers */,
+ 				EB13905212F26C52004DBB7C /* MGTwitterSocialGraphLibXMLParser.h in Headers */,
+ 				EB13905412F26C52004DBB7C /* MGTwitterSocialGraphParser.h in Headers */,
+ 				EB13905612F26C52004DBB7C /* MGTwitterStatusesLibXMLParser.h in Headers */,
+@@ -332,7 +332,7 @@
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "if [ \"${DEPLOYMENT_LOCATION}\" = \"YES\" ]; then\n    cp -r ${DSTROOT}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\nelse\n    cp -r ${CONFIGURATION_BUILD_DIR}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\nfi";
++			shellScript = "#if [ \"${DEPLOYMENT_LOCATION}\" = \"YES\" ]; then\n#cp -r ${DSTROOT}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\n#else\n#cp -r ${CONFIGURATION_BUILD_DIR}${PUBLIC_HEADERS_FOLDER_PATH}/* ../usr/local/include\n#fi";
+ 		};
+ /* End PBXShellScriptBuildPhase section */
+ 
+@@ -415,6 +415,7 @@
+ 				OTHER_LDFLAGS = "-ObjC";
+ 				PREBINDING = NO;
+ 				SDKROOT = iphoneos;
++				SKIP_INSTALL = YES;
+ 			};
+ 			name = Debug;
+ 		};
+@@ -428,6 +429,7 @@
+ 				OTHER_LDFLAGS = "-ObjC";
+ 				PREBINDING = NO;
+ 				SDKROOT = iphoneos;
++				SKIP_INSTALL = YES;
+ 			};
+ 			name = Release;
+ 		};
+diff --git a/Projects/Tour/Tour.xcodeproj/project.pbxproj b/Projects/Tour/Tour.xcodeproj/project.pbxproj
+index 65969c1..4573e3b 100644
+--- a/Projects/Tour/Tour.xcodeproj/project.pbxproj
++++ b/Projects/Tour/Tour.xcodeproj/project.pbxproj
+@@ -233,41 +233,6 @@
+ /* End PBXBuildFile section */
+ 
+ /* Begin PBXContainerItemProxy section */
+-		7ED994E41345352B00D8F866 /* PBXContainerItemProxy */ = {
+-			isa = PBXContainerItemProxy;
+-			containerPortal = EB99B67312F3A8E40065EE93 /* OAuthConsumer.xcodeproj */;
+-			proxyType = 1;
+-			remoteGlobalIDString = EB1391B112F26F48004DBB7C;
+-			remoteInfo = OAuthConsumer;
+-		};
+-		7ED994E61345352B00D8F866 /* PBXContainerItemProxy */ = {
+-			isa = PBXContainerItemProxy;
+-			containerPortal = EBAA860812F728CE00B743C3 /* SFHFKeychainUtils.xcodeproj */;
+-			proxyType = 1;
+-			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+-			remoteInfo = SFHFKeychainUtils;
+-		};
+-		7ED994E81345352B00D8F866 /* PBXContainerItemProxy */ = {
+-			isa = PBXContainerItemProxy;
+-			containerPortal = EB138EE812F251EB004DBB7C /* Facebook.xcodeproj */;
+-			proxyType = 1;
+-			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+-			remoteInfo = "facebook-ios-sdk";
+-		};
+-		7ED994EA1345352B00D8F866 /* PBXContainerItemProxy */ = {
+-			isa = PBXContainerItemProxy;
+-			containerPortal = EB99B38C12F37FDC0065EE93 /* JSON.xcodeproj */;
+-			proxyType = 1;
+-			remoteGlobalIDString = FE2BBD7F0D8B0D3900184787;
+-			remoteInfo = libjson;
+-		};
+-		7ED994EC1345352B00D8F866 /* PBXContainerItemProxy */ = {
+-			isa = PBXContainerItemProxy;
+-			containerPortal = EB99B08912F36F3D0065EE93 /* Twitter.xcodeproj */;
+-			proxyType = 1;
+-			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+-			remoteInfo = Twitter;
+-		};
+ 		EB138EEC12F251EB004DBB7C /* PBXContainerItemProxy */ = {
+ 			isa = PBXContainerItemProxy;
+ 			containerPortal = EB138EE812F251EB004DBB7C /* Facebook.xcodeproj */;
+@@ -660,7 +625,6 @@
+ 		EB99B08912F36F3D0065EE93 /* Twitter.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Twitter.xcodeproj; path = Twitter/Twitter.xcodeproj; sourceTree = "<group>"; };
+ 		EB99B38C12F37FDC0065EE93 /* JSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JSON.xcodeproj; path = JSON/JSON.xcodeproj; sourceTree = "<group>"; };
+ 		EB99B67312F3A8E40065EE93 /* OAuthConsumer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OAuthConsumer.xcodeproj; path = OAuth/OAuthConsumer.xcodeproj; sourceTree = "<group>"; };
+-		EB99B85E12F3AEC10065EE93 /* usr */ = {isa = PBXFileReference; lastKnownFileType = folder; path = usr; sourceTree = "<group>"; };
+ 		EB9AF298130B56AD003B9769 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = ../../Resources/MainWindow.xib; sourceTree = SOURCE_ROOT; };
+ 		EBAA860812F728CE00B743C3 /* SFHFKeychainUtils.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SFHFKeychainUtils.xcodeproj; path = SFHFKeychainUtils/SFHFKeychainUtils.xcodeproj; sourceTree = "<group>"; };
+ 		EBAE863E1215FB0D00F370BE /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = Resources/Icon.png; sourceTree = "<group>"; };
+@@ -1273,7 +1237,6 @@
+ 				EB99B08912F36F3D0065EE93 /* Twitter.xcodeproj */,
+ 				EB138EE812F251EB004DBB7C /* Facebook.xcodeproj */,
+ 				EBAA860812F728CE00B743C3 /* SFHFKeychainUtils.xcodeproj */,
+-				EB99B85E12F3AEC10065EE93 /* usr */,
+ 			);
+ 			name = Contrib;
+ 			path = ../../Contrib;
+@@ -1497,11 +1460,6 @@
+ 			buildRules = (
+ 			);
+ 			dependencies = (
+-				7ED994EB1345352B00D8F866 /* PBXTargetDependency */,
+-				7ED994E91345352B00D8F866 /* PBXTargetDependency */,
+-				7ED994E51345352B00D8F866 /* PBXTargetDependency */,
+-				7ED994ED1345352B00D8F866 /* PBXTargetDependency */,
+-				7ED994E71345352B00D8F866 /* PBXTargetDependency */,
+ 			);
+ 			name = Tour;
+ 			productName = Tour;
+@@ -1842,34 +1800,6 @@
+ 		};
+ /* End PBXSourcesBuildPhase section */
+ 
+-/* Begin PBXTargetDependency section */
+-		7ED994E51345352B00D8F866 /* PBXTargetDependency */ = {
+-			isa = PBXTargetDependency;
+-			name = OAuthConsumer;
+-			targetProxy = 7ED994E41345352B00D8F866 /* PBXContainerItemProxy */;
+-		};
+-		7ED994E71345352B00D8F866 /* PBXTargetDependency */ = {
+-			isa = PBXTargetDependency;
+-			name = SFHFKeychainUtils;
+-			targetProxy = 7ED994E61345352B00D8F866 /* PBXContainerItemProxy */;
+-		};
+-		7ED994E91345352B00D8F866 /* PBXTargetDependency */ = {
+-			isa = PBXTargetDependency;
+-			name = "facebook-ios-sdk";
+-			targetProxy = 7ED994E81345352B00D8F866 /* PBXContainerItemProxy */;
+-		};
+-		7ED994EB1345352B00D8F866 /* PBXTargetDependency */ = {
+-			isa = PBXTargetDependency;
+-			name = libjson;
+-			targetProxy = 7ED994EA1345352B00D8F866 /* PBXContainerItemProxy */;
+-		};
+-		7ED994ED1345352B00D8F866 /* PBXTargetDependency */ = {
+-			isa = PBXTargetDependency;
+-			name = Twitter;
+-			targetProxy = 7ED994EC1345352B00D8F866 /* PBXContainerItemProxy */;
+-		};
+-/* End PBXTargetDependency section */
+-
+ /* Begin XCBuildConfiguration section */
+ 		1D6058940D05DD3E006BFB54 /* Debug - Development */ = {
+ 			isa = XCBuildConfiguration;
+@@ -1885,10 +1815,29 @@
+ 			};
+ 			name = "Release - Production";
+ 		};
++		A618C99B13AFAC4000D959DC /* Debug - AdHoc */ = {
++			isa = XCBuildConfiguration;
++			baseConfigurationReference = EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */;
++			buildSettings = {
++				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
++				CODE_SIGN_IDENTITY = "iPhone Developer: James Kang (33D6U435TG)";
++				PRODUCT_NAME = Tour;
++				PROVISIONING_PROFILE = "D09DEFB6-107B-4E75-8AF3-7D2D37AF635F";
++				TARGETED_DEVICE_FAMILY = "1,2";
++			};
++			name = "Debug - AdHoc";
++		};
++		A618C99C13AFAC4000D959DC /* Debug - AdHoc */ = {
++			isa = XCBuildConfiguration;
++			buildSettings = {
++			};
++			name = "Debug - AdHoc";
++		};
+ 		C01FCF4F08A954540054247B /* Debug - Development */ = {
+ 			isa = XCBuildConfiguration;
+ 			baseConfigurationReference = EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */;
+ 			buildSettings = {
++				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+ 				PRODUCT_NAME = Tour;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+ 			};
+@@ -1898,6 +1847,7 @@
+ 			isa = XCBuildConfiguration;
+ 			baseConfigurationReference = EBC1C7041347B8D20045CE9C /* kurogo.xcconfig */;
+ 			buildSettings = {
++				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+ 				PRODUCT_NAME = Tour;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+ 			};
+@@ -1907,6 +1857,7 @@
+ 			isa = XCBuildConfiguration;
+ 			baseConfigurationReference = EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */;
+ 			buildSettings = {
++				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+ 				PRODUCT_NAME = Tour;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+ 			};
+@@ -1923,6 +1874,7 @@
+ 			isa = XCBuildConfiguration;
+ 			baseConfigurationReference = EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */;
+ 			buildSettings = {
++				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+ 				PRODUCT_NAME = Tour;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+ 			};
+@@ -1938,6 +1890,7 @@
+ 			isa = XCBuildConfiguration;
+ 			baseConfigurationReference = EBC1C7041347B8D20045CE9C /* kurogo.xcconfig */;
+ 			buildSettings = {
++				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+ 				PRODUCT_NAME = Tour;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+ 			};
+@@ -1954,6 +1907,7 @@
+ 			isa = XCBuildConfiguration;
+ 			baseConfigurationReference = EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */;
+ 			buildSettings = {
++				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+ 				PRODUCT_NAME = Tour;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+ 			};
+@@ -1970,6 +1924,7 @@
+ 			isa = XCBuildConfiguration;
+ 			baseConfigurationReference = EBC1C7041347B8D20045CE9C /* kurogo.xcconfig */;
+ 			buildSettings = {
++				CODE_SIGN_ENTITLEMENTS = Entitlements.plist;
+ 				PRODUCT_NAME = Tour;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+ 			};
+@@ -1992,6 +1947,7 @@
+ 				EBAE87921219905300F370BE /* Debug - Testing */,
+ 				DE8B4CF8110F92DC00B7D991 /* Debug - Staging */,
+ 				DE8B4DBF110FAB1100B7D991 /* Debug - Production */,
++				A618C99C13AFAC4000D959DC /* Debug - AdHoc */,
+ 				DEB0B3DE11122D3200021561 /* Release - Staging */,
+ 				EBAEA0741223320800F370BE /* Release - Testing */,
+ 				1D6058950D05DD3E006BFB54 /* Release - Production */,
+@@ -2006,6 +1962,7 @@
+ 				EBAE87911219905300F370BE /* Debug - Testing */,
+ 				DE8B4CF7110F92DC00B7D991 /* Debug - Staging */,
+ 				DE8B4DBE110FAB1100B7D991 /* Debug - Production */,
++				A618C99B13AFAC4000D959DC /* Debug - AdHoc */,
+ 				DEB0B3DD11122D3200021561 /* Release - Staging */,
+ 				EBAEA0731223320800F370BE /* Release - Testing */,
+ 				C01FCF5008A954540054247B /* Release - Production */,
