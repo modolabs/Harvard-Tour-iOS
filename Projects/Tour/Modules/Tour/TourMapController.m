@@ -153,6 +153,23 @@ isGreaterThanRegion2:(MKCoordinateRegion)region2;
     return _selectedStop;
 }
 
+- (BOOL)isAnnotation:(id<MKAnnotation>)annotation inRegion:(MKCoordinateRegion)region {
+    CLLocationCoordinate2D location = annotation.coordinate;
+    if(location.latitude < region.center.latitude - region.span.latitudeDelta / 2) {
+        return NO;
+    }
+    if(location.latitude > region.center.latitude + region.span.latitudeDelta / 2) {
+        return NO;
+    }
+    if(location.longitude < region.center.longitude - region.span.longitudeDelta / 2) {
+        return NO;
+    }
+    if(location.longitude > region.center.longitude + region.span.latitudeDelta / 2) {
+        return NO;
+    }
+    return YES;
+}
+
 - (void)showSelectedStop {
     if(approachPhotoZoomedIn) {
         self.imageViewControl.frame = photoZoomedOutFrame;
@@ -163,9 +180,7 @@ isGreaterThanRegion2:(MKCoordinateRegion)region2;
     self.stopTitleLabel.text = _selectedStop.title;
     self.stopCaptionLabel.text = _selectedStop.subtitle;
     
-    // make sure annotation is visible
-    NSSet *visibleAnnotations = [mapView annotationsInMapRect:[mapView visibleMapRect]];
-    if(![visibleAnnotations containsObject:_selectedStop]) {
+    if(![self isAnnotation:_selectedStop inRegion:[mapView region]]) {
         // move annotation into view
         [mapView setCenterCoordinate:_selectedStop.coordinate animated:YES];
     }
