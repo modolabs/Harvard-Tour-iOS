@@ -11,6 +11,7 @@ static const CGFloat kRequiredLocationAccuracy = 100.0f;
 static BOOL maxRegionSet = NO;
 static MKCoordinateRegion maxRegion = {{0, 0}, {0, 0}};
 static const CGFloat kOverviewMapMarginFactor = 1.1f;
+static const CGFloat kApproachMapMarginFactor = 1.5f;
 
 typedef MKCoordinateRegion(^RegionCalculator)();
 
@@ -227,7 +228,7 @@ isGreaterThanRegion2:(MKCoordinateRegion)region2;
                                   previousStopForTourStop:self.upcomingStop];
         return [self stopsRegion:[NSArray arrayWithObjects:self.upcomingStop, 
                                   previousStop, nil]
-                    marginFactor:kOverviewMapMarginFactor];
+                    marginFactor:kApproachMapMarginFactor];
     };
     
     if (receivedUserLocation) {
@@ -235,7 +236,7 @@ isGreaterThanRegion2:(MKCoordinateRegion)region2;
         [self 
          regionEnclosingUserLocationAndStops:
          [NSArray arrayWithObject:self.upcomingStop]
-         marginFactor:kOverviewMapMarginFactor
+         marginFactor:kApproachMapMarginFactor 
          fallbackRegionCalculator:previousAndCurrentStopsRegionBlock];
     }
     else {
@@ -348,7 +349,6 @@ isGreaterThanRegion2:(MKCoordinateRegion)region2;
         }
     }
     
-//    CGFloat marginFactor = 1.1;
     return MKCoordinateRegionMake(
         CLLocationCoordinate2DMake(0.5*(minLatitude+maxLatitude), 
                                    0.5*(minLongitude+maxLongitude)),
@@ -361,7 +361,7 @@ isGreaterThanRegion2:(MKCoordinateRegion)region2;
     if (!maxRegionSet) {
         maxRegion = 
         [self stopsRegion:[[TourDataManager sharedManager] getAllTourStops] 
-             marginFactor:1.25f];
+             marginFactor:kOverviewMapMarginFactor];
         maxRegionSet = YES;
     }
     return maxRegion;
@@ -423,6 +423,11 @@ didUpdateUserLocation:(MKUserLocation *)userLocation {
         // Update position of the beam annotation.
         self.beamAnnotation.latitude = userLocation.coordinate.latitude;
         self.beamAnnotation.longitude = userLocation.coordinate.longitude;
+        
+#ifdef _DEBUG_USER_LOCATION_FROM_OUTSIDE_HARVARD
+        self.beamAnnotation.latitude = 42.373879f;
+        self.beamAnnotation.longitude = -71.118155;
+#endif        
     }
 }
 
