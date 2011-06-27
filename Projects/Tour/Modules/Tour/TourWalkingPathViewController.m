@@ -83,8 +83,10 @@
     [super viewDidLoad];
         
     // this gets rid of the back button
-    self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] 
-                                              initWithCustomView:[[[UIView alloc] initWithFrame:CGRectZero] autorelease]] autorelease];
+    self.navigationItem.leftBarButtonItem = 
+    [[[UIBarButtonItem alloc] 
+      initWithCustomView:[[[UIView alloc] initWithFrame:CGRectZero] 
+                          autorelease]] autorelease];
     
     self.navigationItem.rightBarButtonItem = 
     [[[UIBarButtonItem alloc] 
@@ -134,7 +136,7 @@
     else {
         [module updateNavBarTitle:self.currentStop.title
                           navItem:self.navigationItem];                
-        if (self.tourStopMode == TourStopModeApproach) {                
+        if (self.tourStopMode == TourStopModeApproach) {                            
             self.previousBarItem.enabled = (self.currentStop != self.initialStop);
         }
         else if(self.tourStopMode == TourStopModeLenses) {
@@ -165,8 +167,9 @@
         previousView.frame = [self frameForContent];
         self.currentContent.frame = [self frameForNextContent];
     } completion:^(BOOL finished) {
-        [self.currentContent removeFromSuperview];
+        [self.currentContent removeFromSuperview];        
         self.currentContent = previousView;
+        [self.tourMapController syncMapType];
         [self refreshUI];
     }];
 }
@@ -211,7 +214,7 @@
             self.tourStopMode = TourStopModeApproach;
             self.currentStop = [[TourDataManager sharedManager] 
                                 nextStopForTourStop:self.currentStop];
-            [self loadMapControllerForCurrentStop];
+            [self loadMapControllerForCurrentStop];            
             nextView = self.tourMapController.view;
         }
     }
@@ -219,6 +222,7 @@
     void (^completionBlock)(BOOL) = ^(BOOL finished) {
         [self.currentContent removeFromSuperview];
         self.currentContent = nextView;
+        [self.tourMapController syncMapType];
         [self refreshUI];
         // Clear alternate stop.
         self.alternateCurrentStop = nil;
