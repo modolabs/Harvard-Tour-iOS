@@ -41,5 +41,7 @@ TourSettingsControllerDelegate> {
 - (IBAction)next;
 - (IBAction)tourOverview;
 - (IBAction)cameraButtonTapped:(id)sender;
+- (IBAction)settingsButtonTapped:(id)sender;
+- (IBAction)helpButtonTapped:(id)sender;
 
 @end

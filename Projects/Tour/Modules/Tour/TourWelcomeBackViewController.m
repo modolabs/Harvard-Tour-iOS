@@ -7,21 +7,6 @@
 
 @implementation TourWelcomeBackViewController
 
-#pragma mark NSObject
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil 
-                title:(NSString *)title
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-        TourModule *module = 
-        (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];        
-        [module setUpNavBarTitle:title navItem:self.navigationItem];
-    }
-    return self;
-}
-
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad {

@@ -9,6 +9,8 @@
 #import "TourModule.h"
 #import "TourSettingsViewController.h"
 #import "TourFinishViewController.h"
+#import "TourHelpViewController.h"
+
 
 @interface TourWalkingPathViewController (Private)
 
@@ -309,6 +311,18 @@
         [self presentModalViewController:picker animated:YES];   
         [picker release];
     }
+}
+
+- (IBAction)helpButtonTapped:(id)sender {
+    TourHelpViewController *helpController = 
+    [[[TourHelpViewController alloc] 
+      initWithNibName:@"TourHelpViewController" 
+      bundle:nil title:@"Help"] autorelease];
+    
+    UINavigationController *modalNavController = 
+    [[[UINavigationController alloc] 
+      initWithRootViewController:helpController] autorelease];
+    [self presentModalViewController:modalNavController animated:YES];    
 }
 
 #pragma - mark UIActionSheet delegate

@@ -64,6 +64,8 @@
 		562F4B7A133EFA10000B9344 /* ContentTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562F4B76133EFA10000B9344 /* ContentTableViewController.m */; };
 		562F4B7B133EFA10000B9344 /* ContentWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562F4B78133EFA10000B9344 /* ContentWebViewController.m */; };
 		A6079B1E13B9253600A1704E /* HTMLTemplateBasedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6079B1D13B9253600A1704E /* HTMLTemplateBasedViewController.m */; };
+		A6079B2713B93DD600A1704E /* TourHelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6079B2513B93DD600A1704E /* TourHelpViewController.m */; };
+		A6079B2813B93DD600A1704E /* TourHelpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A6079B2613B93DD600A1704E /* TourHelpViewController.xib */; };
 		A627310E13A7F953006E66EE /* TourFinishViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A627310C13A7F953006E66EE /* TourFinishViewController.m */; };
 		A627310F13A7F953006E66EE /* TourFinishViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A627310D13A7F953006E66EE /* TourFinishViewController.xib */; };
 		A627311313A92A90006E66EE /* LinkLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = A627311213A92A90006E66EE /* LinkLauncher.m */; };
@@ -401,6 +403,9 @@
 		562F4B78133EFA10000B9344 /* ContentWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContentWebViewController.m; path = ../../../Modules/Content/ContentWebViewController.m; sourceTree = "<group>"; };
 		A6079B1C13B9253500A1704E /* HTMLTemplateBasedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMLTemplateBasedViewController.h; sourceTree = "<group>"; };
 		A6079B1D13B9253600A1704E /* HTMLTemplateBasedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTMLTemplateBasedViewController.m; sourceTree = "<group>"; };
+		A6079B2413B93DD500A1704E /* TourHelpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourHelpViewController.h; sourceTree = "<group>"; };
+		A6079B2513B93DD600A1704E /* TourHelpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourHelpViewController.m; sourceTree = "<group>"; };
+		A6079B2613B93DD600A1704E /* TourHelpViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TourHelpViewController.xib; sourceTree = "<group>"; };
 		A627310C13A7F953006E66EE /* TourFinishViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TourFinishViewController.m; sourceTree = "<group>"; };
 		A627310D13A7F953006E66EE /* TourFinishViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TourFinishViewController.xib; sourceTree = "<group>"; };
 		A627311013A7F979006E66EE /* TourFinishViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TourFinishViewController.h; sourceTree = "<group>"; };
@@ -924,6 +929,9 @@
 				5624688813AED16200D130F2 /* TourUnderLineLabel.m */,
 				A6079B1C13B9253500A1704E /* HTMLTemplateBasedViewController.h */,
 				A6079B1D13B9253600A1704E /* HTMLTemplateBasedViewController.m */,
+				A6079B2413B93DD500A1704E /* TourHelpViewController.h */,
+				A6079B2513B93DD600A1704E /* TourHelpViewController.m */,
+				A6079B2613B93DD600A1704E /* TourHelpViewController.xib */,
 			);
 			path = Tour;
 			sourceTree = "<group>";
@@ -1646,6 +1654,7 @@
 				4B5F184A139C52B200B76E28 /* TourWelcomeBackViewController.xib in Resources */,
 				A6CDCA1F139EB8260068D12A /* TourSettingsViewController.xib in Resources */,
 				A627310F13A7F953006E66EE /* TourFinishViewController.xib in Resources */,
+				A6079B2813B93DD600A1704E /* TourHelpViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1843,6 +1852,7 @@
 				A627311313A92A90006E66EE /* LinkLauncher.m in Sources */,
 				5624688913AED16200D130F2 /* TourUnderLineLabel.m in Sources */,
 				A6079B1E13B9253600A1704E /* HTMLTemplateBasedViewController.m in Sources */,
+				A6079B2713B93DD600A1704E /* TourHelpViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

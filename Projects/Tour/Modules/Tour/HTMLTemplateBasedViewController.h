@@ -20,6 +20,9 @@
 // Keys: Stubs to replace in the template. Values: Strings to replace them.
 - (NSDictionary *)replacementsForStubs;
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil 
+                title:(NSString *)title;
+
 #pragma mark Formatting utils
 + (NSString *)fillOutTemplate:(NSString *)templateString 
          replacementsForStubs:(NSDictionary *)replacementsForStubs;

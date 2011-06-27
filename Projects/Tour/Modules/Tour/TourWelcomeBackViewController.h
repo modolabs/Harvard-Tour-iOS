@@ -8,7 +8,4 @@
 - (IBAction)startOver;
 - (IBAction)resumeTour;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil 
-                title:(NSString *)title;
-
 @end

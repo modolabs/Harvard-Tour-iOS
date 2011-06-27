@@ -31,7 +31,7 @@
         if([[TourDataManager sharedManager] getCurrentStop] == nil) {
             rootVC = 
             [[[TourHomeViewController alloc] 
-              initWithNibName:@"TourHomeViewController" bundle:nil] 
+              initWithNibName:@"TourHomeViewController" bundle:nil title:nil]
              autorelease];
         } else {
             rootVC = 

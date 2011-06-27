@@ -21,6 +21,18 @@
 
 #pragma mark NSObject
 
+#pragma mark NSObject
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil 
+                title:(NSString *)title {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Don't need to do anything with the nav bar title, unlike other 
+        // children of HTMLTemplateBasedViewController.
+    }
+    return self;        
+}
+
+
 - (void)dealloc {
     [scrollView release];
     [super dealloc];
