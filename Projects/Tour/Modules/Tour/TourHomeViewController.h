@@ -1,9 +1,11 @@
 #import <UIKit/UIKit.h>
+#import "HTMLTemplateBasedViewController.h"
 
 @class TourOverviewController;
 @class TourDataManager;
 
-@interface TourHomeViewController : UIViewController <UIWebViewDelegate>{
+@interface TourHomeViewController : HTMLTemplateBasedViewController 
+<UIWebViewDelegate> {
     TourOverviewController *_tourOverviewController;
     
     NSString * welcomeText;
@@ -12,10 +14,8 @@
 }
 
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
-@property (nonatomic, retain) IBOutlet UIWebView *webView;
 
 - (IBAction) startTour:(id)sender;
 
-- (void) setupWebViewLayout;
 
 @end

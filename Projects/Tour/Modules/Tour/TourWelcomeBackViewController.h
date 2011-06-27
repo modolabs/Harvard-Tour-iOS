@@ -1,15 +1,14 @@
 #import <UIKit/UIKit.h>
+#import "HTMLTemplateBasedViewController.h"
 
-
-@interface TourWelcomeBackViewController : UIViewController {
+@interface TourWelcomeBackViewController : HTMLTemplateBasedViewController {
     
 }
 
 - (IBAction)startOver;
 - (IBAction)resumeTour;
 
-@property(nonatomic, retain) IBOutlet UIWebView * webView;
-
-- (void) setupWebViewLayout;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil 
+                title:(NSString *)title;
 
 @end

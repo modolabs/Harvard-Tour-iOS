@@ -6,11 +6,6 @@
 
 }
 
-+ (NSString *)fillOutTemplate:(NSString *)templateString 
-                   withValues:(NSArray *)values forKeys:(NSArray *)keys;
-+ (NSString *)htmlForPageTemplateFileName:(NSString *)pageTemplateFilename
-                              welcomeText:(NSString *)welcomeText
-                        topicDictionaries:(NSArray *)topicDicts;
 @end
 
 @interface TourModule (UINavigationBarModification)
