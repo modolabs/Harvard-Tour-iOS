@@ -164,11 +164,49 @@
           replacementsForStubs:
           [NSDictionary dictionaryWithObjectsAndKeys:
            topicId, @"__TOPIC_ID__", topicText, @"__TOPIC_TEXT__", 
-           topicTextDetails, @"__TOPIC_DEFAILS__", nil]]];
+           topicTextDetails, @"__TOPIC_DETAILS__", nil]]];
         
         [innerPool release];
     }
     return topicsString;
+}
+
+// contactDicts should be an array of dictionaries.
++ (NSString *)htmlForContactsSection:(NSArray *)contactDicts {
+    NSMutableString *contactsString = [NSMutableString string];
+    
+    NSURL *baseURL = 
+    [[NSURL 
+      fileURLWithPath:[[NSBundle mainBundle] resourcePath] isDirectory:YES]
+     URLByAppendingPathComponent:@"modules/tour/"];
+    
+    NSError *error = nil;
+    NSString *contactTemplate = 
+    [NSString 
+     stringWithContentsOfURL:
+     [baseURL URLByAppendingPathComponent:@"contact_item_template.html"] 
+     encoding:NSUTF8StringEncoding error:&error];
+    
+    for (NSDictionary *contactDict in contactDicts) {
+        NSAutoreleasePool *innerPool = [[NSAutoreleasePool alloc] init];
+        
+        NSString *title = [contactDict objectForKey:@"title"];
+        NSString *subtitle = [contactDict objectForKey:@"subtitle"];
+        NSString *urlString = [contactDict objectForKey:@"url"];
+        NSString *cssClass = [contactDict objectForKey:@"class"];
+        
+        // <Image> [Lens-Name]: [Lens-Description] in HTML
+        [contactsString appendString:
+         [[self class]
+          fillOutTemplate:contactTemplate
+          replacementsForStubs:
+          [NSDictionary dictionaryWithObjectsAndKeys:
+           title, @"__TITLE__", subtitle, @"__SUBTITLE__", 
+           urlString, @"__URL__", cssClass, @"__CLASS__", nil]]];
+        
+        [innerPool release];
+    }
+    return contactsString;
 }
 
 @end

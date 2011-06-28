@@ -101,7 +101,8 @@ static const CGFloat kSpaceBetweenLinkLabels = 4.0f;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.    
-    NSArray *finishTextArray = [[TourDataManager sharedManager] finishText];
+    NSArray *finishTextArray = 
+    [[TourDataManager sharedManager] pagesTextArray:@"finish"];
     NSString *htmlString = @"<html><body>";
     if (finishTextArray.count > 0) {
         htmlString = [htmlString stringByAppendingString:[finishTextArray objectAtIndex:0]];

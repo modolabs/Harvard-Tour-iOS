@@ -12,7 +12,7 @@
 - (void)loadStopSummarys;
 - (void)populateTourStopDetails:(TourStop *)tourStop;
 - (NSArray *)retrieveWelcomeText;
-- (NSArray *)finishText;
+- (NSArray *)pagesTextArray:(NSString *)sectionName;
 
 - (void)saveInitialStop:(TourStop *)tourStop;
 - (TourStop *)getInitialStop;

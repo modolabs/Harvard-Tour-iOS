@@ -121,16 +121,16 @@
     return welcomeArray;
 }
 
-- (NSArray *)finishText {    
+- (NSArray *)pagesTextArray:(NSString *)sectionName {    
     NSString *pagesJsonPath = 
     [[[NSBundle mainBundle] bundlePath] 
      stringByAppendingPathComponent:@"data/pages.json"];
     NSData *pagesJsonData = [NSData dataWithContentsOfFile:pagesJsonPath];
-    SBJsonParser *jsonParser = [[[SBJsonParser alloc] init] autorelease];        
+    SBJsonParser *jsonParser = [[[SBJsonParser alloc] init] autorelease];
     NSDictionary *pagesDict = [jsonParser objectWithData:pagesJsonData];
     
     NSDictionary * pagesDetailsDict = [pagesDict objectForKey:@"pages"];
-    return [pagesDetailsDict objectForKey:@"finish"];
+    return [pagesDetailsDict objectForKey:sectionName];
 }
 
 - (void)saveInitialStop:(TourStop *)tourStop {

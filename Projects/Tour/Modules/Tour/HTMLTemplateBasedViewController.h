@@ -29,6 +29,7 @@
 + (NSString *)htmlForPageTemplateFileName:(NSString *)pageTemplateFilename
                      replacementsForStubs:(NSDictionary *)replacementsForStubs;
 + (NSString *)htmlForTopicSection:(NSArray *)topicDicts;
++ (NSString *)htmlForContactsSection:(NSArray *)contactDicts;
 
 @end
 
