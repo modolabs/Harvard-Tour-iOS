@@ -1,5 +1,4 @@
 #import "TourWelcomeBackViewController.h"
-#import "TourHomeViewController.h"
 #import "TourWalkingPathViewController.h"
 #import "TourDataManager.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
@@ -96,7 +95,7 @@
         
         replacementsDict = 
         [NSDictionary dictionaryWithObjectsAndKeys:
-         [welcomeTextArray objectAtIndex:0], @"__WELCOME_TEXT",
+         [welcomeTextArray objectAtIndex:0], @"__WELCOME_TEXT__",
          [[super class] htmlForTopicSection:[welcomeTextArray objectAtIndex:1]], 
          @"__TOPICS__",
          [welcomeTextArray objectAtIndex:2], @"__DISCLAIMER__",
