@@ -9,7 +9,8 @@
 // Make sure that you implement templateFilename and replacementsForStubs set 
 // the webView in the nib of the inheriting class.
 
-@interface HTMLTemplateBasedViewController : UIViewController {
+@interface HTMLTemplateBasedViewController : UIViewController 
+<UIWebViewDelegate> {
     
 }
 
