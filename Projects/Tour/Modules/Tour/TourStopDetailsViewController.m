@@ -10,6 +10,7 @@
 #import "TourSlide.h"
 #import "TourLenseHtmlItem.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import "HTMLTemplateBasedViewController.h"
 
 #define LenseItemPhotoImageTag 100
 #define LenseItemPhotoCaptionTag 101
@@ -151,6 +152,8 @@
     self.webView.delegate = nil;
     self.webView = nil;
     self.html = @"";
+    NSString *htmlBodyContents = @"";
+    
     [moviePlayers removeAllObjects];
     for(UIView *subview in self.lenseContentView.subviews) {
         [subview removeFromSuperview];
@@ -159,7 +162,8 @@
     for (TourLenseItem *lenseItem in [aLense orderedItems]) {
         if([lenseItem isKindOfClass:[TourLenseHtmlItem class]]) {
             TourLenseHtmlItem *lenseHtmlItem = (TourLenseHtmlItem *)lenseItem;
-            self.html = [self.html stringByAppendingString:lenseHtmlItem.html];
+            htmlBodyContents = 
+            [htmlBodyContents stringByAppendingString:lenseHtmlItem.html];
         }
         else if([lenseItem isKindOfClass:[TourLensePhotoItem class]]) {
             TourLensePhotoItem *lensePhotoItem = (TourLensePhotoItem *)lenseItem;
@@ -222,7 +226,15 @@
         }
     }
     
-    if([self.html length]) {
+    if ([htmlBodyContents length]) {
+        // Load the body contents into the template.
+        self.html = 
+        [HTMLTemplateBasedViewController 
+         htmlForPageTemplateFileName:@"stop_detail_template.html"
+         replacementsForStubs:
+         [NSDictionary 
+          dictionaryWithObject:htmlBodyContents forKey:@"__CONTENTS__"]];
+        
         CGFloat dummyInitialHeight = 200;
         CGRect webviewFrame = CGRectMake(0, lenseContentHeight, self.lenseContentView.frame.size.width, dummyInitialHeight);
         lenseContentHeight += dummyInitialHeight;
