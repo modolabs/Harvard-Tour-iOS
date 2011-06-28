@@ -27,21 +27,15 @@
     [[TourDataManager sharedManager] loadStopSummarys];
     
     if([pageName isEqualToString:LocalPathPageNameHome]) {
-        UIViewController *rootVC;
-        if([[TourDataManager sharedManager] getCurrentStop] == nil) {
-            rootVC = 
-            [[[TourHomeViewController alloc] 
-              initWithNibName:@"TourHomeViewController" bundle:nil title:nil]
-             autorelease];
-        } else {
-            rootVC = 
-            [[[TourWelcomeBackViewController alloc] 
-              initWithNibName:@"TourWelcomeBackViewController" bundle:nil
-              title:@"Harvard Yard Tour"] autorelease];
-        }
-        vc = 
-        [[[UINavigationController alloc] initWithRootViewController:rootVC]
-         autorelease];
+        TourWelcomeBackViewController *rootVC = 
+        [[[TourWelcomeBackViewController alloc] 
+          initWithNibName:@"TourWelcomeBackViewController" bundle:nil
+          title:@"Harvard Yard Tour"] autorelease];
+        rootVC.newTourMode = 
+        ([[TourDataManager sharedManager] getCurrentStop] == nil);
+        
+        vc = [[[UINavigationController alloc] initWithRootViewController:rootVC]
+              autorelease];
     }
     return vc;
 }
