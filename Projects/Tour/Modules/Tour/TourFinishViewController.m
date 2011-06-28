@@ -173,7 +173,8 @@ static const CGFloat kSpaceBetweenLinkLabels = 4.0f;
     self.webView.frame = frame;
     
     // noew place the links in the right places
-    NSArray *finishTextArray = [[TourDataManager sharedManager] finishText];
+    NSArray *finishTextArray = 
+    [[TourDataManager sharedManager] pagesTextArray:@"finish"];
     
     // Add links.
     if (finishTextArray.count > 1) {
