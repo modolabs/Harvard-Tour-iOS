@@ -221,6 +221,9 @@
             nextView = self.tourMapController.view;
         }
     }
+
+    nextView.frame = [self frameForNextContent];
+    [self.contentView addSubview:nextView];
     
     void (^completionBlock)(BOOL) = ^(BOOL finished) {
         [self.currentContent removeFromSuperview];
@@ -232,8 +235,6 @@
     };
     
     if (animated) {
-        nextView.frame = [self frameForNextContent];
-        [self.contentView addSubview:nextView];
         [UIView animateWithDuration:0.25 animations:^(void) {
             nextView.frame = [self frameForContent];
             self.currentContent.frame = [self frameForPreviousContent];
@@ -241,6 +242,9 @@
                          completion:completionBlock];
     }
     else {
+        nextView.frame = [self frameForContent];
+        self.currentContent.frame = [self frameForPreviousContent];
+        
         completionBlock(YES);
     }    
 }
