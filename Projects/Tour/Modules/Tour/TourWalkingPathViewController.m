@@ -10,7 +10,7 @@
 #import "TourSettingsViewController.h"
 #import "TourFinishViewController.h"
 #import "TourHelpViewController.h"
-
+#import "TourWelcomeBackViewController.h"
 
 @interface TourWalkingPathViewController (Private)
 
@@ -138,42 +138,55 @@
     else {
         [module updateNavBarTitle:self.currentStop.title
                           navItem:self.navigationItem];                
-        if (self.tourStopMode == TourStopModeApproach) {                            
-            self.previousBarItem.enabled = (self.currentStop != self.initialStop);
-        }
-        else if(self.tourStopMode == TourStopModeLenses) {
-            self.previousBarItem.enabled = YES;
-        }
     }
 }
 
 - (IBAction)previous {
-    UIView *previousView = nil;
-    self.tourFinishController = nil;
     
-    if (self.tourStopMode == TourStopModeLenses) {
-        self.tourStopMode = TourStopModeApproach;
-        [self loadMapControllerForCurrentStop];
-        previousView = self.tourMapController.view;
+    if ((self.currentStop == self.initialStop) && 
+        (self.tourStopMode == TourStopModeApproach)) {
+        // Go back to the welcome view, which should be right underneath it 
+        // in the nav stack.
+        if (self.navigationController.viewControllers.count > 1) {
+            UIViewController *underController = 
+            [self.navigationController.viewControllers 
+             objectAtIndex:self.navigationController.viewControllers.count - 2];
+            if ([underController isKindOfClass:
+                 [TourWelcomeBackViewController class]]) {
+                [(TourWelcomeBackViewController *)underController 
+                 setNewTourMode:YES];
+                [self.navigationController popViewControllerAnimated:YES];
+            }
+        }        
     }
-    else if(self.tourStopMode == TourStopModeApproach) {
-        self.tourStopMode = TourStopModeLenses;
-        self.currentStop = [[TourDataManager sharedManager] previousStopForTourStop:self.currentStop];
-        [self loadStopDetailsControllerForCurrentStop];
-        previousView = self.tourStopDetailsController.view;
+    else {
+        UIView *previousView = nil;
+        self.tourFinishController = nil;
+        
+        if (self.tourStopMode == TourStopModeLenses) {
+            self.tourStopMode = TourStopModeApproach;
+            [self loadMapControllerForCurrentStop];
+            previousView = self.tourMapController.view;
+        }
+        else if(self.tourStopMode == TourStopModeApproach) {        
+            self.tourStopMode = TourStopModeLenses;
+            self.currentStop = [[TourDataManager sharedManager] previousStopForTourStop:self.currentStop];
+            [self loadStopDetailsControllerForCurrentStop];
+            previousView = self.tourStopDetailsController.view;
+        }
+        previousView.frame = [self frameForPreviousContent];
+        [self.contentView addSubview:previousView];
+        
+        [UIView animateWithDuration:0.25 animations:^(void) {
+            previousView.frame = [self frameForContent];
+            self.currentContent.frame = [self frameForNextContent];
+        } completion:^(BOOL finished) {
+            [self.currentContent removeFromSuperview];        
+            self.currentContent = previousView;
+            [self.tourMapController syncMapType];
+            [self refreshUI];
+        }];
     }
-    previousView.frame = [self frameForPreviousContent];
-    [self.contentView addSubview:previousView];
-    
-    [UIView animateWithDuration:0.25 animations:^(void) {
-        previousView.frame = [self frameForContent];
-        self.currentContent.frame = [self frameForNextContent];
-    } completion:^(BOOL finished) {
-        [self.currentContent removeFromSuperview];        
-        self.currentContent = previousView;
-        [self.tourMapController syncMapType];
-        [self refreshUI];
-    }];
 }
 
 - (IBAction)next {
