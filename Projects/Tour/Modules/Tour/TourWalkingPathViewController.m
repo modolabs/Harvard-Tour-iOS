@@ -208,7 +208,8 @@
             self.tourFinishController = 
             [[[TourFinishViewController alloc] 
               initWithNibName:@"TourFinishViewController" 
-              bundle:[NSBundle mainBundle]]
+              bundle:[NSBundle mainBundle]
+              title:@"Thank You"]
              autorelease];
             nextView = self.tourFinishController.view;
         }

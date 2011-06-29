@@ -7,15 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import "TourWalkingPathViewController.h"
-//#import "KGOTabbedControl.h"
+#import "HTMLTemplateBasedViewController.h"
 
-@interface TourFinishViewController : UIViewController <UIWebViewDelegate>
+@interface TourFinishViewController : HTMLTemplateBasedViewController
 {
     IBOutlet UIScrollView *scrollView;
 }
-
-@property (nonatomic, retain) NSMutableArray *linkLaunchers;
-@property (nonatomic, retain) IBOutlet UIWebView * webView;
 
 @end
