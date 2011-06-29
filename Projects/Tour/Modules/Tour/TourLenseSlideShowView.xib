@@ -46,7 +46,7 @@
 					<object class="IBUIScrollView" id="1042069989">
 						<reference key="NSNextResponder" ref="146723528"/>
 						<int key="NSvFlags">290</int>
-						<string key="NSFrameSize">{320, 233}</string>
+						<string key="NSFrameSize">{320, 284}</string>
 						<reference key="NSSuperview" ref="146723528"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="115556394"/>
@@ -64,9 +64,10 @@
 						<reference key="NSNextResponder" ref="146723528"/>
 						<int key="NSvFlags">1316</int>
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
-						<string key="NSFrame">{{0, 233}, {320, 36}}</string>
+						<string key="NSFrame">{{0, 284}, {320, 36}}</string>
 						<reference key="NSSuperview" ref="146723528"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
@@ -79,7 +80,7 @@
 						<int key="IBUICurrentPage">1</int>
 					</object>
 				</object>
-				<string key="NSFrameSize">{320, 270}</string>
+				<string key="NSFrameSize">{320, 320}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="1042069989"/>
@@ -130,8 +131,8 @@
 						<reference key="object" ref="146723528"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="115556394"/>
 							<reference ref="1042069989"/>
+							<reference ref="115556394"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
