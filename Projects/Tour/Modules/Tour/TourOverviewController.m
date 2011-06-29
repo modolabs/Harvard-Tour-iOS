@@ -198,7 +198,7 @@
     return toolbar;
 }
 
-# pragma mark - TableView dataSource
+#pragma mark - TableView dataSource
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *tourStopCellIdentifier = @"TourStepCell";

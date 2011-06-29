@@ -433,7 +433,10 @@ didUpdateUserLocation:(MKUserLocation *)userLocation {
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
     // old selected annotation
-    if([self.selectedStop.visited boolValue]) {
+    // self.selectedAnnotationView.annotation is not always the same as 
+    // self.selectedStop.
+    if([[(TourStop *)self.selectedAnnotationView.annotation visited] 
+        boolValue]) {
         self.selectedAnnotationView.image = 
         [UIImage imageWithPathName:@"modules/tour/map-pin-past.png"];
     } else {

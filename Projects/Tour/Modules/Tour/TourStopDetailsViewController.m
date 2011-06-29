@@ -79,7 +79,6 @@
 {
     [super viewDidLoad]; 
     [[TourDataManager sharedManager] populateTourStopDetails:self.tourStop];
-    [self.tourStop markVisited];
     [self setupLenseTabs];
     self.tabControl.selectedTabIndex = 0;
     [self displayContentForTabIndex:0];

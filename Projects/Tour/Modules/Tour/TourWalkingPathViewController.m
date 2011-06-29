@@ -105,6 +105,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self.tourMapController syncMapType];
 }
 
@@ -382,8 +383,16 @@
 }
 
 - (void)loadStopDetailsControllerForCurrentStop {
-    self.tourStopDetailsController = [[[TourStopDetailsViewController alloc] initWithNibName:@"TourStopDetailsViewController" bundle:nil] autorelease];
+    self.tourStopDetailsController = 
+    [[[TourStopDetailsViewController alloc] initWithNibName:
+      @"TourStopDetailsViewController" bundle:nil] autorelease];
     self.tourStopDetailsController.tourStop = self.currentStop;
+    
+    // Mark the stop visited here, not when the details view loads.
+    // (The details view may load without appearing as a result of its 
+    // corresponding stop being selected in the overview view, and we don't 
+    // want to mark it visited as a result of that.)
+    [self.tourStopDetailsController.tourStop markVisited];    
 }
 
 - (BOOL)isLastStop {
