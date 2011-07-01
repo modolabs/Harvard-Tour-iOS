@@ -56,12 +56,6 @@ a {
 	border-top:0; 
 }
 
-.nav li div.smallprint {
-	padding-top: 2px;
-	font-size: 90%;
-	color: #555;
-}
-
 .nav a  {
 	display: block;
 	margin: -8px;
@@ -74,6 +68,14 @@ a {
 	text-decoration: none;
 	border-radius: 5px;	
 	color: #171717;
+	font-weight: bold;
+}
+
+.nav li div.smallprint {
+	padding-top: 2px;
+	font-size: 90%;
+	color: #555;
+	font-weight: normal;
 }
 
 a.action {
