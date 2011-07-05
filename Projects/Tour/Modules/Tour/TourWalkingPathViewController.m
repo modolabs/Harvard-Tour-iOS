@@ -110,6 +110,12 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tourMapController syncMapType];
+    
+    TourModule *module = 
+    (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
+    [module updateNavBarTitle:
+     self.currentStop.title navItem:self.navigationItem];
+
 }
 
 - (void)deallocViews {
