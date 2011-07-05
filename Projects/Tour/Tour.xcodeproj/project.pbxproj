@@ -6,6 +6,20 @@
 	objectVersion = 45;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		A1899D6F13C3B48E001F1B2B /* Tour Data */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = A1899D7013C3B48E001F1B2B /* Build configuration list for PBXAggregateTarget "Tour Data" */;
+			buildPhases = (
+				A1899D7813C3B4B0001F1B2B /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Tour Data";
+			productName = "Tour Data";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -1493,7 +1507,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "Tour" */;
 			buildPhases = (
-				4BAF7DD4138B1CCB00F9967A /* Run Script */,
 				829673B111F798380098F2A3 /* ShellScript */,
 				1D60588D0D05DD3D006BFB54 /* Resources */,
 				1D60588E0D05DD3D006BFB54 /* Sources */,
@@ -1557,6 +1570,7 @@
 			);
 			projectRoot = "";
 			targets = (
+				A1899D6F13C3B48E001F1B2B /* Tour Data */,
 				1D6058900D05DD3D006BFB54 /* Tour */,
 			);
 		};
@@ -1652,20 +1666,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4BAF7DD4138B1CCB00F9967A /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "if [ -e .skipContentDownload ]; then\n   echo \"skipping downloading tour content\"\n   exit\nfi\n\npython build-scripts/generateInitialTourContent.py \"$CONFIGURATION\"";
-		};
 		829673B111F798380098F2A3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1678,6 +1678,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "PATH=$PATH:/usr/local/git/bin\nFULLREV=`git rev-parse HEAD`\nREV=`echo $FULLREV | cut -c 1-8`\nABOUT_DIR=\"${PROJECT_DIR}/Modules/About\"\n[ -d \"${ABOUT_DIR}\" ] || mkdir \"${ABOUT_DIR}\"\nBUILD_INFO_FILE=\"${ABOUT_DIR}/MITBuildInfo.m\"\n\necho \"#import \\\"MITBuildInfo.h\\\";\" > ${BUILD_INFO_FILE}\necho \"\" >> ${BUILD_INFO_FILE}\necho \"NSString * const MITBuildNumber = @\\\"$REV\\\";\" >> ${BUILD_INFO_FILE}\n\nHASH2PNG=\"${PROJECT_DIR}/../../scripts/hash2png.py\"\nif [ -f \"${HASH2PNG}\" ]; then\n    python \"${HASH2PNG}\" $FULLREV\n    mv githash.png \"${PROJECT_DIR}/Resources/common/\"\nfi\n";
+		};
+		A1899D7813C3B4B0001F1B2B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "python build-scripts/generateInitialTourContent.py \"$CONFIGURATION\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1893,6 +1906,55 @@
 			};
 			name = "Release - Production";
 		};
+		A1899D7113C3B48E001F1B2B /* Debug - Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Debug - Development";
+		};
+		A1899D7213C3B48E001F1B2B /* Debug - Testing */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Debug - Testing";
+		};
+		A1899D7313C3B48E001F1B2B /* Debug - Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Debug - Staging";
+		};
+		A1899D7413C3B48E001F1B2B /* Debug - Production */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Debug - Production";
+		};
+		A1899D7513C3B48E001F1B2B /* Release - Staging */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Release - Staging";
+		};
+		A1899D7613C3B48E001F1B2B /* Release - Testing */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Release - Testing";
+		};
+		A1899D7713C3B48E001F1B2B /* Release - Production */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Release - Production";
+		};
 		C01FCF4F08A954540054247B /* Debug - Development */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */;
@@ -2008,6 +2070,20 @@
 				DEB0B3DE11122D3200021561 /* Release - Staging */,
 				EBAEA0741223320800F370BE /* Release - Testing */,
 				1D6058950D05DD3E006BFB54 /* Release - Production */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Release - Production";
+		};
+		A1899D7013C3B48E001F1B2B /* Build configuration list for PBXAggregateTarget "Tour Data" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1899D7113C3B48E001F1B2B /* Debug - Development */,
+				A1899D7213C3B48E001F1B2B /* Debug - Testing */,
+				A1899D7313C3B48E001F1B2B /* Debug - Staging */,
+				A1899D7413C3B48E001F1B2B /* Debug - Production */,
+				A1899D7513C3B48E001F1B2B /* Release - Staging */,
+				A1899D7613C3B48E001F1B2B /* Release - Testing */,
+				A1899D7713C3B48E001F1B2B /* Release - Production */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Release - Production";
