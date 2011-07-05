@@ -107,6 +107,13 @@
     // e.g. self.myOutlet = nil;
 }
 
+// Call this before hiding this controller's view.
+- (void)cleanUpBeforeDisappearing {
+    for (MPMoviePlayerController *player in moviePlayers) {
+        [player stop];
+    }
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations

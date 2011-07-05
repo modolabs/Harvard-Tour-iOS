@@ -147,6 +147,8 @@
 
 - (IBAction)previous {
     
+    [self.tourStopDetailsController cleanUpBeforeDisappearing];
+    
     if ((self.currentStop == self.initialStop) && 
         (self.tourStopMode == TourStopModeApproach)) {
         // Go back to the welcome view, which should be somewhere underneath it 
@@ -189,6 +191,8 @@
 }
 
 - (IBAction)next {
+    [self.tourStopDetailsController cleanUpBeforeDisappearing];
+    
     if (self.alternateCurrentStop) {
         // Ask if the user wants to go to this stop instead.
         [self promptUserAboutSkippingToStop:self.alternateCurrentStop 

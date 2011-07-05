@@ -27,4 +27,7 @@
 
 @property (nonatomic, retain) TourStop *tourStop;
 
+// Call this before hiding this controller's view.
+- (void)cleanUpBeforeDisappearing;
+
 @end
