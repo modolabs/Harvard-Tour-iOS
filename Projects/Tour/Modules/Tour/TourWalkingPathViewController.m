@@ -28,6 +28,9 @@
 - (CGRect)frameForNextContent;
 - (void)settingsButtonTapped:(id)sender;
 
+#pragma mark Stack digging methods
+- (TourWelcomeBackViewController *)findWelcomeBackViewControllerInNavStack;
+
 @end
 
 @implementation TourWalkingPathViewController
@@ -146,19 +149,14 @@
     
     if ((self.currentStop == self.initialStop) && 
         (self.tourStopMode == TourStopModeApproach)) {
-        // Go back to the welcome view, which should be right underneath it 
+        // Go back to the welcome view, which should be somewhere underneath it 
         // in the nav stack.
-        if (self.navigationController.viewControllers.count > 1) {
-            UIViewController *underController = 
-            [self.navigationController.viewControllers 
-             objectAtIndex:self.navigationController.viewControllers.count - 2];
-            if ([underController isKindOfClass:
-                 [TourWelcomeBackViewController class]]) {
-                [(TourWelcomeBackViewController *)underController 
-                 setNewTourMode:YES];
-                [self.navigationController popViewControllerAnimated:YES];
-            }
-        }        
+        TourWelcomeBackViewController *welcomeBackController = 
+        [self findWelcomeBackViewControllerInNavStack];
+        if (welcomeBackController) {
+            welcomeBackController.newTourMode = YES;
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        }
     }
     else {
         UIView *previousView = nil;
@@ -431,6 +429,23 @@
     [self.navigationController 
      presentModalViewController:modalNavController animated:YES];
     [modalNavController release];
+}
+
+#pragma mark Stack digging methods
+
+// Searches the stack from the top down.
+- (TourWelcomeBackViewController *)findWelcomeBackViewControllerInNavStack {
+    
+    for (NSInteger i = self.navigationController.viewControllers.count - 1;
+         i >= 0; --i) {
+        UIViewController *controller = 
+        [self.navigationController.viewControllers objectAtIndex:i];
+        
+        if ([controller isKindOfClass:[TourWelcomeBackViewController class]]) {
+            return (TourWelcomeBackViewController *)controller;
+        }
+    }        
+    return nil;
 }
 
 - (void)setInitialStop:(TourStop *)stop {
