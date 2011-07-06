@@ -2,9 +2,9 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1056</int>
-		<string key="IBDocument.SystemVersion">10J869</string>
+		<string key="IBDocument.SystemVersion">10K540</string>
 		<string key="IBDocument.InterfaceBuilderVersion">1306</string>
-		<string key="IBDocument.AppKitVersion">1038.35</string>
+		<string key="IBDocument.AppKitVersion">1038.36</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -64,7 +64,7 @@
 							<object class="IBUILabel" id="812929627">
 								<reference key="NSNextResponder" ref="308894989"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{77, 2}, {185, 21}}</string>
+								<string key="NSFrame">{{80, 2}, {185, 21}}</string>
 								<reference key="NSSuperview" ref="308894989"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="875017470"/>
@@ -90,10 +90,10 @@
 							<object class="IBUILabel" id="875017470">
 								<reference key="NSNextResponder" ref="308894989"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{77, 18}, {237, 30}}</string>
+								<string key="NSFrame">{{80, 19}, {237, 30}}</string>
 								<reference key="NSSuperview" ref="308894989"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
+								<reference key="NSNextKeyView" ref="875782274"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">7</int>
@@ -102,7 +102,7 @@
 								<string key="IBUIText">Stop Caption</string>
 								<object class="NSFont" key="IBUIFont">
 									<string key="NSName">Helvetica</string>
-									<double key="NSSize">10</double>
+									<double key="NSSize">11</double>
 									<int key="NSfFlags">16</int>
 								</object>
 								<object class="NSColor" key="IBUITextColor">
@@ -150,6 +150,7 @@
 								<string key="NSFrame">{{59, 2}, {16, 16}}</string>
 								<reference key="NSSuperview" ref="875782274"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
@@ -412,7 +413,6 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>imageViewControl</string>
-							<string>lenseIconsContainer</string>
 							<string>mapTipLabel</string>
 							<string>mapView</string>
 							<string>stopCaptionLabel</string>
@@ -423,7 +423,6 @@
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>UIControl</string>
-							<string>UIView</string>
 							<string>UILabel</string>
 							<string>MKMapView</string>
 							<string>UILabel</string>
@@ -437,7 +436,6 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>imageViewControl</string>
-							<string>lenseIconsContainer</string>
 							<string>mapTipLabel</string>
 							<string>mapView</string>
 							<string>stopCaptionLabel</string>
@@ -450,10 +448,6 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">imageViewControl</string>
 								<string key="candidateClassName">UIControl</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">lenseIconsContainer</string>
-								<string key="candidateClassName">UIView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">mapTipLabel</string>
