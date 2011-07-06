@@ -55,7 +55,7 @@
 							<object class="IBUIButton" id="276249628">
 								<reference key="NSNextResponder" ref="941456169"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{12, 0}, {44, 44}}</string>
+								<string key="NSFrame">{{5, 0}, {44, 44}}</string>
 								<reference key="NSSuperview" ref="941456169"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="318582930"/>
@@ -92,7 +92,7 @@
 							<object class="IBUIButton" id="318582930">
 								<reference key="NSNextResponder" ref="941456169"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{66, 6}, {86, 33}}</string>
+								<string key="NSFrame">{{59, 6}, {86, 33}}</string>
 								<reference key="NSSuperview" ref="941456169"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="68966530"/>
@@ -114,7 +114,7 @@
 							<object class="IBUIButton" id="68966530">
 								<reference key="NSNextResponder" ref="941456169"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{168, 6}, {86, 33}}</string>
+								<string key="NSFrame">{{176, 6}, {86, 33}}</string>
 								<reference key="NSSuperview" ref="941456169"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="67347642"/>
@@ -131,7 +131,7 @@
 							<object class="IBUIButton" id="67347642">
 								<reference key="NSNextResponder" ref="941456169"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{264, 0}, {44, 44}}</string>
+								<string key="NSFrame">{{272, 0}, {44, 44}}</string>
 								<reference key="NSSuperview" ref="941456169"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView"/>
@@ -162,6 +162,11 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<object class="NSMutableArray" key="IBUIItems">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBUIBarButtonItem" id="398005629">
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<reference key="IBUIToolbar" ref="941456169"/>
+								<int key="IBUISystemItemIdentifier">5</int>
+							</object>
 							<object class="IBUIBarButtonItem" id="343681154">
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<reference key="IBUICustomView" ref="276249628"/>
@@ -172,7 +177,18 @@
 								<reference key="IBUICustomView" ref="318582930"/>
 								<reference key="IBUIToolbar" ref="941456169"/>
 							</object>
+							<object class="IBUIBarButtonItem" id="393934787">
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<reference key="IBUIToolbar" ref="941456169"/>
+								<int key="IBUISystemItemIdentifier">5</int>
+							</object>
 							<object class="IBUIBarButtonItem" id="290676198">
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<float key="IBUIWidth">36</float>
+								<reference key="IBUIToolbar" ref="941456169"/>
+								<int key="IBUISystemItemIdentifier">6</int>
+							</object>
+							<object class="IBUIBarButtonItem" id="133776439">
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<reference key="IBUIToolbar" ref="941456169"/>
 								<int key="IBUISystemItemIdentifier">5</int>
@@ -187,6 +203,11 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<reference key="IBUICustomView" ref="67347642"/>
 								<reference key="IBUIToolbar" ref="941456169"/>
+							</object>
+							<object class="IBUIBarButtonItem" id="742986619">
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<reference key="IBUIToolbar" ref="941456169"/>
+								<int key="IBUISystemItemIdentifier">5</int>
 							</object>
 						</object>
 					</object>
@@ -401,6 +422,10 @@
 							<reference ref="290676198"/>
 							<reference ref="665631328"/>
 							<reference ref="1048284158"/>
+							<reference ref="133776439"/>
+							<reference ref="393934787"/>
+							<reference ref="398005629"/>
+							<reference ref="742986619"/>
 						</object>
 						<reference key="parent" ref="191373211"/>
 					</object>
@@ -491,6 +516,26 @@
 						<reference key="object" ref="605960867"/>
 						<reference key="parent" ref="855622620"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">48</int>
+						<reference key="object" ref="133776439"/>
+						<reference key="parent" ref="941456169"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">49</int>
+						<reference key="object" ref="393934787"/>
+						<reference key="parent" ref="941456169"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">50</int>
+						<reference key="object" ref="398005629"/>
+						<reference key="parent" ref="941456169"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">51</int>
+						<reference key="object" ref="742986619"/>
+						<reference key="parent" ref="941456169"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -510,6 +555,10 @@
 					<string>31.IBPluginDependency</string>
 					<string>4.CustomClassName</string>
 					<string>4.IBPluginDependency</string>
+					<string>48.IBPluginDependency</string>
+					<string>49.IBPluginDependency</string>
+					<string>50.IBPluginDependency</string>
+					<string>51.IBPluginDependency</string>
 					<string>6.IBPluginDependency</string>
 					<string>9.IBPluginDependency</string>
 				</object>
@@ -530,6 +579,10 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="unlocalizedProperties">
@@ -544,7 +597,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">42</int>
+			<int key="maxID">51</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
