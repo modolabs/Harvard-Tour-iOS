@@ -126,7 +126,7 @@
      initWithImage:[UIImage imageNamed:@"modules/tour/tabs-background.png"]];
     [self.tabControl addSubview:background];
     [self.tabControl sendSubviewToBack:background];
-    [background release];
+    [background release];    
     
     self.tabControl.tabSpacing = 0.0;
     NSInteger totalTabs = 5;
@@ -163,7 +163,15 @@
     [moviePlayers removeAllObjects];
     for(UIView *subview in self.lenseContentView.subviews) {
         [subview removeFromSuperview];
-    }        
+    }
+    
+    // Set tab content background.
+    UIView *tabBodyBackground = 
+    [[UIImageView alloc] 
+     initWithImage:[UIImage imageNamed:@"common/tab-body"]];
+    [self.lenseContentView addSubview:tabBodyBackground];
+    [self.lenseContentView sendSubviewToBack:tabBodyBackground];
+    [tabBodyBackground release]; 
     
     for (TourLenseItem *lenseItem in [aLense orderedItems]) {
         if([lenseItem isKindOfClass:[TourLenseHtmlItem class]]) {
