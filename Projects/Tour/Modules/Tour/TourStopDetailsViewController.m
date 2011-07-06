@@ -246,7 +246,9 @@
         lenseContentHeight += dummyInitialHeight;
         self.webView = [[[UIWebView alloc] initWithFrame:webviewFrame] autorelease];
         self.webView.delegate = self;
-        [self.webView loadHTMLString:self.html baseURL:nil];
+        [self.webView 
+         loadHTMLString:self.html 
+         baseURL:[[NSBundle mainBundle] resourceURL]];
         [self.lenseContentView addSubview:self.webView]; 
     }
     
