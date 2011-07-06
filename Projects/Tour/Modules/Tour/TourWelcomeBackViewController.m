@@ -66,7 +66,7 @@
         self.leftIconButton.hidden = YES;
         
         [self.rightLabelButton 
-         setTitle:@"Start Tour" forState:UIControlStateNormal];
+         setTitle:@"Start New Tour" forState:UIControlStateNormal];
     }
     else {
         self.leftIconButton.imageView.image = 
