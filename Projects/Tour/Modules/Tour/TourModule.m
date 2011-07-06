@@ -77,4 +77,23 @@
     label.text = title;
 }
 
++ (UIBarButtonItem *)customToolbarButtonWithImageNamed:(NSString *)imageName 
+                                     pressedImageNamed:(NSString *)pressedImageName
+                                                target:(id)target 
+                                                action:(SEL)action {
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage *image = [UIImage imageNamed:imageName];
+    button.frame = CGRectMake(0, 0, image.size.width, image.size.height);
+    
+    [button setImage:image forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:pressedImageName] 
+            forState:UIControlStateHighlighted];
+    
+    [button addTarget:target action:action 
+     forControlEvents:UIControlEventTouchUpInside];
+    
+    return [[[UIBarButtonItem alloc] initWithCustomView:button] autorelease];    
+}
+
 @end

@@ -31,6 +31,7 @@ typedef enum  {
 @property (nonatomic, retain) id<TourOverviewDelegate> delegate;
 
 - (IBAction)mapListToggled:(id)sender;
+- (IBAction)backButtonTapped:(id)sender;
 
 + (void)layoutLensesLegend:(UIView *)legendView forStop:(TourStop *)stop withIconSize:(CGFloat)size;
 

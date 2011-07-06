@@ -91,6 +91,11 @@
     NSString *title = @"";
     if (self.mode == TourOverviewModeStart) {
         title = @"Pick a Starting Point";
+        self.navigationItem.leftBarButtonItem =
+        [TourModule 
+         customToolbarButtonWithImageNamed:@"modules/tour/navbar-back" 
+         pressedImageNamed:@"modules/tour/navbar-back-pressed" 
+         target:self action:@selector(backButtonTapped:)];        
     } else if(self.mode == TourOverviewModeContinue) {
         title = @"Tour Overview";
         self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(continueTour)] autorelease];
@@ -135,6 +140,10 @@
     } else if(mapListToggle.selectedSegmentIndex == 1) {
         [self showListAnimated:YES];
     }
+}
+
+- (IBAction)backButtonTapped:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)showMapAnimated:(BOOL)animated {

@@ -110,7 +110,10 @@
              forControlEvents:UIControlEventTouchUpInside];
     
     self.navigationItem.rightBarButtonItem = 
-    [[[UIBarButtonItem alloc] initWithCustomView:settingsButton] autorelease];
+    [TourModule 
+     customToolbarButtonWithImageNamed:@"modules/tour/navbar-button-settings" 
+     pressedImageNamed:@"modules/tour/navbar-button-settings-pressed" 
+     target:self action:@selector(settingsButtonTapped:)];
     
     [self refreshUI];
     [self loadMapControllerForCurrentStop];
