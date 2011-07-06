@@ -70,6 +70,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
     self.mapContainerView = [[[UIView alloc] initWithFrame:self.contentView.bounds] autorelease];
     self.mapContainerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
@@ -104,14 +107,24 @@
     (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
     [module setUpNavBarTitle:title navItem:self.navigationItem];
     
+    UIImage *mapImage = [UIImage imageNamed:@"modules/tour/navbar-toggle-map"];
+    UIImage *listImage = [UIImage imageNamed:@"modules/tour/navbar-toggle-list"];
     UISegmentedControl *mapList = 
     [[[UISegmentedControl alloc] 
-      initWithItems:[NSArray arrayWithObjects:@"map", @"list", nil]]
+      initWithItems:[NSArray arrayWithObjects:mapImage, listImage,nil]]
      autorelease];
+    [mapList setWidth:mapImage.size.width forSegmentAtIndex:0];
+    [mapList setWidth:listImage.size.width forSegmentAtIndex:1];
+    mapList.frame = CGRectMake(0, 0, 
+                               mapImage.size.width + listImage.size.width, 
+                               mapImage.size.height);
+    
     [mapList addTarget:self action:@selector(mapListToggled:) forControlEvents:UIControlEventValueChanged];
     mapList.segmentedControlStyle = UISegmentedControlStyleBar;
     mapList.selectedSegmentIndex = 0;
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:mapList] autorelease];
+    
+    [pool release];
 }
 
 - (void)deallocViews {
