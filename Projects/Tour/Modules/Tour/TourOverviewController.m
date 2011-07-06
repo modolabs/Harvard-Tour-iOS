@@ -193,13 +193,27 @@
         UIBarButtonItem *startButton = [[[UIBarButtonItem alloc] initWithCustomView:startButtonView] autorelease];
         [startButtonView addTarget:self action:@selector(startTour) forControlEvents:UIControlEventTouchUpInside];
         
+        UIButton *labelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        labelButton.frame = CGRectMake(0, 0, 64, 44);
+        [labelButton setTitle:@"Start Here" forState:UIControlStateNormal];
+        [labelButton setTitle:@"Start Here" forState:UIControlStateHighlighted];
+        labelButton.titleLabel.font = [UIFont boldSystemFontOfSize:12.0f];
+        labelButton.titleLabel.shadowColor = 
+        [UIColor colorWithWhite:0.0f alpha:0.6f];
+        labelButton.titleLabel.shadowOffset = CGSizeMake(0, 1.0f);
+        [labelButton addTarget:self action:@selector(startTour) 
+              forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *labelButtonItem = 
+        [[[UIBarButtonItem alloc] initWithCustomView:labelButton] autorelease];
+        
         UIBarItem *leftMargin = 
         [[[UIBarButtonItem alloc] 
           initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace 
           target:nil action:nil]
          autorelease];
         
-        toolbar.items = [NSArray arrayWithObjects:leftMargin, startButton, nil];
+        toolbar.items = [NSArray arrayWithObjects:leftMargin, labelButtonItem, 
+                         startButton, nil];
     } else if(self.mode == TourOverviewModeContinue) {
         UIButton *previousButtonView = [UIButton buttonWithType:UIButtonTypeCustom];
         [previousButtonView setImage:[UIImage imageWithPathName:@"modules/tour/toolbar-previous.png"] forState:UIControlStateNormal];
