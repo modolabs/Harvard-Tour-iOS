@@ -52,7 +52,6 @@
 
 - (void)dealloc
 {
-    [webView dealloc];
     [super dealloc];
 }
 
