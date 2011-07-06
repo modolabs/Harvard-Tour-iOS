@@ -10,8 +10,10 @@
 
 @synthesize newTourMode;
 @synthesize scrollView;
-@synthesize resumeLabelButton;
-@synthesize resumeIconButton;
+@synthesize rightLabelButton;
+@synthesize rightIconButton;
+@synthesize leftLabelButton;
+@synthesize leftIconButton;
 
 #pragma mark NSObject
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil 
@@ -27,8 +29,10 @@
 
 - (void)dealloc {
     [scrollView release];
-    [resumeLabelButton release];
-    [resumeIconButton release];
+    [rightLabelButton release];
+    [rightIconButton release];
+    [leftLabelButton release];
+    [leftIconButton release];
     [super dealloc];
 }
 
@@ -48,8 +52,31 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     self.navigationController.navigationBarHidden = YES;
-    self.resumeLabelButton.hidden = self.newTourMode;
-    self.resumeIconButton.hidden = self.newTourMode;
+    
+    // If we're in new tour mode, we want the the button the right side of the 
+    // toolbar to be labeled 'Start New Tour' and the button on the left side 
+    // to be invisible.
+    
+    // If we're not in new tour mode, the left button should read 'Start Over', 
+    // the icon should be an icon pointing to the right, and the right button 
+    // should read 'Resume Tour'.
+    
+    if (self.newTourMode) {
+        self.leftLabelButton.hidden = YES;
+        self.leftIconButton.hidden = YES;
+        
+        [self.rightLabelButton 
+         setTitle:@"Start Tour" forState:UIControlStateNormal];
+    }
+    else {
+        self.leftIconButton.imageView.image = 
+        [UIImage imageWithPathName:@"modules/tour/toolbar-next"];
+        self.leftLabelButton.hidden = NO;
+        self.leftIconButton.hidden = NO;
+
+        [self.rightLabelButton 
+         setTitle:@"Resume Tour" forState:UIControlStateNormal];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -58,7 +85,7 @@
 
 #pragma mark Actions
 
-- (IBAction)startOver {    
+- (void)startNewTour {
     [[TourDataManager sharedManager] markAllStopsUnvisited];        
     
     TourOverviewController *overviewController = 
@@ -68,14 +95,30 @@
     [[TourDataManager sharedManager] getFirstStop];
     [self.navigationController pushViewController:overviewController 
                                          animated:YES];
-    [overviewController release];
+    [overviewController release];    
 }
 
-- (IBAction)resumeTour {
-    TourWalkingPathViewController *walkingPathVC = [[[TourWalkingPathViewController alloc] initWithNibName:@"TourWalkingPathViewController" bundle:nil] autorelease];
+- (void)resumeTour {
+    TourWalkingPathViewController *walkingPathVC = 
+    [[[TourWalkingPathViewController alloc] 
+      initWithNibName:@"TourWalkingPathViewController" bundle:nil] autorelease];
     walkingPathVC.initialStop = [[TourDataManager sharedManager] getInitialStop];
     walkingPathVC.currentStop = [[TourDataManager sharedManager] getCurrentStop];
-    [self.navigationController pushViewController:walkingPathVC animated:YES];
+    
+    [self.navigationController pushViewController:walkingPathVC animated:YES];    
+}
+
+- (IBAction)leftButtonTapped {
+    [self startNewTour];
+}
+
+- (IBAction)rightButtonTapped {
+    if (self.newTourMode) {
+        [self startNewTour];
+    }
+    else {
+        [self resumeTour];
+    }
 }
 
 #pragma mark HTMLTemplateBasedViewController

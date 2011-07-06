@@ -2,17 +2,18 @@
 #import "HTMLTemplateBasedViewController.h"
 
 @interface TourWelcomeBackViewController : HTMLTemplateBasedViewController {
-    IBOutlet UIButton *resumeLabelButton;
-    IBOutlet UIButton *resumeIconButton;
 }
 
-- (IBAction)startOver;
-- (IBAction)resumeTour;
+- (IBAction)leftButtonTapped;
+- (IBAction)rightButtonTapped;
 
 @property (assign) BOOL newTourMode;
 @property (nonatomic, retain) IBOutlet UIScrollView *scrollView;
-@property (nonatomic, retain) IBOutlet UIButton *resumeLabelButton;
-@property (nonatomic, retain) IBOutlet UIButton *resumeIconButton;
 
+@property (nonatomic, retain) IBOutlet UIButton *rightLabelButton;
+@property (nonatomic, retain) IBOutlet UIButton *rightIconButton;
+
+@property (nonatomic, retain) IBOutlet UIButton *leftLabelButton;
+@property (nonatomic, retain) IBOutlet UIButton *leftIconButton;
 
 @end
