@@ -86,6 +86,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         
     // this gets rid of the back button
     self.navigationItem.leftBarButtonItem = 
@@ -93,11 +95,22 @@
       initWithCustomView:[[[UIView alloc] initWithFrame:CGRectZero] 
                           autorelease]] autorelease];
     
+    UIButton *settingsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage *settingsImage = 
+    [UIImage imageNamed:@"modules/tour/navbar-button-settings"];
+    settingsButton.frame = 
+    CGRectMake(0, 0, settingsImage.size.width, settingsImage.size.height);
+    
+    [settingsButton setImage:settingsImage forState:UIControlStateNormal];
+    [settingsButton 
+     setImage:[UIImage imageNamed:@"modules/tour/navbar-button-settings-pressed"] 
+     forState:UIControlStateHighlighted];
+    
+    [settingsButton addTarget:self action:@selector(settingsButtonTapped:) 
+             forControlEvents:UIControlEventTouchUpInside];
+    
     self.navigationItem.rightBarButtonItem = 
-    [[[UIBarButtonItem alloc] 
-      initWithImage:[UIImage imageNamed:@"common/button-icon-settings"] 
-      style:UIBarButtonItemStyleBordered 
-      target:self action:@selector(settingsButtonTapped:)] autorelease];
+    [[[UIBarButtonItem alloc] initWithCustomView:settingsButton] autorelease];
     
     [self refreshUI];
     [self loadMapControllerForCurrentStop];
@@ -105,6 +118,8 @@
     [self.contentView addSubview:self.tourMapController.view];
     self.currentContent = self.tourMapController.view;
     // Do any additional setup after loading the view from its nib.
+    
+    [pool release];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
