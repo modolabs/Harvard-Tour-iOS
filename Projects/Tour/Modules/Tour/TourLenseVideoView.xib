@@ -50,11 +50,8 @@
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="582790077"/>
 						<object class="NSColor" key="IBUIBackgroundColor">
-							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MQA</bytes>
-							<object class="NSColorSpace" key="NSCustomColorSpace" id="105260300">
-								<int key="NSID">2</int>
-							</object>
+							<int key="NSColorSpace">2</int>
+							<bytes key="NSRGB">MC45MTc2NDcxMjMzIDAuOTE3NjQ3MTIzMyAwLjkwOTgwMzk4NjUgMAA</bytes>
 						</object>
 						<int key="IBUITag">200</int>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -95,9 +92,8 @@
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="310334588"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">3</int>
-					<bytes key="NSWhite">MQA</bytes>
-					<reference key="NSCustomColorSpace" ref="105260300"/>
+					<int key="NSColorSpace">2</int>
+					<bytes key="NSRGB">MC45MTc2NDcxMjMzIDAuOTE3NjQ3MTIzMyAwLjkwOTgwMzk4NjUgMAA</bytes>
 				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
