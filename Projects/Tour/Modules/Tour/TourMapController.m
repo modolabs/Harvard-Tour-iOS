@@ -401,7 +401,12 @@ didUpdateUserLocation:(MKUserLocation *)userLocation {
             region = [self allStopsRegion];
         }
         
-        [self.mapView setRegion:region animated:NO];
+        // only update the region once based
+        if(!regionSetFromUserLocation) {
+            [self.mapView setRegion:region animated:NO];
+        }
+        regionSetFromUserLocation = YES;
+
         
         // Update the direction beam annotation.
         if (!self.directionBeamAnnotationView) {

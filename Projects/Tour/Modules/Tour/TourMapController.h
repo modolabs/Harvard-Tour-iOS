@@ -26,6 +26,7 @@ typedef enum {
     CGRect photoZoomedOutFrame;
     CGRect photoZoomedInFrame;
     BOOL receivedUserLocation;
+    BOOL regionSetFromUserLocation;
 }
 
 @property (nonatomic, retain) TourStop *selectedStop;
