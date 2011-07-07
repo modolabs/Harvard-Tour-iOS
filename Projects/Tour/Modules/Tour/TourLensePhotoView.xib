@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1056</int>
-		<string key="IBDocument.SystemVersion">10J869</string>
+		<string key="IBDocument.SystemVersion">10J4138</string>
 		<string key="IBDocument.InterfaceBuilderVersion">1306</string>
 		<string key="IBDocument.AppKitVersion">1038.35</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
@@ -58,7 +58,7 @@
 					<object class="IBUILabel" id="321358158">
 						<reference key="NSNextResponder" ref="1018855860"/>
 						<int key="NSvFlags">290</int>
-						<string key="NSFrame">{{8, 214}, {303, 61}}</string>
+						<string key="NSFrame">{{8, 217}, {303, 61}}</string>
 						<reference key="NSSuperview" ref="1018855860"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView"/>
@@ -77,18 +77,18 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<string key="IBUIText">Caption</string>
 						<object class="NSFont" key="IBUIFont">
-							<string key="NSName">Helvetica</string>
+							<string key="NSName">HelveticaNeue-Italic</string>
 							<double key="NSSize">13</double>
 							<int key="NSfFlags">16</int>
 						</object>
 						<object class="NSColor" key="IBUITextColor">
 							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MC4xNQA</bytes>
+							<bytes key="NSWhite">MC4yNQA</bytes>
 						</object>
 						<nil key="IBUIHighlightedColor"/>
 						<int key="IBUIBaselineAdjustment">1</int>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
-						<float key="IBUIMinimumFontSize">6</float>
+						<float key="IBUIMinimumFontSize">11</float>
 						<int key="IBUINumberOfLines">0</int>
 						<int key="IBUITextAlignment">1</int>
 					</object>
