@@ -1,6 +1,7 @@
 import sys
 import plistlib
 import os
+import shutil
 import urllib2
 import json
 import downloadMedia
@@ -47,24 +48,29 @@ tourResponse = json.loads(stopsJson)['response']
 stops = tourResponse['stops']
 tourPages = tourResponse['details']
 
-jsonOutFile = open('Resources/data/stops.json', 'w')
+if os.path.exists('Resources/data.temp'):
+    shutil.rmtree('Resources/data.temp')
+os.mkdir('Resources/data.temp')
+
+jsonOutFile = open('Resources/data.temp/stops.json', 'w')
 jsonOutFile.write(json.dumps(stops))
 jsonOutFile.close
 
-jsonOutFile = open('Resources/data/pages.json', 'w')
+jsonOutFile = open('Resources/data.temp/pages.json', 'w')
 jsonOutFile.write(json.dumps(tourPages))
 jsonOutFile.close
 
 downloadMedia.basePath = 'http://' + host
 
+os.mkdir('Resources/data.temp/stops')
 for stop in stops:
     stopJson = urllib2.urlopen(apiFullPath + '/tour/stop?id=' + urllib2.quote(stop['details']['id'])).read()
     stop = json.loads(stopJson)['response']
     stopDetails = stop['details']
-    if not os.path.exists('Resources/data/stops/' + stopDetails['id']):
-        os.mkdir('Resources/data/stops/' + stopDetails['id'])
+    if not os.path.exists('Resources/data.temp/stops/' + stopDetails['id']):
+        os.mkdir('Resources/data.temp/stops/' + stopDetails['id'])
     
-    jsonOutFile = open('Resources/data/stops/' + stopDetails['id'] + '/content.json', 'w')
+    jsonOutFile = open('Resources/data.temp/stops/' + stopDetails['id'] + '/content.json', 'w')
     jsonOutFile.write(json.dumps(stop))
     
     # retrieve media content (photos and video)
@@ -79,3 +85,9 @@ for stop in stops:
             elif lenseItem['type'] == u'slideshow':
                 for slide in lenseItem['slides']:
                     downloadMedia.retrieveAndSave(slide['url'])
+
+
+if os.path.exists('Resources/data'):
+    shutil.rmtree('Resources/data')
+
+os.rename('Resources/data.temp', 'Resources/data')

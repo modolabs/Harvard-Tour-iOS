@@ -28,9 +28,9 @@ def retrieveAndSave(url):
     else:
         cacheName = md5 
 
-    if not os.path.exists('Resources/data/media/'):
-        os.mkdir('Resources/data/media/')
+    if not os.path.exists('Resources/data.temp/media/'):
+        os.mkdir('Resources/data.temp/media/')
         
-    mediaOutFile = open('Resources/data/media/' + cacheName, 'w')
+    mediaOutFile = open('Resources/data.temp/media/' + cacheName, 'w')
     mediaOutFile.write(rawMedia)
     mediaOutFile.close()
