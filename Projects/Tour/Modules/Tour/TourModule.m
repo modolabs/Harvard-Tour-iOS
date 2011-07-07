@@ -77,6 +77,12 @@
     label.text = title;
 }
 
+- (void)updateNavBarTitleColor:(UIColor *)color 
+                       navItem:(UINavigationItem *)navItem {
+    UILabel *label = (UILabel *)navItem.titleView;
+    label.textColor = color;
+}
+
 + (UIBarButtonItem *)customToolbarButtonWithImageNamed:(NSString *)imageName 
                                      pressedImageNamed:(NSString *)pressedImageName
                                                 target:(id)target 

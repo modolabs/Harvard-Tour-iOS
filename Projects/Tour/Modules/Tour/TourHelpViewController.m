@@ -24,6 +24,12 @@ HelpTextArrayIndexes;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    if ([self.navigationItem.titleView isKindOfClass:[UILabel class]]) {
+        ((UILabel *)self.navigationItem.titleView).textColor = 
+        [UIColor whiteColor];
+    }
+    
     self.navigationItem.leftBarButtonItem = 
     [[[UIBarButtonItem alloc] 
       initWithBarButtonSystemItem:UIBarButtonSystemItemDone
