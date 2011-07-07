@@ -38,6 +38,7 @@
 @synthesize currentContent;
 @synthesize previousBarItem;
 @synthesize nextBarItem;
+@synthesize cameraBarItem;
 @synthesize actionSheetStop;
 @synthesize tourStopMode;
 @synthesize tourFinishController;
@@ -115,6 +116,7 @@
      pressedImageNamed:@"modules/tour/navbar-button-settings-pressed" 
      target:self action:@selector(settingsButtonTapped:)];
     
+    self.cameraBarItem.enabled = [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera];
     [self refreshUI];
     [self loadMapControllerForCurrentStop];
     self.tourMapController.view.frame = [self frameForContent];
@@ -139,6 +141,7 @@
 - (void)deallocViews {
     self.previousBarItem = nil;
     self.nextBarItem = nil;
+    self.cameraBarItem = nil;
 }
 
 - (void)viewDidUnload

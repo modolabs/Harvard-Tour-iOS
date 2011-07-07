@@ -28,6 +28,7 @@ TourSettingsControllerDelegate> {
 @property (nonatomic, retain) TourStop *actionSheetStop;
 @property (nonatomic, retain) IBOutlet UIBarItem *previousBarItem;
 @property (nonatomic, retain) IBOutlet UIBarItem *nextBarItem;
+@property (nonatomic, retain) IBOutlet UIBarItem *cameraBarItem;
 @property (nonatomic, retain) IBOutlet UIView *contentView;
 @property (nonatomic, retain) UIView *currentContent;
 
