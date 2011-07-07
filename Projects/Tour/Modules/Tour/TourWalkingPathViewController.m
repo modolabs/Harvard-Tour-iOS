@@ -368,6 +368,8 @@
     UINavigationController *modalNavController = 
     [[[UINavigationController alloc] 
       initWithRootViewController:helpController] autorelease];
+    TourModule *module = (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
+    [module setUpNavigationBar:modalNavController.navigationBar];
     [self presentModalViewController:modalNavController animated:YES];    
 }
 
@@ -395,6 +397,8 @@
     tourOverviewController.tourStops = [[TourDataManager sharedManager] getTourStopsForInitialStop:self.initialStop];
     tourOverviewController.delegate = self;
     UINavigationController *dummyNavController = [[[UINavigationController alloc] initWithRootViewController:tourOverviewController] autorelease];
+    TourModule *module = (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
+    [module setUpNavigationBar:dummyNavController.navigationBar];
     [self presentModalViewController:dummyNavController animated:YES];
 }
 
@@ -455,6 +459,8 @@
     [[UINavigationController alloc] 
      initWithRootViewController:settingsController];
     [settingsController release];
+    TourModule *module = (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
+    [module setUpNavigationBar:modalNavController.navigationBar];
     [self.navigationController 
      presentModalViewController:modalNavController animated:YES];
     [modalNavController release];
