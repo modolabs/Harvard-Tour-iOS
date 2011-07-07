@@ -307,6 +307,7 @@
          self.currentContent = self.tourMapController.view;
          self.currentContent.frame = [self frameForContent];
          [self.contentView addSubview:self.currentContent];
+         self.tourFinishController = nil;
          [self refreshUI];         
      }];
 }
