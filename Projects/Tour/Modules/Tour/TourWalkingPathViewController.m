@@ -334,8 +334,8 @@
     
     UIActionSheet *actionSheet = 
     [[UIActionSheet alloc] 
-     initWithTitle:title delegate:self cancelButtonTitle:@"NO" 
-     destructiveButtonTitle:nil otherButtonTitles:@"YES", nil];
+     initWithTitle:title delegate:self cancelButtonTitle:@"Cancel" 
+     destructiveButtonTitle:nil otherButtonTitles:@"Yes", nil];
     
     self.stopChoiceBlock = [[skipBlock copy] autorelease];
     self.actionSheetStop = stop;
