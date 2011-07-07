@@ -5,6 +5,9 @@
 
 #import "TourHelpViewController.h"
 #import "TourDataManager.h"
+#import "TourModule.h"
+#import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 
 
 typedef enum {
@@ -24,11 +27,8 @@ HelpTextArrayIndexes;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    if ([self.navigationItem.titleView isKindOfClass:[UILabel class]]) {
-        ((UILabel *)self.navigationItem.titleView).textColor = 
-        [UIColor whiteColor];
-    }
+    TourModule *module = (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
+    [module updateNavBarTitle:@"Help" navItem:self.navigationItem];
     
     self.navigationItem.leftBarButtonItem = 
     [[[UIBarButtonItem alloc] 
