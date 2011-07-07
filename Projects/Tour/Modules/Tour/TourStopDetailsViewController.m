@@ -107,11 +107,14 @@
     // e.g. self.myOutlet = nil;
 }
 
-// Call this before hiding this controller's view.
-- (void)cleanUpBeforeDisappearing {
+- (void)stopAllPlayers {
     for (MPMoviePlayerController *player in moviePlayers) {
         [player stop];
     }
+}
+// Call this before hiding this controller's view.
+- (void)cleanUpBeforeDisappearing {
+    [self stopAllPlayers];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -160,6 +163,7 @@
     self.html = @"";
     NSString *htmlBodyContents = @"";
     
+    [self stopAllPlayers];
     [moviePlayers removeAllObjects];
     for(UIView *subview in self.lenseContentView.subviews) {
         [subview removeFromSuperview];
