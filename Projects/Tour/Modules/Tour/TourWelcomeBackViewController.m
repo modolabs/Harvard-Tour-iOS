@@ -69,8 +69,6 @@
          setTitle:@"Start New Tour" forState:UIControlStateNormal];
     }
     else {
-        self.leftIconButton.imageView.image = 
-        [UIImage imageWithPathName:@"modules/tour/toolbar-next"];
         self.leftLabelButton.hidden = NO;
         self.leftIconButton.hidden = NO;
 

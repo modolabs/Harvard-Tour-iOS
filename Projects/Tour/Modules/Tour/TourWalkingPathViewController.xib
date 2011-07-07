@@ -68,7 +68,7 @@
 							<object class="IBUIButton" id="80756122">
 								<reference key="NSNextResponder" ref="555935926"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{4, 0}, {44, 44}}</string>
+								<string key="NSFrame">{{11, 0}, {44, 44}}</string>
 								<reference key="NSSuperview" ref="555935926"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="700557031"/>
@@ -105,7 +105,7 @@
 							<object class="IBUIButton" id="700557031">
 								<reference key="NSNextResponder" ref="555935926"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{50, 0}, {44, 44}}</string>
+								<string key="NSFrame">{{65, 0}, {44, 44}}</string>
 								<reference key="NSSuperview" ref="555935926"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="381347523"/>
@@ -153,7 +153,7 @@
 							<object class="IBUIButton" id="440322568">
 								<reference key="NSNextResponder" ref="555935926"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{226, 0}, {44, 44}}</string>
+								<string key="NSFrame">{{211, 0}, {44, 44}}</string>
 								<reference key="NSSuperview" ref="555935926"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="109393189"/>
@@ -177,7 +177,7 @@
 							<object class="IBUIButton" id="109393189">
 								<reference key="NSNextResponder" ref="555935926"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{272, 0}, {44, 44}}</string>
+								<string key="NSFrame">{{265, 0}, {44, 44}}</string>
 								<reference key="NSSuperview" ref="555935926"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView"/>
@@ -230,7 +230,7 @@
 							</object>
 							<object class="IBUIBarButtonItem" id="851487497">
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<float key="IBUIWidth">42</float>
+								<float key="IBUIWidth">20</float>
 								<reference key="IBUIToolbar" ref="555935926"/>
 								<int key="IBUISystemItemIdentifier">6</int>
 							</object>
@@ -251,7 +251,7 @@
 							</object>
 							<object class="IBUIBarButtonItem" id="398996761">
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<float key="IBUIWidth">42</float>
+								<float key="IBUIWidth">20</float>
 								<reference key="IBUIToolbar" ref="555935926"/>
 								<int key="IBUISystemItemIdentifier">6</int>
 							</object>

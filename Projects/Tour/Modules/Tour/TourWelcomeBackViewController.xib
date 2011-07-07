@@ -55,7 +55,7 @@
 							<object class="IBUIButton" id="276249628">
 								<reference key="NSNextResponder" ref="941456169"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{5, 0}, {44, 44}}</string>
+								<string key="NSFrame">{{8, 0}, {44, 44}}</string>
 								<reference key="NSSuperview" ref="941456169"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="318582930"/>
@@ -92,7 +92,7 @@
 							<object class="IBUIButton" id="318582930">
 								<reference key="NSNextResponder" ref="941456169"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{59, 6}, {86, 33}}</string>
+								<string key="NSFrame">{{62, 6}, {86, 33}}</string>
 								<reference key="NSSuperview" ref="941456169"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="68966530"/>
@@ -117,7 +117,7 @@
 							<object class="IBUIButton" id="68966530">
 								<reference key="NSNextResponder" ref="941456169"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{176, 6}, {86, 33}}</string>
+								<string key="NSFrame">{{173, 6}, {86, 33}}</string>
 								<reference key="NSSuperview" ref="941456169"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="67347642"/>
@@ -138,7 +138,7 @@
 							<object class="IBUIButton" id="67347642">
 								<reference key="NSNextResponder" ref="941456169"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{272, 0}, {44, 44}}</string>
+								<string key="NSFrame">{{269, 0}, {44, 44}}</string>
 								<reference key="NSSuperview" ref="941456169"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView"/>
@@ -191,7 +191,7 @@
 							</object>
 							<object class="IBUIBarButtonItem" id="290676198">
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<float key="IBUIWidth">36</float>
+								<float key="IBUIWidth">24</float>
 								<reference key="IBUIToolbar" ref="941456169"/>
 								<int key="IBUISystemItemIdentifier">6</int>
 							</object>
