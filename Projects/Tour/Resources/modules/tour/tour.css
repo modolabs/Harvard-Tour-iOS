@@ -2,6 +2,7 @@ body {
 	margin: 0;
 	padding: 0;
 	background-color: #eee;
+	background: #eee url(content-background.jpg);	
 }
 #content {
 	padding: 10px;
