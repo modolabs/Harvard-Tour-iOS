@@ -60,7 +60,6 @@
     label.font = [UIFont boldSystemFontOfSize:20.0f];
     //label.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
     label.numberOfLines = 1;
-    label.adjustsFontSizeToFitWidth = YES;
     label.textAlignment = UITextAlignmentCenter;
     label.textColor = [UIColor colorWithWhite:0.25f alpha:1.0f];
     navItem.titleView = label;
@@ -74,7 +73,9 @@
         [self setUpNavBarTitle:title navItem:navItem];
         label = (UILabel *)navItem.titleView;
     }
+    label.frame = CGRectMake(0, 0, 400, 44);
     label.text = title;
+    [label sizeToFit];
 }
 
 - (void)updateNavBarTitleColor:(UIColor *)color 
