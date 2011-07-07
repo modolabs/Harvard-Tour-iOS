@@ -9,9 +9,9 @@
 #import "TourModule.h"
 
 #define CellThumbnailViewTag 1
-#define CellLegendViewTag 2
 #define CellStopTitleTag 3
 #define CellStopSubtitleTag 4
+#define CellStopStatusImageTag 5
 
 @interface TourOverviewController (Private)
 - (void)showMapAnimated:(BOOL)animated;
@@ -254,8 +254,17 @@
     UILabel *stopSubtitleLabel = (UILabel *)[cell viewWithTag:CellStopSubtitleTag];
     stopSubtitleLabel.text = stop.subtitle;
     
-    UIView *legendView = [cell viewWithTag:CellLegendViewTag];
-    [[self class] layoutLensesLegend:legendView forStop:stop withIconSize:10];
+    if(self.mode == TourOverviewModeContinue) {
+        UIImageView *statusImageView = (UIImageView *)[cell viewWithTag:CellStopStatusImageTag];
+        if (stop == self.selectedStop) {
+            statusImageView.image = [UIImage imageWithPathName:@"modules/tour/map-pin-current"];
+        } else if([stop.visited boolValue]) {
+            statusImageView.image = [UIImage imageWithPathName:@"modules/tour/map-pin-past"];
+        } else {
+            statusImageView.image = nil;
+        }
+    }
+    
     return cell;    
 }
 

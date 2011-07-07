@@ -51,7 +51,7 @@
 							<object class="IBUILabel" id="642253699">
 								<reference key="NSNextResponder" ref="484414536"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{77, 0}, {150, 16}}</string>
+								<string key="NSFrame">{{108, 0}, {150, 16}}</string>
 								<reference key="NSSuperview" ref="484414536"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="578292271"/>
@@ -78,7 +78,7 @@
 							<object class="IBUILabel" id="578292271">
 								<reference key="NSNextResponder" ref="484414536"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrame">{{77, 15}, {240, 31}}</string>
+								<string key="NSFrame">{{108, 15}, {198, 31}}</string>
 								<reference key="NSSuperview" ref="484414536"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView"/>
@@ -106,8 +106,19 @@
 								<string key="NSFrameSize">{75, 50}</string>
 								<reference key="NSSuperview" ref="484414536"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="642253699"/>
+								<reference key="NSNextKeyView" ref="657673180"/>
 								<int key="IBUITag">1</int>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+							</object>
+							<object class="IBUIImageView" id="657673180">
+								<reference key="NSNextResponder" ref="484414536"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{77, 2}, {28, 40}}</string>
+								<reference key="NSSuperview" ref="484414536"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="642253699"/>
+								<int key="IBUITag">5</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
@@ -180,6 +191,7 @@
 							<reference ref="609945066"/>
 							<reference ref="642253699"/>
 							<reference ref="578292271"/>
+							<reference ref="657673180"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -198,6 +210,11 @@
 						<reference key="object" ref="578292271"/>
 						<reference key="parent" ref="741457292"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">10</int>
+						<reference key="object" ref="657673180"/>
+						<reference key="parent" ref="741457292"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -206,6 +223,7 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>-1.CustomClassName</string>
 					<string>-2.CustomClassName</string>
+					<string>10.IBPluginDependency</string>
 					<string>4.IBPluginDependency</string>
 					<string>5.IBPluginDependency</string>
 					<string>8.IBPluginDependency</string>
@@ -216,6 +234,7 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>TourOverviewController</string>
 					<string>UIResponder</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -235,7 +254,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">9</int>
+			<int key="maxID">10</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -252,14 +271,35 @@
 					<string key="className">TourOverviewController</string>
 					<string key="superclassName">UIViewController</string>
 					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">mapListToggled:</string>
-						<string key="NS.object.0">id</string>
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>backButtonTapped:</string>
+							<string>mapListToggled:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+						</object>
 					</object>
 					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">mapListToggled:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">mapListToggled:</string>
-							<string key="candidateClassName">id</string>
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>backButtonTapped:</string>
+							<string>mapListToggled:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">backButtonTapped:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">mapListToggled:</string>
+								<string key="candidateClassName">id</string>
+							</object>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
