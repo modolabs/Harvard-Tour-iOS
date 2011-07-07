@@ -8,6 +8,8 @@
 
 #import "TourSettingsViewController.h"
 #import <MapKit/MapKit.h>
+#import "TourModule.h"
+#import "KGOAppDelegate.h"
 
 typedef enum {
     kMapSegment = 0,
@@ -89,6 +91,9 @@ typedef enum {
     [[[UIBarButtonItem alloc] 
       initWithBarButtonSystemItem:UIBarButtonSystemItemDone
       target:self action:@selector(doneTapped:)] autorelease];
+    TourModule *module = (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"]; 
+    [module updateNavBarTitle:@"Settings" navItem:self.navigationItem];
+    
     
     // Sync the segmented control to the map type.
     NSInteger mapType = 
