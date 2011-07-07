@@ -206,10 +206,7 @@
             [[NSBundle mainBundle] loadNibNamed:@"TourLenseVideoView" owner:self options:nil];
             UIView *videoView = self.lenseItemVideoView;
             self.lenseItemVideoView = nil;
-            CGRect videoViewFrame = videoView.frame;
-            videoViewFrame.origin.y = lenseContentHeight;
-            videoView.frame = videoViewFrame;
-            lenseContentHeight += videoView.frame.size.height;
+
             
             UIView *videoContainerView = [videoView viewWithTag:LenseItemVideoViewContainer];
             NSURL *videoURL = [NSURL fileURLWithPath:[lenseVideoItem.video mediaFilePath]];
@@ -222,6 +219,14 @@
                                
             UILabel *captionLabel = (UILabel *)[videoView viewWithTag:LenseItemVideoCaptionTag];
             captionLabel.text = lenseVideoItem.title;
+            CGSize captionSize = [lenseVideoItem.title sizeWithFont:captionLabel.font constrainedToSize:captionLabel.frame.size lineBreakMode:captionLabel.lineBreakMode];
+            CGFloat deltaHeight = captionSize.height - captionLabel.frame.size.height;
+            
+            CGRect videoViewFrame = videoView.frame;
+            videoViewFrame.origin.y = lenseContentHeight;
+            videoViewFrame.size.height += deltaHeight;
+            videoView.frame = videoViewFrame;
+            lenseContentHeight += videoView.frame.size.height;
             
             [self.lenseContentView addSubview:videoView];
         }
