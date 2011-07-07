@@ -322,7 +322,7 @@
 
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		1D6058910D05DD3D006BFB54 /* Tour.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tour.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D6058910D05DD3D006BFB54 /* Yard Tour.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Yard Tour.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		29366C19118E401C009D6863 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		29366C1D118E4151009D6863 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -742,7 +742,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1D6058910D05DD3D006BFB54 /* Tour.app */,
+				1D6058910D05DD3D006BFB54 /* Yard Tour.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1523,7 +1523,7 @@
 			);
 			name = Tour;
 			productName = Tour;
-			productReference = 1D6058910D05DD3D006BFB54 /* Tour.app */;
+			productReference = 1D6058910D05DD3D006BFB54 /* Yard Tour.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1959,7 +1959,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = Tour;
+				PRODUCT_NAME = "Yard Tour";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug - Development";
@@ -1968,7 +1968,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7041347B8D20045CE9C /* kurogo.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = Tour;
+				PRODUCT_NAME = "Yard Tour";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Release - Production";
@@ -1977,7 +1977,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = Tour;
+				PRODUCT_NAME = "Yard Tour";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug - Staging";
@@ -1994,7 +1994,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = Tour;
+				PRODUCT_NAME = "Yard Tour";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug - Production";
@@ -2010,7 +2010,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7041347B8D20045CE9C /* kurogo.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = Tour;
+				PRODUCT_NAME = "Yard Tour";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Release - Staging";
@@ -2027,7 +2027,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = Tour;
+				PRODUCT_NAME = "Yard Tour";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug - Testing";
@@ -2044,7 +2044,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7041347B8D20045CE9C /* kurogo.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = Tour;
+				PRODUCT_NAME = "Yard Tour";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Release - Testing";
