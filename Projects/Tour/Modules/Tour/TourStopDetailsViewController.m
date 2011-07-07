@@ -184,15 +184,20 @@
             [[NSBundle mainBundle] loadNibNamed:@"TourLensePhotoView" owner:self options:nil];
             UIView *photoView = self.lenseItemPhotoView;
             self.lenseItemPhotoView = nil;
-            CGRect photoViewFrame = photoView.frame;
-            photoViewFrame.origin.y = lenseContentHeight;
-            photoView.frame = photoViewFrame;
-            lenseContentHeight += photoView.frame.size.height;
+
             
             UIImageView *imageView = (UIImageView *)[photoView viewWithTag:LenseItemPhotoImageTag];
             imageView.image = [lensePhotoItem.photo image];
             UILabel *captionLabel = (UILabel *)[photoView viewWithTag:LenseItemPhotoCaptionTag];
             captionLabel.text = lensePhotoItem.title;
+            CGSize captionSize = [lensePhotoItem.title sizeWithFont:captionLabel.font constrainedToSize:captionLabel.frame.size lineBreakMode:captionLabel.lineBreakMode];
+            CGFloat deltaHeight = captionSize.height - captionLabel.frame.size.height;
+            
+            CGRect photoViewFrame = photoView.frame;
+            photoViewFrame.origin.y = lenseContentHeight;
+            photoViewFrame.size.height += deltaHeight;
+            photoView.frame = photoViewFrame;
+            lenseContentHeight += photoView.frame.size.height;
             
             [self.lenseContentView addSubview:photoView];
         }
