@@ -11,7 +11,7 @@
 
 @interface TourFinishViewController : HTMLTemplateBasedViewController
 {
-    IBOutlet UIScrollView *scrollView;
+
 }
 
 @end
