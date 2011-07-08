@@ -304,6 +304,8 @@ isGreaterThanRegion2:(MKCoordinateRegion)region2;
                                                 (maxLongitude - minLongitude)));
     
 #ifdef _DEBUG_USER_LOCATION_FROM_OUTSIDE_HARVARD
+    return region;
+#else
     if ([[self class] region1:region isGreaterThanRegion2:[self getMaxRegion]]) {
         if (fallbackBlock) {
             return fallbackBlock();
@@ -315,8 +317,6 @@ isGreaterThanRegion2:(MKCoordinateRegion)region2;
     else {
         return region;
     }
-#else
-    return region;
 #endif
 }
 
