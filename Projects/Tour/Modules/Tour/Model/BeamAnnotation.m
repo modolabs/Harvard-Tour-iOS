@@ -8,9 +8,6 @@
 
 @implementation BeamAnnotation
 
-@synthesize latitude;
-@synthesize longitude;
-
 #pragma mark NSObject
 - (id)init {
     self = [super init];
@@ -35,5 +32,28 @@
     return coordinate;
 }
 
+- (void)setLatitude:(CGFloat)aLatitude {
+    [self willChangeValueForKey:@"coordinate"];
+    [self willChangeValueForKey:@"latitude"];
+    latitude = aLatitude;
+    [self didChangeValueForKey:@"coordinate"];
+    [self didChangeValueForKey:@"latitude"];
+}
+
+- (CGFloat)latitude {
+    return latitude;
+}
+
+- (void)setLongitude:(CGFloat)aLongitude {
+    [self willChangeValueForKey:@"coordinate"];
+    [self willChangeValueForKey:@"longitude"];
+    longitude = aLongitude;
+    [self didChangeValueForKey:@"coordinate"];
+    [self didChangeValueForKey:@"longitude"];
+}
+
+- (CGFloat)longitude {
+    return longitude;
+}
 
 @end

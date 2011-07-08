@@ -8,6 +8,8 @@
 
 @interface BeamAnnotation : NSObject <MKAnnotation>  {
     CLLocationCoordinate2D coordinate;
+    CGFloat latitude;
+    CGFloat longitude;
 }
 
 @property (assign) CGFloat latitude;
