@@ -10,6 +10,7 @@
 #import <MapKit/MapKit.h>
 #import "TourModule.h"
 #import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 
 typedef enum {
     kMapSegment = 0,
