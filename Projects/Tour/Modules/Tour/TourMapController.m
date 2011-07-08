@@ -303,6 +303,7 @@ isGreaterThanRegion2:(MKCoordinateRegion)region2;
                                                 marginFactor * 
                                                 (maxLongitude - minLongitude)));
     
+#ifdef _DEBUG_USER_LOCATION_FROM_OUTSIDE_HARVARD
     if ([[self class] region1:region isGreaterThanRegion2:[self getMaxRegion]]) {
         if (fallbackBlock) {
             return fallbackBlock();
@@ -314,6 +315,9 @@ isGreaterThanRegion2:(MKCoordinateRegion)region2;
     else {
         return region;
     }
+#esle
+    return region;
+#endif
 }
 
 - (MKCoordinateRegion)stopsRegion:(NSArray *)tourStops 
@@ -428,11 +432,6 @@ didUpdateUserLocation:(MKUserLocation *)userLocation {
         // Update position of the beam annotation.
         self.beamAnnotation.latitude = userLocation.coordinate.latitude;
         self.beamAnnotation.longitude = userLocation.coordinate.longitude;
-        
-#ifdef _DEBUG_USER_LOCATION_FROM_OUTSIDE_HARVARD
-        self.beamAnnotation.latitude = 42.373879f;
-        self.beamAnnotation.longitude = -71.118155;
-#endif        
     }
 }
 
