@@ -133,9 +133,11 @@
     
     TourModule *module = 
     (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
-    [module updateNavBarTitle:
-     self.currentStop.title navItem:self.navigationItem];
-
+    if(self.tourFinishController == nil) {
+        [module updateNavBarTitle:self.currentStop.title navItem:self.navigationItem];
+    } else {
+        [module updateNavBarTitle:@"Thank You" navItem:self.navigationItem];
+    }
 }
 
 - (void)deallocViews {
