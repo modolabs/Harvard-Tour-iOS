@@ -58,6 +58,7 @@
     UILabel *label = [[[UILabel alloc] initWithFrame:frame] autorelease];
     label.backgroundColor = [UIColor clearColor];
     label.font = [UIFont boldSystemFontOfSize:20.0f];
+    label.adjustsFontSizeToFitWidth = YES;
     //label.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
     label.numberOfLines = 1;
     label.textAlignment = UITextAlignmentCenter;
