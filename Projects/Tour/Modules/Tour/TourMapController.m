@@ -110,6 +110,8 @@ isGreaterThanRegion2:(MKCoordinateRegion)region2;
     }
     [self.mapView setRegion:initialRegion animated:NO];
     [self.mapView addAnnotations:tourStops];
+    self.mapView.userLocation.title = nil;
+    self.mapView.userLocation.subtitle = nil;
 }
 
 - (void)deallocViews {
@@ -425,6 +427,7 @@ didUpdateUserLocation:(MKUserLocation *)userLocation {
                   initWithAnnotation:self.beamAnnotation 
                   reuseIdentifier:@"beam"] autorelease];
                 self.directionBeamAnnotationView.canShowCallout = NO;
+                self.directionBeamAnnotationView.userInteractionEnabled = NO;
                 self.directionBeamAnnotationView.image = 
                 [UIImage imageNamed:@"modules/tour/map-compass-beam"];
             }
@@ -439,20 +442,22 @@ didUpdateUserLocation:(MKUserLocation *)userLocation {
     // old selected annotation
     // self.selectedAnnotationView.annotation is not always the same as 
     // self.selectedStop.
-    if([[(TourStop *)self.selectedAnnotationView.annotation visited] 
-        boolValue]) {
-        self.selectedAnnotationView.image = 
-        [UIImage imageWithPathName:@"modules/tour/map-pin-past.png"];
-    } else {
-        self.selectedAnnotationView.image = 
-        [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
-    }
-    // new selected annotation
-    view.image = [UIImage imageWithPathName:@"modules/tour/map-pin-current.png"]; 
-    self.selectedAnnotationView = view;
-    self.selectedStop = (TourStop *)view.annotation;
-    if (self.delegate) {
-        [self.delegate mapController:self didSelectTourStop:self.selectedStop];
+    if([view.annotation isKindOfClass:[TourStop class]]) {
+        if([[(TourStop *)self.selectedAnnotationView.annotation visited] 
+            boolValue]) {
+            self.selectedAnnotationView.image = 
+            [UIImage imageWithPathName:@"modules/tour/map-pin-past.png"];
+        } else {
+            self.selectedAnnotationView.image = 
+            [UIImage imageWithPathName:@"modules/tour/map-pin.png"];
+        }
+        // new selected annotation
+        view.image = [UIImage imageWithPathName:@"modules/tour/map-pin-current.png"]; 
+        self.selectedAnnotationView = view;
+        self.selectedStop = (TourStop *)view.annotation;
+        if (self.delegate) {
+            [self.delegate mapController:self didSelectTourStop:self.selectedStop];
+        }
     }
 }
 
