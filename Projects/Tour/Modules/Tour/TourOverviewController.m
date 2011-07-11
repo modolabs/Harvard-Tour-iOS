@@ -103,7 +103,13 @@
          target:self action:@selector(backButtonTapped:)];        
     } else if(self.mode == TourOverviewModeContinue) {
         title = @"Tour Overview";
-        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(continueTour)] autorelease];
+        UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        UIImage *doneImage = [UIImage imageWithPathName:@"modules/tour/navbar-done"];
+        [doneButton setImage:doneImage forState:UIControlStateNormal];
+        [doneButton setImage:[UIImage imageWithPathName:@"modules/tour/navbar-done-pressed"] forState:UIControlStateHighlighted];
+        doneButton.frame = CGRectMake(0, 0, doneImage.size.width, doneImage.size.height);
+        [doneButton addTarget:self action:@selector(continueTour) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:doneButton] autorelease];
     }
     TourModule *module = 
     (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
