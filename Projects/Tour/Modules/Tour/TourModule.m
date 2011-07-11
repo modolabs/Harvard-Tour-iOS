@@ -1,4 +1,5 @@
 #import "TourModule.h"
+#import "TourMainNavigationController.h"
 #import "TourWelcomeBackViewController.h"
 #import "TourDataManager.h"
 
@@ -33,7 +34,7 @@
         rootVC.newTourMode = 
         ([[TourDataManager sharedManager] getCurrentStop] == nil);
         
-        vc = [[[UINavigationController alloc] initWithRootViewController:rootVC]
+        vc = [[[TourMainNavigationController alloc] initWithRootViewController:rootVC]
               autorelease];
     }
     return vc;
