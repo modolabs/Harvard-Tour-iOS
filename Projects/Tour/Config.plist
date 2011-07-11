@@ -5,9 +5,9 @@
 	<key>Analytics</key>
 	<dict>
 		<key>AccountID</key>
-		<string></string>
+		<string>UA-2923555-32</string>
 		<key>Provider</key>
-		<string></string>
+		<string>Google</string>
 	</dict>
 	<key>AppFeedbackAddress</key>
 	<string>john.smith@example.com</string>

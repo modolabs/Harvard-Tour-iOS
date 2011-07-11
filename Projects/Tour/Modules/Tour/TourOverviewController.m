@@ -1,5 +1,6 @@
 #import "KGOToolbar.h"
 #import "UIKit+KGOAdditions.h"
+#import "AnalyticsWrapper.h"
 #import "TourOverviewController.h"
 #import "TourMapController.h"
 #import "TourDataManager.h"
@@ -307,6 +308,7 @@
     walkingPathViewController.currentStop = stop;
     [self.navigationController pushViewController:walkingPathViewController animated:YES]; 
     [walkingPathViewController release];
+    [[AnalyticsWrapper sharedWrapper] trackEvent:@"Select Starting Point" action:@"Start Tour" label:stop.title];
 }
 
 - (void)startTour {

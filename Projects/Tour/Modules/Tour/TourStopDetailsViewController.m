@@ -1,3 +1,4 @@
+#import "AnalyticsWrapper.h"
 #import "TourStopDetailsViewController.h"
 #import "KGOTabbedControl.h"
 #import "UIKit+KGOAdditions.h"
@@ -147,6 +148,10 @@
 }
 
 - (void)tabbedControl:(KGOTabbedControl *)control didSwitchToTabAtIndex:(NSInteger)index {
+    TourLense *lense = [[self.tourStop orderedLenses] objectAtIndex:index];
+    [[AnalyticsWrapper sharedWrapper] trackEvent:@"Stop Detail" 
+                                          action:[NSString stringWithFormat:@"%@ Tab", lense.lenseType]
+                                           label:self.tourStop.title];
     [self displayContentForTabIndex:index];
 }
 
