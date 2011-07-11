@@ -67,7 +67,7 @@
     // preserve frame for exiting full screen mode
     normalFrame = self.view.frame;    
     self.view.transform = CGAffineTransformMakeRotation(-M_PI_2);
-    self.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height);
+    self.view.frame = [UIScreen mainScreen].bounds;
 }
 
 - (void)videoWillExitFullScreenMode {
