@@ -415,26 +415,28 @@ didUpdateUserLocation:(MKUserLocation *)userLocation {
 
         
         // Update the direction beam annotation.
-        if (!self.directionBeamAnnotationView) {
-            self.directionBeamAnnotationView = 
-            [self.mapView dequeueReusableAnnotationViewWithIdentifier:@"beam"];
+        if ([CLLocationManager headingAvailable]) {
             if (!self.directionBeamAnnotationView) {
-                self.beamAnnotation = [[[BeamAnnotation alloc] init] autorelease];
-                [self.mapView addAnnotation:self.beamAnnotation];
-                
                 self.directionBeamAnnotationView = 
-                [[[MKAnnotationView alloc] 
-                  initWithAnnotation:self.beamAnnotation 
-                  reuseIdentifier:@"beam"] autorelease];
-                self.directionBeamAnnotationView.canShowCallout = NO;
-                self.directionBeamAnnotationView.userInteractionEnabled = NO;
-                self.directionBeamAnnotationView.image = 
-                [UIImage imageNamed:@"modules/tour/map-compass-beam"];
+                [self.mapView dequeueReusableAnnotationViewWithIdentifier:@"beam"];
+                if (!self.directionBeamAnnotationView) {
+                    self.beamAnnotation = [[[BeamAnnotation alloc] init] autorelease];
+                    [self.mapView addAnnotation:self.beamAnnotation];
+                
+                    self.directionBeamAnnotationView = 
+                    [[[MKAnnotationView alloc] 
+                      initWithAnnotation:self.beamAnnotation 
+                      reuseIdentifier:@"beam"] autorelease];
+                    self.directionBeamAnnotationView.canShowCallout = NO;
+                    self.directionBeamAnnotationView.userInteractionEnabled = NO;
+                    self.directionBeamAnnotationView.image = 
+                    [UIImage imageNamed:@"modules/tour/map-compass-beam"];
+                }
             }
+            // Update position of the beam annotation.
+            self.beamAnnotation.latitude = userLocation.coordinate.latitude;
+            self.beamAnnotation.longitude = userLocation.coordinate.longitude;
         }
-        // Update position of the beam annotation.
-        self.beamAnnotation.latitude = userLocation.coordinate.latitude;
-        self.beamAnnotation.longitude = userLocation.coordinate.longitude;
     }
 }
 
