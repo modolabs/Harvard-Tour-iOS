@@ -121,6 +121,7 @@ isGreaterThanRegion2:(MKCoordinateRegion)region2;
     self.stopTitleLabel = nil;
     self.stopCaptionLabel = nil;
     self.mapTipLabel = nil;
+    self.mapView.delegate = nil;
     self.mapView = nil;
     self.directionBeamAnnotationView = nil;
 }
