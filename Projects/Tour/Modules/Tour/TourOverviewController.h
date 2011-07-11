@@ -1,4 +1,5 @@
 #import <UIKit/UIKit.h>
+#import "KGOTabbedControl.h"
 @class TourStop;
 @class TourMapController;
 @class TourOverviewController;
@@ -12,7 +13,7 @@ typedef enum  {
 - (void)tourOverview:(TourOverviewController *)tourOverview stopWasSelected:(TourStop *)stop;
 @end
 
-@interface TourOverviewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
+@interface TourOverviewController : UIViewController <UITableViewDataSource, UITableViewDelegate, KGOTabbedControlDelegate> {
     UIView *_contentView;
     UITableView *_stopsTableView;
     UIView *_mapContainerView;
@@ -30,7 +31,6 @@ typedef enum  {
 
 @property (nonatomic, retain) id<TourOverviewDelegate> delegate;
 
-- (IBAction)mapListToggled:(id)sender;
 - (IBAction)backButtonTapped:(id)sender;
 
 + (void)layoutLensesLegend:(UIView *)legendView forStop:(TourStop *)stop withIconSize:(CGFloat)size;

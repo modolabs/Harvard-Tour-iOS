@@ -115,7 +115,7 @@
 			<key>bold</key>
 			<true/>
 			<key>color</key>
-			<string>#FFFFFF</string>
+			<string>#000000</string>
 			<key>size</key>
 			<integer>-1</integer>
 		</dict>
@@ -213,14 +213,14 @@
 	</dict>
 	<key>Images</key>
 	<dict>
-		<key>ToolbarBackground</key>
-		<string>common/toolbar-background</string>
 		<key>NavBarTitle</key>
 		<string>modules/home/logo-home.png</string>
 		<key>SearchBarBackground</key>
 		<string>common/searchbar-background.png</string>
 		<key>SearchBarDropShadow</key>
 		<string>common/bar-drop-shadow.png</string>
+		<key>ToolbarBackground</key>
+		<string>common/toolbar-background</string>
 	</dict>
 </dict>
 </plist>

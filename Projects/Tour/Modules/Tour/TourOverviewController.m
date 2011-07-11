@@ -1,4 +1,5 @@
 #import "KGOToolbar.h"
+#import "KGOSegmentedControl.h"
 #import "UIKit+KGOAdditions.h"
 #import "AnalyticsWrapper.h"
 #import "TourOverviewController.h"
@@ -108,22 +109,18 @@
     (TourModule *)[KGO_SHARED_APP_DELEGATE() moduleForTag:@"home"];
     [module setUpNavBarTitle:title navItem:self.navigationItem];
     
-    UIImage *mapImage = [UIImage imageNamed:@"modules/tour/navbar-toggle-map"];
-    UIImage *listImage = [UIImage imageNamed:@"modules/tour/navbar-toggle-list"];
-    UISegmentedControl *mapList = 
-    [[[UISegmentedControl alloc] 
-      initWithItems:[NSArray arrayWithObjects:mapImage, listImage,nil]]
-     autorelease];
-    [mapList setWidth:mapImage.size.width forSegmentAtIndex:0];
-    [mapList setWidth:listImage.size.width forSegmentAtIndex:1];
-    mapList.frame = CGRectMake(0, 0, 
-                               mapImage.size.width + listImage.size.width, 
-                               mapImage.size.height);
+    KGOSegmentedControl *mapListControl = [[[KGOSegmentedControl alloc] initWithFrame:CGRectMake(0, 0, 76, 30)] autorelease];
+    mapListControl.tabFont = [UIFont boldSystemFontOfSize:12];
+    mapListControl.tabPadding = 4;
+    [mapListControl insertSegmentWithTitle:@"map" atIndex:0 animated:NO];
+    [mapListControl insertSegmentWithTitle:@"list" atIndex:1 animated:NO];
+
+
+    mapListControl.selectedSegmentIndex = 0;
+    mapListControl.delegate = self;
     
-    [mapList addTarget:self action:@selector(mapListToggled:) forControlEvents:UIControlEventValueChanged];
-    mapList.segmentedControlStyle = UISegmentedControlStyleBar;
-    mapList.selectedSegmentIndex = 0;
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:mapList] autorelease];
+    
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:mapListControl] autorelease];
     
     [pool release];
 }
@@ -147,11 +144,10 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (IBAction)mapListToggled:(id)sender {
-    UISegmentedControl *mapListToggle = sender;
-    if(mapListToggle.selectedSegmentIndex == 0) {
+- (void)tabbedControl:(KGOTabbedControl *)contol didSwitchToTabAtIndex:(NSInteger)index {
+    if(index == 0) {
         [self showMapAnimated:YES];
-    } else if(mapListToggle.selectedSegmentIndex == 1) {
+    } else if(index == 1) {
         [self showListAnimated:YES];
     }
 }
