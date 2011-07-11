@@ -79,6 +79,7 @@
     self.mapContainerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     UIToolbar *mapToolbar = [self mapToolbar];
+    self.tourMapController.selectedStop = self.selectedStop;
     self.tourMapController.view.frame = CGRectMake(0, 0, 
         self.contentView.frame.size.width, self.contentView.frame.size.height - mapToolbar.frame.size.height);
     mapToolbar.frame = CGRectMake(0, self.contentView.frame.size.height - mapToolbar.frame.size.height,
@@ -90,7 +91,6 @@
     if(!self.tourStops) {
         self.tourStops = [[TourDataManager sharedManager] getAllTourStops];
     }
-    self.tourMapController.selectedStop = self.selectedStop;
     [self showMapAnimated:NO];
 
     NSString *title = @"";
