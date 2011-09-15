@@ -167,6 +167,7 @@
     self.webView = nil;
     self.html = @"";
     NSString *htmlBodyContents = @"";
+    BOOL containsVideo = NO;
     
     [self stopAllPlayers];
     [moviePlayers removeAllObjects];
@@ -211,6 +212,8 @@
             [self.lenseContentView addSubview:photoView];
         }
         else if([lenseItem isKindOfClass:[TourLenseVideoItem class]]) {
+            containsVideo = YES;
+            
             TourLenseVideoItem *lenseVideoItem = (TourLenseVideoItem *)lenseItem;
             [[NSBundle mainBundle] loadNibNamed:@"TourLenseVideoView" owner:self options:nil];
             UIView *videoView = self.lenseItemVideoView;
@@ -261,12 +264,14 @@
     
     if ([htmlBodyContents length]) {
         // Load the body contents into the template.
+        NSString *contentsClass = containsVideo ? @"headphones" : @"";
+        NSMutableDictionary *templateContents = [NSMutableDictionary dictionary];
+        [templateContents setObject:htmlBodyContents forKey:@"__CONTENTS__"];
+        [templateContents setObject:contentsClass forKey:@"__CONTENTS_CLASS__"];
         self.html = 
         [HTMLTemplateBasedViewController 
          htmlForPageTemplateFileName:@"stop_detail_template.html"
-         replacementsForStubs:
-         [NSDictionary 
-          dictionaryWithObject:htmlBodyContents forKey:@"__CONTENTS__"]];
+         replacementsForStubs:templateContents];
         
         CGFloat dummyInitialHeight = 200;
         CGRect webviewFrame = CGRectMake(0, lenseContentHeight, self.lenseContentView.frame.size.width, dummyInitialHeight);
@@ -277,6 +282,14 @@
          loadHTMLString:self.html 
          baseURL:[[NSBundle mainBundle] resourceURL]];
         [self.lenseContentView addSubview:self.webView]; 
+        
+        if (containsVideo) {
+            UIImage *headPhonesImage = [UIImage imageWithPathName:@"modules/tour/headphones"];
+            CGRect headPhonesFrame = CGRectMake(12, 11, headPhonesImage.size.width, headPhonesImage.size.height);
+            UIImageView *imageView = [[[UIImageView alloc] initWithImage:headPhonesImage] autorelease];
+            imageView.frame = headPhonesFrame;
+            [self.webView addSubview:imageView];
+        }
     }
     
     
