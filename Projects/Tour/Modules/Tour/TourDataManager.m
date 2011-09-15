@@ -44,6 +44,14 @@
         return;
     }
     
+    NSString *tourDataVersionKey = @"TourDataVersion";
+    NSString *currentVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    NSString *currentTourDataVersion = [[NSUserDefaults standardUserDefaults] objectForKey:tourDataVersionKey];
+    if (![currentTourDataVersion isEqualToString:currentVersion]) {
+        // remove old data
+        [[CoreDataManager sharedManager] deleteStore];
+    }
+    
     // check if stops already loaded into core data    
     if([self countStops] == 0) {
         NSString *stopsJsonPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"data/stops.json"];
@@ -57,6 +65,8 @@
             [TourStop stopWithDictionary:stopDetailsDict order:i];
         }
         [[CoreDataManager sharedManager] saveData];
+        [[NSUserDefaults standardUserDefaults] setObject:currentVersion forKey:tourDataVersionKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
     stopSummarysLoaded = YES;
