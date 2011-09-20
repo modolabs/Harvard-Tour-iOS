@@ -53,7 +53,7 @@
 			<key>APIPath</key>
 			<string>rest</string>
 			<key>Host</key>
-			<string>www.example.com</string>
+			<string>yardtour.harvard.edu</string>
 			<key>PathExtension</key>
 			<string></string>
 			<key>UseHTTPS</key>
@@ -64,7 +64,7 @@
 			<key>APIPath</key>
 			<string>rest</string>
 			<key>Host</key>
-			<string>staging.example.com</string>
+			<string>yardtour-staging.harvard.edu</string>
 			<key>PathExtension</key>
 			<string></string>
 			<key>UseHTTPS</key>
@@ -75,7 +75,7 @@
 			<key>APIPath</key>
 			<string>rest</string>
 			<key>Host</key>
-			<string>tour-demo.modolabs.com</string>
+			<string>yardtour-dev.harvard.edu</string>
 			<key>PathExtension</key>
 			<string></string>
 			<key>UseHTTPS</key>

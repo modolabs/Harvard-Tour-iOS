@@ -391,4 +391,16 @@
     }
 }
 
+- (BOOL)webView:(UIWebView *)webView 
+shouldStartLoadWithRequest:(NSURLRequest *)request 
+ navigationType:(UIWebViewNavigationType)navigationType {
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        // Send all links in these web views to their respective proper handlers.
+        // e.g. Phone for tel://, Mail for mailto://, Safari for http://.
+        [[UIApplication sharedApplication] openURL:[request URL]];
+        return NO;
+    }
+    return YES;
+}
+
 @end
