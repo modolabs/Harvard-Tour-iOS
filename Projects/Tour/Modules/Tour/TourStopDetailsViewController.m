@@ -160,6 +160,15 @@
     [self displayLenseContent:lense];
 }
 
+// In iOS 4.0.x there is no HelveticaNeue-Italic so switch to Helvetica-Oblique
+- (UILabel *)getCaptionLabelForView:(UIView *)view withTag:(NSInteger)tag {
+    UILabel *captionLabel = (UILabel *)[view viewWithTag:tag];
+    if (captionLabel.font == nil) {
+        captionLabel.font = [UIFont fontWithName:@"Helvetica-Oblique" size:13.0];
+    }
+    return captionLabel;
+}
+
 - (void)displayLenseContent:(TourLense *)aLense {
     CGFloat lenseContentHeight = 0;
     // remove old content
@@ -198,7 +207,7 @@
             
             UIImageView *imageView = (UIImageView *)[photoView viewWithTag:LenseItemPhotoImageTag];
             imageView.image = [lensePhotoItem.photo image];
-            UILabel *captionLabel = (UILabel *)[photoView viewWithTag:LenseItemPhotoCaptionTag];
+            UILabel *captionLabel = [self getCaptionLabelForView:photoView withTag:LenseItemPhotoCaptionTag];
             captionLabel.text = lensePhotoItem.title;
             CGSize captionSize = [lensePhotoItem.title sizeWithFont:captionLabel.font constrainedToSize:captionLabel.frame.size lineBreakMode:captionLabel.lineBreakMode];
             CGFloat deltaHeight = captionSize.height - captionLabel.frame.size.height;
@@ -229,7 +238,7 @@
             [player.view setAutoresizingMask:videoContainerView.autoresizingMask];
             [videoContainerView addSubview:player.view];
                                
-            UILabel *captionLabel = (UILabel *)[videoView viewWithTag:LenseItemVideoCaptionTag];
+            UILabel *captionLabel = [self getCaptionLabelForView:videoView withTag:LenseItemVideoCaptionTag];
             captionLabel.text = lenseVideoItem.title;
             CGSize captionSize = [lenseVideoItem.title sizeWithFont:captionLabel.font constrainedToSize:captionLabel.frame.size lineBreakMode:captionLabel.lineBreakMode];
             CGFloat deltaHeight = captionSize.height - captionLabel.frame.size.height;
@@ -308,7 +317,7 @@
     
     UIImageView *imageView = (UIImageView *)[slideView viewWithTag:LenseItemPhotoImageTag];
     imageView.image = [slide.photo image];
-    UILabel *captionLabel = (UILabel *)[slideView viewWithTag:LenseItemPhotoCaptionTag];
+    UILabel *captionLabel = [self getCaptionLabelForView:slideView withTag:LenseItemPhotoCaptionTag];
     captionLabel.text = slide.title;
     
     CGRect slideViewFrame = slideView.frame;
