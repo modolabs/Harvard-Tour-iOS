@@ -50,6 +50,7 @@
     if (![currentTourDataVersion isEqualToString:currentVersion]) {
         // remove old data
         [[CoreDataManager sharedManager] deleteStore];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:INITIAL_TOUR_STOP_KEY];
     }
     
     // check if stops already loaded into core data    
