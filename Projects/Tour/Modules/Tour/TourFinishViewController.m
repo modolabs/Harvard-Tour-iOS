@@ -83,7 +83,7 @@ static const CGFloat kSpaceBetweenLinkLabels = 4.0f;
     
     if ([url.scheme isEqualToString:@"yardtour"]) {
         if ([url.resourceSpecifier isEqualToString:@"//startover"]) {
-            NSString *title = @"Are you sure you want to start a new tour?";
+            NSString *title = @"Are you sure you want to restart the tour?";
             UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title
                                                                      delegate:self
                                                             cancelButtonTitle:@"Cancel"
