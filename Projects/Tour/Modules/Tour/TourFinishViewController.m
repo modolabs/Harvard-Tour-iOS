@@ -19,12 +19,15 @@ static const CGFloat kSpaceBetweenLinkLabels = 4.0f;
 @implementation TourFinishViewController
        
 @synthesize webView;
+@synthesize delegate;
 
 - (void)dealloc
 {
     [webView release];
+    self.delegate = nil;
     [super dealloc];
 }
+
 
 
 #pragma mark - View lifecycle
@@ -65,5 +68,40 @@ static const CGFloat kSpaceBetweenLinkLabels = 4.0f;
     return replacementsDict;
 }
 
+#pragma - mark UIActionSheet delegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != actionSheet.cancelButtonIndex) {
+        [self.delegate startOver];
+    }
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark UIWebView delegate
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
+ navigationType:(UIWebViewNavigationType)navigationType {
+    NSURL* url = request.URL;
+    
+    if ([url.scheme isEqualToString:@"yardtour"]) {
+        if ([url.resourceSpecifier isEqualToString:@"//startover"]) {
+            NSString *title = @"Are you sure you want to start a new tour?";
+            UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title
+                                                                     delegate:self
+                                                            cancelButtonTitle:@"Cancel"
+                                                       destructiveButtonTitle:nil
+                                                            otherButtonTitles:@"Yes", nil];
+            
+            [actionSheet showInView:self.delegate.contentView];
+            [actionSheet release];
+        }
+        return NO;
+    } 
+    else if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        // Send all links in these web views to their respective proper handlers.
+        // e.g. Phone for tel://, Mail for mailto://, Safari for http://.
+        [[UIApplication sharedApplication] openURL:[request URL]];
+        return NO;
+    }
+    return YES;
+}
 
 @end

@@ -3,6 +3,7 @@
 #import "TourOverviewController.h"
 #import "TourMapController.h"
 #import "TourSettingsViewController.h"
+#import "TourFinishViewController.h"
 
 typedef enum {
     TourStopModeApproach,
@@ -12,12 +13,11 @@ typedef enum {
 typedef void(^StopChoiceCompletionBlock)(TourStop *destStop);
 
 @class TourStopDetailsViewController;
-@class TourFinishViewController;
 
 @interface TourWalkingPathViewController : UIViewController 
 <TourOverviewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate,
 UINavigationControllerDelegate, TourMapControllerDelegate, 
-TourSettingsControllerDelegate> {
+TourSettingsControllerDelegate, TourFinishControllerDelegate> {
     TourStop *_initialStop;
     TourStop *_currentStop;    
 }

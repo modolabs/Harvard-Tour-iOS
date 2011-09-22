@@ -9,9 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "HTMLTemplateBasedViewController.h"
 
-@interface TourFinishViewController : HTMLTemplateBasedViewController
+@protocol TourFinishControllerDelegate
+
+- (void)startOver;
+- (UIView *)contentView;
+
+@end
+
+
+@interface TourFinishViewController : HTMLTemplateBasedViewController <UIActionSheetDelegate>
 {
 
 }
+
+@property (assign) id<TourFinishControllerDelegate> delegate;
 
 @end

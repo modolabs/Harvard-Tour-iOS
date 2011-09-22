@@ -191,9 +191,13 @@
     }
     else {
         UIView *previousView = nil;
-        self.tourFinishController = nil;
-        
-        if (self.tourStopMode == TourStopModeLenses) {
+        if (self.tourFinishController != nil) {
+            self.tourFinishController = nil;
+            self.tourStopMode = TourStopModeLenses;
+            [self loadStopDetailsControllerForCurrentStop];
+            previousView = self.tourStopDetailsController.view;
+        }
+        else if (self.tourStopMode == TourStopModeLenses) {
             self.tourStopMode = TourStopModeApproach;
             [self loadMapControllerForCurrentStop];
             previousView = self.tourMapController.view;
@@ -256,6 +260,7 @@
               bundle:[NSBundle mainBundle]
               title:@"Thank You"]
              autorelease];
+            self.tourFinishController.delegate = self;
             nextView = self.tourFinishController.view;
         }
         else {
@@ -378,7 +383,7 @@
     [self presentModalViewController:modalNavController animated:YES];    
 }
 
-#pragma - mark UIActionSheet delegate
+#pragma mark UIActionSheet delegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex != actionSheet.cancelButtonIndex) {
         if (self.stopChoiceBlock) {
@@ -565,6 +570,17 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info {
                         lastTourStopForFirstTourStop:self.initialStop];
     // Move on to the finish view.
     [self navigateToCurrentStopWithoutPromptingUserShouldAnimate:NO];
+}
+
+#pragma mark TourFinishControllerDelegate
+- (void)startOver {
+    // Go back to the welcome view, which should be somewhere underneath it
+    // in the nav stack.
+    TourWelcomeBackViewController *welcomeBackController = [self findWelcomeBackViewControllerInNavStack];
+    if (welcomeBackController) {
+        welcomeBackController.newTourMode = YES;
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
 }
 
 @end
