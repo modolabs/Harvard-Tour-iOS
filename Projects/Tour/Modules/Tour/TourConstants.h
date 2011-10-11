@@ -1,3 +1,11 @@
+
+/****************************************************************
+ *
+ *  Copyright 2011 The President and Fellows of Harvard College
+ *  Copyright 2011 Modo Labs Inc.
+ *
+ *****************************************************************/
+
 extern NSString * const TourStopEntityName;
 extern NSString * const TourLenseEntityName;
 extern NSString * const TourMediaItemEntityName;

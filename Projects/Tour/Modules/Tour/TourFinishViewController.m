@@ -1,10 +1,10 @@
-//
-//  TourFinishViewController.m
-//  Tour
-//
-//  Created by Jim Kang on 6/14/11.
-//  Copyright 2011 Modo Labs. All rights reserved.
-//
+
+/****************************************************************
+ *
+ *  Copyright 2011 The President and Fellows of Harvard College
+ *  Copyright 2011 Modo Labs Inc.
+ *
+ *****************************************************************/
 
 #import "TourFinishViewController.h"
 #import "TourDataManager.h"

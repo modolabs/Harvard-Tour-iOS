@@ -1,10 +1,10 @@
-//
-//  TourSettingsViewController.m
-//  Tour
-//
-//  Created by Jim Kang on 6/7/11.
-//  Copyright 2011 Modo Labs. All rights reserved.
-//
+
+/****************************************************************
+ *
+ *  Copyright 2011 The President and Fellows of Harvard College
+ *  Copyright 2011 Modo Labs Inc.
+ *
+ *****************************************************************/
 
 #import "TourSettingsViewController.h"
 #import <MapKit/MapKit.h>

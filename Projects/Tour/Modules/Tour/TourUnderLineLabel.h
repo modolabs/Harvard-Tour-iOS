@@ -1,10 +1,10 @@
-//
-//  TourUnderLineLabel.h
-//  Tour
-//
-//  Created by Muhammad J Amjad on 6/19/11.
-//  Copyright 2011 ModoLabs Inc. All rights reserved.
-//
+
+/****************************************************************
+ *
+ *  Copyright 2011 The President and Fellows of Harvard College
+ *  Copyright 2011 Modo Labs Inc.
+ *
+ *****************************************************************/
 
 #import <Foundation/Foundation.h>
 #import "KGOLabel.h"
