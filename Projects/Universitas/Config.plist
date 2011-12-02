@@ -134,6 +134,16 @@
 			<key>title</key>
 			<string>About</string>
 		</dict>
+		<dict>
+			<key>id</key>
+			<string>athletics</string>
+			<key>secondary</key>
+			<false/>
+			<key>tag</key>
+			<string>athletics</string>
+			<key>title</key>
+			<string>Athletics</string>
+		</dict>
 	</array>
 	<key>Servers</key>
 	<dict>

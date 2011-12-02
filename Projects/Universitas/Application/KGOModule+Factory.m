@@ -13,6 +13,7 @@
 #import "SettingsModule.h"
 #import "VideoModule.h"
 #import "LinksModule.h"
+#import "AthleticsModule.h"
 
 @implementation KGOModule (Factory)
 
@@ -34,6 +35,7 @@
                                    @"SettingsModule", @"customize",
                                    @"VideoModule", @"video",
                                    @"LinksModule", @"links",
+                                   @"Athletics", @"athletics",
                                    nil];
         
         NSString *serverID = [args objectForKey:@"id"];
