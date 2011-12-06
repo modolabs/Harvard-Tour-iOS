@@ -7,10 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@interface AthleticsDataController : NSObject {
-    
+#import "KGORequestManager.h"
+@interface AthleticsDataController : NSObject <KGORequestDelegate>{
+    NSMutableSet *_searchRequests;
+    NSMutableArray *_searchResults;
 }
+
+- (BOOL)requiresKurogoServer;
+
 @property (nonatomic, assign) id delegate;
 @property (nonatomic, assign) id searchDelegate;
+@property (nonatomic, retain) ModuleTag *moduleTag;
+
+- (void)fetchCategories;
 @end

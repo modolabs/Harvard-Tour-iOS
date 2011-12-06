@@ -9,15 +9,25 @@
 #import <UIKit/UIKit.h>
 #import "KGOScrollingTabstrip.h"
 #import "AthleticsTableViewCell.h"
-@interface AthleticsListController : UIViewController {
+#import "KGOSearchBar.h"
+#import "KGOTableViewController.h"
+#import "AthleticsDataController.h"
+#import "KGOSearchDisplayController.h"
+@interface AthleticsListController : KGOTableViewController <KGOScrollingTabstripDelegate,KGOSearchBarDelegate>{
     
     IBOutlet KGOScrollingTabstrip *_navScrollView;
     IBOutlet UILabel *_loadingLabel;
     IBOutlet UILabel *_lastUpdateLabel;
     IBOutlet UIProgressView *_progressView;
     IBOutlet UITableView *_storyTable;
-
-    IBOutlet AthleticsTableViewCell *_athleticsCell;
+    IBOutlet UIView *_activityView;
+    IBOutlet AthleticsTableViewCell *_athletcisCell;
 }
 
+@property (nonatomic, retain) AthleticsDataController *dataManager;
+@property (nonatomic, retain) NSArray *federatedSearchResults;
+@property (nonatomic, retain) NSString *federatedSearchTerms;
+@property (nonatomic, retain) NSArray *stories;
+
+- (void)setupNavScrollButtons;
 @end

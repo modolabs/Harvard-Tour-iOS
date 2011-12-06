@@ -35,6 +35,8 @@
 		4E89EFA11488BAB4001402A2 /* AthleticsSportDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EFA01488BAB3001402A2 /* AthleticsSportDetailViewController.m */; };
 		4E89EFA41488BB56001402A2 /* AthleticsSportsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EFA31488BB56001402A2 /* AthleticsSportsViewController.m */; };
 		4E89EFAD1488BCAA001402A2 /* Athletics.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EFAB1488BCAA001402A2 /* Athletics.xcdatamodeld */; };
+		4E8EF7D3148E1811009AFF2A /* AthleticsStory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E8EF7D2148E1811009AFF2A /* AthleticsStory.m */; };
+		4E8EF7D6148E1AFA009AFF2A /* AthleticsImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E8EF7D5148E1AF9009AFF2A /* AthleticsImage.m */; };
 		562CD69F13B9AEA600C5CB94 /* LinksModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 562CD69E13B9AEA600C5CB94 /* LinksModule.m */; };
 		562F4B79133EFA10000B9344 /* ContentModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 562F4B74133EFA10000B9344 /* ContentModule.m */; };
 		562F4B7A133EFA10000B9344 /* ContentTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562F4B76133EFA10000B9344 /* ContentTableViewController.m */; };
@@ -247,6 +249,11 @@
 		4E89EFA21488BB55001402A2 /* AthleticsSportsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsSportsViewController.h; sourceTree = "<group>"; };
 		4E89EFA31488BB56001402A2 /* AthleticsSportsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsSportsViewController.m; sourceTree = "<group>"; };
 		4E89EFAC1488BCAA001402A2 /* Athletics.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Athletics.xcdatamodel; sourceTree = "<group>"; };
+		4E8EF7CD148E086E009AFF2A /* AthleticsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsModel.h; sourceTree = "<group>"; };
+		4E8EF7D1148E1810009AFF2A /* AthleticsStory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsStory.h; sourceTree = "<group>"; };
+		4E8EF7D2148E1811009AFF2A /* AthleticsStory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsStory.m; sourceTree = "<group>"; };
+		4E8EF7D4148E1AF9009AFF2A /* AthleticsImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsImage.h; sourceTree = "<group>"; };
+		4E8EF7D5148E1AF9009AFF2A /* AthleticsImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsImage.m; sourceTree = "<group>"; };
 		562CD69D13B9AEA600C5CB94 /* LinksModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinksModule.h; sourceTree = "<group>"; };
 		562CD69E13B9AEA600C5CB94 /* LinksModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinksModule.m; sourceTree = "<group>"; };
 		562F4B73133EFA10000B9344 /* ContentModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentModule.h; sourceTree = "<group>"; };
@@ -717,6 +724,11 @@
 			isa = PBXGroup;
 			children = (
 				4E89EFAB1488BCAA001402A2 /* Athletics.xcdatamodeld */,
+				4E8EF7CD148E086E009AFF2A /* AthleticsModel.h */,
+				4E8EF7D1148E1810009AFF2A /* AthleticsStory.h */,
+				4E8EF7D2148E1811009AFF2A /* AthleticsStory.m */,
+				4E8EF7D4148E1AF9009AFF2A /* AthleticsImage.h */,
+				4E8EF7D5148E1AF9009AFF2A /* AthleticsImage.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1598,6 +1610,8 @@
 				4E89EFA11488BAB4001402A2 /* AthleticsSportDetailViewController.m in Sources */,
 				4E89EFA41488BB56001402A2 /* AthleticsSportsViewController.m in Sources */,
 				4E89EFAD1488BCAA001402A2 /* Athletics.xcdatamodeld in Sources */,
+				4E8EF7D3148E1811009AFF2A /* AthleticsStory.m in Sources */,
+				4E8EF7D6148E1AFA009AFF2A /* AthleticsImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,6 +13,7 @@
 @class AthleticsDataController;
 @interface AthleticsModule : KGOModule {
     AthleticsDataController *_dataManager;
+    NSString *_searchText;
 }
 @property (nonatomic, retain)  AthleticsDataController *dataManager;
 

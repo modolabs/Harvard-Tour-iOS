@@ -5,10 +5,14 @@
 //  Created by Liu Mingxing on 12/2/11.
 //  Copyright (c) 2011 Symbio Inc. All rights reserved.
 //
-
+#import "UIKit+KGOAdditions.h"
 #import "AthleticsListController.h"
-
+#import "AthleticsTableViewCell.h"
 @implementation AthleticsListController
+@synthesize dataManager;
+@synthesize federatedSearchResults;
+@synthesize federatedSearchTerms;
+@synthesize stories;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -31,8 +35,42 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    _navScrollView.delegate = self;
+    _storyTable.separatorColor = [UIColor colorWithWhite:0.5 alpha:1.0];
+    [self addTableView:_storyTable];
+    
+    //configure these things
+    self.navigationItem.title = @"Athletics";
+    self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
+                                                                             style:UIBarButtonItemStylePlain 
+                                                                            target:nil 
+                                                                            action:nil] autorelease];
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
+                                                                                           target:self 
+                                                                                           action:@selector(refresh:)] autorelease];
+    [self.dataManager fetchCategories];
+    
+    if (self.federatedSearchTerms || self.federatedSearchResults) {
+        [_navScrollView showSearchBarAnimated:NO];
+        [_navScrollView.searchController setActive:NO animated:NO];
+        _navScrollView.searchController.searchBar.text = self.federatedSearchTerms;
+        
+        if (self.federatedSearchResults) {
+            [_navScrollView.searchController setSearchResults:self.federatedSearchResults
+                                                 forModuleTag:self.dataManager.moduleTag];
+        }
+    }
+
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self setupNavScrollButtons]; // needed for updating bookmark status
+}
+
+
 
 - (void)viewDidUnload
 {
@@ -47,11 +85,7 @@
     [_storyTable release];
     _storyTable = nil;
 
-    [_athleticsCell release];
-    _athleticsCell = nil;
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -67,7 +101,113 @@
     [_progressView release];
     [_storyTable release];
 
-    [_athleticsCell release];
     [super dealloc];
 }
+
+#pragma mark - Navigation 
+- (void)refresh:(id)sender {
+    
+}
+
+- (void)setupNavScrollButtons {
+    
+}
+
+#pragma mark -
+#pragma mark Bottom status bar
+
+- (void)setStatusText:(NSString *)text {
+    _loadingLabel.hidden = YES;
+    _progressView.hidden = YES;
+    _activityView.alpha = 1.0;
+	_lastUpdateLabel.hidden = NO;
+	_lastUpdateLabel.text = text;
+    
+    CGFloat y = _navScrollView != nil ? _navScrollView.frame.size.height : 0;
+    _storyTable.frame = CGRectMake(0, y, self.view.bounds.size.width, self.view.bounds.size.height - y);
+    
+    [UIView animateWithDuration:1.0 delay:2.0 options:0 animations:^(void) {
+        _activityView.alpha = 0;
+    } completion:^(BOOL finished) {
+        _activityView.hidden = YES;
+    }];
+}
+
+- (void)setLastUpdated:(NSDate *)date {
+    if (date) {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateStyle:NSDateFormatterMediumStyle];
+        [formatter setTimeStyle:NSDateFormatterShortStyle];
+        [self setStatusText:[NSString stringWithFormat:@"%@ %@",
+                             NSLocalizedString(@"Last Updated", nil),
+                             [formatter stringFromDate:date]]];
+        [formatter release];
+    }
+}
+
+- (void)setProgress:(CGFloat)value {
+	_loadingLabel.hidden = NO;
+	_progressView.hidden = NO;
+	_lastUpdateLabel.hidden = YES;
+	_progressView.progress = value;
+    
+    _activityView.hidden = NO;
+    _activityView.alpha = 1.0;
+    CGFloat y = _navScrollView != nil ? _navScrollView.frame.size.height : 0;
+    _storyTable.frame = CGRectMake(0, y, self.view.bounds.size.width,
+                                   self.view.bounds.size.height - y - _activityView.frame.size.height);
+}
+
+
+#pragma mark -KGOScrollingTabstrip Delegate
+- (void)tabstrip:(KGOScrollingTabstrip *)tabstrip clickedButtonAtIndex:(NSUInteger)index {
+    NSString *title = [tabstrip buttonTitleAtIndex:index];
+    NSLog(@"(%@)",title);
+}
+
+#pragma mark -KGOTable Methds
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return (self.stories.count > 0) ? 1 : 0;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSInteger n = self.stories.count;
+    return n;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = nil;
+    if (indexPath.row == self.stories.count) {
+        static NSString *loadMoreIdentifier = @"loadmore";
+        cell = [tableView dequeueReusableCellWithIdentifier:loadMoreIdentifier];
+        if (!cell) {
+            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                           reuseIdentifier:loadMoreIdentifier] autorelease];
+        }
+        cell.textLabel.text = NSLocalizedString(@"Load more stories", @"new story list");
+        [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
+        // TODO: set color to #999999 while things are loading
+        cell.textLabel.textColor = [UIColor colorWithHexString:@"#1A1611"];
+        
+    } else {
+        NSString *cellIdentifier = [AthleticsTableViewCell commonReuseIdentifier];
+        cell = (AthleticsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (!cell) {
+            [[NSBundle mainBundle] loadNibNamed:@"AthleticsTableViewCell" owner:self options:nil];
+            cell = _athletcisCell;
+            //[_athletcisCell configureLabelsTheme];
+        }
+        //[(AthleticsTableViewCell *)cell setStory:[self.stories objectAtIndex:indexPath.row]];
+        [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
+
+
 @end
