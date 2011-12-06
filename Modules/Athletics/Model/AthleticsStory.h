@@ -16,5 +16,7 @@
 @property (nonatomic, retain)  AthleticsImage *thumbImage;
 @property (nonatomic, retain) NSString * summary;
 @property (nonatomic, retain)  NSString *identifier;
-
+@property (nonatomic, retain)  NSString *link;
+@property (nonatomic, retain) NSString * body;
+@property (nonatomic, retain) NSNumber * hasBody;
 @end

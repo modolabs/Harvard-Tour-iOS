@@ -8,6 +8,7 @@
 #import "UIKit+KGOAdditions.h"
 #import "AthleticsListController.h"
 #import "AthleticsTableViewCell.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 @implementation AthleticsListController
 @synthesize dataManager;
 @synthesize federatedSearchResults;
@@ -207,6 +208,60 @@
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
+}
+
+#pragma mark - KGOSearchDisplayDelegate
+
+- (BOOL)tabstripShouldShowSearchDisplayController:(KGOScrollingTabstrip *)tabstrip
+{
+    return YES;
+}
+
+- (UIViewController *)viewControllerForTabstrip:(KGOScrollingTabstrip *)tabstrip
+{
+    return self;
+}
+
+- (BOOL)searchControllerShouldShowSuggestions:(KGOSearchDisplayController *)controller {
+    return NO;
+}
+
+- (NSArray *)searchControllerValidModules:(KGOSearchDisplayController *)controller {
+    return [NSArray arrayWithObject:self.dataManager.moduleTag];
+}
+
+- (NSString *)searchControllerModuleTag:(KGOSearchDisplayController *)controller {
+    return self.dataManager.moduleTag;
+}
+
+- (void)resultsHolder:(id<KGOSearchResultsHolder>)resultsHolder didSelectResult:(id<KGOSearchResult>)aResult {
+    AthleticsStory *story = aResult;
+    if ([[story hasBody] boolValue]) {
+        NSArray *resultStories = [resultsHolder results];
+        NSInteger row = [resultStories indexOfObject:story];
+        NSDictionary *params = nil;
+        if (row != NSNotFound) {
+            params = [NSDictionary dictionaryWithObjectsAndKeys:
+                      resultStories, @"stories",
+                      [NSIndexPath indexPathForRow:row inSection:0], @"indexPath",
+                      nil];
+        } else {
+            params = [NSDictionary dictionaryWithObjectsAndKeys:
+                      aResult, @"story",
+                      nil];
+        }
+        [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail 
+                               forModuleTag:self.dataManager.moduleTag
+                                     params:params];
+    } else {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:story.link]];
+    }
+}
+
+- (void)searchController:(KGOSearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView {
+    self.federatedSearchTerms = nil;
+    self.federatedSearchResults = nil;
+    [_navScrollView hideSearchBarAnimated:YES];
 }
 
 

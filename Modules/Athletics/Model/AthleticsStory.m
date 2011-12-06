@@ -13,6 +13,9 @@
 @synthesize thumbImage;
 @synthesize summary;
 @synthesize identifier;
+@synthesize link;
+@synthesize body;
+@synthesize hasBody;
 
 - (id)init {
     self = [super init];
@@ -26,6 +29,9 @@
     self.thumbImage = nil;
     self.summary = nil;
     self.identifier = nil;
+    self.link = nil;
+    self.body = nil;
+    self.hasBody = nil;
 
     [super dealloc];
 }
