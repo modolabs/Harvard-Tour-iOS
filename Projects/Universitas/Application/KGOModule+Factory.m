@@ -35,7 +35,7 @@
                                    @"SettingsModule", @"customize",
                                    @"VideoModule", @"video",
                                    @"LinksModule", @"links",
-                                   @"Athletics", @"athletics",
+                                   @"AthleticsModule", @"athletics",
                                    nil];
         
         NSString *serverID = [args objectForKey:@"id"];
