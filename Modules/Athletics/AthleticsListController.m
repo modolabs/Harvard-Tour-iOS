@@ -6,14 +6,18 @@
 //  Copyright (c) 2011 Symbio Inc. All rights reserved.
 //
 #import "UIKit+KGOAdditions.h"
+#import "AthleticsModel.h"
 #import "AthleticsListController.h"
 #import "AthleticsTableViewCell.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
+
 @implementation AthleticsListController
 @synthesize dataManager;
 @synthesize federatedSearchResults;
 @synthesize federatedSearchTerms;
 @synthesize stories;
+@synthesize categories;
+@synthesize activeCategoryId;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -101,6 +105,7 @@
     [_lastUpdateLabel release];
     [_progressView release];
     [_storyTable release];
+    self.activeCategoryId = nil;
 
     [super dealloc];
 }
@@ -111,7 +116,46 @@
 }
 
 - (void)setupNavScrollButtons {
-    
+    BOOL showsSearchButton = YES; // TODO: when would this be false?
+    BOOL bookmarksExist = [self.dataManager bookmarkedStories].count > 0;
+    if (self.categories.count > 1 || bookmarksExist || showsSearchButton) {
+        [_navScrollView removeAllRegularButtons];
+        
+        _navScrollView.showsSearchButton = showsSearchButton;
+        _navScrollView.showsBookmarkButton = bookmarksExist;
+        
+        AthleticsCategory *activeCategory = nil;
+        for (AthleticsCategory *aCategory in self.categories) {
+            [_navScrollView addButtonWithTitle:aCategory.title];
+            
+            if (!activeCategory // choose the first category if nothing matches
+                || [aCategory.category_id isEqualToString:self.activeCategoryId])
+            {
+                activeCategory = aCategory;
+            }
+        }
+        
+        [_navScrollView setNeedsLayout];
+        
+        if (showingBookmarks) {
+            [_navScrollView selectButtonAtIndex:[_navScrollView bookmarkButtonIndex]];
+            
+        } else {
+            for (NSUInteger i = 0; i < _navScrollView.numberOfButtons; i++) {
+                if ([[_navScrollView buttonTitleAtIndex:i] isEqualToString:activeCategory.title]) {
+                    [_navScrollView selectButtonAtIndex:i];
+                    break;
+                }
+            }
+        }
+        
+    } else {
+        [_navScrollView removeFromSuperview];
+        _navScrollView = nil;
+        
+        CGFloat dh = _activityView.hidden ? 0 : _activityView.frame.size.height;
+        _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - dh);
+    }
 }
 
 #pragma mark -
@@ -157,6 +201,54 @@
     CGFloat y = _navScrollView != nil ? _navScrollView.frame.size.height : 0;
     _storyTable.frame = CGRectMake(0, y, self.view.bounds.size.width,
                                    self.view.bounds.size.height - y - _activityView.frame.size.height);
+}
+
+#pragma mark -
+#pragma mark NewsDataController delegate methods
+
+- (void)dataController:(AthleticsDataController *)controller didFailWithCategoryId:(NSString *)categoryId
+{
+    if([self.activeCategoryId isEqualToString:categoryId]) {
+        [self setStatusText:NSLocalizedString(@"Update failed", @"news story update failed")];
+    }
+}
+
+- (void)dataController:(AthleticsDataController *)controller didMakeProgress:(CGFloat)progress
+{
+    [self setProgress:progress];
+}
+/*
+ - (void)dataController:(NewsDataController *)controller didPruneStoriesForCategoryId:(NSString *)categoryId
+ {
+ }
+ */
+- (void)dataController:(AthleticsDataController *)controller didReceiveSearchResults:(NSArray *)results
+{
+}
+
+- (void)dataController:(AthleticsDataController *)controller didRetrieveCategories:(NSArray *)theCategories
+{
+    self.categories = theCategories;
+    
+    if (!self.activeCategoryId && theCategories.count) {
+        AthleticsCategory *category = [theCategories objectAtIndex:0];
+        self.activeCategoryId = category.category_id;
+    }
+    
+    [self setupNavScrollButtons]; // update button pressed states
+    
+    // now that we have categories load the stories
+    if (self.activeCategoryId) {
+        [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
+    }
+}
+
+- (void)dataController:(AthleticsDataController *)controller didRetrieveStories:(NSArray *)theStories
+{
+    self.stories = theStories;
+    [self setLastUpdated:[NSDate date]];
+    [self reloadDataForTableView:_storyTable];
+    [_storyTable flashScrollIndicators];
 }
 
 

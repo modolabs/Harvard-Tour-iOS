@@ -47,7 +47,7 @@
     // TODO: configure these strings
     self.navigationItem.title = @"News";
     self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil)
-                                                                              style:UIBarButtonItemStylePlain
+                                                                               style:UIBarButtonItemStylePlain
                                                                              target:nil
                                                                              action:nil] autorelease];
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh

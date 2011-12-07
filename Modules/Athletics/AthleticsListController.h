@@ -22,12 +22,19 @@
     IBOutlet UITableView *_storyTable;
     IBOutlet UIView *_activityView;
     IBOutlet AthleticsTableViewCell *_athletcisCell;
+    
+    NSString *activeCategoryId;
+    
+    BOOL showingBookmarks;
 }
 
 @property (nonatomic, retain) AthleticsDataController *dataManager;
 @property (nonatomic, retain) NSArray *federatedSearchResults;
 @property (nonatomic, retain) NSString *federatedSearchTerms;
 @property (nonatomic, retain) NSArray *stories;
+@property (nonatomic, retain) NSArray *categories;
+@property (nonatomic, retain)  NSString *activeCategoryId;
 
 - (void)setupNavScrollButtons;
+- (void)setStatusText:(NSString *)text;
 @end

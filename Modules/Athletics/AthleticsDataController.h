@@ -8,16 +8,47 @@
 
 #import <Foundation/Foundation.h>
 #import "KGORequestManager.h"
+#define ATHLETICS_CATEGORY_EXPIRES_TIME 7200.0
+static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
+@class AthleticsDataController,AthleticsCategory,AthleticsStory;
+@protocol AthleticsDataDelegate <NSObject>
+
+@optional
+
+- (void)dataController:(AthleticsDataController *)controller didRetrieveCategories:(NSArray *)categories;
+- (void)dataController:(AthleticsDataController *)controller didRetrieveStories:(NSArray *)stories;
+
+- (void)dataController:(AthleticsDataController *)controller didMakeProgress:(CGFloat)progress;
+
+- (void)dataController:(AthleticsDataController *)controller didFailWithCategoryId:(NSString *)categoryId;
+- (void)dataController:(AthleticsDataController *)controller didReceiveSearchResults:(NSArray *)results;
+
+- (void)dataController:(AthleticsDataController *)controller didPruneStoriesForCategoryId:(NSString *)categoryId;
+
+@end
+
 @interface AthleticsDataController : NSObject <KGORequestDelegate>{
+    NSMutableArray *_currentStories;
+     NSArray *_currentCategories;
     NSMutableSet *_searchRequests;
     NSMutableArray *_searchResults;
 }
 
-- (BOOL)requiresKurogoServer;
 
+@property (nonatomic, retain) NSArray *currentCategories;
+@property (nonatomic, retain) NSMutableArray *currentStories;
 @property (nonatomic, assign) id delegate;
 @property (nonatomic, assign) id searchDelegate;
 @property (nonatomic, retain) ModuleTag *moduleTag;
-
+@property (nonatomic, retain) AthleticsCategory *currentCategory;
+@property (nonatomic, retain) KGORequest *storiesRequest;
+- (BOOL)requiresKurogoServer;
 - (void)fetchCategories;
+- (NSArray *)bookmarkedStories;
+- (void)requestCategoriesFromServer;
+- (void)fetchStoriesForCategory:(NSString *)categoryId
+                        startId:(NSString *)startId;
+- (void)requestStoriesForCategory:(NSString *)categoryId afterId:(NSString *)afterId;
+- (AthleticsCategory *)categoryWithDictionary:(NSDictionary *)categoryDict;
+- (AthleticsStory *)storyWithDictionary:(NSDictionary *)storyDict;
 @end

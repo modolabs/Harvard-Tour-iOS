@@ -17,4 +17,6 @@ NSString * const NewsImageEntityName = @"NewsImage";
 @dynamic title;
 @dynamic featuredParent;
 
+
+
 @end
