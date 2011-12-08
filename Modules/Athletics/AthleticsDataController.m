@@ -105,7 +105,7 @@ NSString * const AthleticsTagBody            = @"body";
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isMainCategory = YES AND moduleTag = %@", self.moduleTag];
         NSSortDescriptor *sort = [[[NSSortDescriptor alloc] initWithKey:@"sortOrder" ascending:YES] autorelease];
         NSSortDescriptor *catSort = [[[NSSortDescriptor alloc] initWithKey:@"category_id" ascending:YES] autorelease]; // compat
-        NSArray *results = [[CoreDataManager sharedManager] objectsForEntity:AthleticsStoryEntityName
+        NSArray *results = [[CoreDataManager sharedManager] objectsForEntity:AthleticsCategoryEntityName
                                                            matchingPredicate:predicate
                                                              sortDescriptors:[NSArray arrayWithObjects:sort, catSort, nil]];
         if (results.count) {
@@ -181,7 +181,7 @@ NSString * const AthleticsTagBody            = @"body";
 - (void)requestCategoriesFromServer {
     KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
                                                                           module:self.moduleTag
-                                                                            path:@"categories"
+                                                                            path:@"news?sport=SPORT"
                                                                          version:1
                                                                           params:nil];
     
