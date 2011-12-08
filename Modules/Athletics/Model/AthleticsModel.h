@@ -1,8 +1,7 @@
-#import "AthleticsStory.h"
 #import "AthleticsImage.h"
 #import "AthleticsCategory.h"
+#import "AthleticsStory.h"
 
-
-extern NSString * const AthleticsStoryEntityName;
-extern NSString * const AthleticsCategoryEntityName;
-extern NSString * const AthleticsImageEntityName;
+NSString * const AthleticsImageEntityName;
+NSString * const AthleticsCategoryEntityName;
+NSString * const AthleticsStoryEntityName;

@@ -1,34 +1,27 @@
+//
+//  AthleticsImage.m
+//  Universitas
+//
+//  Created by Liu Mingxing on 12/8/11.
+//  Copyright (c) 2011 Symbio Inc. All rights reserved.
+//
+
 #import "AthleticsImage.h"
 #import "AthleticsStory.h"
 NSString * const AthleticsImageEntityName = @"AthleticsImage";
 
 @implementation AthleticsImage
-@synthesize height;
-@synthesize data;
-@synthesize width;
-@synthesize ordinality;
-@synthesize credits;
-@synthesize caption;
-@synthesize url;
-@synthesize title;
-@synthesize link;
-@synthesize thumbParent;
-@synthesize featuredParent;
 
+@dynamic height;
+@dynamic data;
+@dynamic width;
+@dynamic ordinality;
+@dynamic credits;
+@dynamic url;
+@dynamic caption;
+@dynamic title;
+@dynamic link;
+@dynamic thumbParent;
+@dynamic featuredParent;
 
-- (void)dealloc {
-    self.height = nil;
-    self.data = nil;
-    self.width = nil;
-    self.ordinality = nil;
-    self.credits = nil;
-    self.caption = nil;
-    self.url = nil;
-    self.title = nil;
-    self.link = nil;
-    self.thumbParent = nil;
-    self.featuredParent = nil;
-
-    [super dealloc];
-}
 @end

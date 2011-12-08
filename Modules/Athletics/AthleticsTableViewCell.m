@@ -10,6 +10,7 @@
 #import "KGOTheme.h"
 #import "UIKit+KGOAdditions.h"
 #import "CoreDataManager.h"
+#import "AthleticsModel.h"
 @implementation AthleticsTableViewCell
 - (void)dealloc {
     [_thumbnailView release];

@@ -2,93 +2,35 @@
 //  AthleticsStory.m
 //  Universitas
 //
-//  Created by Liu Mingxing on 12/6/11.
+//  Created by Liu Mingxing on 12/8/11.
 //  Copyright (c) 2011 Symbio Inc. All rights reserved.
 //
 
 #import "AthleticsStory.h"
+#import "AthleticsCategory.h"
+#import "AthleticsImage.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
-
-
 NSString * const AthleticsStoryEntityName = @"AthleticsStory";
 @implementation AthleticsStory
-@synthesize body;
-@synthesize author;
-@synthesize read;
-@synthesize featured;
-@synthesize hasBody;
-@synthesize identifier;
-@synthesize link;
-@synthesize postDate;
-@synthesize title;
-@synthesize topStory;
-@synthesize summary;
-@synthesize searchResult;
-@synthesize bookmarked;
-@synthesize categories;
-@synthesize thumbImage;
-@synthesize featuredImage;
+
+@dynamic author;
+@dynamic body;
+@dynamic bookmarked;
+@dynamic featured;
+@dynamic hasBody;
+@dynamic identifier;
+@dynamic link;
+@dynamic postDate;
+@dynamic read;
+@dynamic searchResult;
+@dynamic title;
+@dynamic topStory;
+@dynamic summary;
+@dynamic categories;
+@dynamic featuredImage;
+@dynamic thumbImage;
+
 @synthesize moduleTag;
-
-
-
-- (id)init {
-    self = [super init];
-    if (self) {
-    }
-    return self;
-}
-
-- (void)dealloc {
-    self.body = nil;
-    self.author = nil;
-    self.read = nil;
-    self.featured = nil;
-    self.hasBody = nil;
-    self.identifier = nil;
-    self.link = nil;
-    self.postDate = nil;
-    self.title = nil;
-    self.topStory = nil;
-    self.summary = nil;
-    self.searchResult = nil;
-    self.bookmarked = nil;
-    self.categories = nil;
-    self.thumbImage = nil;
-    self.featuredImage = nil;
-
-
-    [super dealloc];
-}
-
-- (void)addCategoriesObject:(NSManagedObject *)value {    
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"categories"] addObject:value];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:changedObjects];
-    [changedObjects release];
-}
-
-- (void)removeCategoriesObject:(NSManagedObject *)value {
-    NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [[self primitiveValueForKey:@"categories"] removeObject:value];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:changedObjects];
-    [changedObjects release];
-}
-
-- (void)addCategories:(NSSet *)value {    
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"categories"] unionSet:value];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueUnionSetMutation usingObjects:value];
-}
-
-- (void)removeCategories:(NSSet *)value {
-    [self willChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-    [[self primitiveValueForKey:@"categories"] minusSet:value];
-    [self didChangeValueForKey:@"categories" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
-}
-
 #pragma mark - KGOSearchResult
 
 - (NSString *)subtitle {
