@@ -11,6 +11,7 @@
 #define ATHLETICS_CATEGORY_EXPIRES_TIME 7200.0
 static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 @class AthleticsDataController,AthleticsCategory,AthleticsStory;
+@protocol KGOSearchResultsHolder;
 @protocol AthleticsDataDelegate <NSObject>
 
 @optional
@@ -37,11 +38,17 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 
 @property (nonatomic, retain) NSArray *currentCategories;
 @property (nonatomic, retain) NSMutableArray *currentStories;
-@property (nonatomic, assign) id delegate;
-@property (nonatomic, assign) id searchDelegate;
+@property (nonatomic, assign) id<AthleticsDataDelegate> delegate;
+@property (nonatomic, assign) id<KGOSearchResultsHolder> searchDelegate;
 @property (nonatomic, retain) ModuleTag *moduleTag;
 @property (nonatomic, retain) AthleticsCategory *currentCategory;
+
+@property (nonatomic, copy) NSDate *feedListModifiedDate;
+
 @property (nonatomic, retain) KGORequest *storiesRequest;
+@property (nonatomic, retain) NSMutableSet *searchRequests;
+
+- (NSArray *)latestCategories;
 - (BOOL)requiresKurogoServer;
 - (void)fetchCategories;
 - (NSArray *)bookmarkedStories;

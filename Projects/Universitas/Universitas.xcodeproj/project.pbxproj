@@ -26,6 +26,12 @@
 		4BD493691349144400891968 /* EmergencyContactsSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD493681349144400891968 /* EmergencyContactsSection.m */; };
 		4BD4936C1349146900891968 /* EmergencyContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD4936B1349146900891968 /* EmergencyContact.m */; };
 		4BD4936F13492C2400891968 /* EmergencyContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD4936E13492C2400891968 /* EmergencyContactsViewController.m */; };
+		4E89C1F61492108000A1595A /* NewsCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1F11492107E00A1595A /* NewsCategory.m */; };
+		4E89C1F71492108000A1595A /* NewsImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1F31492107E00A1595A /* NewsImage.m */; };
+		4E89C1F81492108000A1595A /* NewsStory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1F51492108000A1595A /* NewsStory.m */; };
+		4E89C1FF1492127E00A1595A /* AthleticsCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1FA1492127E00A1595A /* AthleticsCategory.m */; };
+		4E89C2001492127E00A1595A /* AthleticsImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1FC1492127E00A1595A /* AthleticsImage.m */; };
+		4E89C2011492127E00A1595A /* AthleticsStory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1FE1492127E00A1595A /* AthleticsStory.m */; };
 		4E89EF881488AE75001402A2 /* AthleticsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EF861488AE75001402A2 /* AthleticsListController.m */; };
 		4E89EF891488AE75001402A2 /* AthleticsListController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E89EF871488AE75001402A2 /* AthleticsListController.xib */; };
 		4E89EF8D1488AEDA001402A2 /* AthleticsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EF8B1488AEDA001402A2 /* AthleticsTableViewCell.m */; };
@@ -35,9 +41,6 @@
 		4E89EFA11488BAB4001402A2 /* AthleticsSportDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EFA01488BAB3001402A2 /* AthleticsSportDetailViewController.m */; };
 		4E89EFA41488BB56001402A2 /* AthleticsSportsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EFA31488BB56001402A2 /* AthleticsSportsViewController.m */; };
 		4E89EFAD1488BCAA001402A2 /* Athletics.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EFAB1488BCAA001402A2 /* Athletics.xcdatamodeld */; };
-		4EE107661490A27500F03EC4 /* AthleticsImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE107651490A27500F03EC4 /* AthleticsImage.m */; };
-		4EE107691490A27500F03EC4 /* AthleticsCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE107681490A27500F03EC4 /* AthleticsCategory.m */; };
-		4EE107721490A48000F03EC4 /* AthleticsStory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EE107711490A48000F03EC4 /* AthleticsStory.m */; };
 		562CD69F13B9AEA600C5CB94 /* LinksModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 562CD69E13B9AEA600C5CB94 /* LinksModule.m */; };
 		562F4B79133EFA10000B9344 /* ContentModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 562F4B74133EFA10000B9344 /* ContentModule.m */; };
 		562F4B7A133EFA10000B9344 /* ContentTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562F4B76133EFA10000B9344 /* ContentTableViewController.m */; };
@@ -104,9 +107,6 @@
 		EB03384A1340DB0500ACF2BB /* KGOEventContactInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0338411340DB0500ACF2BB /* KGOEventContactInfo.m */; };
 		EB03384B1340DB0500ACF2BB /* KGOEventWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0338431340DB0500ACF2BB /* KGOEventWrapper.m */; };
 		EB03386F1340DBE100ACF2BB /* News.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EB0338671340DBE100ACF2BB /* News.xcdatamodeld */; };
-		EB0338701340DBE100ACF2BB /* NewsCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = EB03386A1340DBE100ACF2BB /* NewsCategory.m */; };
-		EB0338711340DBE100ACF2BB /* NewsImage.m in Sources */ = {isa = PBXBuildFile; fileRef = EB03386C1340DBE100ACF2BB /* NewsImage.m */; };
-		EB0338721340DBE100ACF2BB /* NewsStory.m in Sources */ = {isa = PBXBuildFile; fileRef = EB03386E1340DBE100ACF2BB /* NewsStory.m */; };
 		EB03387B1340DBF400ACF2BB /* KGOPlacemark.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0338771340DBF400ACF2BB /* KGOPlacemark.m */; };
 		EB0370F11396B6B500AD881F /* KGOLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0370F01396B6B500AD881F /* KGOLabel.m */; };
 		EB0371401396E84500AD881F /* KGOSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EB03713F1396E84500AD881F /* KGOSearchBar.m */; };
@@ -235,6 +235,18 @@
 		4BD4936B1349146900891968 /* EmergencyContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergencyContact.m; sourceTree = "<group>"; };
 		4BD4936D13492C2400891968 /* EmergencyContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyContactsViewController.h; sourceTree = "<group>"; };
 		4BD4936E13492C2400891968 /* EmergencyContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergencyContactsViewController.m; sourceTree = "<group>"; };
+		4E89C1F01492107E00A1595A /* NewsCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsCategory.h; sourceTree = "<group>"; };
+		4E89C1F11492107E00A1595A /* NewsCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsCategory.m; sourceTree = "<group>"; };
+		4E89C1F21492107E00A1595A /* NewsImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsImage.h; sourceTree = "<group>"; };
+		4E89C1F31492107E00A1595A /* NewsImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsImage.m; sourceTree = "<group>"; };
+		4E89C1F41492107E00A1595A /* NewsStory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsStory.h; sourceTree = "<group>"; };
+		4E89C1F51492108000A1595A /* NewsStory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsStory.m; sourceTree = "<group>"; };
+		4E89C1F91492127E00A1595A /* AthleticsCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsCategory.h; sourceTree = "<group>"; };
+		4E89C1FA1492127E00A1595A /* AthleticsCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsCategory.m; sourceTree = "<group>"; };
+		4E89C1FB1492127E00A1595A /* AthleticsImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsImage.h; sourceTree = "<group>"; };
+		4E89C1FC1492127E00A1595A /* AthleticsImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsImage.m; sourceTree = "<group>"; };
+		4E89C1FD1492127E00A1595A /* AthleticsStory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsStory.h; sourceTree = "<group>"; };
+		4E89C1FE1492127E00A1595A /* AthleticsStory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsStory.m; sourceTree = "<group>"; };
 		4E89EF851488AE75001402A2 /* AthleticsListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsListController.h; sourceTree = "<group>"; };
 		4E89EF861488AE75001402A2 /* AthleticsListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsListController.m; sourceTree = "<group>"; };
 		4E89EF871488AE75001402A2 /* AthleticsListController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AthleticsListController.xib; sourceTree = "<group>"; };
@@ -251,13 +263,7 @@
 		4E89EFA31488BB56001402A2 /* AthleticsSportsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsSportsViewController.m; sourceTree = "<group>"; };
 		4E89EFAC1488BCAA001402A2 /* Athletics.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Athletics.xcdatamodel; sourceTree = "<group>"; };
 		4EE1075A1490A17E00F03EC4 /* Athletics 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Athletics 2.xcdatamodel"; sourceTree = "<group>"; };
-		4EE107641490A27500F03EC4 /* AthleticsImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsImage.h; sourceTree = "<group>"; };
-		4EE107651490A27500F03EC4 /* AthleticsImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsImage.m; sourceTree = "<group>"; };
-		4EE107671490A27500F03EC4 /* AthleticsCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsCategory.h; sourceTree = "<group>"; };
-		4EE107681490A27500F03EC4 /* AthleticsCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsCategory.m; sourceTree = "<group>"; };
 		4EE1076D1490A2E900F03EC4 /* AthleticsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsModel.h; sourceTree = "<group>"; };
-		4EE107701490A47F00F03EC4 /* AthleticsStory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsStory.h; sourceTree = "<group>"; };
-		4EE107711490A48000F03EC4 /* AthleticsStory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsStory.m; sourceTree = "<group>"; };
 		562CD69D13B9AEA600C5CB94 /* LinksModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinksModule.h; sourceTree = "<group>"; };
 		562CD69E13B9AEA600C5CB94 /* LinksModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinksModule.m; sourceTree = "<group>"; };
 		562F4B73133EFA10000B9344 /* ContentModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentModule.h; sourceTree = "<group>"; };
@@ -384,12 +390,6 @@
 		EB0338421340DB0500ACF2BB /* KGOEventWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOEventWrapper.h; sourceTree = "<group>"; };
 		EB0338431340DB0500ACF2BB /* KGOEventWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KGOEventWrapper.m; sourceTree = "<group>"; };
 		EB0338681340DBE100ACF2BB /* News 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "News 2.xcdatamodel"; sourceTree = "<group>"; };
-		EB0338691340DBE100ACF2BB /* NewsCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsCategory.h; sourceTree = "<group>"; };
-		EB03386A1340DBE100ACF2BB /* NewsCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsCategory.m; sourceTree = "<group>"; };
-		EB03386B1340DBE100ACF2BB /* NewsImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsImage.h; sourceTree = "<group>"; };
-		EB03386C1340DBE100ACF2BB /* NewsImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsImage.m; sourceTree = "<group>"; };
-		EB03386D1340DBE100ACF2BB /* NewsStory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsStory.h; sourceTree = "<group>"; };
-		EB03386E1340DBE100ACF2BB /* NewsStory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsStory.m; sourceTree = "<group>"; };
 		EB0338761340DBF400ACF2BB /* KGOPlacemark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOPlacemark.h; sourceTree = "<group>"; };
 		EB0338771340DBF400ACF2BB /* KGOPlacemark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KGOPlacemark.m; sourceTree = "<group>"; };
 		EB0370EF1396B6B500AD881F /* KGOLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOLabel.h; sourceTree = "<group>"; };
@@ -728,12 +728,12 @@
 			isa = PBXGroup;
 			children = (
 				4E89EFAB1488BCAA001402A2 /* Athletics.xcdatamodeld */,
-				4EE107701490A47F00F03EC4 /* AthleticsStory.h */,
-				4EE107711490A48000F03EC4 /* AthleticsStory.m */,
-				4EE107671490A27500F03EC4 /* AthleticsCategory.h */,
-				4EE107681490A27500F03EC4 /* AthleticsCategory.m */,
-				4EE107641490A27500F03EC4 /* AthleticsImage.h */,
-				4EE107651490A27500F03EC4 /* AthleticsImage.m */,
+				4E89C1F91492127E00A1595A /* AthleticsCategory.h */,
+				4E89C1FA1492127E00A1595A /* AthleticsCategory.m */,
+				4E89C1FB1492127E00A1595A /* AthleticsImage.h */,
+				4E89C1FC1492127E00A1595A /* AthleticsImage.m */,
+				4E89C1FD1492127E00A1595A /* AthleticsStory.h */,
+				4E89C1FE1492127E00A1595A /* AthleticsStory.m */,
 				4EE1076D1490A2E900F03EC4 /* AthleticsModel.h */,
 			);
 			path = Model;
@@ -1059,12 +1059,12 @@
 			isa = PBXGroup;
 			children = (
 				EB0338671340DBE100ACF2BB /* News.xcdatamodeld */,
-				EB0338691340DBE100ACF2BB /* NewsCategory.h */,
-				EB03386A1340DBE100ACF2BB /* NewsCategory.m */,
-				EB03386B1340DBE100ACF2BB /* NewsImage.h */,
-				EB03386C1340DBE100ACF2BB /* NewsImage.m */,
-				EB03386D1340DBE100ACF2BB /* NewsStory.h */,
-				EB03386E1340DBE100ACF2BB /* NewsStory.m */,
+				4E89C1F01492107E00A1595A /* NewsCategory.h */,
+				4E89C1F11492107E00A1595A /* NewsCategory.m */,
+				4E89C1F21492107E00A1595A /* NewsImage.h */,
+				4E89C1F31492107E00A1595A /* NewsImage.m */,
+				4E89C1F41492107E00A1595A /* NewsStory.h */,
+				4E89C1F51492108000A1595A /* NewsStory.m */,
 				EBBE60BB142CE3AA00538361 /* NewsModel.h */,
 			);
 			path = Model;
@@ -1556,9 +1556,6 @@
 				EB03384A1340DB0500ACF2BB /* KGOEventContactInfo.m in Sources */,
 				EB03384B1340DB0500ACF2BB /* KGOEventWrapper.m in Sources */,
 				EB03386F1340DBE100ACF2BB /* News.xcdatamodeld in Sources */,
-				EB0338701340DBE100ACF2BB /* NewsCategory.m in Sources */,
-				EB0338711340DBE100ACF2BB /* NewsImage.m in Sources */,
-				EB0338721340DBE100ACF2BB /* NewsStory.m in Sources */,
 				EB03387B1340DBF400ACF2BB /* KGOPlacemark.m in Sources */,
 				4B3904EF134147D000CD9C6F /* EmergencyDataManager.m in Sources */,
 				4B3904F0134147D000CD9C6F /* EmergencyHomeViewController.m in Sources */,
@@ -1616,9 +1613,12 @@
 				4E89EFA11488BAB4001402A2 /* AthleticsSportDetailViewController.m in Sources */,
 				4E89EFA41488BB56001402A2 /* AthleticsSportsViewController.m in Sources */,
 				4E89EFAD1488BCAA001402A2 /* Athletics.xcdatamodeld in Sources */,
-				4EE107661490A27500F03EC4 /* AthleticsImage.m in Sources */,
-				4EE107691490A27500F03EC4 /* AthleticsCategory.m in Sources */,
-				4EE107721490A48000F03EC4 /* AthleticsStory.m in Sources */,
+				4E89C1F61492108000A1595A /* NewsCategory.m in Sources */,
+				4E89C1F71492108000A1595A /* NewsImage.m in Sources */,
+				4E89C1F81492108000A1595A /* NewsStory.m in Sources */,
+				4E89C1FF1492127E00A1595A /* AthleticsCategory.m in Sources */,
+				4E89C2001492127E00A1595A /* AthleticsImage.m in Sources */,
+				4E89C2011492127E00A1595A /* AthleticsStory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

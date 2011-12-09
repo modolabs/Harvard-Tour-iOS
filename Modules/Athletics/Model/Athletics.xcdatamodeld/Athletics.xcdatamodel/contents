@@ -50,9 +50,9 @@
         <relationship name="thumbImage" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsImage" inverseName="thumbParent" inverseEntity="AthleticsImage" syncable="YES"/>
     </entity>
     <elements>
-        <element name="AthleticsImage" positionX="117" positionY="189" width="128" height="75"/>
-        <element name="AthleticsStory" positionX="160" positionY="192" width="128" height="285"/>
         <element name="AthleticsCategory" positionX="160" positionY="192" width="128" height="195"/>
+        <element name="AthleticsImage" positionX="117" positionY="189" width="128" height="75"/>
         <element name="AthleticsImageRep" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="AthleticsStory" positionX="160" positionY="192" width="128" height="285"/>
     </elements>
 </model>

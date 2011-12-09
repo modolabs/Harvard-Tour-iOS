@@ -30,10 +30,11 @@ NSString * const AthleticsTagBody            = @"body";
 @synthesize delegate;
 @synthesize searchDelegate;
 @synthesize moduleTag;
-@synthesize currentStories;
-@synthesize currentCategories;
+@synthesize currentStories = _currentStories;
+@synthesize currentCategories = _currentCategories;
 @synthesize currentCategory;
 @synthesize storiesRequest;
+@synthesize searchRequests = _searchRequests;
 
 - (BOOL)requiresKurogoServer {
     return YES;
@@ -45,19 +46,74 @@ NSString * const AthleticsTagBody            = @"body";
 }
 
 - (void)request:(KGORequest *)request didFailWithError:(NSError *)error {
-    
+    if (request == self.storiesRequest) {
+        //NSString *categoryID = [request.getParams objectForKey:@"categoryID"];
+        
+        //if ([self.delegate respondsToSelector:@selector(storiesDidFailWithCategoryId:)]) {
+        //    [self.delegate storiesDidFailWithCategoryId:categoryID];
+        //}
+        
+        if ([self.delegate respondsToSelector:@selector(dataController:didFailWithCategoryId:)]) {
+            [self.delegate dataController:self didFailWithCategoryId:self.currentCategory.category_id];
+        }
+        
+        [[KGORequestManager sharedManager] showAlertForError:error request:request];
+        
+    } else if ([request.path isEqualToString:@"categories"]) {
+        [[KGORequestManager sharedManager] showAlertForError:error request:request];
+        
+        // don't call -fetchCategories since it may issue another request
+        NSArray *existingCategories = [self latestCategories];
+        if (existingCategories && [self.delegate respondsToSelector:@selector(dataController:didRetrieveCategories:)]) {
+            [self.delegate dataController:self didRetrieveCategories:existingCategories];
+        }
+    }
 }
 
 - (void)request:(KGORequest *)request didHandleResult:(NSInteger)returnValue {
+    NSString *path = request.path;
     
+    if (request == self.storiesRequest) {
+        NSString *categoryId = [request.getParams objectForKey:@"categoryID"];
+        NSString *startId = [request.getParams objectForKey:@"start"];
+        [self fetchStoriesForCategory:categoryId startId:startId];
+        
+    } else if ([path isEqualToString:@"categories"]) {    
+        switch (returnValue) {
+            case REQUEST_CATEGORIES_CHANGED:
+            {
+                self.currentCategories = nil;
+                [self fetchCategories];
+                break;
+            }
+            default:
+                break;
+        }
+    }
 }
 
 - (void)request:(KGORequest *)request didReceiveResult:(id)result {
-    
+    if ([self.searchRequests containsObject:request]) {
+        for (NSDictionary *storyDict in (NSArray *)result) {
+            AthleticsStory *story = [self storyWithDictionary:storyDict]; 
+            story.searchResult = [NSNumber numberWithInt:1];
+            if([_searchResults indexOfObject:story] == NSNotFound) {
+                [_searchResults addObject:story];
+            }
+        }
+    }
 }
 
 - (void)request:(KGORequest *)request didMakeProgress:(CGFloat)progress {
-    
+    if (request == self.storiesRequest) {
+        //NSString *categoryID = [request.getParams objectForKey:@"categoryID"];
+        
+        // TODO: see if progress value needs tweaking
+        
+        if ([self.delegate respondsToSelector:@selector(dataController:didMakeProgress:)]) {
+            [self.delegate dataController:self didMakeProgress:progress];
+        }
+    }
 }
 
 - (void)requestDidReceiveResponse:(KGORequest *)request {
@@ -65,7 +121,14 @@ NSString * const AthleticsTagBody            = @"body";
 }
 
 - (void)requestResponseUnchanged:(KGORequest *)request {
+    [request cancel];
     
+    NSDate *date = [self feedListModifiedDate];
+    if (!date || [date timeIntervalSinceNow] + ATHLETICS_CATEGORY_EXPIRES_TIME < 0) {
+        self.feedListModifiedDate = [NSDate date];
+    }
+    
+    [self fetchCategories];
 }
 
 - (NSArray *)bookmarkedStories
@@ -179,11 +242,13 @@ NSString * const AthleticsTagBody            = @"body";
 }
 
 - (void)requestCategoriesFromServer {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:@"topnews" forKey:@"sport"];
     KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
                                                                           module:self.moduleTag
-                                                                            path:@"news?sport=SPORT"
+                                                                            path:@"news"
                                                                          version:1
-                                                                          params:nil];
+                                                                          params:dict];
     
     NSDate *date = self.feedListModifiedDate;
     if (date) {
@@ -193,25 +258,31 @@ NSString * const AthleticsTagBody            = @"body";
     __block AthleticsDataController *blockSelf = self;
     __block NSArray *oldCategories = self.currentCategories;
     
-    [request connectWithResponseType:[NSArray class] callback:^(id result) {
+    [request connectWithResponseType:[NSDictionary class] callback:^(id result) {
         
         int retVal = REQUEST_CATEGORIES_UNCHANGED;
+        NSInteger retval;
+        NSDictionary *newCategoryDicts = (NSDictionary *)result;
+
+        //[[CoreDataManager sharedManager] deleteObjects:cachedNotices];
         
-        NSArray *newCategoryDicts = (NSArray *)result;
+        NSArray *newCategoryArray = [newCategoryDicts objectForKey:@"stories"];
+        if(newCategoryArray) {
         
-        NSArray *newCategoryIds = [newCategoryDicts mappedArrayUsingBlock:^id(id element) {
-            return [(NSDictionary *)element nonemptyStringForKey:@"id"];
-        }];
         
-        for (AthleticsCategory *oldCategory in oldCategories) {
-            if (![newCategoryIds containsObject:oldCategory.category_id]) {
-                [[CoreDataManager sharedManager] deleteObject:oldCategory];
-                retVal = REQUEST_CATEGORIES_CHANGED;
-            }
-        }
+//        NSArray *newCategoryIds = [newCategoryDicts mappedArrayUsingBlock:^id(id element) {
+//            return [(NSDictionary *)element nonemptyStringForKey:@"id"];
+//        }];
         
-        for (NSInteger i = 0; i < newCategoryDicts.count; i++) {
-            NSDictionary *categoryDict = [newCategoryDicts dictionaryAtIndex:i];
+//        for (AthleticsCategory *oldCategory in oldCategories) {
+//            if (![newCategoryIds containsObject:oldCategory.category_id]) {
+//                [[CoreDataManager sharedManager] deleteObject:oldCategory];
+//                retVal = REQUEST_CATEGORIES_CHANGED;
+//            }
+//        }
+        
+        for (NSInteger i = 0; i < newCategoryArray.count; i++) {
+            NSDictionary *categoryDict = [newCategoryArray dictionaryAtIndex:i];
             NSString *categoryId = [categoryDict nonemptyStringForKey:@"id"];
             AthleticsCategory *category = [blockSelf categoryWithId:categoryId];
             if (!category) {
@@ -228,6 +299,8 @@ NSString * const AthleticsTagBody            = @"body";
         
         blockSelf.feedListModifiedDate = [NSDate date];
         
+        
+    }
         return retVal;
     }];
 }
