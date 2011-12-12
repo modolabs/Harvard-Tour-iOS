@@ -21,6 +21,9 @@ NSString * const AthleticsCategoryEntityName = @"AthleticsCategory";
 @dynamic sortOrder;
 @dynamic title;
 @dynamic url;
+@dynamic path;
+@dynamic category;
+@dynamic ivar;
 @dynamic stories;
 
 @end

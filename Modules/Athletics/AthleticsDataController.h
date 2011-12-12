@@ -30,7 +30,7 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 
 @interface AthleticsDataController : NSObject <KGORequestDelegate>{
     NSMutableArray *_currentStories;
-     NSArray *_currentCategories;
+    NSArray *_currentCategories;
     NSMutableSet *_searchRequests;
     NSMutableArray *_searchResults;
 }

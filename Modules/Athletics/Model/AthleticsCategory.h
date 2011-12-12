@@ -22,6 +22,9 @@
 @property (nonatomic, retain) NSNumber * sortOrder;
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSString * url;
+@property (nonatomic, retain) NSString * path;
+@property (nonatomic, retain) NSString * category;
+@property (nonatomic, retain) NSString * ivar;
 @property (nonatomic, retain) NSSet *stories;
 
 @end

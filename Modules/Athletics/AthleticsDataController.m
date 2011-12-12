@@ -14,7 +14,7 @@
 #define REQUEST_CATEGORIES_CHANGED 1
 #define REQUEST_CATEGORIES_UNCHANGED 2
 #define LOADMORE_LIMIT 10
-
+#define CATEGORIES_COUNT 4
 NSString * const AthleticsTagItem            = @"item";
 NSString * const AthleticsTagTitle           = @"title";
 NSString * const AthleticsTagAuthor          = @"author";
@@ -181,16 +181,48 @@ NSString * const AthleticsTagBody            = @"body";
 
 - (void)fetchCategories
 {
-    NSDate *lastUpdate = [self feedListModifiedDate];
-    NSArray *results = [self latestCategories];
-    if (results.count) {
-        if ([self.delegate respondsToSelector:@selector(dataController:didRetrieveCategories:)]) {
-            [self.delegate dataController:self didRetrieveCategories:results];
+    if (_currentCategories) {
+        NSMutableArray *categories = [NSMutableArray array];
+        
+        NSMutableArray *newCategories = [NSMutableArray array];
+        [newCategories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                  @"0", @"id", 
+                                  @"Top News", @"title", 
+                                  @"news", @"path",
+                                  @"sport", @"category",
+                                  @"topnews", @"ivar",
+                                  nil]];
+        [newCategories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                  @"1", @"id", 
+                                  @"Men", @"title", 
+                                  @"news", @"path",
+                                  @"gender", @"category",
+                                  @"men", @"ivar",
+                                  nil]];
+        [newCategories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                  @"2", @"id", 
+                                  @"Women", @"title", 
+                                  @"news", @"path",
+                                  @"gender", @"category",
+                                  @"women", @"ivar",
+                                  nil]];
+        [newCategories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                  @"3", @"id", 
+                                  @"Schedule", @"title", 
+                                  @"schedule", @"path",
+                                  @"sport", @"category",
+                                  @"baseball", @"ivar",
+                                  nil]];
+
+        for (NSDictionary *enumerator in newCategories) {
+           [categories addObject:[self categoryWithDictionary:enumerator]];
         }
-    }
-    
-    if (!results.count || !lastUpdate || [lastUpdate timeIntervalSinceNow] + ATHLETICS_CATEGORY_EXPIRES_TIME < 0) {
-        [self requestCategoriesFromServer];
+        self.currentCategories = categories;
+        if (_currentCategories && _currentCategories.count > 0) {
+            if ([self.delegate respondsToSelector:@selector(dataController:didRetrieveCategories:)]) {
+                [self.delegate dataController:self didRetrieveCategories:_currentCategories];
+            }
+        }
     }
 }
 
@@ -241,69 +273,69 @@ NSString * const AthleticsTagBody            = @"body";
     }
 }
 
-- (void)requestCategoriesFromServer {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:@"topnews" forKey:@"sport"];
-    KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
-                                                                          module:self.moduleTag
-                                                                            path:@"news"
-                                                                         version:1
-                                                                          params:dict];
-    
-    NSDate *date = self.feedListModifiedDate;
-    if (date) {
-        request.ifModifiedSince = date;
-    }
-    
-    __block AthleticsDataController *blockSelf = self;
-    __block NSArray *oldCategories = self.currentCategories;
-    
-    [request connectWithResponseType:[NSDictionary class] callback:^(id result) {
-        
-        int retVal = REQUEST_CATEGORIES_UNCHANGED;
-        NSInteger retval;
-        NSDictionary *newCategoryDicts = (NSDictionary *)result;
-
-        //[[CoreDataManager sharedManager] deleteObjects:cachedNotices];
-        
-        NSArray *newCategoryArray = [newCategoryDicts objectForKey:@"stories"];
-        if(newCategoryArray) {
-        
-        
-//        NSArray *newCategoryIds = [newCategoryDicts mappedArrayUsingBlock:^id(id element) {
-//            return [(NSDictionary *)element nonemptyStringForKey:@"id"];
-//        }];
-        
-//        for (AthleticsCategory *oldCategory in oldCategories) {
-//            if (![newCategoryIds containsObject:oldCategory.category_id]) {
-//                [[CoreDataManager sharedManager] deleteObject:oldCategory];
+//- (void)requestCategoriesFromServer {
+//    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+//    [dict setObject:@"topnews" forKey:@"sport"];
+//    KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
+//                                                                          module:self.moduleTag
+//                                                                            path:@"news"
+//                                                                         version:1
+//                                                                          params:dict];
+//    
+//    NSDate *date = self.feedListModifiedDate;
+//    if (date) {
+//        request.ifModifiedSince = date;
+//    }
+//    
+//    __block AthleticsDataController *blockSelf = self;
+//    __block NSArray *oldCategories = self.currentCategories;
+//    
+//    [request connectWithResponseType:[NSDictionary class] callback:^(id result) {
+//        
+//        int retVal = REQUEST_CATEGORIES_UNCHANGED;
+//        NSInteger retval;
+//        NSDictionary *newCategoryDicts = (NSDictionary *)result;
+//
+//        //[[CoreDataManager sharedManager] deleteObjects:cachedNotices];
+//        
+//        NSArray *newCategoryArray = [newCategoryDicts objectForKey:@"stories"];
+//        if(newCategoryArray) {
+//        
+//        
+////        NSArray *newCategoryIds = [newCategoryDicts mappedArrayUsingBlock:^id(id element) {
+////            return [(NSDictionary *)element nonemptyStringForKey:@"id"];
+////        }];
+//        
+////        for (AthleticsCategory *oldCategory in oldCategories) {
+////            if (![newCategoryIds containsObject:oldCategory.category_id]) {
+////                [[CoreDataManager sharedManager] deleteObject:oldCategory];
+////                retVal = REQUEST_CATEGORIES_CHANGED;
+////            }
+////        }
+//        
+//        for (NSInteger i = 0; i < newCategoryArray.count; i++) {
+//            NSDictionary *categoryDict = [newCategoryArray dictionaryAtIndex:i];
+//            NSString *categoryId = [categoryDict nonemptyStringForKey:@"id"];
+//            AthleticsCategory *category = [blockSelf categoryWithId:categoryId];
+//            if (!category) {
+//                retVal = REQUEST_CATEGORIES_CHANGED;
+//                category = [blockSelf categoryWithDictionary:categoryDict];
+//            }
+//            if (!category.sortOrder || ![category.sortOrder isEqualToNumber:[NSNumber numberWithInt: i]]) {
+//                category.sortOrder = [NSNumber numberWithInt: i];
 //                retVal = REQUEST_CATEGORIES_CHANGED;
 //            }
 //        }
-        
-        for (NSInteger i = 0; i < newCategoryArray.count; i++) {
-            NSDictionary *categoryDict = [newCategoryArray dictionaryAtIndex:i];
-            NSString *categoryId = [categoryDict nonemptyStringForKey:@"id"];
-            AthleticsCategory *category = [blockSelf categoryWithId:categoryId];
-            if (!category) {
-                retVal = REQUEST_CATEGORIES_CHANGED;
-                category = [blockSelf categoryWithDictionary:categoryDict];
-            }
-            if (!category.sortOrder || ![category.sortOrder isEqualToNumber:[NSNumber numberWithInt: i]]) {
-                category.sortOrder = [NSNumber numberWithInt: i];
-                retVal = REQUEST_CATEGORIES_CHANGED;
-            }
-        }
-        
-        [[CoreDataManager sharedManager] saveDataWithTemporaryMergePolicy:NSOverwriteMergePolicy];
-        
-        blockSelf.feedListModifiedDate = [NSDate date];
-        
-        
-    }
-        return retVal;
-    }];
-}
+//        
+//        [[CoreDataManager sharedManager] saveDataWithTemporaryMergePolicy:NSOverwriteMergePolicy];
+//        
+//        blockSelf.feedListModifiedDate = [NSDate date];
+//        
+//        
+//    }
+//        return retVal;
+//    }];
+//}
 
 - (AthleticsCategory *)categoryWithDictionary:(NSDictionary *)categoryDict
 {
@@ -343,18 +375,14 @@ NSString * const AthleticsTagBody            = @"body";
         }
     }
     
-    NSInteger moreStories = [self.currentCategory.moreStories integerValue];
-    NSInteger limit = (moreStories && moreStories < LOADMORE_LIMIT) ? moreStories : LOADMORE_LIMIT;
+//    NSInteger moreStories = [self.currentCategory.moreStories integerValue];
+//    NSInteger limit = (moreStories && moreStories < LOADMORE_LIMIT) ? moreStories : LOADMORE_LIMIT;
     
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                            [NSString stringWithFormat:@"%d", start], @"start",
-                            [NSString stringWithFormat:@"%d", limit], @"limit",
-                            categoryId, @"categoryID", 
-                            @"full", @"mode", nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:self.currentCategory.ivar, self.currentCategory.category,nil];
     
     KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
                                                                           module:self.moduleTag
-                                                                            path:@"stories"
+                                                                            path:self.currentCategory.path
                                                                          version:1
                                                                           params:params];
     self.storiesRequest = request;
