@@ -52,7 +52,6 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 - (BOOL)requiresKurogoServer;
 - (void)fetchCategories;
 - (NSArray *)bookmarkedStories;
-- (void)requestCategoriesFromServer;
 - (void)fetchStoriesForCategory:(NSString *)categoryId
                         startId:(NSString *)startId;
 - (void)requestStoriesForCategory:(NSString *)categoryId afterId:(NSString *)afterId;

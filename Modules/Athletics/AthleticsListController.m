@@ -65,7 +65,6 @@
                                                  forModuleTag:self.dataManager.moduleTag];
         }
     }
-
 }
 
 - (void)viewWillAppear:(BOOL)animated

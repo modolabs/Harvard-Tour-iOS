@@ -74,9 +74,10 @@ NSString * const AthleticsTagBody            = @"body";
     NSString *path = request.path;
     
     if (request == self.storiesRequest) {
-        NSString *categoryId = [request.getParams objectForKey:@"categoryID"];
-        NSString *startId = [request.getParams objectForKey:@"start"];
-        [self fetchStoriesForCategory:categoryId startId:startId];
+//        NSString *categoryId = [request.getParams objectForKey:@"categoryID"];
+//        NSString *startId = [request.getParams objectForKey:@"start"];
+        NSString *categoryId = self.currentCategory.category_id;
+        [self fetchStoriesForCategory:categoryId startId:nil];
         
     } else if ([path isEqualToString:@"categories"]) {    
         switch (returnValue) {
@@ -181,7 +182,7 @@ NSString * const AthleticsTagBody            = @"body";
 
 - (void)fetchCategories
 {
-    if (_currentCategories) {
+    if (!_currentCategories) {
         NSMutableArray *categories = [NSMutableArray array];
         
         NSMutableArray *newCategories = [NSMutableArray array];
@@ -217,6 +218,7 @@ NSString * const AthleticsTagBody            = @"body";
         for (NSDictionary *enumerator in newCategories) {
            [categories addObject:[self categoryWithDictionary:enumerator]];
         }
+        [[CoreDataManager sharedManager] saveDataWithTemporaryMergePolicy:NSOverwriteMergePolicy];
         self.currentCategories = categories;
         if (_currentCategories && _currentCategories.count > 0) {
             if ([self.delegate respondsToSelector:@selector(dataController:didRetrieveCategories:)]) {
@@ -349,6 +351,9 @@ NSString * const AthleticsTagBody            = @"body";
             category.category_id = categoryId;
         }
         category.title = [categoryDict nonemptyStringForKey:@"title"];
+        category.category = [categoryDict nonemptyStringForKey:@"category"];
+        category.path = [categoryDict nonemptyStringForKey:@"path"];
+        category.ivar = [categoryDict nonemptyStringForKey:@"ivar"];
         category.isMainCategory = [NSNumber numberWithBool:YES];
         category.moreStories = [NSNumber numberWithInt:-1];
         category.nextSeekId = [NSNumber numberWithInt:0];
@@ -398,14 +403,15 @@ NSString * const AthleticsTagBody            = @"body";
         
         for (NSDictionary *storyDict in stories) {
             AthleticsStory *story = [blockSelf storyWithDictionary:storyDict];
-            NSMutableSet *mutableCategories = [story mutableSetValueForKey:@"categories"];
-            if (!mergedCategory) {
-                mergedCategory = (AthleticsCategory *)[[story managedObjectContext] objectWithID:[category objectID]];
-            }
-            if (mergedCategory) {
-                [mutableCategories addObject:mergedCategory];
-            }
-            story.categories = mutableCategories;
+//            NSMutableSet *mutableCategories = [story mutableSetValueForKey:@"categories"];
+//            if (!mergedCategory) {
+//                mergedCategory = (AthleticsCategory *)[[story managedObjectContext] objectWithID:[category objectID]];
+//            }
+//            if (mergedCategory) {
+//                [mutableCategories addObject:mergedCategory];
+//            }
+//            story.categories = mutableCategories;
+            story.categories = nil;
         }
         
         mergedCategory.moreStories = [resultDict numberForKey:@"moreStories"];
@@ -440,7 +446,6 @@ NSString * const AthleticsTagBody            = @"body";
     story.summary = [storyDict nonemptyStringForKey:AthleticsTagSummary];
     story.hasBody = [NSNumber numberWithBool:[storyDict boolForKey:AthleticsTagHasBody]];
     story.body = [storyDict nonemptyStringForKey:AthleticsTagBody];
-    
     NSDictionary *imageDict = [storyDict dictionaryForKey:AthleticsTagImage];
     if (imageDict) {
         // an old thumb may already exist

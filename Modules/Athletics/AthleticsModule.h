@@ -8,10 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "KGOModule.h"
+#import "AthleticsDataController.h"
 
-
-@class AthleticsDataController;
-@interface AthleticsModule : KGOModule {
+@interface AthleticsModule : KGOModule <AthleticsDataDelegate>{
     AthleticsDataController *_dataManager;
     NSString *_searchText;
 }

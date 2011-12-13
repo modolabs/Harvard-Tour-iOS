@@ -8,7 +8,6 @@
 
 #import "AthleticsModule.h"
 #import "AthleticsListController.h"
-#import "AthleticsDataController.h"
 #import "AthleticsModel.h"
 #import "AthleticsSportDetailViewController.h"
 @implementation AthleticsModule
