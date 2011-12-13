@@ -72,24 +72,10 @@ NSString * const AthleticsTagBody            = @"body";
 
 - (void)request:(KGORequest *)request didHandleResult:(NSInteger)returnValue {
     NSString *path = request.path;
-    
     if (request == self.storiesRequest) {
-//        NSString *categoryId = [request.getParams objectForKey:@"categoryID"];
-//        NSString *startId = [request.getParams objectForKey:@"start"];
-        NSString *categoryId = self.currentCategory.category_id;
-        [self fetchStoriesForCategory:categoryId startId:nil];
-        
+        [self fetchStoriesForCategory:@"0" startId:nil];
     } else if ([path isEqualToString:@"categories"]) {    
-        switch (returnValue) {
-            case REQUEST_CATEGORIES_CHANGED:
-            {
-                self.currentCategories = nil;
-                [self fetchCategories];
-                break;
-            }
-            default:
-                break;
-        }
+
     }
 }
 
@@ -399,8 +385,8 @@ NSString * const AthleticsTagBody            = @"body";
         NSArray *stories = [resultDict arrayForKey:@"stories"];
         // need to bring category to local context
         // http://stackoverflow.com/questions/1554623/illegal-attempt-to-establish-a-relationship-xyz-between-objects-in-different-co
-        AthleticsCategory *mergedCategory = nil;
-        
+        AthleticsCategory *mergedCategory = category;
+        NSMutableSet *mutableCategories = [NSMutableSet set];
         for (NSDictionary *storyDict in stories) {
             AthleticsStory *story = [blockSelf storyWithDictionary:storyDict];
 //            NSMutableSet *mutableCategories = [story mutableSetValueForKey:@"categories"];
@@ -411,13 +397,18 @@ NSString * const AthleticsTagBody            = @"body";
 //                [mutableCategories addObject:mergedCategory];
 //            }
 //            story.categories = mutableCategories;
+            
+            mergedCategory = (AthleticsCategory *)[[story managedObjectContext] objectWithID:[category objectID]];
+            if (mergedCategory) {
+                [mutableCategories addObject:mergedCategory];
+            }
             story.categories = nil;
         }
         
         mergedCategory.moreStories = [resultDict numberForKey:@"moreStories"];
         mergedCategory.lastUpdated = [NSDate date];
+        mergedCategory.stories = mutableCategories;
         [[CoreDataManager sharedManager] saveData];
-        
         return (NSInteger)[stories count];
     }];
 }

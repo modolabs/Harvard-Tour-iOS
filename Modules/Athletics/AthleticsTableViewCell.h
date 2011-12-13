@@ -20,4 +20,6 @@
 }
 + (NSString *)commonReuseIdentifier;
 - (NSString *)reuseIdentifier;
+- (void)configureLabelsTheme;
+- (void)setStory:(AthleticsStory *)story;
 @end

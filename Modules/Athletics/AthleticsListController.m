@@ -105,7 +105,7 @@
     [_progressView release];
     [_storyTable release];
     self.activeCategoryId = nil;
-
+    self.categories = nil;
     [super dealloc];
 }
 
@@ -288,9 +288,9 @@
         if (!cell) {
             [[NSBundle mainBundle] loadNibNamed:@"AthleticsTableViewCell" owner:self options:nil];
             cell = _athletcisCell;
-            //[_athletcisCell configureLabelsTheme];
+            [_athletcisCell configureLabelsTheme];
         }
-        //[(AthleticsTableViewCell *)cell setStory:[self.stories objectAtIndex:indexPath.row]];
+        [(AthleticsTableViewCell *)cell setStory:[self.stories objectAtIndex:indexPath.row]];
         [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
