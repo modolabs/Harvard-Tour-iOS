@@ -503,7 +503,7 @@
 		EBAE863F1215FB0D00F370BE /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		EBAE86441215FB4900F370BE /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		EBB121EC13392F3300A4BD1D /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
-		EBB121EE133A912500A4BD1D /* CalendarDayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = CalendarDayViewController.h; sourceTree = "<group>"; };
+		EBB121EE133A912500A4BD1D /* CalendarDayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarDayViewController.h; sourceTree = "<group>"; };
 		EBB121EF133A913100A4BD1D /* CalendarDayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarDayViewController.m; sourceTree = "<group>"; };
 		EBB121F0133A915200A4BD1D /* CalendarDayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalendarDayViewController.xib; sourceTree = "<group>"; };
 		EBBE60BB142CE3AA00538361 /* NewsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsModel.h; sourceTree = "<group>"; };
@@ -580,7 +580,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				4B7F835A1458C36B001524FB /* Twitter.framework */,
 				EB1441361309EF7B00396753 /* Application */,
 				EB0336B2133C2B8B00ACF2BB /* Common */,
 				EB1387B912F22DF7004DBB7C /* Contrib */,
@@ -630,6 +629,7 @@
 				DE7720DF10C57E1C00620A7D /* QuartzCore.framework */,
 				29366C19118E401C009D6863 /* libxml2.dylib */,
 				29366C1D118E4151009D6863 /* Security.framework */,
+				4B7F835A1458C36B001524FB /* Twitter.framework */,
 				EB6D02A811E3784100B65CE3 /* MapKit.framework */,
 				A6F2F83C134BAEDD009F597D /* MediaPlayer.framework */,
 			);
