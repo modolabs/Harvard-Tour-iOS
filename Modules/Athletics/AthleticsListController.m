@@ -40,7 +40,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _navScrollView.delegate = self;
+    _navTabbedView.delegate = self;
     _storyTable.separatorColor = [UIColor colorWithWhite:0.5 alpha:1.0];
     [self addTableView:_storyTable];
     
@@ -55,31 +55,31 @@
                                                                                            action:@selector(refresh:)] autorelease];
     [self.dataManager fetchCategories];
     
-    if (self.federatedSearchTerms || self.federatedSearchResults) {
-        [_navScrollView showSearchBarAnimated:NO];
-        [_navScrollView.searchController setActive:NO animated:NO];
-        _navScrollView.searchController.searchBar.text = self.federatedSearchTerms;
-        
-        if (self.federatedSearchResults) {
-            [_navScrollView.searchController setSearchResults:self.federatedSearchResults
-                                                 forModuleTag:self.dataManager.moduleTag];
-        }
-    }
+//    if (self.federatedSearchTerms || self.federatedSearchResults) {
+//        [_navTabbedView showSearchBarAnimated:NO];
+//        [_navTabbedView.searchController setActive:NO animated:NO];
+//        _navTabbedView.searchController.searchBar.text = self.federatedSearchTerms;
+//        
+//        if (self.federatedSearchResults) {
+//            [_navTabbedView.searchController setSearchResults:self.federatedSearchResults
+//                                                 forModuleTag:self.dataManager.moduleTag];
+//        }
+//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    [self setupNavScrollButtons]; // needed for updating bookmark status
+    [self setupNavTabbedButtons]; // needed for updating bookmark status
 }
 
 
 
 - (void)viewDidUnload
 {
-    [_navScrollView release];
-    _navScrollView = nil;
+    [_navTabbedView release];
+    _navTabbedView = nil;
     [_loadingLabel release];
     _loadingLabel = nil;
     [_lastUpdateLabel release];
@@ -99,7 +99,7 @@
 }
 
 - (void)dealloc {
-    [_navScrollView release];
+    [_navTabbedView release];
     [_loadingLabel release];
     [_lastUpdateLabel release];
     [_progressView release];
@@ -114,43 +114,32 @@
     
 }
 
-- (void)setupNavScrollButtons {
-    BOOL showsSearchButton = YES; // TODO: when would this be false?
-    BOOL bookmarksExist = [self.dataManager bookmarkedStories].count > 0;
-    if (self.categories.count > 1 || bookmarksExist || showsSearchButton) {
-        [_navScrollView removeAllRegularButtons];
+- (void)setupNavTabbedButtons {
+    if (self.categories.count > 0) {
+        [_navTabbedView removeAllTabs];
+        _navTabbedView.frame = CGRectMake(0, self.view.bounds.size.height - 44, self.view.bounds.size.width, 44);
         
-        _navScrollView.showsSearchButton = showsSearchButton;
-        _navScrollView.showsBookmarkButton = bookmarksExist;
-        
+        //configure the tabbar.
+        const NSInteger count = self.categories.count;
         AthleticsCategory *activeCategory = nil;
-        for (AthleticsCategory *aCategory in self.categories) {
-            [_navScrollView addButtonWithTitle:aCategory.title];
-            
-            if (!activeCategory // choose the first category if nothing matches
-                || [aCategory.category_id isEqualToString:self.activeCategoryId])
-            {
+        for (int i = 0; i < count; i++) {
+            AthleticsCategory *aCategory = [self.categories objectAtIndex:i];
+            [_navTabbedView insertTabWithTitle:aCategory.title atIndex:i animated:NO];
+            if (!activeCategory || [aCategory.category_id isEqualToString:activeCategoryId]) {
                 activeCategory = aCategory;
+                activeCategoryId = activeCategory.category_id;
             }
         }
-        
-        [_navScrollView setNeedsLayout];
-        
-        if (showingBookmarks) {
-            [_navScrollView selectButtonAtIndex:[_navScrollView bookmarkButtonIndex]];
-            
-        } else {
-            for (NSUInteger i = 0; i < _navScrollView.numberOfButtons; i++) {
-                if ([[_navScrollView buttonTitleAtIndex:i] isEqualToString:activeCategory.title]) {
-                    [_navScrollView selectButtonAtIndex:i];
-                    break;
-                }
+        [_navTabbedView setNeedsLayout];
+        for (NSUInteger i = 0; i < _navTabbedView.numberOfTabs; i++) {
+            if ([[_navTabbedView titleForTabAtIndex:i] isEqualToString:activeCategory.title]) {
+                [_navTabbedView setSelectedTabIndex:i];
+                break;
             }
         }
-        
     } else {
-        [_navScrollView removeFromSuperview];
-        _navScrollView = nil;
+        [_navTabbedView removeFromSuperview];
+        _navTabbedView = nil;
         
         CGFloat dh = _activityView.hidden ? 0 : _activityView.frame.size.height;
         _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - dh);
@@ -167,8 +156,8 @@
 	_lastUpdateLabel.hidden = NO;
 	_lastUpdateLabel.text = text;
     
-    CGFloat y = _navScrollView != nil ? _navScrollView.frame.size.height : 0;
-    _storyTable.frame = CGRectMake(0, y, self.view.bounds.size.width, self.view.bounds.size.height - y);
+    CGFloat y = _navTabbedView != nil ? _navTabbedView.frame.size.height : 0;
+    _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - y);
     
     [UIView animateWithDuration:1.0 delay:2.0 options:0 animations:^(void) {
         _activityView.alpha = 0;
@@ -197,8 +186,8 @@
     
     _activityView.hidden = NO;
     _activityView.alpha = 1.0;
-    CGFloat y = _navScrollView != nil ? _navScrollView.frame.size.height : 0;
-    _storyTable.frame = CGRectMake(0, y, self.view.bounds.size.width,
+    CGFloat y = _navTabbedView != nil ? _navTabbedView.frame.size.height : 0;
+    _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width,
                                    self.view.bounds.size.height - y - _activityView.frame.size.height);
 }
 
@@ -234,7 +223,7 @@
         self.activeCategoryId = category.category_id;
     }
     
-    [self setupNavScrollButtons]; // update button pressed states
+    [self setupNavTabbedButtons]; // update button pressed states
     
     // now that we have categories load the stories
     if (self.activeCategoryId) {
@@ -252,8 +241,8 @@
 
 
 #pragma mark -KGOScrollingTabstrip Delegate
-- (void)tabstrip:(KGOScrollingTabstrip *)tabstrip clickedButtonAtIndex:(NSUInteger)index {
-    NSString *title = [tabstrip buttonTitleAtIndex:index];
+- (void)tabbedControl:(KGOTabbedControl *)contol didSwitchToTabAtIndex:(NSInteger)index {
+    NSString *title = [contol titleForTabAtIndex:index];
     for (AthleticsCategory *aCategory in self.categories) {
         if ([aCategory.title isEqualToString:title]) {
             NSString *tagValue = aCategory.category_id;
@@ -321,15 +310,15 @@
 
 #pragma mark - KGOSearchDisplayDelegate
 
-- (BOOL)tabstripShouldShowSearchDisplayController:(KGOScrollingTabstrip *)tabstrip
-{
-    return YES;
-}
+//- (BOOL)tabstripShouldShowSearchDisplayController:(KGOScrollingTabstrip *)tabstrip
+//{
+//    return YES;
+//}
 
-- (UIViewController *)viewControllerForTabstrip:(KGOScrollingTabstrip *)tabstrip
-{
-    return self;
-}
+//- (UIViewController *)viewControllerForTabstrip:(KGOScrollingTabstrip *)tabstrip
+//{
+//    return self;
+//}
 
 - (BOOL)searchControllerShouldShowSuggestions:(KGOSearchDisplayController *)controller {
     return NO;
@@ -370,7 +359,7 @@
 - (void)searchController:(KGOSearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView {
     self.federatedSearchTerms = nil;
     self.federatedSearchResults = nil;
-    [_navScrollView hideSearchBarAnimated:YES];
+//    [_navTabbedView hideSearchBarAnimated:YES];
 }
 
 

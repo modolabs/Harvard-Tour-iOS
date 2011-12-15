@@ -364,11 +364,9 @@ NSString * const AthleticsTagBody            = @"body";
             }
         }
     }
-    
-//    NSInteger moreStories = [self.currentCategory.moreStories integerValue];
-//    NSInteger limit = (moreStories && moreStories < LOADMORE_LIMIT) ? moreStories : LOADMORE_LIMIT;
-    
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:self.currentCategory.ivar, self.currentCategory.category,nil];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            self.currentCategory.ivar, self.currentCategory.category,
+                            nil];
     
     KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
                                                                           module:self.moduleTag

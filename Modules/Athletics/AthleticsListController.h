@@ -7,15 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KGOScrollingTabstrip.h"
+#import "KGOTabbedControl.h"
 #import "AthleticsTableViewCell.h"
 #import "KGOSearchBar.h"
 #import "KGOTableViewController.h"
 #import "AthleticsDataController.h"
 #import "KGOSearchDisplayController.h"
-@interface AthleticsListController : KGOTableViewController <KGOScrollingTabstripDelegate,KGOSearchBarDelegate,AthleticsDataDelegate>{
+@interface AthleticsListController : KGOTableViewController <KGOTabbedControlDelegate,KGOSearchBarDelegate,AthleticsDataDelegate> {
     
-    IBOutlet KGOScrollingTabstrip *_navScrollView;
+    IBOutlet KGOTabbedControl *_navTabbedView;
     IBOutlet UILabel *_loadingLabel;
     IBOutlet UILabel *_lastUpdateLabel;
     IBOutlet UIProgressView *_progressView;
@@ -33,12 +33,9 @@
 @property (nonatomic, retain) NSString *federatedSearchTerms;
 @property (nonatomic, retain) NSArray *stories;
 @property (nonatomic, retain) NSArray *categories;
-@property (nonatomic, retain)  NSString *activeCategoryId;
+@property (nonatomic, retain) NSString *activeCategoryId;
 
-- (void)setupNavScrollButtons;
+- (void)setupNavTabbedButtons;
 - (void)setStatusText:(NSString *)text;
-
-//- (void)showSearchBar;
 - (void)switchToCategory:(NSString *)category;
-- (void)switchToBookmarks;
 @end
