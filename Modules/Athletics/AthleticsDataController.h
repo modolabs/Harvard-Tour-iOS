@@ -10,7 +10,7 @@
 #import "KGORequestManager.h"
 #define ATHLETICS_CATEGORY_EXPIRES_TIME 7200.0
 static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
-@class AthleticsDataController,AthleticsCategory,AthleticsStory;
+@class AthleticsDataController,AthleticsCategory,AthleticsStory,AthleticsMenu;
 @protocol KGOSearchResultsHolder;
 @protocol AthleticsDataDelegate <NSObject>
 
@@ -57,4 +57,5 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 - (void)requestStoriesForCategory:(NSString *)categoryId afterId:(NSString *)afterId;
 - (AthleticsCategory *)categoryWithDictionary:(NSDictionary *)categoryDict;
 - (AthleticsStory *)storyWithDictionary:(NSDictionary *)storyDict;
+- (AthleticsMenu *)menuWithDictionary:(NSDictionary *)menuDict;
 @end

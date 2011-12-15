@@ -14,6 +14,7 @@
         <attribute name="sortOrder" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="menu" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsMenu" inverseName="categories" inverseEntity="AthleticsMenu" syncable="YES"/>
         <relationship name="stories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AthleticsStory" inverseName="categories" inverseEntity="AthleticsStory" syncable="YES"/>
     </entity>
     <entity name="AthleticsImage" representedClassName="AthleticsImage" syncable="YES">
@@ -35,6 +36,10 @@
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="width" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
     </entity>
+    <entity name="AthleticsMenu" representedClassName="AthleticsMenu" syncable="YES">
+        <attribute name="sportTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AthleticsCategory" inverseName="menu" inverseEntity="AthleticsCategory" syncable="YES"/>
+    </entity>
     <entity name="AthleticsStory" representedClassName="AthleticsStory" syncable="YES">
         <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
@@ -54,9 +59,10 @@
         <relationship name="thumbImage" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsImage" inverseName="thumbParent" inverseEntity="AthleticsImage" syncable="YES"/>
     </entity>
     <elements>
-        <element name="AthleticsCategory" positionX="160" positionY="192" width="128" height="255"/>
+        <element name="AthleticsCategory" positionX="160" positionY="192" width="128" height="270"/>
         <element name="AthleticsImage" positionX="117" positionY="189" width="128" height="75"/>
         <element name="AthleticsImageRep" positionX="160" positionY="192" width="128" height="105"/>
         <element name="AthleticsStory" positionX="160" positionY="192" width="128" height="285"/>
+        <element name="AthleticsMenu" positionX="160" positionY="192" width="128" height="75"/>
     </elements>
 </model>

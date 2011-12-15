@@ -29,7 +29,6 @@
 		4E89C1F61492108000A1595A /* NewsCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1F11492107E00A1595A /* NewsCategory.m */; };
 		4E89C1F71492108000A1595A /* NewsImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1F31492107E00A1595A /* NewsImage.m */; };
 		4E89C1F81492108000A1595A /* NewsStory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1F51492108000A1595A /* NewsStory.m */; };
-		4E89C1FF1492127E00A1595A /* AthleticsCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1FA1492127E00A1595A /* AthleticsCategory.m */; };
 		4E89C2001492127E00A1595A /* AthleticsImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1FC1492127E00A1595A /* AthleticsImage.m */; };
 		4E89C2011492127E00A1595A /* AthleticsStory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1FE1492127E00A1595A /* AthleticsStory.m */; };
 		4E89EF881488AE75001402A2 /* AthleticsListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EF861488AE75001402A2 /* AthleticsListController.m */; };
@@ -41,6 +40,8 @@
 		4E89EFA11488BAB4001402A2 /* AthleticsSportDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EFA01488BAB3001402A2 /* AthleticsSportDetailViewController.m */; };
 		4E89EFA41488BB56001402A2 /* AthleticsSportsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EFA31488BB56001402A2 /* AthleticsSportsViewController.m */; };
 		4E89EFAD1488BCAA001402A2 /* Athletics.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EFAB1488BCAA001402A2 /* Athletics.xcdatamodeld */; };
+		4E8F88691499DC8100141835 /* AthleticsMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F88681499DC8000141835 /* AthleticsMenu.m */; };
+		4E8F886C1499E4BE00141835 /* AthleticsCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F886B1499E4BE00141835 /* AthleticsCategory.m */; };
 		562CD69F13B9AEA600C5CB94 /* LinksModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 562CD69E13B9AEA600C5CB94 /* LinksModule.m */; };
 		562F4B79133EFA10000B9344 /* ContentModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 562F4B74133EFA10000B9344 /* ContentModule.m */; };
 		562F4B7A133EFA10000B9344 /* ContentTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562F4B76133EFA10000B9344 /* ContentTableViewController.m */; };
@@ -241,8 +242,6 @@
 		4E89C1F31492107E00A1595A /* NewsImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsImage.m; sourceTree = "<group>"; };
 		4E89C1F41492107E00A1595A /* NewsStory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsStory.h; sourceTree = "<group>"; };
 		4E89C1F51492108000A1595A /* NewsStory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsStory.m; sourceTree = "<group>"; };
-		4E89C1F91492127E00A1595A /* AthleticsCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsCategory.h; sourceTree = "<group>"; };
-		4E89C1FA1492127E00A1595A /* AthleticsCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsCategory.m; sourceTree = "<group>"; };
 		4E89C1FB1492127E00A1595A /* AthleticsImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsImage.h; sourceTree = "<group>"; };
 		4E89C1FC1492127E00A1595A /* AthleticsImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsImage.m; sourceTree = "<group>"; };
 		4E89C1FD1492127E00A1595A /* AthleticsStory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsStory.h; sourceTree = "<group>"; };
@@ -262,6 +261,10 @@
 		4E89EFA21488BB55001402A2 /* AthleticsSportsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsSportsViewController.h; sourceTree = "<group>"; };
 		4E89EFA31488BB56001402A2 /* AthleticsSportsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsSportsViewController.m; sourceTree = "<group>"; };
 		4E89EFAC1488BCAA001402A2 /* Athletics.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Athletics.xcdatamodel; sourceTree = "<group>"; };
+		4E8F88671499DC8000141835 /* AthleticsMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsMenu.h; sourceTree = "<group>"; };
+		4E8F88681499DC8000141835 /* AthleticsMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsMenu.m; sourceTree = "<group>"; };
+		4E8F886A1499E4BD00141835 /* AthleticsCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsCategory.h; sourceTree = "<group>"; };
+		4E8F886B1499E4BE00141835 /* AthleticsCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsCategory.m; sourceTree = "<group>"; };
 		4EE1075A1490A17E00F03EC4 /* Athletics 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Athletics 2.xcdatamodel"; sourceTree = "<group>"; };
 		4EE1076D1490A2E900F03EC4 /* AthleticsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsModel.h; sourceTree = "<group>"; };
 		562CD69D13B9AEA600C5CB94 /* LinksModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinksModule.h; sourceTree = "<group>"; };
@@ -728,8 +731,10 @@
 			isa = PBXGroup;
 			children = (
 				4E89EFAB1488BCAA001402A2 /* Athletics.xcdatamodeld */,
-				4E89C1F91492127E00A1595A /* AthleticsCategory.h */,
-				4E89C1FA1492127E00A1595A /* AthleticsCategory.m */,
+				4E8F886A1499E4BD00141835 /* AthleticsCategory.h */,
+				4E8F886B1499E4BE00141835 /* AthleticsCategory.m */,
+				4E8F88671499DC8000141835 /* AthleticsMenu.h */,
+				4E8F88681499DC8000141835 /* AthleticsMenu.m */,
 				4E89C1FB1492127E00A1595A /* AthleticsImage.h */,
 				4E89C1FC1492127E00A1595A /* AthleticsImage.m */,
 				4E89C1FD1492127E00A1595A /* AthleticsStory.h */,
@@ -1616,9 +1621,10 @@
 				4E89C1F61492108000A1595A /* NewsCategory.m in Sources */,
 				4E89C1F71492108000A1595A /* NewsImage.m in Sources */,
 				4E89C1F81492108000A1595A /* NewsStory.m in Sources */,
-				4E89C1FF1492127E00A1595A /* AthleticsCategory.m in Sources */,
 				4E89C2001492127E00A1595A /* AthleticsImage.m in Sources */,
 				4E89C2011492127E00A1595A /* AthleticsStory.m in Sources */,
+				4E8F88691499DC8100141835 /* AthleticsMenu.m in Sources */,
+				4E8F886C1499E4BE00141835 /* AthleticsCategory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

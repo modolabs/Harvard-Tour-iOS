@@ -182,14 +182,14 @@ NSString * const AthleticsTagBody            = @"body";
         [newCategories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                   @"1", @"id", 
                                   @"Men", @"title", 
-                                  @"news", @"path",
+                                  @"sports", @"path",
                                   @"gender", @"category",
                                   @"men", @"ivar",
                                   nil]];
         [newCategories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                   @"2", @"id", 
                                   @"Women", @"title", 
-                                  @"news", @"path",
+                                  @"sports", @"path",
                                   @"gender", @"category",
                                   @"women", @"ivar",
                                   nil]];
@@ -346,6 +346,58 @@ NSString * const AthleticsTagBody            = @"body";
     return category;
 }
 
+- (AthleticsCategory *)menuCategoryWithDictionary:(NSDictionary *)menuDict 
+withKey:(NSString *)key{
+    AthleticsCategory *category = nil;
+    if (!category) {
+        category = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:AthleticsCategoryEntityName];
+        category.moduleTag = self.moduleTag;
+        category.category_id = @"";
+    }
+    category.title = [menuDict nonemptyStringForKey:@"title"];
+    category.category = @"sport";
+    category.path = @"news";
+    category.ivar = key;
+    category.isMainCategory = [NSNumber numberWithBool:NO];
+    category.moreStories = [NSNumber numberWithInt:-1];
+    category.nextSeekId = [NSNumber numberWithInt:0];
+    return category;
+}
+
+- (void)requestMenusForCategory:(NSString *)categoryID afterID:(NSString *)afterID {
+    if (![categoryID isEqualToString:self.currentCategory.category_id]) {
+        self.currentCategory = [self categoryWithId:categoryID];
+    }
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            self.currentCategory.ivar, self.currentCategory.category,
+                            nil];
+    
+    KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
+                                                                          module:self.moduleTag
+                                                                            path:self.currentCategory.path
+                                                                         version:1
+                                                                          params:params];
+    self.storiesRequest = request;
+    
+    __block AthleticsDataController *blockSelf = self;
+    __block AthleticsCategory *category = self.currentCategory;
+    [request connectWithCallback:^(id result) {
+        NSDictionary *resultDict = (NSDictionary *)result;
+        AthleticsMenu *menu = [blockSelf menuWithDictionary:resultDict];
+        NSMutableSet *mutableCategories = [menu mutableSetValueForKey:@"categories"];
+        NSDictionary *sports = [resultDict dictionaryForKey:@"sports"];
+        [sports enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            AthleticsCategory *menuCategory = [blockSelf menuCategoryWithDictionary:obj withKey:key];
+            if (menuCategory) {
+                [mutableCategories addObject:menuCategory];
+            }
+        }];
+        category.menu = menu;
+        [[CoreDataManager sharedManager] saveData];
+        return 1;
+    }];
+}
+
 - (void)requestStoriesForCategory:(NSString *)categoryId afterId:(NSString *)afterId
 {
     // TODO: signal that loading progress is 0
@@ -399,6 +451,12 @@ NSString * const AthleticsTagBody            = @"body";
         [[CoreDataManager sharedManager] saveData];
         return (NSInteger)[stories count];
     }];
+}
+
+- (AthleticsMenu *)menuWithDictionary:(NSDictionary *)menuDict {
+    AthleticsMenu *menu = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:AthleticsMenuEntityName];
+    menu.sportTitle = [menuDict objectForKey:@"sporttitle"];
+    return menu;
 }
 
 - (AthleticsStory *)storyWithDictionary:(NSDictionary *)storyDict {

@@ -288,7 +288,6 @@
         [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
         // TODO: set color to #999999 while things are loading
         cell.textLabel.textColor = [UIColor colorWithHexString:@"#1A1611"];
-        
     } else {
         NSString *cellIdentifier = [AthleticsTableViewCell commonReuseIdentifier];
         cell = (AthleticsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
