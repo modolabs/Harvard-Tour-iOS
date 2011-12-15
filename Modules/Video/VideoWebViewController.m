@@ -1,7 +1,3 @@
-//  VideoWebViewController.m
-//  Universitas
-//
-
 #import "VideoWebViewController.h"
 
 
