@@ -55,6 +55,8 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 - (void)fetchStoriesForCategory:(NSString *)categoryId
                         startId:(NSString *)startId;
 - (void)requestStoriesForCategory:(NSString *)categoryId afterId:(NSString *)afterId;
+- (void)requestMenusForCategory:(NSString *)categoryID afterID:(NSString *)afterId;
+
 - (AthleticsCategory *)categoryWithDictionary:(NSDictionary *)categoryDict;
 - (AthleticsStory *)storyWithDictionary:(NSDictionary *)storyDict;
 - (AthleticsMenu *)menuWithDictionary:(NSDictionary *)menuDict;

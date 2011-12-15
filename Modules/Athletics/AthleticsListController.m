@@ -257,8 +257,11 @@
     if (![category isEqualToString:self.activeCategoryId]) {
 		self.activeCategoryId = category;
         self.dataManager.delegate = self;
-        [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
-        
+        if (0 != self.activeCategoryId) {
+            [self.dataManager requestMenusForCategory:self.activeCategoryId afterID:nil];
+        } else {
+            [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
+        }
         // makes request to server if no request has been made this session
         //[self.dataManager requestStoriesForCategory:self.activeCategoryId loadMore:NO forceRefresh:NO];
     }

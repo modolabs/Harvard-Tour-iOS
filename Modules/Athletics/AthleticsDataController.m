@@ -227,6 +227,39 @@ NSString * const AthleticsTagBody            = @"body";
     return [matches lastObject];
 }
 
+- (void)fetchMenusForCategory:(NSString *)categoryId
+                        startId:(NSString *)startId
+{
+    if (categoryId && ![categoryId isEqualToString:self.currentCategory.category_id]) {
+        self.currentCategory = [self categoryWithId:categoryId];
+    }
+    
+    NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+    if ([self.currentCategory managedObjectContext] != context) {
+        self.currentCategory = (AthleticsCategory *)[context objectWithID:[self.currentCategory objectID]];
+    }
+    [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:self.currentCategory mergeChanges:NO];
+    if (!self.currentCategory.lastUpdated
+        || [self.currentCategory.lastUpdated timeIntervalSinceNow] > ATHLETICS_CATEGORY_EXPIRES_TIME
+        // TODO: make sure the following doesn't result an infinite loop if stories legitimately don't exist
+        || !self.currentCategory.stories.count)
+    {
+        DLog(@"last updated: %@", self.currentCategory.lastUpdated);
+        [self requestMenusForCategory:categoryId afterID:nil];
+        return;
+    }
+    
+    NSSortDescriptor *dateSort = [[[NSSortDescriptor alloc] initWithKey:@"postDate" ascending:NO] autorelease];
+    NSSortDescriptor *idSort = [[[NSSortDescriptor alloc] initWithKey:@"identifier" ascending:NO] autorelease];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:dateSort, idSort, nil];
+    
+    NSArray *results = [self.currentCategory.stories sortedArrayUsingDescriptors:sortDescriptors];
+    
+    if ([self.delegate respondsToSelector:@selector(dataController:didRetrieveStories:)]) {
+        [self.delegate dataController:self didRetrieveStories:results];
+    }
+}
+
 - (void)fetchStoriesForCategory:(NSString *)categoryId
                         startId:(NSString *)startId
 {
@@ -364,7 +397,7 @@ withKey:(NSString *)key{
     return category;
 }
 
-- (void)requestMenusForCategory:(NSString *)categoryID afterID:(NSString *)afterID {
+- (void)requestMenusForCategory:(NSString *)categoryID afterID:(NSString *)afterId {
     if (![categoryID isEqualToString:self.currentCategory.category_id]) {
         self.currentCategory = [self categoryWithId:categoryID];
     }
@@ -383,8 +416,8 @@ withKey:(NSString *)key{
     __block AthleticsCategory *category = self.currentCategory;
     [request connectWithCallback:^(id result) {
         NSDictionary *resultDict = (NSDictionary *)result;
-        AthleticsMenu *menu = [blockSelf menuWithDictionary:resultDict];
-        NSMutableSet *mutableCategories = [menu mutableSetValueForKey:@"categories"];
+        category.menu = [blockSelf menuWithDictionary:resultDict];
+        NSMutableSet *mutableCategories = [category.menu mutableSetValueForKey:@"categories"];
         NSDictionary *sports = [resultDict dictionaryForKey:@"sports"];
         [sports enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
             AthleticsCategory *menuCategory = [blockSelf menuCategoryWithDictionary:obj withKey:key];
@@ -392,7 +425,6 @@ withKey:(NSString *)key{
                 [mutableCategories addObject:menuCategory];
             }
         }];
-        category.menu = menu;
         [[CoreDataManager sharedManager] saveData];
         return 1;
     }];
