@@ -239,7 +239,6 @@ NSString * const AthleticsTagBody            = @"body";
         self.currentCategory = (AthleticsCategory *)[context objectWithID:[self.currentCategory objectID]];
     }
     [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:self.currentCategory mergeChanges:NO];
-    
     if (!self.currentCategory.lastUpdated
         || [self.currentCategory.lastUpdated timeIntervalSinceNow] > ATHLETICS_CATEGORY_EXPIRES_TIME
         // TODO: make sure the following doesn't result an infinite loop if stories legitimately don't exist
@@ -385,29 +384,20 @@ NSString * const AthleticsTagBody            = @"body";
         NSArray *stories = [resultDict arrayForKey:@"stories"];
         // need to bring category to local context
         // http://stackoverflow.com/questions/1554623/illegal-attempt-to-establish-a-relationship-xyz-between-objects-in-different-co
-        AthleticsCategory *mergedCategory = category;
-        NSMutableSet *mutableCategories = [NSMutableSet set];
-        for (NSDictionary *storyDict in stories) {
-            AthleticsStory *story = [blockSelf storyWithDictionary:storyDict];
-//            NSMutableSet *mutableCategories = [story mutableSetValueForKey:@"categories"];
-//            if (!mergedCategory) {
-//                mergedCategory = (AthleticsCategory *)[[story managedObjectContext] objectWithID:[category objectID]];
-//            }
-//            if (mergedCategory) {
-//                [mutableCategories addObject:mergedCategory];
-//            }
-//            story.categories = mutableCategories;
-            
-            mergedCategory = (AthleticsCategory *)[[story managedObjectContext] objectWithID:[category objectID]];
+        AthleticsCategory *mergedCategory = nil;
+        for (NSDictionary *storyDict in stories) {            
+            AthleticsStory *story = [blockSelf storyWithDictionary:storyDict];            
+            NSMutableSet *mutableCategories = [story mutableSetValueForKey:@"categories"];
+            if (!mergedCategory) {
+                mergedCategory = (AthleticsCategory *)[[story managedObjectContext] objectWithID:[category objectID]];
+            }
             if (mergedCategory) {
                 [mutableCategories addObject:mergedCategory];
             }
-            story.categories = nil;
+            story.categories = mutableCategories;
         }
-        
         mergedCategory.moreStories = [resultDict numberForKey:@"moreStories"];
         mergedCategory.lastUpdated = [NSDate date];
-        mergedCategory.stories = mutableCategories;
         [[CoreDataManager sharedManager] saveData];
         return (NSInteger)[stories count];
     }];
@@ -416,9 +406,7 @@ NSString * const AthleticsTagBody            = @"body";
 - (AthleticsStory *)storyWithDictionary:(NSDictionary *)storyDict {
     // use existing story if it's already in the db
     NSString *GUID = [storyDict nonemptyStringForKey:AthleticsTagStoryId];
-    AthleticsStory *story = [[CoreDataManager sharedManager] uniqueObjectForEntity:AthleticsStoryEntityName 
-                                                                    attribute:@"identifier" 
-                                                                        value:GUID];
+    AthleticsStory *story = [[CoreDataManager sharedManager] uniqueObjectForEntity:AthleticsStoryEntityName attribute:@"identifier" value:GUID];
     // otherwise create new
     if (!story) {
         story = (AthleticsStory *)[[CoreDataManager sharedManager] insertNewObjectForEntityForName:AthleticsStoryEntityName];

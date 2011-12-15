@@ -14,7 +14,7 @@
         <attribute name="sortOrder" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="stories" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsStory" inverseName="categories" inverseEntity="AthleticsStory" syncable="YES"/>
+        <relationship name="stories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AthleticsStory" inverseName="categories" inverseEntity="AthleticsStory" syncable="YES"/>
     </entity>
     <entity name="AthleticsImage" representedClassName="AthleticsImage" syncable="YES">
         <attribute name="caption" optional="YES" attributeType="String" syncable="YES"/>
@@ -49,7 +49,7 @@
         <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="topStory" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <relationship name="categories" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsCategory" inverseName="stories" inverseEntity="AthleticsCategory" syncable="YES"/>
+        <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AthleticsCategory" inverseName="stories" inverseEntity="AthleticsCategory" syncable="YES"/>
         <relationship name="featuredImage" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsImage" inverseName="featuredParent" inverseEntity="AthleticsImage" syncable="YES"/>
         <relationship name="thumbImage" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsImage" inverseName="thumbParent" inverseEntity="AthleticsImage" syncable="YES"/>
     </entity>
