@@ -37,4 +37,8 @@
 
 - (void)setupNavScrollButtons;
 - (void)setStatusText:(NSString *)text;
+
+//- (void)showSearchBar;
+- (void)switchToCategory:(NSString *)category;
+- (void)switchToBookmarks;
 @end

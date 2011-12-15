@@ -254,7 +254,25 @@
 #pragma mark -KGOScrollingTabstrip Delegate
 - (void)tabstrip:(KGOScrollingTabstrip *)tabstrip clickedButtonAtIndex:(NSUInteger)index {
     NSString *title = [tabstrip buttonTitleAtIndex:index];
-    NSLog(@"(%@)",title);
+    for (AthleticsCategory *aCategory in self.categories) {
+        if ([aCategory.title isEqualToString:title]) {
+            NSString *tagValue = aCategory.category_id;
+            [self switchToCategory:tagValue];
+            break;
+        }
+    }
+}
+
+- (void)switchToCategory:(NSString *)category {
+    showingBookmarks = NO;
+    if (![category isEqualToString:self.activeCategoryId]) {
+		self.activeCategoryId = category;
+        self.dataManager.delegate = self;
+        [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
+        
+        // makes request to server if no request has been made this session
+        //[self.dataManager requestStoriesForCategory:self.activeCategoryId loadMore:NO forceRefresh:NO];
+    }
 }
 
 #pragma mark -KGOTable Methds
