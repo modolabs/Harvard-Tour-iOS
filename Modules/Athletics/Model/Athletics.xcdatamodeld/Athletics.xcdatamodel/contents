@@ -62,7 +62,7 @@
         <element name="AthleticsCategory" positionX="160" positionY="192" width="128" height="270"/>
         <element name="AthleticsImage" positionX="117" positionY="189" width="128" height="75"/>
         <element name="AthleticsImageRep" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="AthleticsStory" positionX="160" positionY="192" width="128" height="285"/>
         <element name="AthleticsMenu" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="AthleticsStory" positionX="160" positionY="192" width="128" height="285"/>
     </elements>
 </model>

@@ -416,6 +416,11 @@ withKey:(NSString *)key{
     __block AthleticsCategory *category = self.currentCategory;
     [request connectWithCallback:^(id result) {
         NSDictionary *resultDict = (NSDictionary *)result;
+        NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+        if ([category managedObjectContext] != context) {
+            category = (AthleticsCategory *)[context objectWithID:[category objectID]];
+        }
+        [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:category mergeChanges:NO];
         category.menu = [blockSelf menuWithDictionary:resultDict];
         NSMutableSet *mutableCategories = [category.menu mutableSetValueForKey:@"categories"];
         NSDictionary *sports = [resultDict dictionaryForKey:@"sports"];
