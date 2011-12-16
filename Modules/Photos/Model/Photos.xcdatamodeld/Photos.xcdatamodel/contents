@@ -7,6 +7,7 @@
         <attribute name="imageData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="pubDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sortOrder" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="thumbData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="thumbURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
@@ -23,6 +24,6 @@
     </entity>
     <elements>
         <element name="PhotoAlbum" positionX="160" positionY="192" width="128" height="150"/>
-        <element name="Photo" positionX="160" positionY="192" width="128" height="195"/>
+        <element name="Photo" positionX="160" positionY="192" width="128" height="210"/>
     </elements>
 </model>

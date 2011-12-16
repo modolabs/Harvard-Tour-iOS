@@ -13,6 +13,7 @@
 @property (nonatomic, retain) NSString * caption;
 @property (nonatomic, retain) NSString * author;
 @property (nonatomic, retain) NSDate * pubDate;
+@property (nonatomic, retain) NSNumber * sortOrder;
 @property (nonatomic, retain) NSManagedObject *album;
 
 + (Photo *)photoWithDictionary:(NSDictionary *)dictionary;

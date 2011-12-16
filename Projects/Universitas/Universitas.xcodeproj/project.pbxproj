@@ -160,6 +160,10 @@
 		EB4E4E9F149ABC6C00745061 /* PhotoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E9E149ABC6900745061 /* PhotoTableViewCell.m */; };
 		EB4E4EA3149ABE9300745061 /* AlbumListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4EA1149ABE9200745061 /* AlbumListViewController.m */; };
 		EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */; };
+		EB4E4EA8149ADAC400745061 /* PhotoGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */; };
+		EB4E4EA9149ADAC400745061 /* PhotoGridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */; };
+		EB4E4EAB149AE29500745061 /* PhotoPagerControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EAA149AE29400745061 /* PhotoPagerControlView.xib */; };
+		EB4E4EAE149AE2F100745061 /* PhotoPagerControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4EAD149AE2F000745061 /* PhotoPagerControlView.m */; };
 		EB640C6B13FDFFFB00CFAC5B /* libjson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB640C6A13FDFFFB00CFAC5B /* libjson.a */; };
 		EB6BC7F614058A0B0095744E /* MapCategoryListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */; };
 		EB6D02A911E3784100B65CE3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6D02A811E3784100B65CE3 /* MapKit.framework */; };
@@ -491,6 +495,12 @@
 		EB4E4EA0149ABE9100745061 /* AlbumListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumListViewController.h; sourceTree = "<group>"; };
 		EB4E4EA1149ABE9200745061 /* AlbumListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumListViewController.m; sourceTree = "<group>"; };
 		EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumListViewController.xib; sourceTree = "<group>"; };
+		EB4E4EA5149ADAC200745061 /* PhotoGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoGridViewController.h; sourceTree = "<group>"; };
+		EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoGridViewController.m; sourceTree = "<group>"; };
+		EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoGridViewController.xib; sourceTree = "<group>"; };
+		EB4E4EAA149AE29400745061 /* PhotoPagerControlView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoPagerControlView.xib; sourceTree = "<group>"; };
+		EB4E4EAC149AE2EF00745061 /* PhotoPagerControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoPagerControlView.h; sourceTree = "<group>"; };
+		EB4E4EAD149AE2F000745061 /* PhotoPagerControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoPagerControlView.m; sourceTree = "<group>"; };
 		EB640C6A13FDFFFB00CFAC5B /* libjson.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libjson.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB6BC7F414058A0B0095744E /* MapCategoryListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapCategoryListViewController.h; sourceTree = "<group>"; };
 		EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapCategoryListViewController.m; sourceTree = "<group>"; };
@@ -1231,6 +1241,12 @@
 				EB4E4EA0149ABE9100745061 /* AlbumListViewController.h */,
 				EB4E4EA1149ABE9200745061 /* AlbumListViewController.m */,
 				EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */,
+				EB4E4EA5149ADAC200745061 /* PhotoGridViewController.h */,
+				EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */,
+				EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */,
+				EB4E4EAA149AE29400745061 /* PhotoPagerControlView.xib */,
+				EB4E4EAC149AE2EF00745061 /* PhotoPagerControlView.h */,
+				EB4E4EAD149AE2F000745061 /* PhotoPagerControlView.m */,
 			);
 			path = Photos;
 			sourceTree = "<group>";
@@ -1431,6 +1447,8 @@
 				EB70DC94143E7CBB00E60476 /* Settings.plist in Resources */,
 				EB4E4E9C149ABADB00745061 /* PhotoTableViewCell.xib in Resources */,
 				EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */,
+				EB4E4EA9149ADAC400745061 /* PhotoGridViewController.xib in Resources */,
+				EB4E4EAB149AE29500745061 /* PhotoPagerControlView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1598,6 +1616,8 @@
 				EB4E4E95149A903F00745061 /* PhotoDataManager.m in Sources */,
 				EB4E4E9F149ABC6C00745061 /* PhotoTableViewCell.m in Sources */,
 				EB4E4EA3149ABE9300745061 /* AlbumListViewController.m in Sources */,
+				EB4E4EA8149ADAC400745061 /* PhotoGridViewController.m in Sources */,
+				EB4E4EAE149AE2F100745061 /* PhotoPagerControlView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

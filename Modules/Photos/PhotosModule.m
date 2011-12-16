@@ -1,5 +1,6 @@
 #import "PhotosModule.h"
 #import "AlbumListViewController.h"
+#import "PhotoGridViewController.h"
 #import "PhotoDataManager.h"
 
 @implementation PhotosModule
@@ -26,6 +27,13 @@
                                                                                       bundle:nil] autorelease];
         albumVC.dataManager = [self dataManager];
         vc = albumVC;
+    } else if ([pageName isEqualToString:LocalPathPageNameItemList]) {
+        PhotoAlbum *album = [params objectForKey:@"album"];
+        PhotoGridViewController *gridVC = [[[PhotoGridViewController alloc] initWithNibName:@"PhotoGridViewController"
+                                                                                     bundle:nil] autorelease];
+        gridVC.dataManager = [self dataManager];
+        gridVC.album = album;
+        vc = gridVC;
     }
     return vc;
 }

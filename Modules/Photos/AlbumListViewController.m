@@ -28,7 +28,8 @@
 - (void)dealloc
 {
     self.albums = nil;
-
+    self.dataManager.delegate = nil;
+    self.dataManager = nil;
     [super dealloc];
 }
 
@@ -132,7 +133,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    PhotoAlbum *album = [self.albums objectAtIndex:indexPath.row];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:album, @"album", nil];
+    [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameItemList
+                           forModuleTag:self.dataManager.moduleTag
+                                 params:params];
 }
 
 @end

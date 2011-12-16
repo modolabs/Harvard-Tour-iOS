@@ -16,6 +16,7 @@ NSString * const PhotoEntityName = @"Photo";
 @dynamic caption;
 @dynamic author;
 @dynamic pubDate;
+@dynamic sortOrder;
 @dynamic album;
 
 + (Photo *)photoWithDictionary:(NSDictionary *)dictionary
