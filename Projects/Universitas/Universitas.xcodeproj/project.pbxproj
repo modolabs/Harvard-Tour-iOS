@@ -151,6 +151,15 @@
 		EB48910913310A930036AEBF /* ExternalURLModule.m in Sources */ = {isa = PBXBuildFile; fileRef = EB48910813310A930036AEBF /* ExternalURLModule.m */; };
 		EB4C2CDF127F138100058748 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB4C2CDE127F138100058748 /* libsqlite3.dylib */; };
 		EB4C2CE1127F138900058748 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB4C2CE0127F138900058748 /* CFNetwork.framework */; };
+		EB4E4E6E149A7CD400745061 /* PhotosModule.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E6D149A7CD400745061 /* PhotosModule.m */; };
+		EB4E4E8C149A87A100745061 /* Photos.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E8A149A87A100745061 /* Photos.xcdatamodeld */; };
+		EB4E4E8F149A88C100745061 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E8E149A88C100745061 /* Photo.m */; };
+		EB4E4E92149A88C200745061 /* PhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E91149A88C200745061 /* PhotoAlbum.m */; };
+		EB4E4E95149A903F00745061 /* PhotoDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E94149A903E00745061 /* PhotoDataManager.m */; };
+		EB4E4E9C149ABADB00745061 /* PhotoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4E9B149ABADA00745061 /* PhotoTableViewCell.xib */; };
+		EB4E4E9F149ABC6C00745061 /* PhotoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E9E149ABC6900745061 /* PhotoTableViewCell.m */; };
+		EB4E4EA3149ABE9300745061 /* AlbumListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4EA1149ABE9200745061 /* AlbumListViewController.m */; };
+		EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */; };
 		EB640C6B13FDFFFB00CFAC5B /* libjson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB640C6A13FDFFFB00CFAC5B /* libjson.a */; };
 		EB6BC7F614058A0B0095744E /* MapCategoryListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */; };
 		EB6D02A911E3784100B65CE3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6D02A811E3784100B65CE3 /* MapKit.framework */; };
@@ -467,6 +476,21 @@
 		EB48910813310A930036AEBF /* ExternalURLModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExternalURLModule.m; sourceTree = "<group>"; };
 		EB4C2CDE127F138100058748 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		EB4C2CE0127F138900058748 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		EB4E4E6C149A7CD400745061 /* PhotosModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotosModule.h; sourceTree = "<group>"; };
+		EB4E4E6D149A7CD400745061 /* PhotosModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotosModule.m; sourceTree = "<group>"; };
+		EB4E4E8B149A87A100745061 /* Photos.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Photos.xcdatamodel; sourceTree = "<group>"; };
+		EB4E4E8D149A88C100745061 /* Photo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Photo.h; sourceTree = "<group>"; };
+		EB4E4E8E149A88C100745061 /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
+		EB4E4E90149A88C200745061 /* PhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoAlbum.h; sourceTree = "<group>"; };
+		EB4E4E91149A88C200745061 /* PhotoAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoAlbum.m; sourceTree = "<group>"; };
+		EB4E4E93149A903E00745061 /* PhotoDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoDataManager.h; sourceTree = "<group>"; };
+		EB4E4E94149A903E00745061 /* PhotoDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoDataManager.m; sourceTree = "<group>"; };
+		EB4E4E9B149ABADA00745061 /* PhotoTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoTableViewCell.xib; sourceTree = "<group>"; };
+		EB4E4E9D149ABC6800745061 /* PhotoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoTableViewCell.h; sourceTree = "<group>"; };
+		EB4E4E9E149ABC6900745061 /* PhotoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoTableViewCell.m; sourceTree = "<group>"; };
+		EB4E4EA0149ABE9100745061 /* AlbumListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumListViewController.h; sourceTree = "<group>"; };
+		EB4E4EA1149ABE9200745061 /* AlbumListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumListViewController.m; sourceTree = "<group>"; };
+		EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumListViewController.xib; sourceTree = "<group>"; };
 		EB640C6A13FDFFFB00CFAC5B /* libjson.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libjson.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB6BC7F414058A0B0095744E /* MapCategoryListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapCategoryListViewController.h; sourceTree = "<group>"; };
 		EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapCategoryListViewController.m; sourceTree = "<group>"; };
@@ -722,6 +746,7 @@
 		DE715445102FE468005E6111 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				EB4E4E59149A766A00745061 /* Photos */,
 				562CD69C13B9AE6D00C5CB94 /* Links */,
 				4B3904E3134147D000CD9C6F /* Emergency */,
 				562F4B61133EC6DE000B9344 /* Content */,
@@ -1192,6 +1217,36 @@
 			path = ExternalURL;
 			sourceTree = "<group>";
 		};
+		EB4E4E59149A766A00745061 /* Photos */ = {
+			isa = PBXGroup;
+			children = (
+				EB4E4E89149A878C00745061 /* Model */,
+				EB4E4E6C149A7CD400745061 /* PhotosModule.h */,
+				EB4E4E6D149A7CD400745061 /* PhotosModule.m */,
+				EB4E4E93149A903E00745061 /* PhotoDataManager.h */,
+				EB4E4E94149A903E00745061 /* PhotoDataManager.m */,
+				EB4E4E9D149ABC6800745061 /* PhotoTableViewCell.h */,
+				EB4E4E9E149ABC6900745061 /* PhotoTableViewCell.m */,
+				EB4E4E9B149ABADA00745061 /* PhotoTableViewCell.xib */,
+				EB4E4EA0149ABE9100745061 /* AlbumListViewController.h */,
+				EB4E4EA1149ABE9200745061 /* AlbumListViewController.m */,
+				EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */,
+			);
+			path = Photos;
+			sourceTree = "<group>";
+		};
+		EB4E4E89149A878C00745061 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				EB4E4E8A149A87A100745061 /* Photos.xcdatamodeld */,
+				EB4E4E90149A88C200745061 /* PhotoAlbum.h */,
+				EB4E4E91149A88C200745061 /* PhotoAlbum.m */,
+				EB4E4E8D149A88C100745061 /* Photo.h */,
+				EB4E4E8E149A88C100745061 /* Photo.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		EB7E9E94143144CC0093B0C7 /* Site */ = {
 			isa = PBXGroup;
 			children = (
@@ -1374,6 +1429,8 @@
 				EB7E9EAE143156260093B0C7 /* secret in Resources */,
 				EB7E9F4E14337C630093B0C7 /* ipad in Resources */,
 				EB70DC94143E7CBB00E60476 /* Settings.plist in Resources */,
+				EB4E4E9C149ABADB00745061 /* PhotoTableViewCell.xib in Resources */,
+				EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1534,6 +1591,13 @@
 				EB70DCF01444958300E60476 /* PeopleDataManager.m in Sources */,
 				EB05DAA81458953100A8F316 /* KGOGradientView.m in Sources */,
 				EBE9F1B014620B85009589C5 /* MapModel.xcdatamodeld in Sources */,
+				EB4E4E6E149A7CD400745061 /* PhotosModule.m in Sources */,
+				EB4E4E8C149A87A100745061 /* Photos.xcdatamodeld in Sources */,
+				EB4E4E8F149A88C100745061 /* Photo.m in Sources */,
+				EB4E4E92149A88C200745061 /* PhotoAlbum.m in Sources */,
+				EB4E4E95149A903F00745061 /* PhotoDataManager.m in Sources */,
+				EB4E4E9F149ABC6C00745061 /* PhotoTableViewCell.m in Sources */,
+				EB4E4EA3149ABE9300745061 /* AlbumListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1683,6 +1747,16 @@
 			);
 			currentVersion = EB181F7A131EDECA003728FF /* PeopleDataModel 5.xcdatamodel */;
 			path = PeopleDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		EB4E4E8A149A87A100745061 /* Photos.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				EB4E4E8B149A87A100745061 /* Photos.xcdatamodel */,
+			);
+			currentVersion = EB4E4E8B149A87A100745061 /* Photos.xcdatamodel */;
+			path = Photos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

@@ -9,6 +9,7 @@
 #import "NewsModule.h"
 #import	"MapModule.h"
 #import "PeopleModule.h"
+#import "PhotosModule.h"
 #import "ContentModule.h"
 #import "SettingsModule.h"
 #import "VideoModule.h"
@@ -31,6 +32,7 @@
                                    @"MapModule", @"map",
                                    @"NewsModule", @"news",
                                    @"PeopleModule", @"people",
+                                   @"PhotosModule", @"photos",
                                    @"SettingsModule", @"customize",
                                    @"VideoModule", @"video",
                                    @"LinksModule", @"links",
