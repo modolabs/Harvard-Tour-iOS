@@ -239,6 +239,13 @@
     [_storyTable flashScrollIndicators];
 }
 
+- (void)dataController:(AthleticsDataController *)controller didRetrieveMenuCategories:(NSArray *)menuCategories {
+    self.stories = menuCategories;
+    [self setLastUpdated:[NSDate date]];
+    [self reloadDataForTableView:_storyTable];
+    [_storyTable flashScrollIndicators];
+}
+
 
 #pragma mark -KGOScrollingTabstrip Delegate
 - (void)tabbedControl:(KGOTabbedControl *)contol didSwitchToTabAtIndex:(NSInteger)index {
@@ -254,17 +261,35 @@
 
 - (void)switchToCategory:(NSString *)category {
     showingBookmarks = NO;
+    showingMenuCategories = NO;
     if (![category isEqualToString:self.activeCategoryId]) {
 		self.activeCategoryId = category;
         self.dataManager.delegate = self;
-        if (0 != self.activeCategoryId) {
-            [self.dataManager requestMenusForCategory:self.activeCategoryId afterID:nil];
+        if (![self.activeCategoryId isEqualToString:@"0"]) {
+            showingMenuCategories = YES;
+            [self.dataManager fetchMenusForCategory:self.activeCategoryId startId:nil];
         } else {
             [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
         }
         // makes request to server if no request has been made this session
         //[self.dataManager requestStoriesForCategory:self.activeCategoryId loadMore:NO forceRefresh:NO];
     }
+}
+
+#pragma mark -Menu Cell Organization
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForMenuAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *cellIdentifier = @"athleticsMenuCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (!cell) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
+                                      reuseIdentifier:cellIdentifier] autorelease];
+    }
+    AthleticsCategory *menuCategory = [self.stories objectAtIndex:indexPath.row];
+    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyMediaListTitle];
+    cell.textLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyMediaListTitle];
+    cell.textLabel.text = menuCategory.title;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    return cell;
 }
 
 #pragma mark -KGOTable Methds
@@ -292,16 +317,20 @@
         // TODO: set color to #999999 while things are loading
         cell.textLabel.textColor = [UIColor colorWithHexString:@"#1A1611"];
     } else {
-        NSString *cellIdentifier = [AthleticsTableViewCell commonReuseIdentifier];
-        cell = (AthleticsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        if (!cell) {
-            [[NSBundle mainBundle] loadNibNamed:@"AthleticsTableViewCell" owner:self options:nil];
-            cell = _athletcisCell;
-            [_athletcisCell configureLabelsTheme];
+        if (showingMenuCategories) {
+            cell = [self tableView:tableView cellForMenuAtIndexPath:indexPath];
+        } else {
+            NSString *cellIdentifier = [AthleticsTableViewCell commonReuseIdentifier];
+            cell = (AthleticsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            if (!cell) {
+                [[NSBundle mainBundle] loadNibNamed:@"AthleticsTableViewCell" owner:self options:nil];
+                cell = _athletcisCell;
+                [_athletcisCell configureLabelsTheme];
+            }
+            [(AthleticsTableViewCell *)cell setStory:[self.stories objectAtIndex:indexPath.row]];
+            [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
-        [(AthleticsTableViewCell *)cell setStory:[self.stories objectAtIndex:indexPath.row]];
-        [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     return cell;
 }

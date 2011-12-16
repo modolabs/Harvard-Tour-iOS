@@ -73,9 +73,9 @@ NSString * const AthleticsTagBody            = @"body";
 - (void)request:(KGORequest *)request didHandleResult:(NSInteger)returnValue {
     NSString *path = request.path;
     if (request == self.storiesRequest) {
-        [self fetchStoriesForCategory:@"0" startId:nil];
-    } else if ([path isEqualToString:@"categories"]) {    
-
+        [self fetchStoriesForCategory:self.currentCategory.category_id startId:nil];
+    } else if ([path isEqualToString:@"sports"]) {    
+        [self fetchMenusForCategory:self.currentCategory.category_id startId:nil];
     }
 }
 
@@ -239,10 +239,14 @@ NSString * const AthleticsTagBody            = @"body";
         self.currentCategory = (AthleticsCategory *)[context objectWithID:[self.currentCategory objectID]];
     }
     [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:self.currentCategory mergeChanges:NO];
+    NSLog(@"%d",!self.currentCategory.lastUpdated);
+    NSLog(@"%d",[self.currentCategory.lastUpdated timeIntervalSinceNow] > ATHLETICS_CATEGORY_EXPIRES_TIME);
+    NSLog(@"%d",!self.currentCategory.menu.categories);
+    
     if (!self.currentCategory.lastUpdated
         || [self.currentCategory.lastUpdated timeIntervalSinceNow] > ATHLETICS_CATEGORY_EXPIRES_TIME
         // TODO: make sure the following doesn't result an infinite loop if stories legitimately don't exist
-        || !self.currentCategory.stories.count)
+        || !self.currentCategory.menu.categories)
     {
         DLog(@"last updated: %@", self.currentCategory.lastUpdated);
         [self requestMenusForCategory:categoryId afterID:nil];
@@ -253,7 +257,7 @@ NSString * const AthleticsTagBody            = @"body";
     NSSortDescriptor *idSort = [[[NSSortDescriptor alloc] initWithKey:@"identifier" ascending:NO] autorelease];
     NSArray *sortDescriptors = [NSArray arrayWithObjects:dateSort, idSort, nil];
     
-    NSArray *results = [self.currentCategory.stories sortedArrayUsingDescriptors:sortDescriptors];
+    NSArray *results = [self.currentCategory.menu.categories sortedArrayUsingDescriptors:nil];
     
     if ([self.delegate respondsToSelector:@selector(dataController:didRetrieveStories:)]) {
         [self.delegate dataController:self didRetrieveStories:results];
@@ -410,7 +414,7 @@ withKey:(NSString *)key{
                                                                             path:self.currentCategory.path
                                                                          version:1
                                                                           params:params];
-    self.storiesRequest = request;
+    self.storiesRequest = nil;
     
     __block AthleticsDataController *blockSelf = self;
     __block AthleticsCategory *category = self.currentCategory;
@@ -430,6 +434,7 @@ withKey:(NSString *)key{
                 [mutableCategories addObject:menuCategory];
             }
         }];
+        category.lastUpdated = [NSDate date];
         [[CoreDataManager sharedManager] saveData];
         return 1;
     }];

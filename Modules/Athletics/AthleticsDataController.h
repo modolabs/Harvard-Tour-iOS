@@ -18,6 +18,7 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 
 - (void)dataController:(AthleticsDataController *)controller didRetrieveCategories:(NSArray *)categories;
 - (void)dataController:(AthleticsDataController *)controller didRetrieveStories:(NSArray *)stories;
+- (void)dataController:(AthleticsDataController *)controller didRetrieveMenuCategories:(NSArray *)menuCategories;
 
 - (void)dataController:(AthleticsDataController *)controller didMakeProgress:(CGFloat)progress;
 
@@ -53,6 +54,8 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 - (void)fetchCategories;
 - (NSArray *)bookmarkedStories;
 - (void)fetchStoriesForCategory:(NSString *)categoryId
+                        startId:(NSString *)startId;
+- (void)fetchMenusForCategory:(NSString *)categoryId
                         startId:(NSString *)startId;
 - (void)requestStoriesForCategory:(NSString *)categoryId afterId:(NSString *)afterId;
 - (void)requestMenusForCategory:(NSString *)categoryID afterID:(NSString *)afterId;
