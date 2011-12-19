@@ -24,7 +24,7 @@
     IBOutlet AthleticsTableViewCell *_athletcisCell;
     
     NSString *activeCategoryId;
-    
+    NSInteger actieveMenuCategoryIdx;
     BOOL showingBookmarks;
     BOOL showingMenuCategories;
 }
@@ -35,6 +35,7 @@
 @property (nonatomic, retain) NSArray *stories;
 @property (nonatomic, retain) NSArray *categories;
 @property (nonatomic, retain) NSString *activeCategoryId;
+@property (nonatomic, assign)  NSInteger actieveMenuCategoryIdx;
 
 - (void)setupNavTabbedButtons;
 - (void)setStatusText:(NSString *)text;

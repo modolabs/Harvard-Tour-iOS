@@ -34,6 +34,7 @@ NSString * const AthleticsTagBody            = @"body";
 @synthesize currentCategories = _currentCategories;
 @synthesize currentCategory;
 @synthesize storiesRequest;
+@synthesize menuCategoryStoriesRequest;
 @synthesize searchRequests = _searchRequests;
 
 - (BOOL)requiresKurogoServer {
@@ -74,6 +75,8 @@ NSString * const AthleticsTagBody            = @"body";
     NSString *path = request.path;
     if (request == self.storiesRequest) {
         [self fetchStoriesForCategory:self.currentCategory.category_id startId:nil];
+    } else if (request == self.menuCategoryStoriesRequest) {
+        [self fetchMenuCategoryStories:self.currentCategory startId:nil];
     } else if ([path isEqualToString:@"sports"]) {    
         [self fetchMenusForCategory:self.currentCategory.category_id startId:nil];
     }
@@ -226,6 +229,37 @@ NSString * const AthleticsTagBody            = @"body";
     if (!results.count || !lastUpdate || [lastUpdate timeIntervalSinceNow] + ATHLETICS_CATEGORY_EXPIRES_TIME < 0) {
         [self requestCategoriesFromLocal];
     }    
+}
+
+- (void)fetchMenuCategoryStories:(AthleticsCategory *)menuCategory startId:(NSString *)startId {
+//    if (categoryId && ![categoryId isEqualToString:self.currentCategory.category_id]) {
+//        self.currentCategory = [self categoryWithId:categoryId];
+//    }
+    
+    NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+    if ([menuCategory managedObjectContext] != context) {
+        menuCategory = (AthleticsCategory *)[context objectWithID:[menuCategory objectID]];
+    }
+    [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:menuCategory mergeChanges:NO];
+    if (!menuCategory.lastUpdated
+        || [menuCategory.lastUpdated timeIntervalSinceNow] > ATHLETICS_CATEGORY_EXPIRES_TIME
+        // TODO: make sure the following doesn't result an infinite loop if stories legitimately don't exist
+        || !menuCategory.stories.count)
+    {
+        DLog(@"last updated: %@", menuCategory.lastUpdated);
+        [self requestMenuCategoryStoriesForCategory:menuCategory afterId:nil];
+        return;
+    }
+    
+    NSSortDescriptor *dateSort = [[[NSSortDescriptor alloc] initWithKey:@"postDate" ascending:NO] autorelease];
+    NSSortDescriptor *idSort = [[[NSSortDescriptor alloc] initWithKey:@"identifier" ascending:NO] autorelease];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:dateSort, idSort, nil];
+    
+    NSArray *results = [menuCategory.stories sortedArrayUsingDescriptors:sortDescriptors];
+    
+    if ([self.delegate respondsToSelector:@selector(dataController:didRetrieveStories:)]) {
+        [self.delegate dataController:self didRetrieveStories:results];
+    }
 }
 
 - (AthleticsCategory *)categoryWithId:(NSString *)categoryId {
@@ -509,6 +543,61 @@ withKey:(NSString *)key{
     }];
 }
 
+- (void)requestMenuCategoryStoriesForCategory:(AthleticsCategory *)menuCategory afterId:(NSString *)afterId
+{
+    // TODO: signal that loading progress is 0
+//    if (![categoryId isEqualToString:self.currentCategory.category_id]) {
+//        self.currentCategory = [self categoryWithId:categoryId];
+//    }
+//    
+//    NSInteger start = 0;
+//    if (afterId) {
+//        NSPredicate *pred = [NSPredicate predicateWithFormat:@"identifier = %@", afterId];
+//        AthleticsStory *story = [[self.currentStories filteredArrayUsingPredicate:pred] lastObject];
+//        if (story) {
+//            NSInteger index = [self.currentStories indexOfObject:story];
+//            if (index != NSNotFound) {
+//                start = index;
+//            }
+//        }
+//    }
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            menuCategory.ivar, menuCategory.category,
+                            nil];
+    
+    KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
+                                                                          module:self.moduleTag
+                                                                            path:menuCategory.path
+                                                                         version:1
+                                                                          params:params];
+    self.menuCategoryStoriesRequest = request;
+    
+    __block AthleticsDataController *blockSelf = self;
+    __block AthleticsCategory *category = menuCategory;
+    [request connectWithCallback:^(id result) {
+        NSDictionary *resultDict = (NSDictionary *)result;
+        NSArray *stories = [resultDict arrayForKey:@"stories"];
+        // need to bring category to local context
+        // http://stackoverflow.com/questions/1554623/illegal-attempt-to-establish-a-relationship-xyz-between-objects-in-different-co
+        AthleticsCategory *mergedCategory = nil;
+        for (NSDictionary *storyDict in stories) {            
+            AthleticsStory *story = [blockSelf storyWithDictionary:storyDict];            
+            NSMutableSet *mutableCategories = [story mutableSetValueForKey:@"categories"];
+            if (!mergedCategory) {
+                mergedCategory = (AthleticsCategory *)[[story managedObjectContext] objectWithID:[category objectID]];
+            }
+            if (mergedCategory) {
+                [mutableCategories addObject:mergedCategory];
+            }
+            story.categories = mutableCategories;
+        }
+        mergedCategory.moreStories = [resultDict numberForKey:@"moreStories"];
+        mergedCategory.lastUpdated = [NSDate date];
+        [[CoreDataManager sharedManager] saveData];
+        return (NSInteger)[stories count];
+    }];
+}
+
 - (AthleticsMenu *)menuWithDictionary:(NSDictionary *)menuDict {
     AthleticsMenu *menu = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:AthleticsMenuEntityName];
     menu.sportTitle = [menuDict objectForKey:@"sporttitle"];
@@ -556,7 +645,8 @@ withKey:(NSString *)key{
 
 - (void)dealloc {
     self.moduleTag = nil;
-
+    self.storiesRequest = nil;
+    self.menuCategoryStoriesRequest = nil;
     [super dealloc];
 }
 @end

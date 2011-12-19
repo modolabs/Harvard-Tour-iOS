@@ -47,6 +47,7 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 @property (nonatomic, copy) NSDate *feedListModifiedDate;
 
 @property (nonatomic, retain) KGORequest *storiesRequest;
+@property (nonatomic, retain) KGORequest *menuCategoryStoriesRequest;
 @property (nonatomic, retain) NSMutableSet *searchRequests;
 
 - (NSArray *)latestCategories;
@@ -57,7 +58,11 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
                         startId:(NSString *)startId;
 - (void)fetchMenusForCategory:(NSString *)categoryId
                         startId:(NSString *)startId;
+- (void)fetchMenuCategoryStories:(AthleticsCategory *)menuCategory 
+                         startId:(NSString *)startId;
 - (void)requestStoriesForCategory:(NSString *)categoryId afterId:(NSString *)afterId;
+- (void)requestMenuCategoryStoriesForCategory:(AthleticsCategory *)menuCategory 
+                                      afterId:(NSString *)afterId;
 - (void)requestMenusForCategory:(NSString *)categoryID afterID:(NSString *)afterId;
 
 - (AthleticsCategory *)categoryWithDictionary:(NSDictionary *)categoryDict;

@@ -47,7 +47,6 @@
         AthleticsListController *athleticsListVC = [[[AthleticsListController alloc] initWithNibName:@"AthleticsListController"
                                                                                       bundle:nil] autorelease];
         athleticsListVC.dataManager = self.dataManager;
-        self.dataManager.delegate = athleticsListVC;
         vc = athleticsListVC;
         
         if ([params objectForKey:@"category"]) {
@@ -107,7 +106,13 @@
     
         if ([params objectForKey:@"category"]) {
             AthleticsCategory *category = [params objectForKey:@"category"];
-            [(AthleticsListController *)vc setActiveCategoryId:category.category_id];
+            NSIndexPath *indexPath = [params objectForKey:@"indexPath"];
+            NSArray *menuCategories = [params objectForKey:@"menuCategories"];
+            
+            athleticsSportsVC.dataManager.currentCategory = [menuCategories objectAtIndex:indexPath.row];
+            [(AthleticsSportsViewController *)vc setActiveCategoryId:category.category_id];
+            [(AthleticsSportsViewController *)vc setActieveMenuCategoryIdx:indexPath.row];
+            [(AthleticsSportsViewController *)vc setCategories:menuCategories];
         }
     }
     return vc;

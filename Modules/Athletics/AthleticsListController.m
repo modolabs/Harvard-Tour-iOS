@@ -43,7 +43,7 @@
     _navTabbedView.delegate = self;
     _storyTable.separatorColor = [UIColor colorWithWhite:0.5 alpha:1.0];
     [self addTableView:_storyTable];
-    
+    self.dataManager.delegate = self;
     //configure these things
     self.navigationItem.title = @"Athletics";
     self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
@@ -347,7 +347,7 @@
             //TODO:Add Menu Categories Methods.
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
             [params setObject:indexPath forKey:@"indexPath"];
-            [params setObject:self.stories forKey:@"stories"];
+            [params setObject:self.stories forKey:@"menuCategories"];
             [params setObject:self.dataManager.currentCategory forKey:@"category"];
             
             [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameItemList

@@ -18,6 +18,7 @@
 @synthesize stories;
 @synthesize categories;
 @synthesize activeCategoryId;
+@synthesize actieveMenuCategoryIdx;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -43,7 +44,7 @@
     _navTabbedView.delegate = self;
     _storyTable.separatorColor = [UIColor colorWithWhite:0.5 alpha:1.0];
     [self addTableView:_storyTable];
-    
+    self.dataManager.delegate = self;
     //configure these things
     self.navigationItem.title = @"Athletics";
     self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
@@ -53,7 +54,9 @@
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
                                                                                             target:self 
                                                                                             action:@selector(refresh:)] autorelease];
-    [self.dataManager fetchCategories];
+    
+    [self.dataManager fetchMenuCategoryStories:[self.categories objectAtIndex:self.actieveMenuCategoryIdx] 
+                                       startId:nil];
     
     //    if (self.federatedSearchTerms || self.federatedSearchResults) {
     //        [_navTabbedView showSearchBarAnimated:NO];
