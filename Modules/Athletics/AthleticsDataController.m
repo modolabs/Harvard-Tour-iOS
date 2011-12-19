@@ -166,8 +166,7 @@ NSString * const AthleticsTagBody            = @"body";
     return _currentCategories;
 }
 
-- (void)fetchCategories
-{
+- (void)requestCategoriesFromLocal {
     if (!_currentCategories) {
         NSMutableArray *categories = [NSMutableArray array];
         
@@ -200,9 +199,9 @@ NSString * const AthleticsTagBody            = @"body";
                                   @"sport", @"category",
                                   @"baseball", @"ivar",
                                   nil]];
-
+        
         for (NSDictionary *enumerator in newCategories) {
-           [categories addObject:[self categoryWithDictionary:enumerator]];
+            [categories addObject:[self categoryWithDictionary:enumerator]];
         }
         [[CoreDataManager sharedManager] saveDataWithTemporaryMergePolicy:NSOverwriteMergePolicy];
         self.currentCategories = categories;
@@ -212,6 +211,21 @@ NSString * const AthleticsTagBody            = @"body";
             }
         }
     }
+}
+
+- (void)fetchCategories
+{
+    NSDate *lastUpdate = [self feedListModifiedDate];
+    NSArray *results = [self latestCategories];
+    if (results.count) {
+        if ([self.delegate respondsToSelector:@selector(dataController:didRetrieveCategories:)]) {
+            [self.delegate dataController:self didRetrieveCategories:results];
+        }
+    }
+    
+    if (!results.count || !lastUpdate || [lastUpdate timeIntervalSinceNow] + ATHLETICS_CATEGORY_EXPIRES_TIME < 0) {
+        [self requestCategoriesFromLocal];
+    }    
 }
 
 - (AthleticsCategory *)categoryWithId:(NSString *)categoryId {
