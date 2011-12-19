@@ -79,6 +79,10 @@ NSString * const PhotoEntityName = @"Photo";
         PhotoAlbum *album = [PhotoAlbum albumWithID:albumID canCreate:NO];
         if (album) {
             self.album = album;
+            self.album.lastUpdate = [NSDate date];
+            if (self.sortOrder == nil) {
+                self.sortOrder = [NSNumber numberWithInt:self.album.photos.count];
+            }
         }
     }
 }

@@ -153,25 +153,25 @@ KGOSign KGOGetIntegerSign(NSInteger x) {
     int minutes = seconds / 60;
     if (minutes < 60) {
         if (minutes == 1) {
-            result = [NSString stringWithFormat:@"%d %@", minutes, NSLocalizedString(@"minute ago", nil)];
+            result = NSLocalizedString(@"1 minute ago", nil);
         } else {
-            result = [NSString stringWithFormat:@"%d %@", minutes, NSLocalizedString(@"minutes ago", nil)];
+            result = [NSString stringWithFormat:NSLocalizedString(@"%d minutes ago", nil), minutes];
         }
     } else {
         int hours = minutes / 60;
         if (hours < 24) {
             if (hours == 1) {
-                result = [NSString stringWithFormat:@"%d %@", hours, NSLocalizedString(@"hour ago", nil)];
+                result = NSLocalizedString(@"1 hour ago", nil);
             } else {
-                result = [NSString stringWithFormat:@"%d %@", hours, NSLocalizedString(@"hours ago", nil)];
+                result = [NSString stringWithFormat:NSLocalizedString(@"%d hours ago", nil), minutes];
             }
         } else {
             int days = hours / 24;
             if (days < 7) {
                 if (days == 1) {
-                    result = [NSString stringWithFormat:@"%d %@", days, NSLocalizedString(@"day ago", nil)];
+                    result = NSLocalizedString(@"1 day ago", nil);
                 } else {
-                    result = [NSString stringWithFormat:@"%d %@", days, NSLocalizedString(@"days ago", nil)];
+                    result = [NSString stringWithFormat:NSLocalizedString(@"%d days ago", nil), days];
                 }
             } else {
                 static NSDateFormatter *shortFormatter = nil;

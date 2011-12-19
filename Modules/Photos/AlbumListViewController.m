@@ -1,8 +1,7 @@
 #import "AlbumListViewController.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
-//#import "PhotoTableViewCell.h"
-#import "MITThumbnailView.h"
-#import "NewsStoryTableViewCell.h"
+#import "UIKit+KGOAdditions.h"
+#import "ThumbnailTableViewCell.h"
 
 @implementation AlbumListViewController
 
@@ -83,8 +82,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return IS_IPAD_OR_PORTRAIT(interfaceOrientation);
 }
 
 #pragma mark - Table view data source
@@ -103,12 +101,11 @@
 {
     static NSString *CellIdentifier = @"Cell";
     
-    NewsStoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    ThumbnailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        [[NSBundle mainBundle] loadNibNamed:@"NewsStoryTableViewCell" owner:self options:nil];
+        [[NSBundle mainBundle] loadNibNamed:@"ThumbnailTableViewCell" owner:self options:nil];
         cell = _photoCell;
-        cell.thumbnailPadding = 10;
-        cell.thumbnailSize = CGSizeMake(52, 52);
+        cell.thumbnailSize = CGSizeMake(tableView.rowHeight, tableView.rowHeight);
     }
     
     PhotoAlbum *album = [self.albums objectAtIndex:indexPath.row];
@@ -121,8 +118,7 @@
     cell.titleLabel.text = album.title;
     NSInteger count = [album.totalItems integerValue];
     if (count) {
-        // TODO: localize string
-        cell.subtitleLabel.text = [NSString stringWithFormat:@"%@\n%d photos", album.type, count];
+        cell.subtitleLabel.text = [NSString stringWithFormat:@"%@\n%@", album.type, [album albumSize]];
     } else {
         cell.subtitleLabel.text = album.type;
     }

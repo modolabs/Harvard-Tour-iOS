@@ -46,7 +46,7 @@
  * @"0099FF" @"#0099FF" @"0x0099FF" @"AA0099FF" @"#AA0099FF" @"0xAA0099FF"
  */
 + (UIColor *)colorWithHexString:(NSString *)hexString  
-{  
+{
     NSString *cString = [[hexString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
     
     // String should be 6 - 8 characters

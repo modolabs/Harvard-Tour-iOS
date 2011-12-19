@@ -137,6 +137,8 @@
 		EB181FBD131EDF30003728FF /* KGOPortletHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB181FB3131EDF30003728FF /* KGOPortletHomeViewController.m */; };
 		EB181FBF131EDF30003728FF /* SpringboardIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = EB181FB5131EDF30003728FF /* SpringboardIcon.m */; };
 		EB181FC5131EDF43003728FF /* MapSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB181FC3131EDF43003728FF /* MapSettingsViewController.m */; };
+		EB267006149FD6DF00F50997 /* ThumbnailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB267004149FD6DF00F50997 /* ThumbnailTableViewCell.m */; };
+		EB267007149FD6DF00F50997 /* ThumbnailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB267005149FD6DF00F50997 /* ThumbnailTableViewCell.xib */; };
 		EB29B169141EA6C400D8559A /* NewsDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB29B168141EA6C400D8559A /* NewsDataController.m */; };
 		EB46A346134EB942005796E4 /* ThemeConfig-iPad.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB46A345134EB942005796E4 /* ThemeConfig-iPad.plist */; };
 		EB46A348134EB97C005796E4 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB46A347134EB97C005796E4 /* MainWindow-iPad.xib */; };
@@ -160,8 +162,6 @@
 		EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */; };
 		EB4E4EA8149ADAC400745061 /* PhotoGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */; };
 		EB4E4EA9149ADAC400745061 /* PhotoGridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */; };
-		EB4E4EAB149AE29500745061 /* PhotoPagerControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EAA149AE29400745061 /* PhotoPagerControlView.xib */; };
-		EB4E4EAE149AE2F100745061 /* PhotoPagerControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4EAD149AE2F000745061 /* PhotoPagerControlView.m */; };
 		EB640C6B13FDFFFB00CFAC5B /* libjson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB640C6A13FDFFFB00CFAC5B /* libjson.a */; };
 		EB6BC7F614058A0B0095744E /* MapCategoryListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */; };
 		EB6D02A911E3784100B65CE3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6D02A811E3784100B65CE3 /* MapKit.framework */; };
@@ -182,8 +182,6 @@
 		EB7F32D710CD6FBB00188BCD /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB7F32D610CD6FBB00188BCD /* AddressBookUI.framework */; };
 		EB83AE4C13C747AA006CCEDB /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB83AE4A13C747AA006CCEDB /* Settings.plist */; };
 		EB83AE5113C747BE006CCEDB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB83AE4F13C747BE006CCEDB /* Localizable.strings */; };
-		EB93486A139ED48500446243 /* NewsStoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB934867139ED48500446243 /* NewsStoryTableViewCell.m */; };
-		EB93486B139ED48500446243 /* NewsStoryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB934868139ED48500446243 /* NewsStoryTableViewCell.xib */; };
 		EB93486C139ED48500446243 /* StoryListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB934869139ED48500446243 /* StoryListViewController.xib */; };
 		EB9AF2A7130B59C3003B9769 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB9AF298130B56AD003B9769 /* MainWindow.xib */; };
 		EB9AF2BD130B5AC2003B9769 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB138AFC12F22F31004DBB7C /* Config.plist */; };
@@ -451,6 +449,9 @@
 		EB181FB5131EDF30003728FF /* SpringboardIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpringboardIcon.m; sourceTree = "<group>"; };
 		EB181FC2131EDF43003728FF /* MapSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapSettingsViewController.h; sourceTree = "<group>"; };
 		EB181FC3131EDF43003728FF /* MapSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapSettingsViewController.m; sourceTree = "<group>"; };
+		EB267003149FD6DF00F50997 /* ThumbnailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailTableViewCell.h; sourceTree = "<group>"; };
+		EB267004149FD6DF00F50997 /* ThumbnailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbnailTableViewCell.m; sourceTree = "<group>"; };
+		EB267005149FD6DF00F50997 /* ThumbnailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ThumbnailTableViewCell.xib; sourceTree = "<group>"; };
 		EB29B167141EA6C400D8559A /* NewsDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsDataController.h; sourceTree = "<group>"; };
 		EB29B168141EA6C400D8559A /* NewsDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsDataController.m; sourceTree = "<group>"; };
 		EB3067FD142BC15B0047C9CF /* FBConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBConnect.h; path = ../../Contrib/Facebook/FBConnect.h; sourceTree = "<group>"; };
@@ -493,9 +494,6 @@
 		EB4E4EA5149ADAC200745061 /* PhotoGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoGridViewController.h; sourceTree = "<group>"; };
 		EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoGridViewController.m; sourceTree = "<group>"; };
 		EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoGridViewController.xib; sourceTree = "<group>"; };
-		EB4E4EAA149AE29400745061 /* PhotoPagerControlView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoPagerControlView.xib; sourceTree = "<group>"; };
-		EB4E4EAC149AE2EF00745061 /* PhotoPagerControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoPagerControlView.h; sourceTree = "<group>"; };
-		EB4E4EAD149AE2F000745061 /* PhotoPagerControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoPagerControlView.m; sourceTree = "<group>"; };
 		EB640C6A13FDFFFB00CFAC5B /* libjson.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libjson.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB6BC7F414058A0B0095744E /* MapCategoryListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapCategoryListViewController.h; sourceTree = "<group>"; };
 		EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapCategoryListViewController.m; sourceTree = "<group>"; };
@@ -523,9 +521,6 @@
 		EB83AE5213C747C5006CCEDB /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EB83AE5413C747CF006CCEDB /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EB83AE5C13C75C0C006CCEDB /* staging.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = staging.xcconfig; sourceTree = "<group>"; };
-		EB934866139ED48500446243 /* NewsStoryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsStoryTableViewCell.h; sourceTree = "<group>"; };
-		EB934867139ED48500446243 /* NewsStoryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsStoryTableViewCell.m; sourceTree = "<group>"; };
-		EB934868139ED48500446243 /* NewsStoryTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewsStoryTableViewCell.xib; sourceTree = "<group>"; };
 		EB934869139ED48500446243 /* StoryListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StoryListViewController.xib; sourceTree = "<group>"; };
 		EB9AF298130B56AD003B9769 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		EBAE863E1215FB0D00F370BE /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -795,9 +790,6 @@
 				EB934869139ED48500446243 /* StoryListViewController.xib */,
 				DE728E6410D6FF4700BFED37 /* StoryDetailViewController.h */,
 				DE728E6510D6FF4700BFED37 /* StoryDetailViewController.m */,
-				EB934866139ED48500446243 /* NewsStoryTableViewCell.h */,
-				EB934867139ED48500446243 /* NewsStoryTableViewCell.m */,
-				EB934868139ED48500446243 /* NewsStoryTableViewCell.xib */,
 			);
 			path = News;
 			sourceTree = "<group>";
@@ -974,6 +966,9 @@
 				EBE2CC2013438AEA0037546A /* KGODetailPageHeaderView.m */,
 				EB05DAA61458953100A8F316 /* KGOGradientView.h */,
 				EB05DAA71458953100A8F316 /* KGOGradientView.m */,
+				EB267003149FD6DF00F50997 /* ThumbnailTableViewCell.h */,
+				EB267004149FD6DF00F50997 /* ThumbnailTableViewCell.m */,
+				EB267005149FD6DF00F50997 /* ThumbnailTableViewCell.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1236,9 +1231,6 @@
 				EB4E4EA5149ADAC200745061 /* PhotoGridViewController.h */,
 				EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */,
 				EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */,
-				EB4E4EAA149AE29400745061 /* PhotoPagerControlView.xib */,
-				EB4E4EAC149AE2EF00745061 /* PhotoPagerControlView.h */,
-				EB4E4EAD149AE2F000745061 /* PhotoPagerControlView.m */,
 			);
 			path = Photos;
 			sourceTree = "<group>";
@@ -1426,7 +1418,6 @@
 				EB46A348134EB97C005796E4 /* MainWindow-iPad.xib in Resources */,
 				EB46A4B413501A80005796E4 /* Icon-72.png in Resources */,
 				EB163ABA136CFB2F003C69E2 /* Default-Portrait~ipad.png in Resources */,
-				EB93486B139ED48500446243 /* NewsStoryTableViewCell.xib in Resources */,
 				EB93486C139ED48500446243 /* StoryListViewController.xib in Resources */,
 				EB83AE4C13C747AA006CCEDB /* Settings.plist in Resources */,
 				EB83AE5113C747BE006CCEDB /* Localizable.strings in Resources */,
@@ -1439,7 +1430,7 @@
 				EB70DC94143E7CBB00E60476 /* Settings.plist in Resources */,
 				EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */,
 				EB4E4EA9149ADAC400745061 /* PhotoGridViewController.xib in Resources */,
-				EB4E4EAB149AE29500745061 /* PhotoPagerControlView.xib in Resources */,
+				EB267007149FD6DF00F50997 /* ThumbnailTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1585,7 +1576,6 @@
 				EB0370F11396B6B500AD881F /* KGOLabel.m in Sources */,
 				EB0371401396E84500AD881F /* KGOSearchBar.m in Sources */,
 				EB0371431396E87500AD881F /* KGOSearchResultListTableView.m in Sources */,
-				EB93486A139ED48500446243 /* NewsStoryTableViewCell.m in Sources */,
 				562CD69F13B9AEA600C5CB94 /* LinksModule.m in Sources */,
 				4B2A10B013D609300028298E /* LinksTableViewController.m in Sources */,
 				EB6BC7F614058A0B0095744E /* MapCategoryListViewController.m in Sources */,
@@ -1607,7 +1597,7 @@
 				EB4E4E95149A903F00745061 /* PhotoDataManager.m in Sources */,
 				EB4E4EA3149ABE9300745061 /* AlbumListViewController.m in Sources */,
 				EB4E4EA8149ADAC400745061 /* PhotoGridViewController.m in Sources */,
-				EB4E4EAE149AE2F100745061 /* PhotoPagerControlView.m in Sources */,
+				EB267006149FD6DF00F50997 /* ThumbnailTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

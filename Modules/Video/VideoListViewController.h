@@ -6,13 +6,13 @@
 #import "KGOSearchDisplayController.h"
 #import "Video.h"
 
-@class NewsStoryTableViewCell;
+@class ThumbnailTableViewCell;
 
 @interface VideoListViewController : UITableViewController <
 KGOScrollingTabstripSearchDelegate> {
 
     BOOL showingBookmarks;
-    NewsStoryTableViewCell *_cell;
+    ThumbnailTableViewCell *_cell;
 }
 
 @property (nonatomic, retain) VideoDataManager *dataManager;
@@ -27,6 +27,6 @@ KGOScrollingTabstripSearchDelegate> {
 @property (nonatomic, retain) NSArray *federatedSearchResults;
 @property (nonatomic, retain) NSString *federatedSearchTerms;
 
-@property (nonatomic, retain) IBOutlet NewsStoryTableViewCell *cell;
+@property (nonatomic, retain) IBOutlet ThumbnailTableViewCell *cell;
 
 @end

@@ -7,6 +7,8 @@
 @interface PhotoAlbum : NSManagedObject <MITThumbnailDelegate>
 
 @property (nonatomic, retain) NSString * identifier;
+@property (nonatomic, retain) NSDate * lastUpdate;
+@property (nonatomic, retain) NSNumber * sortOrder;
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSString * type;
 @property (nonatomic, retain) NSString * thumbURL;
@@ -17,6 +19,9 @@
 + (PhotoAlbum *)albumWithDictionary:(NSDictionary *)dictionary;
 + (PhotoAlbum *)albumWithID:(NSString *)identifier canCreate:(BOOL)canCreate;
 - (void)updateWithDictionary:(NSDictionary *)dictionary;
+
+- (NSString *)albumSize; // returns localized version of "# photos"
+- (NSString *)lastUpdateString; // return localized "Updated # days ago"
 
 @end
 

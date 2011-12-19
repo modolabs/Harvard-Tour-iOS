@@ -8,6 +8,8 @@ NSString * const PhotoAlbumEntityName = @"PhotoAlbum";
 @implementation PhotoAlbum
 
 @dynamic identifier;
+@dynamic lastUpdate;
+@dynamic sortOrder;
 @dynamic title;
 @dynamic type;
 @dynamic thumbURL;
@@ -57,6 +59,20 @@ NSString * const PhotoAlbumEntityName = @"PhotoAlbum";
     if (count) {
         self.totalItems = [NSNumber numberWithInt:count];
     }
+}
+
+- (NSString *)albumSize
+{
+    return [NSString stringWithFormat:
+            NSLocalizedString(@"%d photos", @"number of photos in album"),
+            [self.totalItems integerValue]];
+}
+
+- (NSString *)lastUpdateString
+{
+    return [NSString stringWithFormat:
+            NSLocalizedString(@"Updated %@", @"photo last update description"),
+            [self.lastUpdate agoString]];
 }
 
 #pragma mark - MITThumbnailDelegate

@@ -9,7 +9,7 @@
 @optional
 
 - (void)photoDataManager:(PhotoDataManager *)manager didReceiveAlbums:(NSArray *)albums;
-- (void)photoDataManager:(PhotoDataManager *)manager didReceivePhotos:(NSArray *)photos;
+- (void)photoDataManager:(PhotoDataManager *)manager didReceivePhotos:(id<NSFastEnumeration>)photos;
 /*
 - (void)photoDataManager:(PhotoDataManager *)manager
         didReceivePhotos:(NSArray *)photos
@@ -26,7 +26,7 @@
 }
 
 - (void)fetchAlbums;
-- (void)fetchPhotosForAlbum:(NSString *)album;
+- (void)fetchPhotosForAlbum:(NSString *)albumName;
 
 @property (nonatomic, retain) NSString *moduleTag;
 @property (nonatomic, assign) id<PhotoDataManagerDelegate> delegate;

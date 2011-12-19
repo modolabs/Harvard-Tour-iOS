@@ -1,4 +1,5 @@
 #import "PhotoDataManager.h"
+#import "CoreDataManager.h"
 
 @implementation PhotoDataManager
 
@@ -18,10 +19,31 @@
     }
 }
 
-- (void)fetchPhotosForAlbum:(NSString *)album
+- (void)fetchPhotosForAlbum:(NSString *)albumName
 {
-    if (!_photosRequest) {
-        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:album, @"id", nil];
+    if (_photosRequest) {
+        return;
+    }
+    
+    PhotoAlbum *album = [PhotoAlbum albumWithID:albumName canCreate:NO];
+    if ([album.lastUpdate timeIntervalSinceNow] < -3600) { // TODO
+        [[CoreDataManager sharedManager] deleteObjects:[album.photos allObjects]];
+        album.photos = nil;
+    }
+    
+    if (album.photos.count && album.photos.count == [album.totalItems integerValue]) {
+        if ([self.delegate respondsToSelector:@selector(photoDataManager:didReceivePhotos:)]) {
+            [self.delegate photoDataManager:self didReceivePhotos:album.photos];
+        }
+
+    } else {
+        NSInteger pageSize = 36;
+        NSString *start = [NSString stringWithFormat:@"%d", album.photos.count / pageSize];
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                albumName, @"id",
+                                start, @"page",
+                                @"36", @"limit",
+                                nil];
         _photosRequest = [[KGORequestManager sharedManager] requestWithDelegate:self
                                                                          module:self.moduleTag
                                                                            path:@"list"
@@ -53,7 +75,7 @@
             }
         }
         
-        if ([self.delegate respondsToSelector:@selector(photoDataManager:didReceivePhotos:forAlbum:)]) {
+        if ([self.delegate respondsToSelector:@selector(photoDataManager:didReceivePhotos:)]) {
             [self.delegate photoDataManager:self didReceivePhotos:photos];
         }
         
@@ -64,6 +86,7 @@
         for (NSDictionary *albumDict in albumData) {
             PhotoAlbum *anAlbum = [PhotoAlbum albumWithDictionary:albumDict];
             if (anAlbum) {
+                anAlbum.sortOrder = [NSNumber numberWithInt:albums.count];
                 [albums addObject:anAlbum];
             }
         }

@@ -1,16 +1,15 @@
 #import <UIKit/UIKit.h>
 #import "PhotoDataManager.h"
-//#import "PhotoTableViewCell.h"
 
-@class NewsStoryTableViewCell;
+@class ThumbnailTableViewCell;
 
 @interface AlbumListViewController : UITableViewController <PhotoDataManagerDelegate> {
     
-    NewsStoryTableViewCell *_photoCell;
+    ThumbnailTableViewCell *_photoCell;
     
 }
 
-@property (nonatomic, retain) IBOutlet NewsStoryTableViewCell *cell;
+@property (nonatomic, retain) IBOutlet ThumbnailTableViewCell *cell;
 
 @property (nonatomic, retain) NSArray *albums;
 @property (nonatomic, assign) PhotoDataManager *dataManager;

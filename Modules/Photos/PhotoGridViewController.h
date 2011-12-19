@@ -1,20 +1,18 @@
 #import <UIKit/UIKit.h>
 #import "IconGrid.h"
-#import "PhotoPagerControlView.h"
 #import "PhotoDataManager.h"
 
-@interface PhotoGridViewController : UIViewController <PhotoDataManagerDelegate, IconGridDelegate> {
+@interface PhotoGridViewController : UIViewController <PhotoDataManagerDelegate,
+IconGridDelegate, UIScrollViewDelegate>
+{
     
     IBOutlet IconGrid *_iconGrid;
     IBOutlet UIView *_titleView;
     IBOutlet UILabel *_titleLabel;
-    //IBOutlet PhotoPagerControlView *_gridHeaderView;
-    IBOutlet PhotoPagerControlView *_gridPagerView;
-    IBOutlet UIView *_gridHeaderContainer;
-    //IBOutlet PhotoPagerControlView *_gridFooterView;
-    IBOutlet UIView *_gridFooterContainer;
+    IBOutlet UILabel *_subtitleLabel;
     
-    IBOutletCollection(PhotoPagerControlView) NSArray *pagerCollection;
+    IBOutlet UIView *_loadingFooter;
+    IBOutlet UILabel *_loadingStatusLabel;
 }
 
 @property (nonatomic, retain) PhotoAlbum *album;

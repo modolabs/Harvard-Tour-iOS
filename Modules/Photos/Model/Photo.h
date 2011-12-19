@@ -2,6 +2,8 @@
 #import <CoreData/CoreData.h>
 #import "MITThumbnailView.h"
 
+@class PhotoAlbum;
+
 @interface Photo : NSManagedObject <MITThumbnailDelegate>
 
 @property (nonatomic, retain) NSString * identifier;
@@ -14,7 +16,7 @@
 @property (nonatomic, retain) NSString * author;
 @property (nonatomic, retain) NSDate * pubDate;
 @property (nonatomic, retain) NSNumber * sortOrder;
-@property (nonatomic, retain) NSManagedObject *album;
+@property (nonatomic, retain) PhotoAlbum *album;
 
 + (Photo *)photoWithDictionary:(NSDictionary *)dictionary;
 + (Photo *)photoWithID:(NSString *)identifier canCreate:(BOOL)canCreate;

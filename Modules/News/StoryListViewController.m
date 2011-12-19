@@ -5,7 +5,7 @@
 #import "UIKit+KGOAdditions.h"
 #import "KGOSearchDisplayController.h"
 #import "AnalyticsWrapper.h"
-#import "NewsStoryTableViewCell.h"
+#import "ThumbnailTableViewCell.h"
 
 @interface StoryListViewController (Private)
 
@@ -307,15 +307,13 @@
         cell.textLabel.textColor = [UIColor colorWithHexString:@"#1A1611"];
         
     } else {
-        NSString *cellIdentifier = [NewsStoryTableViewCell commonReuseIdentifier];
-        NewsStoryTableViewCell *newsCell = (NewsStoryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        NSString *cellIdentifier = [ThumbnailTableViewCell commonReuseIdentifier];
+        ThumbnailTableViewCell *newsCell = (ThumbnailTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
         if (!newsCell) {
-            [[NSBundle mainBundle] loadNibNamed:@"NewsStoryTableViewCell" owner:self options:nil];
+            [[NSBundle mainBundle] loadNibNamed:@"ThumbnailTableViewCell" owner:self options:nil];
             newsCell = _storyCell;
             newsCell.thumbnailSize = CGSizeMake(tableView.rowHeight, tableView.rowHeight);
-            //[_storyCell configureLabelsTheme];
         }
-        //[(NewsStoryTableViewCell *)cell setStory:[self.stories objectAtIndex:indexPath.row]];
         NewsStory *story = [self.stories objectAtIndex:indexPath.row];
         newsCell.titleLabel.text = story.title;
         newsCell.subtitleLabel.text = story.summary;
@@ -377,7 +375,7 @@
 }
           
 - (void)resultsHolder:(id<KGOSearchResultsHolder>)resultsHolder didSelectResult:(id<KGOSearchResult>)aResult {
-    NewsStory *story = aResult;
+    NewsStory *story = (NewsStory *)aResult;
     if ([[story hasBody] boolValue]) {
         NSArray *resultStories = [resultsHolder results];
         NSInteger row = [resultStories indexOfObject:story];

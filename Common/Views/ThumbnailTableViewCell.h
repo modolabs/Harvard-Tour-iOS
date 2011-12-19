@@ -2,9 +2,7 @@
 #import "MITThumbnailView.h"
 #import "KGOLabel.h"
 
-//@class NewsStory;
-
-@interface NewsStoryTableViewCell : UITableViewCell// <MITThumbnailDelegate> 
+@interface ThumbnailTableViewCell : UITableViewCell
 {
     KGOLabel *_titleLabel;
     KGOLabel *_dekLabel;
@@ -14,8 +12,6 @@
     CGSize _thumbnailSize;
     
     BOOL _customLayoutComplete;
-    
-//    NewsStory *_story;
 }
 
 // use KGOLabel because these are top-aligned by default
@@ -25,8 +21,6 @@
 
 @property (nonatomic) CGFloat thumbnailPadding;
 @property (nonatomic) CGSize thumbnailSize;
-
-//@property (nonatomic, retain) NewsStory *story;
 
 + (NSString *)commonReuseIdentifier;
 

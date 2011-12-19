@@ -15,6 +15,8 @@
     </entity>
     <entity name="PhotoAlbum" representedClassName="PhotoAlbum" syncable="YES">
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastUpdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sortOrder" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="thumbData" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="thumbURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
@@ -23,7 +25,7 @@
         <relationship name="photos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Photo" inverseName="album" inverseEntity="Photo" syncable="YES"/>
     </entity>
     <elements>
-        <element name="PhotoAlbum" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Photo" positionX="160" positionY="192" width="128" height="210"/>
+        <element name="PhotoAlbum" positionX="160" positionY="192" width="128" height="150"/>
     </elements>
 </model>
