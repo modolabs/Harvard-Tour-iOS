@@ -336,7 +336,29 @@
 }
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+	if (indexPath.row == self.stories.count) {
+        AthleticsStory *story = [self.stories lastObject];
+        NSString *lastId = story.identifier;
+        // TODO: doesn't seem right that we need to se this on the datamanager
+        self.dataManager.currentStories = [[self.stories mutableCopy] autorelease];
+        [self.dataManager requestStoriesForCategory:self.activeCategoryId afterId:lastId];
+	} else {
+        if (showingMenuCategories) {
+            //TODO:Add Menu Categories Methods.
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            [params setObject:indexPath forKey:@"indexPath"];
+            [params setObject:self.stories forKey:@"stories"];
+            [params setObject:self.dataManager.currentCategory forKey:@"category"];
+            
+            [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameItemList
+                                   forModuleTag:self.dataManager.moduleTag
+                                         params:params];
+        } else {
+            AthleticsStory *story = [self.stories objectAtIndex:indexPath.row];
+            NSString *urlString = story.link;
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+        }        
+	}
 }
 
 #pragma mark - KGOSearchDisplayDelegate

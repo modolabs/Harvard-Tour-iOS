@@ -30,7 +30,7 @@
 }
 
 - (void)viewDidLoad {
-    self.navigationItem.title = @"Story";
+    self.navigationItem.title = @"Sport";
     
     [super viewDidLoad];
 	

@@ -10,6 +10,7 @@
 #import "AthleticsListController.h"
 #import "AthleticsModel.h"
 #import "AthleticsSportDetailViewController.h"
+#import "AthleticsSportsViewController.h"
 @implementation AthleticsModule
 @synthesize dataManager = _dataManager;
 
@@ -96,6 +97,17 @@
         AthleticsStory *category = [params objectForKey:@"category"];
         if (category) {
             [detailVC setCategory:category];
+        }
+    } else if ([pageName isEqualToString:LocalPathPageNameItemList]) {
+        AthleticsSportsViewController *athleticsSportsVC = [[AthleticsSportsViewController alloc] 
+                                                            initWithNibName:@"AthleticsSportsViewController" 
+                                                            bundle:nil];
+        athleticsSportsVC.dataManager = self.dataManager;
+        vc = athleticsSportsVC;
+    
+        if ([params objectForKey:@"category"]) {
+            AthleticsCategory *category = [params objectForKey:@"category"];
+            [(AthleticsListController *)vc setActiveCategoryId:category.category_id];
         }
     }
     return vc;
