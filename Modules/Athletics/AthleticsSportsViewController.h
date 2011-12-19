@@ -7,15 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KGOTabbedControl.h"
 #import "AthleticsTableViewCell.h"
 #import "KGOSearchBar.h"
 #import "KGOTableViewController.h"
 #import "AthleticsDataController.h"
 #import "KGOSearchDisplayController.h"
-@interface AthleticsSportsViewController : KGOTableViewController <KGOTabbedControlDelegate,KGOSearchBarDelegate,AthleticsDataDelegate> {
-    
-    IBOutlet KGOTabbedControl *_navTabbedView;
+@interface AthleticsSportsViewController : KGOTableViewController <KGOSearchBarDelegate,AthleticsDataDelegate> {
     IBOutlet UILabel *_loadingLabel;
     IBOutlet UILabel *_lastUpdateLabel;
     IBOutlet UIProgressView *_progressView;
@@ -37,7 +34,6 @@
 @property (nonatomic, retain) NSString *activeCategoryId;
 @property (nonatomic, assign)  NSInteger actieveMenuCategoryIdx;
 
-- (void)setupNavTabbedButtons;
+
 - (void)setStatusText:(NSString *)text;
-- (void)switchToCategory:(NSString *)category;
 @end

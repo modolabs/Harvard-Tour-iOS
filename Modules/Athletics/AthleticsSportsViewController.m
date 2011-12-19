@@ -41,7 +41,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _navTabbedView.delegate = self;
     _storyTable.separatorColor = [UIColor colorWithWhite:0.5 alpha:1.0];
     [self addTableView:_storyTable];
     self.dataManager.delegate = self;
@@ -73,16 +72,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self setupNavTabbedButtons]; // needed for updating bookmark status
 }
 
 
 
 - (void)viewDidUnload
 {
-    [_navTabbedView release];
-    _navTabbedView = nil;
     [_loadingLabel release];
     _loadingLabel = nil;
     [_lastUpdateLabel release];
@@ -102,7 +97,6 @@
 }
 
 - (void)dealloc {
-    [_navTabbedView release];
     [_loadingLabel release];
     [_lastUpdateLabel release];
     [_progressView release];
@@ -118,38 +112,6 @@
     
 }
 
-- (void)setupNavTabbedButtons {
-    if (self.categories.count > 0) {
-        [_navTabbedView removeAllTabs];
-        _navTabbedView.frame = CGRectMake(0, self.view.bounds.size.height - 44, self.view.bounds.size.width, 44);
-        
-        //configure the tabbar.
-        const NSInteger count = self.categories.count;
-        AthleticsCategory *activeCategory = nil;
-        for (int i = 0; i < count; i++) {
-            AthleticsCategory *aCategory = [self.categories objectAtIndex:i];
-            [_navTabbedView insertTabWithTitle:aCategory.title atIndex:i animated:NO];
-            if (!activeCategory || [aCategory.category_id isEqualToString:activeCategoryId]) {
-                activeCategory = aCategory;
-                activeCategoryId = activeCategory.category_id;
-            }
-        }
-        [_navTabbedView setNeedsLayout];
-        for (NSUInteger i = 0; i < _navTabbedView.numberOfTabs; i++) {
-            if ([[_navTabbedView titleForTabAtIndex:i] isEqualToString:activeCategory.title]) {
-                [_navTabbedView setSelectedTabIndex:i];
-                break;
-            }
-        }
-    } else {
-        [_navTabbedView removeFromSuperview];
-        _navTabbedView = nil;
-        
-        CGFloat dh = _activityView.hidden ? 0 : _activityView.frame.size.height;
-        _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - dh);
-    }
-}
-
 #pragma mark -
 #pragma mark Bottom status bar
 
@@ -159,9 +121,8 @@
     _activityView.alpha = 1.0;
 	_lastUpdateLabel.hidden = NO;
 	_lastUpdateLabel.text = text;
-    
-    CGFloat y = _navTabbedView != nil ? _navTabbedView.frame.size.height : 0;
-    _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - y);
+
+    _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     
     [UIView animateWithDuration:1.0 delay:2.0 options:0 animations:^(void) {
         _activityView.alpha = 0;
@@ -190,9 +151,9 @@
     
     _activityView.hidden = NO;
     _activityView.alpha = 1.0;
-    CGFloat y = _navTabbedView != nil ? _navTabbedView.frame.size.height : 0;
+
     _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width,
-                                   self.view.bounds.size.height - y - _activityView.frame.size.height);
+                                   self.view.bounds.size.height - _activityView.frame.size.height);
 }
 
 #pragma mark -
@@ -227,8 +188,6 @@
         self.activeCategoryId = category.category_id;
     }
     
-    [self setupNavTabbedButtons]; // update button pressed states
-    
     // now that we have categories load the stories
     if (self.activeCategoryId) {
         [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
@@ -248,36 +207,6 @@
     [self setLastUpdated:[NSDate date]];
     [self reloadDataForTableView:_storyTable];
     [_storyTable flashScrollIndicators];
-}
-
-
-#pragma mark -KGOScrollingTabstrip Delegate
-- (void)tabbedControl:(KGOTabbedControl *)contol didSwitchToTabAtIndex:(NSInteger)index {
-    NSString *title = [contol titleForTabAtIndex:index];
-    for (AthleticsCategory *aCategory in self.categories) {
-        if ([aCategory.title isEqualToString:title]) {
-            NSString *tagValue = aCategory.category_id;
-            [self switchToCategory:tagValue];
-            break;
-        }
-    }
-}
-
-- (void)switchToCategory:(NSString *)category {
-    showingBookmarks = NO;
-    showingMenuCategories = NO;
-    if (![category isEqualToString:self.activeCategoryId]) {
-		self.activeCategoryId = category;
-        self.dataManager.delegate = self;
-        if (![self.activeCategoryId isEqualToString:@"0"]) {
-            showingMenuCategories = YES;
-            [self.dataManager fetchMenusForCategory:self.activeCategoryId startId:nil];
-        } else {
-            [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
-        }
-        // makes request to server if no request has been made this session
-        //[self.dataManager requestStoriesForCategory:self.activeCategoryId loadMore:NO forceRefresh:NO];
-    }
 }
 
 #pragma mark -KGOTable Methds
