@@ -77,6 +77,7 @@ NSString * const AthleticsTagBody            = @"body";
         [self fetchStoriesForCategory:self.currentCategory.category_id startId:nil];
     } else if (request == self.menuCategoryStoriesRequest) {
         [self fetchMenuCategoryStories:self.currentCategory startId:nil];
+        [self fetchMenuCategorySchedule:self.currentCategory startId:nil];
     } else if ([path isEqualToString:@"sports"]) {    
         [self fetchMenusForCategory:self.currentCategory.category_id startId:nil];
     }
@@ -231,6 +232,29 @@ NSString * const AthleticsTagBody            = @"body";
     }    
 }
 
+- (void)fetchMenuCategorySchedule:(AthleticsCategory *)menuCategory startId:(NSString *)startId {
+    NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+    if ([menuCategory managedObjectContext] != context) {
+        menuCategory = (AthleticsCategory *)[context objectWithID:[menuCategory objectID]];
+    }
+    [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:menuCategory mergeChanges:NO];
+    if (!menuCategory.lastUpdated
+        || [menuCategory.lastUpdated timeIntervalSinceNow] > ATHLETICS_CATEGORY_EXPIRES_TIME
+        // TODO: make sure the following doesn't result an infinite loop if stories legitimately don't exist
+        || !menuCategory.schedules.count)
+    {
+        DLog(@"last updated: %@", menuCategory.lastUpdated);
+        [self requestMenuCategorySchedulesForCategory:menuCategory afterId:nil];
+        return;
+    }
+    
+    NSArray *results = [menuCategory.schedules sortedArrayUsingDescriptors:nil];
+    
+    if ([self.delegate respondsToSelector:@selector(dataController:didRetrieveSchedules:)]) {
+        [self.delegate dataController:self didRetrieveSchedules:results];
+    }
+}
+
 - (void)fetchMenuCategoryStories:(AthleticsCategory *)menuCategory startId:(NSString *)startId {
 //    if (categoryId && ![categoryId isEqualToString:self.currentCategory.category_id]) {
 //        self.currentCategory = [self categoryWithId:categoryId];
@@ -300,15 +324,11 @@ NSString * const AthleticsTagBody            = @"body";
         [self requestMenusForCategory:categoryId afterID:nil];
         return;
     }
-    
-    NSSortDescriptor *dateSort = [[[NSSortDescriptor alloc] initWithKey:@"postDate" ascending:NO] autorelease];
-    NSSortDescriptor *idSort = [[[NSSortDescriptor alloc] initWithKey:@"identifier" ascending:NO] autorelease];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:dateSort, idSort, nil];
-    
+
     NSArray *results = [self.currentCategory.menu.categories sortedArrayUsingDescriptors:nil];
     
-    if ([self.delegate respondsToSelector:@selector(dataController:didRetrieveStories:)]) {
-        [self.delegate dataController:self didRetrieveStories:results];
+    if ([self.delegate respondsToSelector:@selector(dataController:didRetrieveMenuCategories:)]) {
+        [self.delegate dataController:self didRetrieveMenuCategories:results];
     }
 }
 
@@ -479,6 +499,59 @@ withKey:(NSString *)key{
     }];
 }
 
+- (void)requestMenuCategorySchedulesForCategory:(AthleticsCategory *)menuCategory afterId:(NSString *)afterId
+{
+    // TODO: signal that loading progress is 0
+    //    if (![categoryId isEqualToString:self.currentCategory.category_id]) {
+    //        self.currentCategory = [self categoryWithId:categoryId];
+    //    }
+    //    
+    //    NSInteger start = 0;
+    //    if (afterId) {
+    //        NSPredicate *pred = [NSPredicate predicateWithFormat:@"identifier = %@", afterId];
+    //        AthleticsStory *story = [[self.currentStories filteredArrayUsingPredicate:pred] lastObject];
+    //        if (story) {
+    //            NSInteger index = [self.currentStories indexOfObject:story];
+    //            if (index != NSNotFound) {
+    //                start = index;
+    //            }
+    //        }
+    //    }
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            menuCategory.ivar, menuCategory.category,
+                            nil];
+    
+    KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
+                                                                          module:self.moduleTag
+                                                                            path:@"schedule"
+                                                                         version:1
+                                                                          params:params];
+    self.menuCategoryStoriesRequest = request;
+    
+    __block AthleticsDataController *blockSelf = self;
+    __block AthleticsCategory *category = menuCategory;
+    [request connectWithCallback:^(id result) {
+        NSDictionary *resultDict = (NSDictionary *)result;
+        NSArray *schedules = [resultDict arrayForKey:@"results"];
+        NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+        if ([category managedObjectContext] != context) {
+            category = (AthleticsCategory *)[context objectWithID:[category objectID]];
+        }
+        [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:category mergeChanges:NO];
+        // need to bring category to local context
+        // http://stackoverflow.com/questions/1554623/illegal-attempt-to-establish-a-relationship-xyz-between-objects-in-different-co
+        NSMutableSet *mutableSchedules = [category mutableSetValueForKey:@"schedules"];
+        for (NSDictionary *scheduleDict in schedules) {            
+            AthleticsSchedule *schedule = [blockSelf scheduleWithDictionary:scheduleDict];            
+            schedule.category = category;
+            [mutableSchedules addObject:schedule];
+        }
+        category.lastUpdated = [NSDate date];
+        [[CoreDataManager sharedManager] saveData];
+        return (NSInteger)[schedules count];
+    }];
+}
+
 - (void)requestMenuCategoryStoriesForCategory:(AthleticsCategory *)menuCategory afterId:(NSString *)afterId
 {
     // TODO: signal that loading progress is 0
@@ -577,6 +650,29 @@ withKey:(NSString *)key{
     return story;
 }
 
+- (AthleticsSchedule *)scheduleWithDictionary:(NSDictionary *)scheduleDict {
+    // use existing schedule if it's already in the db
+    NSString *ScheduleID = [scheduleDict nonemptyStringForKey:@"id"];
+    AthleticsSchedule *schedule = [[CoreDataManager sharedManager] uniqueObjectForEntity:AthleticsScheduleEntityName attribute:@"schedule_id" value:ScheduleID];
+    if (!schedule) {
+        schedule = (AthleticsSchedule *)[[CoreDataManager sharedManager] insertNewObjectForEntityForName:AthleticsScheduleEntityName];
+        schedule.schedule_id = ScheduleID;
+    }
+    
+//    double unixtime = [[scheduleDict objectForKey:@"start"] doubleValue];
+//    NSDate *start = [NSDate dateWithTimeIntervalSince1970:unixtime];
+    schedule.allDay = [NSNumber numberWithBool:[scheduleDict boolForKey:@"allday"]];
+    schedule.descriptionString = [scheduleDict nonemptyStringForKey:@"description"];
+    schedule.gender = [scheduleDict nonemptyStringForKey:@"gender"];
+    schedule.location = [scheduleDict nonemptyStringForKey:@"location"];
+    schedule.locationLabel = [scheduleDict nonemptyStringForKey:@"locationLabel"];
+    schedule.pastStatus = [NSNumber numberWithBool:[scheduleDict boolForKey:@"pastStatus"]];
+    schedule.sport = [scheduleDict nonemptyStringForKey:@"sport"];
+    schedule.sportName = [scheduleDict nonemptyStringForKey:@"sportName"];
+    schedule.start = [scheduleDict numberForKey:@"start"];
+    schedule.title = [scheduleDict nonemptyStringForKey:@"title"];
+    return schedule;
+}
 
 
 - (void)dealloc {

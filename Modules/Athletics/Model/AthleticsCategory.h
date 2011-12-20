@@ -2,14 +2,14 @@
 //  AthleticsCategory.h
 //  Universitas
 //
-//  Created by Liu Mingxing on 12/15/11.
+//  Created by Liu Mingxing on 12/20/11.
 //  Copyright (c) 2011 Symbio Inc. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class AthleticsMenu, AthleticsStory;
+@class AthleticsMenu, AthleticsSchedule, AthleticsStory;
 
 @interface AthleticsCategory : NSManagedObject
 
@@ -26,8 +26,9 @@
 @property (nonatomic, retain) NSNumber * sortOrder;
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSString * url;
-@property (nonatomic, retain) NSSet *stories;
 @property (nonatomic, retain) AthleticsMenu *menu;
+@property (nonatomic, retain) NSSet *stories;
+@property (nonatomic, retain) NSSet *schedules;
 @end
 
 @interface AthleticsCategory (CoreDataGeneratedAccessors)
@@ -36,5 +37,10 @@
 - (void)removeStoriesObject:(AthleticsStory *)value;
 - (void)addStories:(NSSet *)values;
 - (void)removeStories:(NSSet *)values;
+
+- (void)addSchedulesObject:(AthleticsSchedule *)value;
+- (void)removeSchedulesObject:(AthleticsSchedule *)value;
+- (void)addSchedules:(NSSet *)values;
+- (void)removeSchedules:(NSSet *)values;
 
 @end

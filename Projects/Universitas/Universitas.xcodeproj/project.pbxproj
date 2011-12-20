@@ -41,8 +41,9 @@
 		4E89EFA41488BB56001402A2 /* AthleticsSportsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EFA31488BB56001402A2 /* AthleticsSportsViewController.m */; };
 		4E89EFAD1488BCAA001402A2 /* Athletics.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4E89EFAB1488BCAA001402A2 /* Athletics.xcdatamodeld */; };
 		4E8F88691499DC8100141835 /* AthleticsMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F88681499DC8000141835 /* AthleticsMenu.m */; };
-		4E8F886C1499E4BE00141835 /* AthleticsCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F886B1499E4BE00141835 /* AthleticsCategory.m */; };
 		4E90758A149B36A400E5A322 /* AthleticsSportsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E907589149B36A300E5A322 /* AthleticsSportsViewController.xib */; };
+		4EFD5EFB14A0831100568A5D /* AthleticsCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EFD5EFA14A0831100568A5D /* AthleticsCategory.m */; };
+		4EFD5EFE14A0831100568A5D /* AthleticsSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EFD5EFD14A0831100568A5D /* AthleticsSchedule.m */; };
 		562CD69F13B9AEA600C5CB94 /* LinksModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 562CD69E13B9AEA600C5CB94 /* LinksModule.m */; };
 		562F4B79133EFA10000B9344 /* ContentModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 562F4B74133EFA10000B9344 /* ContentModule.m */; };
 		562F4B7A133EFA10000B9344 /* ContentTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562F4B76133EFA10000B9344 /* ContentTableViewController.m */; };
@@ -264,11 +265,13 @@
 		4E89EFAC1488BCAA001402A2 /* Athletics.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Athletics.xcdatamodel; sourceTree = "<group>"; };
 		4E8F88671499DC8000141835 /* AthleticsMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsMenu.h; sourceTree = "<group>"; };
 		4E8F88681499DC8000141835 /* AthleticsMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsMenu.m; sourceTree = "<group>"; };
-		4E8F886A1499E4BD00141835 /* AthleticsCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsCategory.h; sourceTree = "<group>"; };
-		4E8F886B1499E4BE00141835 /* AthleticsCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsCategory.m; sourceTree = "<group>"; };
 		4E907589149B36A300E5A322 /* AthleticsSportsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AthleticsSportsViewController.xib; sourceTree = "<group>"; };
 		4EE1075A1490A17E00F03EC4 /* Athletics 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Athletics 2.xcdatamodel"; sourceTree = "<group>"; };
 		4EE1076D1490A2E900F03EC4 /* AthleticsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsModel.h; sourceTree = "<group>"; };
+		4EFD5EF914A0831100568A5D /* AthleticsCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsCategory.h; sourceTree = "<group>"; };
+		4EFD5EFA14A0831100568A5D /* AthleticsCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsCategory.m; sourceTree = "<group>"; };
+		4EFD5EFC14A0831100568A5D /* AthleticsSchedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsSchedule.h; sourceTree = "<group>"; };
+		4EFD5EFD14A0831100568A5D /* AthleticsSchedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsSchedule.m; sourceTree = "<group>"; };
 		562CD69D13B9AEA600C5CB94 /* LinksModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinksModule.h; sourceTree = "<group>"; };
 		562CD69E13B9AEA600C5CB94 /* LinksModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LinksModule.m; sourceTree = "<group>"; };
 		562F4B73133EFA10000B9344 /* ContentModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentModule.h; sourceTree = "<group>"; };
@@ -734,8 +737,10 @@
 			isa = PBXGroup;
 			children = (
 				4E89EFAB1488BCAA001402A2 /* Athletics.xcdatamodeld */,
-				4E8F886A1499E4BD00141835 /* AthleticsCategory.h */,
-				4E8F886B1499E4BE00141835 /* AthleticsCategory.m */,
+				4EFD5EFC14A0831100568A5D /* AthleticsSchedule.h */,
+				4EFD5EFD14A0831100568A5D /* AthleticsSchedule.m */,
+				4EFD5EF914A0831100568A5D /* AthleticsCategory.h */,
+				4EFD5EFA14A0831100568A5D /* AthleticsCategory.m */,
 				4E8F88671499DC8000141835 /* AthleticsMenu.h */,
 				4E8F88681499DC8000141835 /* AthleticsMenu.m */,
 				4E89C1FB1492127E00A1595A /* AthleticsImage.h */,
@@ -1628,7 +1633,8 @@
 				4E89C2001492127E00A1595A /* AthleticsImage.m in Sources */,
 				4E89C2011492127E00A1595A /* AthleticsStory.m in Sources */,
 				4E8F88691499DC8100141835 /* AthleticsMenu.m in Sources */,
-				4E8F886C1499E4BE00141835 /* AthleticsCategory.m in Sources */,
+				4EFD5EFB14A0831100568A5D /* AthleticsCategory.m in Sources */,
+				4EFD5EFE14A0831100568A5D /* AthleticsSchedule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

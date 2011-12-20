@@ -10,7 +10,7 @@
 #import "KGORequestManager.h"
 #define ATHLETICS_CATEGORY_EXPIRES_TIME 7200.0
 static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
-@class AthleticsDataController,AthleticsCategory,AthleticsStory,AthleticsMenu;
+@class AthleticsDataController,AthleticsCategory,AthleticsStory,AthleticsMenu,AthleticsSchedule;
 @protocol KGOSearchResultsHolder;
 @protocol AthleticsDataDelegate <NSObject>
 
@@ -19,6 +19,7 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 - (void)dataController:(AthleticsDataController *)controller didRetrieveCategories:(NSArray *)categories;
 - (void)dataController:(AthleticsDataController *)controller didRetrieveStories:(NSArray *)stories;
 - (void)dataController:(AthleticsDataController *)controller didRetrieveMenuCategories:(NSArray *)menuCategories;
+- (void)dataController:(AthleticsDataController *)controller didRetrieveSchedules:(NSArray *)schedules;
 
 - (void)dataController:(AthleticsDataController *)controller didMakeProgress:(CGFloat)progress;
 
@@ -58,8 +59,12 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
                         startId:(NSString *)startId;
 - (void)fetchMenusForCategory:(NSString *)categoryId
                         startId:(NSString *)startId;
+- (void)fetchMenuCategorySchedule:(AthleticsCategory *)menuCategory 
+                          startId:(NSString *)startId;
 - (void)fetchMenuCategoryStories:(AthleticsCategory *)menuCategory 
                          startId:(NSString *)startId;
+- (void)requestMenuCategorySchedulesForCategory:(AthleticsCategory *)menuCategory 
+                                        afterId:(NSString *)afterId;
 - (void)requestStoriesForCategory:(NSString *)categoryId afterId:(NSString *)afterId;
 - (void)requestMenuCategoryStoriesForCategory:(AthleticsCategory *)menuCategory 
                                       afterId:(NSString *)afterId;
@@ -68,4 +73,5 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 - (AthleticsCategory *)categoryWithDictionary:(NSDictionary *)categoryDict;
 - (AthleticsStory *)storyWithDictionary:(NSDictionary *)storyDict;
 - (AthleticsMenu *)menuWithDictionary:(NSDictionary *)menuDict;
+- (AthleticsSchedule *)scheduleWithDictionary:(NSDictionary *)scheduleDict;
 @end

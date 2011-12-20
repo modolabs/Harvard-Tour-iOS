@@ -15,6 +15,7 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="menu" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsMenu" inverseName="categories" inverseEntity="AthleticsMenu" syncable="YES"/>
+        <relationship name="schedules" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AthleticsSchedule" inverseName="category" inverseEntity="AthleticsSchedule" syncable="YES"/>
         <relationship name="stories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AthleticsStory" inverseName="categories" inverseEntity="AthleticsStory" syncable="YES"/>
     </entity>
     <entity name="AthleticsImage" representedClassName="AthleticsImage" syncable="YES">
@@ -40,6 +41,20 @@
         <attribute name="sportTitle" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AthleticsCategory" inverseName="menu" inverseEntity="AthleticsCategory" syncable="YES"/>
     </entity>
+    <entity name="AthleticsSchedule" representedClassName="AthleticsSchedule" syncable="YES">
+        <attribute name="allDay" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="descriptionString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locationLabel" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pastStatus" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="schedule_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sport" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sportName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="start" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsCategory" inverseName="schedules" inverseEntity="AthleticsCategory" syncable="YES"/>
+    </entity>
     <entity name="AthleticsStory" representedClassName="AthleticsStory" syncable="YES">
         <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
@@ -64,5 +79,6 @@
         <element name="AthleticsImageRep" positionX="160" positionY="192" width="128" height="105"/>
         <element name="AthleticsMenu" positionX="160" positionY="192" width="128" height="75"/>
         <element name="AthleticsStory" positionX="160" positionY="192" width="128" height="285"/>
+        <element name="AthleticsSchedule" positionX="160" positionY="192" width="128" height="225"/>
     </elements>
 </model>

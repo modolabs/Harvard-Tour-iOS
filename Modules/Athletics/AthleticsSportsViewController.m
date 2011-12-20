@@ -16,6 +16,7 @@
 @synthesize federatedSearchResults;
 @synthesize federatedSearchTerms;
 @synthesize stories;
+@synthesize schedules;
 @synthesize categories;
 @synthesize activeCategoryId;
 @synthesize actieveMenuCategoryIdx;
@@ -56,6 +57,8 @@
                                                                                             action:@selector(refresh:)] autorelease];
     
     [self.dataManager fetchMenuCategoryStories:[self.categories objectAtIndex:self.actieveMenuCategoryIdx] 
+                                       startId:nil];
+    [self.dataManager fetchMenuCategorySchedule:[self.categories objectAtIndex:self.actieveMenuCategoryIdx] 
                                        startId:nil];
     
     //    if (self.federatedSearchTerms || self.federatedSearchResults) {
@@ -105,6 +108,7 @@
     [_athletcisCell release];
     self.activeCategoryId = nil;
     self.categories = nil;
+    self.schedules = nil;
     [super dealloc];
 }
 
@@ -210,42 +214,104 @@
     [_storyTable flashScrollIndicators];
 }
 
+- (void)dataController:(AthleticsDataController *)controller didRetrieveSchedules:(NSArray *)theSchedules {
+    self.schedules = theSchedules;
+    [self setLastUpdated:[NSDate date]];
+    [self reloadDataForTableView:_storyTable];
+    [_storyTable flashScrollIndicators];
+}
+
+#pragma mark -TableView Data Organization
+- (UITableViewCell *)tableView:(UITableView *)tableView athleticsCellAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = nil;
+    NSString *cellIdentifier = [AthleticsTableViewCell commonReuseIdentifier];
+    cell = (AthleticsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (!cell) {
+        NSArray *container = [[NSBundle mainBundle] loadNibNamed:@"AthleticsTableViewCell" owner:self options:nil];
+        _athletcisCell = (AthleticsTableViewCell *)[container objectAtIndex:0];
+        cell = [[_athletcisCell retain] autorelease];
+        [_athletcisCell configureLabelsTheme];
+    }
+    [(AthleticsTableViewCell *)cell setStory:[self.stories objectAtIndex:indexPath.row]];
+    [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    return cell;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView loadMoreCellAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = nil;
+    static NSString *loadMoreIdentifier = @"loadmore";
+    cell = [tableView dequeueReusableCellWithIdentifier:loadMoreIdentifier];
+    if (!cell) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                       reuseIdentifier:loadMoreIdentifier] autorelease];
+    }
+    cell.textLabel.text = NSLocalizedString(@"Load more stories", @"new story SportsView");
+    [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
+    // TODO: set color to #999999 while things are loading
+    cell.textLabel.textColor = [UIColor colorWithHexString:@"#1A1611"];
+    return cell;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView scheduleCellAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = nil;
+    static NSString *scheduleIdentifier = @"schedule";
+    cell = [tableView dequeueReusableCellWithIdentifier:scheduleIdentifier];
+    if (!cell) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
+                                      reuseIdentifier:scheduleIdentifier] autorelease];
+    }
+    AthleticsSchedule *schedule = [self.schedules objectAtIndex:indexPath.row];
+    cell.textLabel.text = schedule.title;
+    cell.detailTextLabel.text = schedule.location;
+    return cell;
+}
+
 #pragma mark -KGOTable Methds
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return (self.stories.count > 0) ? 1 : 0;
+    return (self.stories.count > 0) + (self.stories.count > 0);
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger n = self.stories.count;
-    return n;
+    NSInteger condition = (self.stories.count > 0) + (self.stories.count > 0);
+    if (0 == condition) {
+        return 0;
+    } else if (2 == condition) {
+        if (0 == section) {
+            return self.schedules.count;
+        } else {
+            return self.stories.count;
+        }
+    } else {
+        return self.stories.count + self.schedules.count;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = nil;
-    if (indexPath.row == self.stories.count) {
-        static NSString *loadMoreIdentifier = @"loadmore";
-        cell = [tableView dequeueReusableCellWithIdentifier:loadMoreIdentifier];
-        if (!cell) {
-            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                           reuseIdentifier:loadMoreIdentifier] autorelease];
+    NSInteger condition = (self.stories.count > 0) + (self.schedules.count > 0);
+    if (2 == condition) {
+        if (0 == indexPath.section) {
+            cell = [self tableView:tableView scheduleCellAtIndexPath:indexPath];
+        } else {
+            if (indexPath.row == self.stories.count) {
+               cell = [self tableView:tableView loadMoreCellAtIndexPath:indexPath];
+            } else {
+               cell = [self tableView:tableView athleticsCellAtIndexPath:indexPath];
+            }
         }
-        cell.textLabel.text = NSLocalizedString(@"Load more stories", @"new story SportsView");
-        [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
-        // TODO: set color to #999999 while things are loading
-        cell.textLabel.textColor = [UIColor colorWithHexString:@"#1A1611"];
     } else {
-        NSString *cellIdentifier = [AthleticsTableViewCell commonReuseIdentifier];
-        cell = (AthleticsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        if (!cell) {
-            NSArray *container = [[NSBundle mainBundle] loadNibNamed:@"AthleticsTableViewCell" owner:self options:nil];
-            _athletcisCell = (AthleticsTableViewCell *)[container objectAtIndex:0];
-            cell = [[_athletcisCell retain] autorelease];
-            [_athletcisCell configureLabelsTheme];
+        if (self.stories.count > 0) {
+            if (indexPath.row == self.stories.count) {
+                cell = [self tableView:tableView loadMoreCellAtIndexPath:indexPath];
+            } else {
+                cell = [self tableView:tableView athleticsCellAtIndexPath:indexPath];
+            }
+        } else {
+            cell = [self tableView:tableView scheduleCellAtIndexPath:indexPath];
         }
-        [(AthleticsTableViewCell *)cell setStory:[self.stories objectAtIndex:indexPath.row]];
-        [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     return cell;
 }

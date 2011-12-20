@@ -2,12 +2,13 @@
 //  AthleticsCategory.m
 //  Universitas
 //
-//  Created by Liu Mingxing on 12/15/11.
+//  Created by Liu Mingxing on 12/20/11.
 //  Copyright (c) 2011 Symbio Inc. All rights reserved.
 //
 
 #import "AthleticsCategory.h"
 #import "AthleticsMenu.h"
+#import "AthleticsSchedule.h"
 #import "AthleticsStory.h"
 
 NSString * const AthleticsCategoryEntityName = @"AthleticsCategory";
@@ -26,7 +27,8 @@ NSString * const AthleticsCategoryEntityName = @"AthleticsCategory";
 @dynamic sortOrder;
 @dynamic title;
 @dynamic url;
-@dynamic stories;
 @dynamic menu;
+@dynamic stories;
+@dynamic schedules;
 
 @end

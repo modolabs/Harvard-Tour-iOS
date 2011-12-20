@@ -30,6 +30,7 @@
 @property (nonatomic, retain) NSArray *federatedSearchResults;
 @property (nonatomic, retain) NSString *federatedSearchTerms;
 @property (nonatomic, retain) NSArray *stories;
+@property (nonatomic, retain) NSArray *schedules;
 @property (nonatomic, retain) NSArray *categories;
 @property (nonatomic, retain) NSString *activeCategoryId;
 @property (nonatomic, assign)  NSInteger actieveMenuCategoryIdx;
