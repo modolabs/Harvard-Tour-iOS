@@ -68,7 +68,7 @@ NSString * const PhotoEntityName = @"Photo";
         self.thumbURL = thumbURL;
         self.thumbData = nil;
     }
-    NSString *imageURL = [dictionary stringForKey:@"imageUrl"];
+    NSString *imageURL = [dictionary stringForKey:@"imgUrl"];
     if (imageURL && ![self.imageURL isEqualToString:imageURL]) {
         self.imageURL = imageURL;
         self.imageData = nil;
@@ -85,6 +85,13 @@ NSString * const PhotoEntityName = @"Photo";
             }
         }
     }
+}
+
+- (NSString *)lastUpdateString
+{
+    return [NSString stringWithFormat:
+            NSLocalizedString(@"Updated %@", @"photo last update description"),
+            [self.pubDate agoString]];
 }
 
 #pragma mark - MITThumbnailDelegate

@@ -139,6 +139,8 @@
 		EB181FC5131EDF43003728FF /* MapSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB181FC3131EDF43003728FF /* MapSettingsViewController.m */; };
 		EB267006149FD6DF00F50997 /* ThumbnailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB267004149FD6DF00F50997 /* ThumbnailTableViewCell.m */; };
 		EB267007149FD6DF00F50997 /* ThumbnailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB267005149FD6DF00F50997 /* ThumbnailTableViewCell.xib */; };
+		EB26700B14A007F100F50997 /* PhotoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB26700914A007F100F50997 /* PhotoDetailViewController.m */; };
+		EB26700C14A007F100F50997 /* PhotoDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB26700A14A007F100F50997 /* PhotoDetailViewController.xib */; };
 		EB29B169141EA6C400D8559A /* NewsDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB29B168141EA6C400D8559A /* NewsDataController.m */; };
 		EB46A346134EB942005796E4 /* ThemeConfig-iPad.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB46A345134EB942005796E4 /* ThemeConfig-iPad.plist */; };
 		EB46A348134EB97C005796E4 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB46A347134EB97C005796E4 /* MainWindow-iPad.xib */; };
@@ -452,6 +454,9 @@
 		EB267003149FD6DF00F50997 /* ThumbnailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailTableViewCell.h; sourceTree = "<group>"; };
 		EB267004149FD6DF00F50997 /* ThumbnailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbnailTableViewCell.m; sourceTree = "<group>"; };
 		EB267005149FD6DF00F50997 /* ThumbnailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ThumbnailTableViewCell.xib; sourceTree = "<group>"; };
+		EB26700814A007F000F50997 /* PhotoDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoDetailViewController.h; sourceTree = "<group>"; };
+		EB26700914A007F100F50997 /* PhotoDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoDetailViewController.m; sourceTree = "<group>"; };
+		EB26700A14A007F100F50997 /* PhotoDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoDetailViewController.xib; sourceTree = "<group>"; };
 		EB29B167141EA6C400D8559A /* NewsDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsDataController.h; sourceTree = "<group>"; };
 		EB29B168141EA6C400D8559A /* NewsDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsDataController.m; sourceTree = "<group>"; };
 		EB3067FD142BC15B0047C9CF /* FBConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBConnect.h; path = ../../Contrib/Facebook/FBConnect.h; sourceTree = "<group>"; };
@@ -1231,6 +1236,9 @@
 				EB4E4EA5149ADAC200745061 /* PhotoGridViewController.h */,
 				EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */,
 				EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */,
+				EB26700814A007F000F50997 /* PhotoDetailViewController.h */,
+				EB26700914A007F100F50997 /* PhotoDetailViewController.m */,
+				EB26700A14A007F100F50997 /* PhotoDetailViewController.xib */,
 			);
 			path = Photos;
 			sourceTree = "<group>";
@@ -1431,6 +1439,7 @@
 				EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */,
 				EB4E4EA9149ADAC400745061 /* PhotoGridViewController.xib in Resources */,
 				EB267007149FD6DF00F50997 /* ThumbnailTableViewCell.xib in Resources */,
+				EB26700C14A007F100F50997 /* PhotoDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1598,6 +1607,7 @@
 				EB4E4EA3149ABE9300745061 /* AlbumListViewController.m in Sources */,
 				EB4E4EA8149ADAC400745061 /* PhotoGridViewController.m in Sources */,
 				EB267006149FD6DF00F50997 /* ThumbnailTableViewCell.m in Sources */,
+				EB26700B14A007F100F50997 /* PhotoDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

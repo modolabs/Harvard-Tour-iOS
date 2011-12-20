@@ -21,5 +21,6 @@
 + (Photo *)photoWithDictionary:(NSDictionary *)dictionary;
 + (Photo *)photoWithID:(NSString *)identifier canCreate:(BOOL)canCreate;
 - (void)updateWithDictionary:(NSDictionary *)dictionary;
+- (NSString *)lastUpdateString;
 
 @end

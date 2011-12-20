@@ -1,5 +1,6 @@
 #import "PhotoGridViewController.h"
 #import "UIKit+KGOAdditions.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 
 @implementation PhotoGridViewController
 
@@ -10,7 +11,7 @@
     NSMutableArray *views = [NSMutableArray array];
     for (NSInteger i = 0; i < self.photos.count; i++) {
         Photo *aPhoto = [self.photos objectAtIndex:i];
-        CGRect frame = CGRectMake(0, 0, 60, 60);
+        CGRect frame = CGRectMake(0, 0, 72, 72);
         MITThumbnailView *thumbView = [[[MITThumbnailView alloc] initWithFrame:frame] autorelease];
         thumbView.userInteractionEnabled = NO;
         thumbView.imageURL = aPhoto.thumbURL;
@@ -23,6 +24,7 @@
         [views addObject:control];
     }
     _iconGrid.icons = views;
+    [_iconGrid setNeedsLayout];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -56,7 +58,11 @@
     UIControl *control = (UIControl *)sender;
     if (control.tag < self.photos.count) {
         Photo *aPhoto = [self.photos objectAtIndex:control.tag];
-        
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                aPhoto, @"photo", self.photos, @"photos", nil];
+        [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail
+                               forModuleTag:self.dataManager.moduleTag
+                                     params:params];
     };
 }
 
@@ -88,6 +94,8 @@
 {
     [super viewDidLoad];
     
+    self.title = NSLocalizedString(@"Album", @"photo album grid view");
+    
     _titleLabel.text = self.album.title;
     
     NSString *cdot = [NSString stringWithUTF8String:"\u00B7"];
@@ -96,8 +104,8 @@
                            [self.album albumSize], cdot, [self.album lastUpdateString]];
     
     _iconGrid.delegate = self;
-    _iconGrid.padding = GridPaddingMake(16, 16, 16, 16);
-    _iconGrid.spacing = GridSpacingMake(16, 16);
+    _iconGrid.padding = GridPaddingMake(7, 7, 7, 7);
+    _iconGrid.spacing = GridSpacingMake(6, 6);
     
     _loadingStatusLabel.text = NSLocalizedString(@"Loading more photos", nil);
     

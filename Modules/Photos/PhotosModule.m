@@ -1,6 +1,7 @@
 #import "PhotosModule.h"
 #import "AlbumListViewController.h"
 #import "PhotoGridViewController.h"
+#import "PhotoDetailViewController.h"
 #import "PhotoDataManager.h"
 
 @implementation PhotosModule
@@ -22,11 +23,11 @@
 {
     UIViewController *vc = nil;
     if ([pageName isEqualToString:LocalPathPageNameHome]) {
-        //AlbumListViewController *albumVC = [[[AlbumListViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
         AlbumListViewController *albumVC = [[[AlbumListViewController alloc] initWithNibName:@"AlbumListViewController"
                                                                                       bundle:nil] autorelease];
         albumVC.dataManager = [self dataManager];
         vc = albumVC;
+
     } else if ([pageName isEqualToString:LocalPathPageNameItemList]) {
         PhotoAlbum *album = [params objectForKey:@"album"];
         PhotoGridViewController *gridVC = [[[PhotoGridViewController alloc] initWithNibName:@"PhotoGridViewController"
@@ -34,6 +35,15 @@
         gridVC.dataManager = [self dataManager];
         gridVC.album = album;
         vc = gridVC;
+    
+    } else if ([pageName isEqualToString:LocalPathPageNameDetail]) {
+        Photo *photo = [params objectForKey:@"photo"];
+        NSArray *photos = [params objectForKey:@"photos"];
+        PhotoDetailViewController *detailVC = [[[PhotoDetailViewController alloc] initWithNibName:@"PhotoDetailViewController"
+                                                                                           bundle:nil] autorelease];
+        detailVC.photo = photo;
+        detailVC.photos = photos;
+        vc = detailVC;
     }
     return vc;
 }
