@@ -10,12 +10,12 @@
 #import "KGOTabbedControl.h"
 #import "AthleticsTableViewCell.h"
 #import "KGOSearchBar.h"
-#import "KGOTableViewController.h"
+
 #import "AthleticsDataController.h"
 #import "KGOSearchDisplayController.h"
-@interface AthleticsListController : KGOTableViewController <KGOTabbedControlDelegate,KGOSearchBarDelegate,AthleticsDataDelegate> {
+@interface AthleticsListController : KGOTableViewController <UITabBarDelegate,KGOSearchBarDelegate,AthleticsDataDelegate> {
     
-    IBOutlet KGOTabbedControl *_navTabbedView;
+    IBOutlet UITabBar *_navTabbar;
     IBOutlet UILabel *_loadingLabel;
     IBOutlet UILabel *_lastUpdateLabel;
     IBOutlet UIProgressView *_progressView;

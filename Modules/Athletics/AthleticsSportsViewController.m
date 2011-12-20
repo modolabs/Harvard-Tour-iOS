@@ -45,7 +45,8 @@
     [self addTableView:_storyTable];
     self.dataManager.delegate = self;
     //configure these things
-    self.navigationItem.title = @"Athletics";
+   AthleticsCategory *currentCategory =  (AthleticsCategory *)[self.categories objectAtIndex:self.actieveMenuCategoryIdx];
+    self.navigationItem.title = currentCategory.title;
     self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
                                                                               style:UIBarButtonItemStylePlain 
                                                                              target:nil 
@@ -239,7 +240,7 @@
         if (!cell) {
             NSArray *container = [[NSBundle mainBundle] loadNibNamed:@"AthleticsTableViewCell" owner:self options:nil];
             _athletcisCell = (AthleticsTableViewCell *)[container objectAtIndex:0];
-            cell = [_athletcisCell retain];
+            cell = [[_athletcisCell retain] autorelease];
             [_athletcisCell configureLabelsTheme];
         }
         [(AthleticsTableViewCell *)cell setStory:[self.stories objectAtIndex:indexPath.row]];

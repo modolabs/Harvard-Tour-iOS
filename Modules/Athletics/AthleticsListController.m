@@ -40,8 +40,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _navTabbedView.delegate = self;
     _storyTable.separatorColor = [UIColor colorWithWhite:0.5 alpha:1.0];
+    _navTabbar.tintColor = [[KGOTheme sharedTheme] backgroundColorForApplication];
     [self addTableView:_storyTable];
     self.dataManager.delegate = self;
     //configure these things
@@ -53,15 +53,16 @@
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
                                                                                            target:self 
                                                                                            action:@selector(refresh:)] autorelease];
+    
     [self.dataManager fetchCategories];
     
 //    if (self.federatedSearchTerms || self.federatedSearchResults) {
-//        [_navTabbedView showSearchBarAnimated:NO];
-//        [_navTabbedView.searchController setActive:NO animated:NO];
-//        _navTabbedView.searchController.searchBar.text = self.federatedSearchTerms;
+//        [_navTabbar showSearchBarAnimated:NO];
+//        [_navTabbar.searchController setActive:NO animated:NO];
+//        _navTabbar.searchController.searchBar.text = self.federatedSearchTerms;
 //        
 //        if (self.federatedSearchResults) {
-//            [_navTabbedView.searchController setSearchResults:self.federatedSearchResults
+//            [_navTabbar.searchController setSearchResults:self.federatedSearchResults
 //                                                 forModuleTag:self.dataManager.moduleTag];
 //        }
 //    }
@@ -78,8 +79,8 @@
 
 - (void)viewDidUnload
 {
-    [_navTabbedView release];
-    _navTabbedView = nil;
+    [_navTabbar release];
+    _navTabbar = nil;
     [_loadingLabel release];
     _loadingLabel = nil;
     [_lastUpdateLabel release];
@@ -99,7 +100,7 @@
 }
 
 - (void)dealloc {
-    [_navTabbedView release];
+    [_navTabbar release];
     [_loadingLabel release];
     [_lastUpdateLabel release];
     [_progressView release];
@@ -116,30 +117,36 @@
 
 - (void)setupNavTabbedButtons {
     if (self.categories.count > 0) {
-        [_navTabbedView removeAllTabs];
-        _navTabbedView.frame = CGRectMake(0, self.view.bounds.size.height - 44, self.view.bounds.size.width, 44);
+        _navTabbar.frame = CGRectMake(0, self.view.bounds.size.height - 49, self.view.bounds.size.width, 49);
         
         //configure the tabbar.
         const NSInteger count = self.categories.count;
         AthleticsCategory *activeCategory = nil;
+        UITabBarItem *barItem = nil;
+        NSMutableArray *barItems = [NSMutableArray array];
         for (int i = 0; i < count; i++) {
             AthleticsCategory *aCategory = [self.categories objectAtIndex:i];
-            [_navTabbedView insertTabWithTitle:aCategory.title atIndex:i animated:NO];
-            if (!activeCategory || [aCategory.category_id isEqualToString:activeCategoryId]) {
+            barItem = [[UITabBarItem alloc] initWithTitle:aCategory.title 
+                                                    image:nil 
+                                                      tag:[aCategory.category_id integerValue]];
+            [barItems addObject:barItem];
+            [barItem release];
+
+            if ([aCategory.category_id isEqualToString:activeCategoryId]) {
                 activeCategory = aCategory;
-                activeCategoryId = activeCategory.category_id;
             }
         }
-        [_navTabbedView setNeedsLayout];
-        for (NSUInteger i = 0; i < _navTabbedView.numberOfTabs; i++) {
-            if ([[_navTabbedView titleForTabAtIndex:i] isEqualToString:activeCategory.title]) {
-                [_navTabbedView setSelectedTabIndex:i];
+        [_navTabbar setItems:barItems animated:YES];
+        for (NSUInteger i = 0; i < [_navTabbar items].count; i++) {
+            barItem = [[_navTabbar items] objectAtIndex:i];
+            if ([barItem.title isEqualToString:activeCategory.title]) {
+                [_navTabbar setSelectedItem:barItem];
                 break;
             }
         }
     } else {
-        [_navTabbedView removeFromSuperview];
-        _navTabbedView = nil;
+        [_navTabbar removeFromSuperview];
+        _navTabbar = nil;
         
         CGFloat dh = _activityView.hidden ? 0 : _activityView.frame.size.height;
         _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - dh);
@@ -156,7 +163,7 @@
 	_lastUpdateLabel.hidden = NO;
 	_lastUpdateLabel.text = text;
     
-    CGFloat y = _navTabbedView != nil ? _navTabbedView.frame.size.height : 0;
+    CGFloat y = _navTabbar != nil ? _navTabbar.frame.size.height : 0;
     _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - y);
     
     [UIView animateWithDuration:1.0 delay:2.0 options:0 animations:^(void) {
@@ -186,7 +193,7 @@
     
     _activityView.hidden = NO;
     _activityView.alpha = 1.0;
-    CGFloat y = _navTabbedView != nil ? _navTabbedView.frame.size.height : 0;
+    CGFloat y = _navTabbar != nil ? _navTabbar.frame.size.height : 0;
     _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width,
                                    self.view.bounds.size.height - y - _activityView.frame.size.height);
 }
@@ -247,9 +254,9 @@
 }
 
 
-#pragma mark -KGOScrollingTabstrip Delegate
-- (void)tabbedControl:(KGOTabbedControl *)contol didSwitchToTabAtIndex:(NSInteger)index {
-    NSString *title = [contol titleForTabAtIndex:index];
+#pragma mark -UITabbar Delegate
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
+    NSString *title = item.title;
     for (AthleticsCategory *aCategory in self.categories) {
         if ([aCategory.title isEqualToString:title]) {
             NSString *tagValue = aCategory.category_id;
@@ -412,7 +419,7 @@
 - (void)searchController:(KGOSearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView {
     self.federatedSearchTerms = nil;
     self.federatedSearchResults = nil;
-//    [_navTabbedView hideSearchBarAnimated:YES];
+//    [_navTabbar hideSearchBarAnimated:YES];
 }
 
 
