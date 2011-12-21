@@ -669,7 +669,7 @@ withKey:(NSString *)key{
     schedule.pastStatus = [NSNumber numberWithBool:[scheduleDict boolForKey:@"pastStatus"]];
     schedule.sport = [scheduleDict nonemptyStringForKey:@"sport"];
     schedule.sportName = [scheduleDict nonemptyStringForKey:@"sportName"];
-    schedule.start = [scheduleDict numberForKey:@"start"];
+    schedule.start = [NSNumber numberWithDouble:[[scheduleDict nonemptyStringForKey:@"start"] doubleValue]] ;
     schedule.title = [scheduleDict nonemptyStringForKey:@"title"];
     return schedule;
 }

@@ -10,6 +10,7 @@
 #import "AthleticsSportsViewController.h"
 #import "AthleticsTableViewCell.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation AthleticsSportsViewController
 @synthesize dataManager;
@@ -263,7 +264,25 @@
     }
     AthleticsSchedule *schedule = [self.schedules objectAtIndex:indexPath.row];
     cell.textLabel.text = schedule.title;
-    cell.detailTextLabel.text = schedule.location;
+    
+    
+    double unixtime = [schedule.start doubleValue];
+    NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:unixtime];
+    NSString *detailString = [NSString stringWithFormat:@"%@\n%@",startDate.description,schedule.location];
+    cell.detailTextLabel.text = detailString;
+    cell.detailTextLabel.numberOfLines = 2;
+    return cell;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView loadFullSchedulesCellAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = nil;
+    static NSString *loadFullSchedulesIdentifier = @"loadFullSchedules";
+    cell = [tableView dequeueReusableCellWithIdentifier:loadFullSchedulesIdentifier];
+    if (!cell) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
+                                       reuseIdentifier:loadFullSchedulesIdentifier] autorelease];
+    }
+    cell.textLabel.text = @"Load full schedules.";
     return cell;
 }
 
@@ -278,12 +297,21 @@
         return 0;
     } else if (2 == condition) {
         if (0 == section) {
-            return self.schedules.count;
+            if (self.schedules.count <= 2) {
+                return self.schedules.count;
+            } else {
+                return 3;
+            }
         } else {
             return self.stories.count;
         }
     } else {
-        return self.stories.count + self.schedules.count;
+        NSInteger scheduleNumber = self.schedules.count;
+        if (self.stories.count > 0) {
+            return self.stories.count;
+        } else {
+            return (scheduleNumber <= 2) ? scheduleNumber : 3;
+        }
     }
     return 0;
 }
@@ -294,7 +322,11 @@
     NSInteger condition = (self.stories.count > 0) + (self.schedules.count > 0);
     if (2 == condition) {
         if (0 == indexPath.section) {
-            cell = [self tableView:tableView scheduleCellAtIndexPath:indexPath];
+            if (indexPath.row <= 1) {
+                cell = [self tableView:tableView scheduleCellAtIndexPath:indexPath];
+            } else {
+                cell = [self tableView:tableView loadFullSchedulesCellAtIndexPath:indexPath];
+            }
         } else {
             if (indexPath.row == self.stories.count) {
                cell = [self tableView:tableView loadMoreCellAtIndexPath:indexPath];
@@ -310,7 +342,11 @@
                 cell = [self tableView:tableView athleticsCellAtIndexPath:indexPath];
             }
         } else {
-            cell = [self tableView:tableView scheduleCellAtIndexPath:indexPath];
+            if (indexPath.row <= 1) {
+                cell = [self tableView:tableView scheduleCellAtIndexPath:indexPath];
+            } else {
+                cell = [self tableView:tableView loadFullSchedulesCellAtIndexPath:indexPath];
+            }
         }
     }
     return cell;
@@ -318,6 +354,26 @@
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    NSInteger condition = (self.stories.count > 0) + (self.stories.count > 0);
+    if (0 == condition) {
+        return nil;
+    } else if (2 == condition) {
+        if (0 == section) {
+            return @"Schedule";
+        } else {
+            return @"News";
+        }
+    } else {
+        if (self.stories.count > 0) {
+            return @"News";
+        } else {
+            return @"Schedule";
+        }
+    }
+    return 0;
 }
 
 #pragma mark - KGOSearchDisplayDelegate
