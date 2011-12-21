@@ -1,19 +1,32 @@
 #import <UIKit/UIKit.h>
 #import "MITThumbnailView.h"
+#import "KGOLabel.h"
 
-@class KGOLabel, NewsStory;
+//@class NewsStory;
 
-@interface NewsStoryTableViewCell : UITableViewCell <MITThumbnailDelegate> {
+@interface NewsStoryTableViewCell : UITableViewCell// <MITThumbnailDelegate> 
+{
+    KGOLabel *_titleLabel;
+    KGOLabel *_dekLabel;
+    MITThumbnailView *_thumbnailView;
+
+    CGFloat _thumbnailPadding;
+    CGSize _thumbnailSize;
     
-    IBOutlet KGOLabel *_titleLabel;
-    IBOutlet KGOLabel *_dekLabel;
-    IBOutlet MITThumbnailView *_thumbnailView;
-    NewsStory *_story;
+    BOOL _customLayoutComplete;
+    
+//    NewsStory *_story;
 }
 
-@property (nonatomic, retain) NewsStory *story;
+// use KGOLabel because these are top-aligned by default
+@property (nonatomic, retain) IBOutlet KGOLabel *titleLabel;
+@property (nonatomic, retain) IBOutlet KGOLabel *subtitleLabel;
+@property (nonatomic, retain) IBOutlet MITThumbnailView *thumbView;
 
-- (void)configureLabelsTheme;
+@property (nonatomic) CGFloat thumbnailPadding;
+@property (nonatomic) CGSize thumbnailSize;
+
+//@property (nonatomic, retain) NewsStory *story;
 
 + (NSString *)commonReuseIdentifier;
 

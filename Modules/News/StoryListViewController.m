@@ -1,13 +1,9 @@
-#import "KGOAppDelegate+ModuleAdditions.h"
 #import "StoryListViewController.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 #import "StoryDetailViewController.h"
-#import "NewsDataController.h"
-#import "NewsModel.h"
 #import "CoreDataManager.h"
 #import "UIKit+KGOAdditions.h"
-#import "KGOScrollingTabstrip.h"
 #import "KGOSearchDisplayController.h"
-#import "NewsCategory.h"
 #import "AnalyticsWrapper.h"
 #import "NewsStoryTableViewCell.h"
 
@@ -30,6 +26,7 @@
 @synthesize categories;
 @synthesize activeCategoryId;
 @synthesize featuredStory;
+@synthesize cell = _storyCell;
 
 @synthesize federatedSearchTerms, federatedSearchResults;
 
@@ -297,6 +294,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = nil;
+    
     if (indexPath.row == self.stories.count) {
         static NSString *loadMoreIdentifier = @"loadmore";
         cell = [tableView dequeueReusableCellWithIdentifier:loadMoreIdentifier];
@@ -305,22 +303,32 @@
                                            reuseIdentifier:loadMoreIdentifier] autorelease];
         }
         cell.textLabel.text = NSLocalizedString(@"Load more stories", @"new story list");
-        [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
         // TODO: set color to #999999 while things are loading
         cell.textLabel.textColor = [UIColor colorWithHexString:@"#1A1611"];
         
     } else {
         NSString *cellIdentifier = [NewsStoryTableViewCell commonReuseIdentifier];
-        cell = (NewsStoryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        if (!cell) {
+        NewsStoryTableViewCell *newsCell = (NewsStoryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (!newsCell) {
             [[NSBundle mainBundle] loadNibNamed:@"NewsStoryTableViewCell" owner:self options:nil];
-            cell = _storyCell;
-            [_storyCell configureLabelsTheme];
+            newsCell = _storyCell;
+            newsCell.thumbnailSize = CGSizeMake(tableView.rowHeight, tableView.rowHeight);
+            //[_storyCell configureLabelsTheme];
         }
-        [(NewsStoryTableViewCell *)cell setStory:[self.stories objectAtIndex:indexPath.row]];
-        [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        //[(NewsStoryTableViewCell *)cell setStory:[self.stories objectAtIndex:indexPath.row]];
+        NewsStory *story = [self.stories objectAtIndex:indexPath.row];
+        newsCell.titleLabel.text = story.title;
+        newsCell.subtitleLabel.text = story.summary;
+        newsCell.thumbView.imageURL = story.thumbImage.url;
+        newsCell.thumbView.imageData = story.thumbImage.data;
+        [newsCell.thumbView loadImage];
+        newsCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+        cell = newsCell;
     }
+    
+    [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
+    
     return cell;
 }
 

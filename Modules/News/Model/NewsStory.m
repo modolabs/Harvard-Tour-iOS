@@ -1,5 +1,6 @@
 #import "NewsStory.h"
 #import "NewsImage.h"
+#import "CoreDataManager.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
 
 NSString * const NewsStoryEntityName = @"NewsStory";
@@ -87,6 +88,14 @@ NSString * const NewsStoryEntityName = @"NewsStory";
         return YES;
     }
     return NO;
+}
+
+#pragma mark - MITThumgnailDelegate
+
+- (void)thumbnail:(MITThumbnailView *)thumbnail didLoadData:(NSData *)data
+{
+    self.thumbImage.data = data;
+    [[CoreDataManager sharedManager] saveData];
 }
 
 @end

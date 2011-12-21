@@ -1,10 +1,11 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "KGOSearchModel.h"
+#import "MITThumbnailView.h"
 
 @class NewsImage;
 
-@interface NewsStory : NSManagedObject <KGOSearchResult> {
+@interface NewsStory : NSManagedObject <KGOSearchResult, MITThumbnailDelegate> {
 @private
 }
 @property (nonatomic, retain) NSString * body;

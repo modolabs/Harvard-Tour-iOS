@@ -156,8 +156,6 @@
 		EB4E4E8F149A88C100745061 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E8E149A88C100745061 /* Photo.m */; };
 		EB4E4E92149A88C200745061 /* PhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E91149A88C200745061 /* PhotoAlbum.m */; };
 		EB4E4E95149A903F00745061 /* PhotoDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E94149A903E00745061 /* PhotoDataManager.m */; };
-		EB4E4E9C149ABADB00745061 /* PhotoTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4E9B149ABADA00745061 /* PhotoTableViewCell.xib */; };
-		EB4E4E9F149ABC6C00745061 /* PhotoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E9E149ABC6900745061 /* PhotoTableViewCell.m */; };
 		EB4E4EA3149ABE9300745061 /* AlbumListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4EA1149ABE9200745061 /* AlbumListViewController.m */; };
 		EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */; };
 		EB4E4EA8149ADAC400745061 /* PhotoGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */; };
@@ -489,9 +487,6 @@
 		EB4E4E91149A88C200745061 /* PhotoAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoAlbum.m; sourceTree = "<group>"; };
 		EB4E4E93149A903E00745061 /* PhotoDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoDataManager.h; sourceTree = "<group>"; };
 		EB4E4E94149A903E00745061 /* PhotoDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoDataManager.m; sourceTree = "<group>"; };
-		EB4E4E9B149ABADA00745061 /* PhotoTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoTableViewCell.xib; sourceTree = "<group>"; };
-		EB4E4E9D149ABC6800745061 /* PhotoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoTableViewCell.h; sourceTree = "<group>"; };
-		EB4E4E9E149ABC6900745061 /* PhotoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoTableViewCell.m; sourceTree = "<group>"; };
 		EB4E4EA0149ABE9100745061 /* AlbumListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumListViewController.h; sourceTree = "<group>"; };
 		EB4E4EA1149ABE9200745061 /* AlbumListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumListViewController.m; sourceTree = "<group>"; };
 		EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumListViewController.xib; sourceTree = "<group>"; };
@@ -1235,9 +1230,6 @@
 				EB4E4E6D149A7CD400745061 /* PhotosModule.m */,
 				EB4E4E93149A903E00745061 /* PhotoDataManager.h */,
 				EB4E4E94149A903E00745061 /* PhotoDataManager.m */,
-				EB4E4E9D149ABC6800745061 /* PhotoTableViewCell.h */,
-				EB4E4E9E149ABC6900745061 /* PhotoTableViewCell.m */,
-				EB4E4E9B149ABADA00745061 /* PhotoTableViewCell.xib */,
 				EB4E4EA0149ABE9100745061 /* AlbumListViewController.h */,
 				EB4E4EA1149ABE9200745061 /* AlbumListViewController.m */,
 				EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */,
@@ -1445,7 +1437,6 @@
 				EB7E9EAE143156260093B0C7 /* secret in Resources */,
 				EB7E9F4E14337C630093B0C7 /* ipad in Resources */,
 				EB70DC94143E7CBB00E60476 /* Settings.plist in Resources */,
-				EB4E4E9C149ABADB00745061 /* PhotoTableViewCell.xib in Resources */,
 				EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */,
 				EB4E4EA9149ADAC400745061 /* PhotoGridViewController.xib in Resources */,
 				EB4E4EAB149AE29500745061 /* PhotoPagerControlView.xib in Resources */,
@@ -1614,7 +1605,6 @@
 				EB4E4E8F149A88C100745061 /* Photo.m in Sources */,
 				EB4E4E92149A88C200745061 /* PhotoAlbum.m in Sources */,
 				EB4E4E95149A903F00745061 /* PhotoDataManager.m in Sources */,
-				EB4E4E9F149ABC6C00745061 /* PhotoTableViewCell.m in Sources */,
 				EB4E4EA3149ABE9300745061 /* AlbumListViewController.m in Sources */,
 				EB4E4EA8149ADAC400745061 /* PhotoGridViewController.m in Sources */,
 				EB4E4EAE149AE2F100745061 /* PhotoPagerControlView.m in Sources */,

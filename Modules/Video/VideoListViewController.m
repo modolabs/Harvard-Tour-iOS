@@ -5,6 +5,7 @@
 #import "VideoModule.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "KGOTheme.h"
+#import "NewsStoryTableViewCell.h"
 
 static const NSInteger kVideoListCellThumbnailTag = 0x78;
 
@@ -43,6 +44,7 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 @synthesize videoSections;
 @synthesize activeSectionIndex;
 @synthesize theSearchBar;
+@synthesize cell = _cell;
 
 @synthesize federatedSearchTerms, federatedSearchResults;
 
@@ -141,7 +143,16 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    NewsStoryTableViewCell *cell = (NewsStoryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:
+                                                              [NewsStoryTableViewCell commonReuseIdentifier]];
+    if (!cell) {
+        [[NSBundle mainBundle] loadNibNamed:@"NewsStoryTableViewCell" owner:self options:nil];
+        cell = _cell;
+        cell.thumbnailSize = CGSizeMake(120, tableView.rowHeight);
+    }
     
+/*
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -164,8 +175,8 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 
     if (self.videos.count > indexPath.row) {
         Video *video = [self.videos objectAtIndex:indexPath.row];
-        MITThumbnailView *thumbnailView = (MITThumbnailView *)[cell.contentView viewWithTag:kVideoListCellThumbnailTag];
-        thumbnailView.delegate = video;
+        //MITThumbnailView *thumbnailView = (MITThumbnailView *)[cell.contentView viewWithTag:kVideoListCellThumbnailTag];
+        //thumbnailView.delegate = video;
         cell.textLabel.text = video.title;
         cell.detailTextLabel.text = video.subtitle;
         
@@ -180,7 +191,18 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
             [thumbnailView loadImage];
         }
         [thumbnailView displayImage];
-    }
+    //}
+ */        
+
+    Video *video = [self.videos objectAtIndex:indexPath.row];
+    cell.thumbView.delegate = video;
+    cell.titleLabel.text = video.title;
+    cell.subtitleLabel.text = video.subtitle;
+    
+    cell.thumbView.imageURL = video.thumbnailURLString;
+    cell.thumbView.imageData = video.thumbnailImageData;
+    
+    [cell.thumbView loadImage];
     
     return cell;
 }

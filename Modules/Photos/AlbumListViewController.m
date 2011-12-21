@@ -1,12 +1,12 @@
 #import "AlbumListViewController.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
-#import "PhotoTableViewCell.h"
+//#import "PhotoTableViewCell.h"
 #import "MITThumbnailView.h"
-
+#import "NewsStoryTableViewCell.h"
 
 @implementation AlbumListViewController
 
-@synthesize albums = _albums, dataManager;
+@synthesize albums = _albums, cell = _photoCell, dataManager;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -103,14 +103,18 @@
 {
     static NSString *CellIdentifier = @"Cell";
     
-    PhotoTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    NewsStoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        [[NSBundle mainBundle] loadNibNamed:@"PhotoTableViewCell" owner:self options:nil];
+        [[NSBundle mainBundle] loadNibNamed:@"NewsStoryTableViewCell" owner:self options:nil];
         cell = _photoCell;
+        cell.thumbnailPadding = 10;
+        cell.thumbnailSize = CGSizeMake(52, 52);
     }
     
     PhotoAlbum *album = [self.albums objectAtIndex:indexPath.row];
+    
     cell.thumbView.imageURL = album.thumbURL;
+    cell.thumbView.imageData = album.thumbData;
     cell.thumbView.delegate = album;
     [cell.thumbView loadImage];
 
