@@ -96,5 +96,6 @@ typedef enum {
 - (void)cancel;  // call to stop receiving messages
 
 + (KGORequestErrorCode)internalCodeForNSError:(NSError *)error;
++ (NSString *)userAgentString;
 
 @end
