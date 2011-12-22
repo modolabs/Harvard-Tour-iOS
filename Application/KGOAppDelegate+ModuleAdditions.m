@@ -51,6 +51,7 @@
     if (!_appConfig) {
         NSString * mainFile = [[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"];
         NSString * secretFile = [[NSBundle mainBundle] pathForResource:@"secret/Config" ofType:@"plist"];
+        NSLog(@"%@", secretFile);        
         if (!secretFile) {
             _appConfig = [[NSDictionary alloc] initWithContentsOfFile:mainFile];
         } else {

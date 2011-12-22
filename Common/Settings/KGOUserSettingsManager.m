@@ -347,8 +347,13 @@ NSString * const KGOUserSettingKeyServer = @"ServerSelection";
         NSMutableArray *options = [NSMutableArray array];
         
         for (NSString *configTitle in configTitles) {
-            NSString *host = [[servers dictionaryForKey:configTitle] nonemptyStringForKey:@"Host"];
+            NSDictionary *serverConfig = [servers dictionaryForKey:configTitle];
+            NSString *host = [serverConfig nonemptyStringForKey:@"Host"];
             if (host) {
+                NSString *pathExtension = [serverConfig nonemptyStringForKey:@"PathExtension"];
+                if (pathExtension) {
+                    host = [NSString stringWithFormat:@"%@/%@", host, pathExtension];
+                }
                 [options addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                     configTitle, @"id",
                                     configTitle, @"title",

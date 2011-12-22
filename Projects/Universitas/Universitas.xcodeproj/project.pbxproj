@@ -165,6 +165,18 @@
 		EB4E4EA8149ADAC400745061 /* PhotoGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */; };
 		EB4E4EA9149ADAC400745061 /* PhotoGridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */; };
 		EB640C6B13FDFFFB00CFAC5B /* libjson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB640C6A13FDFFFB00CFAC5B /* libjson.a */; };
+		EB66FE8514A26AFA00B9A734 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE8114A26AFA00B9A734 /* Config.plist */; };
+		EB66FE8614A26AFA00B9A734 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE8314A26AFA00B9A734 /* InfoPlist.strings */; };
+		EB66FE8B14A26B0200B9A734 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE8114A26AFA00B9A734 /* Config.plist */; };
+		EB66FE8C14A26B0200B9A734 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE8314A26AFA00B9A734 /* InfoPlist.strings */; };
+		EB66FE8D14A26B0200B9A734 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB83AE4F13C747BE006CCEDB /* Localizable.strings */; };
+		EB66FE9014A26B0B00B9A734 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE8114A26AFA00B9A734 /* Config.plist */; };
+		EB66FE9114A26B0B00B9A734 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE8314A26AFA00B9A734 /* InfoPlist.strings */; };
+		EB66FE9414A2B5A000B9A734 /* secret in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE9214A2B5A000B9A734 /* secret */; };
+		EB66FE9614A2B5AE00B9A734 /* secret in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE9214A2B5A000B9A734 /* secret */; };
+		EB66FE9F14A2BAA600B9A734 /* secret in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE9D14A2BAA600B9A734 /* secret */; };
+		EB66FEA114A2BAAD00B9A734 /* secret in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE9D14A2BAA600B9A734 /* secret */; };
+		EB66FEA314A2BAB500B9A734 /* secret in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE9D14A2BAA600B9A734 /* secret */; };
 		EB6BC7F614058A0B0095744E /* MapCategoryListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */; };
 		EB6D02A911E3784100B65CE3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6D02A811E3784100B65CE3 /* MapKit.framework */; };
 		EB6D576A14196B1A009EDA9D /* FBDialog.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EB6D576914196B1A009EDA9D /* FBDialog.bundle */; };
@@ -176,7 +188,6 @@
 		EB7E9EA2143153600093B0C7 /* kurogo in Resources */ = {isa = PBXBuildFile; fileRef = EB7E9EA1143153600093B0C7 /* kurogo */; };
 		EB7E9EA5143155BD0093B0C7 /* common in Resources */ = {isa = PBXBuildFile; fileRef = EB7E9EA3143155BD0093B0C7 /* common */; };
 		EB7E9EA6143155BD0093B0C7 /* modules in Resources */ = {isa = PBXBuildFile; fileRef = EB7E9EA4143155BD0093B0C7 /* modules */; };
-		EB7E9EAE143156260093B0C7 /* secret in Resources */ = {isa = PBXBuildFile; fileRef = EB7E9EAD143156260093B0C7 /* secret */; };
 		EB7E9F2E143171780093B0C7 /* Video.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EB7E9F2C143171770093B0C7 /* Video.xcdatamodeld */; };
 		EB7E9F301433740D0093B0C7 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB7E9F2F143374010093B0C7 /* CoreTelephony.framework */; };
 		EB7E9F4E14337C630093B0C7 /* ipad in Resources */ = {isa = PBXBuildFile; fileRef = EB7E9F4D14337C630093B0C7 /* ipad */; };
@@ -186,7 +197,6 @@
 		EB83AE5113C747BE006CCEDB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB83AE4F13C747BE006CCEDB /* Localizable.strings */; };
 		EB93486C139ED48500446243 /* StoryListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB934869139ED48500446243 /* StoryListViewController.xib */; };
 		EB9AF2A7130B59C3003B9769 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB9AF298130B56AD003B9769 /* MainWindow.xib */; };
-		EB9AF2BD130B5AC2003B9769 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB138AFC12F22F31004DBB7C /* Config.plist */; };
 		EBAE86401215FB0D00F370BE /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAE863E1215FB0D00F370BE /* Icon.png */; };
 		EBAE86411215FB0D00F370BE /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAE863F1215FB0D00F370BE /* Icon@2x.png */; };
 		EBAE86451215FB4900F370BE /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAE86441215FB4900F370BE /* Default@2x.png */; };
@@ -377,7 +387,6 @@
 		EB05DAA61458953100A8F316 /* KGOGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOGradientView.h; sourceTree = "<group>"; };
 		EB05DAA71458953100A8F316 /* KGOGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KGOGradientView.m; sourceTree = "<group>"; };
 		EB0CF98C13403141003B8E45 /* TwitterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TwitterViewController.xib; sourceTree = "<group>"; };
-		EB138AFC12F22F31004DBB7C /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Config.plist; path = ../Config.plist; sourceTree = "<group>"; };
 		EB138F0212F253A1004DBB7C /* GANTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GANTracker.h; sourceTree = "<group>"; };
 		EB138F0312F253A1004DBB7C /* libGoogleAnalytics.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAnalytics.a; sourceTree = "<group>"; };
 		EB1440C11309EEA000396753 /* CalendarDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarDataManager.h; sourceTree = "<group>"; };
@@ -500,6 +509,16 @@
 		EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoGridViewController.m; sourceTree = "<group>"; };
 		EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoGridViewController.xib; sourceTree = "<group>"; };
 		EB640C6A13FDFFFB00CFAC5B /* libjson.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libjson.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB66FE8214A26AFA00B9A734 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/Config.plist; sourceTree = "<group>"; };
+		EB66FE8414A26AFA00B9A734 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EB66FE8814A26B0200B9A734 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = zh_CN; path = zh_CN.lproj/Config.plist; sourceTree = "<group>"; };
+		EB66FE8914A26B0200B9A734 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EB66FE8A14A26B0200B9A734 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EB66FE8E14A26B0B00B9A734 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = zh_TW; path = zh_TW.lproj/Config.plist; sourceTree = "<group>"; };
+		EB66FE8F14A26B0B00B9A734 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EB66FE9E14A2BAA600B9A734 /* en */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en; path = en.lproj/secret; sourceTree = "<group>"; };
+		EB66FEA014A2BAAD00B9A734 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = folder; name = zh_CN; path = zh_CN.lproj/secret; sourceTree = "<group>"; };
+		EB66FEA214A2BAB500B9A734 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = folder; name = zh_TW; path = zh_TW.lproj/secret; sourceTree = "<group>"; };
 		EB6BC7F414058A0B0095744E /* MapCategoryListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapCategoryListViewController.h; sourceTree = "<group>"; };
 		EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapCategoryListViewController.m; sourceTree = "<group>"; };
 		EB6D02A811E3784100B65CE3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -515,7 +534,6 @@
 		EB7E9EA1143153600093B0C7 /* kurogo */ = {isa = PBXFileReference; lastKnownFileType = folder; name = kurogo; path = default/kurogo; sourceTree = "<group>"; };
 		EB7E9EA3143155BD0093B0C7 /* common */ = {isa = PBXFileReference; lastKnownFileType = folder; path = common; sourceTree = "<group>"; };
 		EB7E9EA4143155BD0093B0C7 /* modules */ = {isa = PBXFileReference; lastKnownFileType = folder; path = modules; sourceTree = "<group>"; };
-		EB7E9EAD143156260093B0C7 /* secret */ = {isa = PBXFileReference; lastKnownFileType = folder; path = secret; sourceTree = "<group>"; };
 		EB7E9F2D143171780093B0C7 /* Video.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Video.xcdatamodel; sourceTree = "<group>"; };
 		EB7E9F2F143374010093B0C7 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		EB7E9F4D14337C630093B0C7 /* ipad */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ipad; sourceTree = "<group>"; };
@@ -523,7 +541,6 @@
 		EB7F32D610CD6FBB00188BCD /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		EB83AE4B13C747AA006CCEDB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/Settings.plist; sourceTree = "<group>"; };
 		EB83AE5013C747BE006CCEDB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		EB83AE5213C747C5006CCEDB /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EB83AE5413C747CF006CCEDB /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EB83AE5C13C75C0C006CCEDB /* staging.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = staging.xcconfig; sourceTree = "<group>"; };
 		EB934869139ED48500446243 /* StoryListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StoryListViewController.xib; sourceTree = "<group>"; };
@@ -981,6 +998,8 @@
 		EB0338261340D39C00ACF2BB /* Localization */ = {
 			isa = PBXGroup;
 			children = (
+				EB66FE8114A26AFA00B9A734 /* Config.plist */,
+				EB66FE8314A26AFA00B9A734 /* InfoPlist.strings */,
 				EB83AE4F13C747BE006CCEDB /* Localizable.strings */,
 				EB83AE4A13C747AA006CCEDB /* Settings.plist */,
 			);
@@ -1311,11 +1330,10 @@
 		EB7E9EA7143155FB0093B0C7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				EB138AFC12F22F31004DBB7C /* Config.plist */,
+				EB66FE9D14A2BAA600B9A734 /* secret */,
 				EB1441321309EF5800396753 /* KGOInfo.plist */,
 				EB46CA8B1327F97100AF7B5C /* ThemeConfig.plist */,
 				EB46A345134EB942005796E4 /* ThemeConfig-iPad.plist */,
-				EB7E9EAD143156260093B0C7 /* secret */,
 			);
 			path = "Supporting Files";
 			sourceTree = SOURCE_ROOT;
@@ -1396,6 +1414,7 @@
 				en,
 				zh_TW,
 				ja,
+				zh_CN,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -1411,7 +1430,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB9AF2BD130B5AC2003B9769 /* Config.plist in Resources */,
 				DED3CCE910418F5F003D3B74 /* Default.png in Resources */,
 				EBAE86401215FB0D00F370BE /* Icon.png in Resources */,
 				EBAE86411215FB0D00F370BE /* Icon@2x.png in Resources */,
@@ -1433,13 +1451,24 @@
 				EB7E9EA2143153600093B0C7 /* kurogo in Resources */,
 				EB7E9EA5143155BD0093B0C7 /* common in Resources */,
 				EB7E9EA6143155BD0093B0C7 /* modules in Resources */,
-				EB7E9EAE143156260093B0C7 /* secret in Resources */,
 				EB7E9F4E14337C630093B0C7 /* ipad in Resources */,
 				EB70DC94143E7CBB00E60476 /* Settings.plist in Resources */,
 				EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */,
 				EB4E4EA9149ADAC400745061 /* PhotoGridViewController.xib in Resources */,
 				EB267007149FD6DF00F50997 /* ThumbnailTableViewCell.xib in Resources */,
 				EB26700C14A007F100F50997 /* PhotoDetailViewController.xib in Resources */,
+				EB66FE8514A26AFA00B9A734 /* Config.plist in Resources */,
+				EB66FE8614A26AFA00B9A734 /* InfoPlist.strings in Resources */,
+				EB66FE8B14A26B0200B9A734 /* Config.plist in Resources */,
+				EB66FE8C14A26B0200B9A734 /* InfoPlist.strings in Resources */,
+				EB66FE8D14A26B0200B9A734 /* Localizable.strings in Resources */,
+				EB66FE9014A26B0B00B9A734 /* Config.plist in Resources */,
+				EB66FE9114A26B0B00B9A734 /* InfoPlist.strings in Resources */,
+				EB66FE9414A2B5A000B9A734 /* secret in Resources */,
+				EB66FE9614A2B5AE00B9A734 /* secret in Resources */,
+				EB66FE9F14A2BAA600B9A734 /* secret in Resources */,
+				EB66FEA114A2BAAD00B9A734 /* secret in Resources */,
+				EB66FEA314A2BAB500B9A734 /* secret in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1614,6 +1643,44 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		EB66FE8114A26AFA00B9A734 /* Config.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EB66FE8214A26AFA00B9A734 /* en */,
+				EB66FE8814A26B0200B9A734 /* zh_CN */,
+				EB66FE8E14A26B0B00B9A734 /* zh_TW */,
+			);
+			name = Config.plist;
+			sourceTree = "<group>";
+		};
+		EB66FE8314A26AFA00B9A734 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EB66FE8414A26AFA00B9A734 /* en */,
+				EB66FE8914A26B0200B9A734 /* zh_CN */,
+				EB66FE8F14A26B0B00B9A734 /* zh_TW */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		EB66FE9214A2B5A000B9A734 /* secret */ = {
+			isa = PBXVariantGroup;
+			children = (
+			);
+			name = secret;
+			path = "/Users/sonya/kurogo/ios-private/Projects/Universitas/Supporting Files";
+			sourceTree = "<absolute>";
+		};
+		EB66FE9D14A2BAA600B9A734 /* secret */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EB66FE9E14A2BAA600B9A734 /* en */,
+				EB66FEA014A2BAAD00B9A734 /* zh_CN */,
+				EB66FEA214A2BAB500B9A734 /* zh_TW */,
+			);
+			name = secret;
+			sourceTree = "<group>";
+		};
 		EB83AE4A13C747AA006CCEDB /* Settings.plist */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1626,8 +1693,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				EB83AE5013C747BE006CCEDB /* en */,
-				EB83AE5213C747C5006CCEDB /* ja */,
 				EB83AE5413C747CF006CCEDB /* zh_TW */,
+				EB66FE8A14A26B0200B9A734 /* zh_CN */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

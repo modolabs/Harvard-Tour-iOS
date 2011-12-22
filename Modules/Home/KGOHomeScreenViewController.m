@@ -84,7 +84,10 @@
     }
     
     // left nav bar button
-	UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStyleBordered target:nil action:nil];	
+	UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Home", @"home back button title")
+                                                                      style:UIBarButtonItemStyleBordered
+                                                                     target:nil
+                                                                     action:nil];	
 	[[self navigationItem] setBackBarButtonItem: newBackButton];
 	[newBackButton release];
     
