@@ -9,6 +9,8 @@
 #import "KGOUserSettingsManager.h"
 #endif
 
+NSString * const CurrentKurogoServerSettingKey = @"CURRENT_KUROGO_SERVER";
+
 @implementation KGORequestManager
 
 @synthesize host = _host, loginPath;
@@ -312,6 +314,20 @@ NSString * const kHTTPSURIScheme = @"https";
 
             _reachability = [[Reachability reachabilityWithHostName:[NSString stringByTrimmingURLPortNumber:_host]] retain];
         }
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *oldServer = [defaults stringForKey:CurrentKurogoServerSettingKey];
+        NSString *newServer = [_baseURL absoluteString];
+        if (!oldServer) {
+            [defaults setObject:newServer forKey:CurrentKurogoServerSettingKey];
+        } else if (![oldServer isEqualToString:newServer]) {
+            // TODO: handle this in a more customizable way.
+            AlertLog(@"deleting core data store due to server change");
+            
+            [[CoreDataManager sharedManager] deleteStore];
+            [defaults setObject:newServer forKey:CurrentKurogoServerSettingKey];
+        }
+        
     }
 }
 
@@ -557,13 +573,15 @@ NSString * const kHTTPSURIScheme = @"https";
         
         [_sessionInfo release];
         _sessionInfo = nil;
-        
+
+        /*
         // TODO: decide how to handle data deletion.
         // e.g. keep track of data on a per-user basis?
         
         if ([[CoreDataManager sharedManager] deleteStore]) {
             DLog(@"deleted store");
         }
+        */
         
         [[NSNotificationCenter defaultCenter] postNotificationName:KGODidLogoutNotification object:self];
     }

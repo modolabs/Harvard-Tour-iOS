@@ -16,7 +16,19 @@
 
 #ifdef DEBUG
 #define DLog( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
+
+#define AlertLog( s, ... ) [NSString stringWithFormat:(s), ##__VA_ARGS__]; \
+    UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:@"Debug Alert" \
+                                                         message:@"deleting core data store due to server change" \
+                                                        delegate:nil \
+                                               cancelButtonTitle:nil \
+                                               otherButtonTitles:@"OK", nil] autorelease]; \
+    [alertView show];
+
 #else
 #define DLog( s, ... ) 
+#define AlertLog( s, ... ) 
 #endif
+
+
 
