@@ -28,6 +28,37 @@ NSString * const KGORequestLastRequestTime = @"last";
 @synthesize format, delegate, timeout, minimumDuration, apiMaxVersion, apiMinVersion;
 @synthesize expectedResponseType, handler, result = _result;
 
++ (NSString *)userAgentString
+{
+    static NSString *userAgent = nil;
+    if (userAgent == nil) {
+        // app info
+        NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+        
+        // hardware info
+        struct utsname systemInfo;
+        uname(&systemInfo);
+        
+        // carrier info
+        CTTelephonyNetworkInfo *networkInfo = [[[CTTelephonyNetworkInfo alloc] init] autorelease];
+        CTCarrier *carrier = [networkInfo subscriberCellularProvider];
+        NSString *carrierName = [carrier carrierName];
+        if (!carrierName) {
+            carrierName = @"";
+        }
+        
+        userAgent = [[NSString alloc] initWithFormat:@"%@/%@ (%@; %@) %@/%@ %@",
+                     [infoDict objectForKey:@"CFBundleName"],
+                     [infoDict objectForKey:@"CFBundleVersion"],
+                     [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding],
+                     [[UIDevice currentDevice] systemVersion],
+                     KUROGO_FRAMEWORK_NAME,
+                     KUROGO_FRAMEWORK_VERSION,
+                     carrierName];
+    }
+    return userAgent;
+}
+
 + (KGORequestErrorCode)internalCodeForNSError:(NSError *)error
 {
 	KGORequestErrorCode errCode;
@@ -105,34 +136,10 @@ NSString * const KGORequestLastRequestTime = @"last";
 	} else {
         DLog(@"requesting %@", [self.url absoluteString]);
         
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url cachePolicy:self.cachePolicy timeoutInterval:self.timeout];
-        static NSString *userAgent = nil;
-        if (userAgent == nil) {
-            // app info
-            NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-
-            // hardware info
-            struct utsname systemInfo;
-            uname(&systemInfo);
-
-            // carrier info
-            CTTelephonyNetworkInfo *networkInfo = [[[CTTelephonyNetworkInfo alloc] init] autorelease];
-            CTCarrier *carrier = [networkInfo subscriberCellularProvider];
-            NSString *carrierName = [carrier carrierName];
-            if (!carrierName) {
-                carrierName = @"";
-            }
-            
-            userAgent = [[NSString alloc] initWithFormat:@"%@/%@ (%@; %@) %@/%@ %@",
-                         [infoDict objectForKey:@"CFBundleName"],
-                         [infoDict objectForKey:@"CFBundleVersion"],
-                         [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding],
-                         [[UIDevice currentDevice] systemVersion],
-                         KUROGO_FRAMEWORK_NAME,
-                         KUROGO_FRAMEWORK_VERSION,
-                         carrierName];
-        }
-        [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url
+                                                               cachePolicy:self.cachePolicy
+                                                           timeoutInterval:self.timeout];
+        [request setValue:[KGORequest userAgentString] forHTTPHeaderField:@"User-Agent"];
 
         if (self.ifModifiedSince) {
             NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
