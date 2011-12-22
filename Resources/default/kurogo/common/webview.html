@@ -8,9 +8,10 @@ body {
     font-family:Helvetica;
     font-size:15px;
     line-height: 1.33em;
-    color:#333;
     margin: 0;
-    padding: 0;
+    padding: 12px 10px;
+    color:#333;
+    background-color: transparent;
 }
 a, a:visited {
     color:#003366;
@@ -24,6 +25,7 @@ h2 {
     font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
     font-size: 20px;
     font-weight: normal;
+    margin-top: 1.5em;
 }
 h3 {
     color: #505050;
@@ -34,16 +36,13 @@ ol, ul {
     margin: 0 0 1em;
     padding-left: 1.2em;
 }
-.date {font-size: 12px; color: #666666 }
-#content {
+h2.compact {
+    margin-top: 0;
 }
+.date {font-size: 12px; color: #666666 }
 </style>
 </head>
-   <body>
-        <div id="content">
-            <h2>__TITLE__</h2>
-            <p class="date">__DATE__</p>
-            <div class="body">__BODY__</div>
-        </div>
-    </body>
+<body>
+    __BODY__
+</body>
 </html>

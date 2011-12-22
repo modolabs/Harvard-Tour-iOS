@@ -25,7 +25,7 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        loadingStatus = Loading;
+        loadingStatus = EmergencyStatusLoading;
 
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(emergencyNoticeRetrieved:)
@@ -86,7 +86,6 @@
         // make server request if needed
         [manager fetchContacts];
     }
-    self.navigationItem.title = @"Emergency Info";
 }
 
 - (void)viewDidUnload
@@ -159,7 +158,7 @@
             accessoryTag = KGOAccessoryTypePhone;
 
         } else if(indexPath.row == self.primaryContacts.count) {
-            title = @"More contacts";
+            title = NSLocalizedString(@"More contacts", @"more emergency contacts");
             accessoryTag = KGOAccessoryTypeChevron;
         }
     }
@@ -205,55 +204,65 @@
 
 - (NSArray *)noticeViewsWithtableView:(UITableView *)tableView {
     CGFloat height = 1000.0f;
-    if(self.contentDivHeight) {
+    if (_contentDivHeight) {
         height = [self.contentDivHeight floatValue] + 20.0;
     }
-    CGRect frame = CGRectMake(10, 10, tableView.frame.size.width-20-20, height);
-    self.infoWebView.delegate = nil;
+    CGFloat hPadding = 2;
+    CGRect frame = CGRectMake(hPadding, 4,
+                              tableView.frame.size.width - ([tableView marginWidth] + hPadding) * 2,
+                              height);
+
     self.infoWebView = [[[UIWebView alloc] initWithFrame:frame] autorelease];
+    self.infoWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.infoWebView.backgroundColor = [UIColor clearColor];
+    self.infoWebView.opaque = NO;
     self.infoWebView.delegate = self;
+
+    KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:@"common/webview.html"];
+    NSString *contentText = nil;
     
-    NSString *htmlString;
-    if (loadingStatus == Loading) {
-        htmlString = @"<html><body style=\"font:15px/1.33em Helvetica;color:#333;margin:0;padding:2px\"><div id=\"content\">Loading...</div></body></html>";
-        [self.infoWebView loadHTMLString:htmlString baseURL:[[NSBundle mainBundle] resourceURL]];
-    } else if(loadingStatus == Failed) {
-        htmlString =@"<html><body style=\"font:15px/1.33em Helvetica;color:#333;margin:0;padding:2px\"><div id=\"content\">Failed to load.</div></body></html>";
-        [self.infoWebView loadHTMLString:htmlString baseURL:[[NSBundle mainBundle] resourceURL]];
+    switch (loadingStatus) {
+        case EmergencyStatusLoading:
+            contentText = NSLocalizedString(@"Loading...", @"emergency home screen announcement loading status");
+            break;
+        case EmergencyStatusFailed:
+            contentText = NSLocalizedString(@"Failed to load.", @"emergency home screen announcement loading status");
+            break;
+        case EmergencyStatusLoaded:
+            if (_notice) {
+                NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+                [dateFormatter setDateFormat:@"MMM d, y"];
+                NSString *pubDate = [dateFormatter stringFromDate:_notice.pubDate];
+
+                // TODO: make sure no strings are nil
+                contentText = [NSString stringWithFormat:
+                               @"<h2 class=\"compact\">%@</h2>"
+                               "<p class=\"date\">%@</p>"
+                               "<div class=\"body\">%@</div>", _notice.title, pubDate, _notice.html];
+            } else {
+                contentText = NSLocalizedString(@"<h2 class=\"compact\">No Emergency</h2>", nil);
+            }
+            break;
+        default:
+            break;
     }
-    
-    if (loadingStatus == Loaded) {
-        KGOHTMLTemplate *template;
-        NSMutableDictionary *values = [NSMutableDictionary dictionary];
-        
-        if(_notice) {
-            template = [KGOHTMLTemplate templateWithPathName:@"modules/emergency/emergency_notice_template.html"];
-        
-            NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-            [dateFormatter setDateFormat:@"MMM d, y"];
-            NSString *pubDate = [dateFormatter stringFromDate:_notice.pubDate];
-        
-            [values setValue:_notice.title forKey:@"TITLE"];
-            [values setValue:pubDate forKey:@"DATE"];
-            [values setValue:_notice.html forKey:@"BODY"];
-        } else {
-            template = [KGOHTMLTemplate templateWithPathName:@"modules/emergency/no_emergency_notice_template.html"];
-            
-        }
-        [self.infoWebView loadTemplate:template values:values];
-    }
+
+    NSString *bodyText = [NSString stringWithFormat:@"<div id=\"content\">%@</div>", contentText];
+    NSDictionary *values = [NSDictionary dictionaryWithObject:bodyText forKey:@"BODY"];
+    [self.infoWebView loadTemplate:template values:values];
+
     return [NSArray arrayWithObject:self.infoWebView];
 }
 
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    if(self.contentDivHeight) {
+    if (self.contentDivHeight) {
         // height already known so just exit
         return;
     }
     NSString *output = [webView stringByEvaluatingJavaScriptFromString:@"document.getElementById(\"content\").offsetHeight;"];
     self.contentDivHeight = [NSNumber numberWithInt:[output intValue]];
-    if(self.contentDivHeight) {
+    if (self.contentDivHeight) {
         [self reloadDataForTableView:self.tableView];
     }
 }
@@ -263,9 +272,9 @@
     EmergencyDataManager *manager = [EmergencyDataManager managerForTag:_module.tag];
     if (object == manager) {    
         enum EmergencyNoticeStatus status = [[[notification userInfo] objectForKey:@"EmergencyStatus"] intValue];
-        loadingStatus = Loaded;
+        loadingStatus = EmergencyStatusLoaded;
         
-        if(status == NoCurrentEmergencyNotice) {
+        if (status == NoCurrentEmergencyNotice) {
             self.notice = nil;
         } else if (status == EmergencyNoticeActive) {
             // reset content values
@@ -286,4 +295,5 @@
         [self reloadDataForTableView:self.tableView];
     }
 }
+
 @end
