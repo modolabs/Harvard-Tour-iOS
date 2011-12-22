@@ -19,6 +19,9 @@
 @synthesize categories;
 @synthesize activeCategoryId;
 
+#define ATHLETICS_LOADMORE_ROW_HEIGHT 50
+#define ATHLETICS_NEWS_ROW_HEIGHT 76
+#define ATHLETICS_MENUCATEGORY_ROW_HEIGHT 50
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -364,6 +367,18 @@
             AthleticsStory *story = [self.stories objectAtIndex:indexPath.row];
             NSString *urlString = story.link;
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlString]];
+        }        
+	}
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (indexPath.row == self.stories.count) {
+        return ATHLETICS_LOADMORE_ROW_HEIGHT;
+	} else {
+        if (showingMenuCategories) {
+            return ATHLETICS_MENUCATEGORY_ROW_HEIGHT;
+        } else {
+            return ATHLETICS_NEWS_ROW_HEIGHT;
         }        
 	}
 }

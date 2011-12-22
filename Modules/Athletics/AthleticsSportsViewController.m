@@ -12,6 +12,9 @@
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import <QuartzCore/QuartzCore.h>
 
+#define ATHLETICS_SCHDULES_ROW_HEIGHT 60
+#define ATHLETICS_NEWS_ROW_HEIGHT 76
+
 @implementation AthleticsSportsViewController
 @synthesize dataManager;
 @synthesize federatedSearchResults;
@@ -371,6 +374,26 @@
             return @"News";
         } else {
             return @"Schedule";
+        }
+    }
+    return 0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger condition = (self.stories.count > 0) + (self.stories.count > 0);
+    if (0 == condition) {
+        return 0;
+    } else if (2 == condition) {
+        if (0 == indexPath.section) {
+            return ATHLETICS_SCHDULES_ROW_HEIGHT;
+        } else {
+            return ATHLETICS_NEWS_ROW_HEIGHT;
+        }
+    } else {
+        if (self.stories.count > 0) {
+            return ATHLETICS_NEWS_ROW_HEIGHT;
+        } else {
+            return ATHLETICS_SCHDULES_ROW_HEIGHT;
         }
     }
     return 0;
