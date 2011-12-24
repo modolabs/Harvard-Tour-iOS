@@ -47,3 +47,10 @@
 
 @end
 
+@interface UITabBar (KGOAdditions)
+
+- (void)drawRect:(CGRect)rect;
+
+@end
+
+

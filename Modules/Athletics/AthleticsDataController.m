@@ -198,7 +198,7 @@ NSString * const AthleticsTagBody            = @"body";
                                   nil]];
         [newCategories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                   @"3", @"id", 
-                                  @"Schedule", @"title", 
+                                  @"My Sports", @"title", 
                                   @"schedule", @"path",
                                   @"sport", @"category",
                                   @"baseball", @"ivar",

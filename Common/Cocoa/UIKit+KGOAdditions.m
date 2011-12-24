@@ -233,4 +233,26 @@
 
 @end
 
+@implementation UITabBar (KGOAdditions)
+
+- (void)drawRect:(CGRect)rect {
+    UIView *backgroundView = nil;
+    
+    NSArray *subViews = self.subviews;
+    for (backgroundView in subViews) {
+        if (2011 == backgroundView.tag) {
+            break;
+        }
+    }
+    
+    if (!backgroundView) {
+        backgroundView = [[UIView alloc] initWithFrame:self.frame];
+        backgroundView.tag = 2011;
+        [self insertSubview:backgroundView atIndex:0];
+        [backgroundView release];
+    }
+    
+    [backgroundView setBackgroundColor:[[KGOTheme sharedTheme] backgroundColorForApplication]];
+}
+@end
 

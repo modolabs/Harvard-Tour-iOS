@@ -268,7 +268,6 @@
     AthleticsSchedule *schedule = [self.schedules objectAtIndex:indexPath.row];
     cell.textLabel.text = schedule.title;
     
-    
     double unixtime = [schedule.start doubleValue];
     NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:unixtime];
     NSString *detailString = [NSString stringWithFormat:@"%@\n%@",startDate.description,schedule.location];
@@ -285,7 +284,7 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                        reuseIdentifier:loadFullSchedulesIdentifier] autorelease];
     }
-    cell.textLabel.text = @"Load full schedules.";
+    cell.textLabel.text = @"Full schedule and results";
     return cell;
 }
 

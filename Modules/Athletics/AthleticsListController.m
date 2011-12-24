@@ -10,6 +10,7 @@
 #import "AthleticsListController.h"
 #import "AthleticsTableViewCell.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
+#import "UIKit+KGOAdditions.h"
 
 @implementation AthleticsListController
 @synthesize dataManager;
@@ -44,7 +45,6 @@
 {
     [super viewDidLoad];
     _storyTable.separatorColor = [UIColor colorWithWhite:0.5 alpha:1.0];
-    _navTabbar.tintColor = [[KGOTheme sharedTheme] backgroundColorForApplication];
     [self addTableView:_storyTable];
     self.dataManager.delegate = self;
     //configure these things
