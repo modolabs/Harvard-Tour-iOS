@@ -17,6 +17,7 @@
 @property (nonatomic, retain) NSString * descriptionString;
 @property (nonatomic, retain) NSString * gender;
 @property (nonatomic, retain) NSString * schedule_id;
+@property (nonatomic, retain) NSString * link;
 @property (nonatomic, retain) NSString * location;
 @property (nonatomic, retain) NSString * locationLabel;
 @property (nonatomic, retain) NSNumber * pastStatus;

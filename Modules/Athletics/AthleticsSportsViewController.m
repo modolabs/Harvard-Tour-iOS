@@ -288,6 +288,26 @@
     return cell;
 }
 
+- (void)scheduleCellDidSelected:(NSIndexPath *)indexPath {
+    AthleticsSchedule *scheduleInstance = [self.schedules objectAtIndex:indexPath.row];
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:scheduleInstance forKey:@"schedule"];
+    [params setObject:@"schedule" forKey:@"type"];
+    
+    [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail
+                           forModuleTag:self.dataManager.moduleTag
+                                 params:params];
+}
+
+- (void)fullSchedulCellDidSelected:(NSIndexPath *)indexPath {
+    
+}
+
+- (void)storyCellDidSelected:(NSIndexPath *)indexPath {
+    
+}
+
 #pragma mark -KGOTable Methds
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return (self.stories.count > 0) + (self.stories.count > 0);
@@ -354,8 +374,31 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger condition = (self.stories.count > 0) + (self.stories.count > 0);
+    if (0 == condition) {
+        return;
+    } else if (2 == condition) {
+        if (0 == indexPath.section) {
+            if (indexPath.row == 2) {
+                [self fullSchedulCellDidSelected:indexPath];
+            } else {
+                [self scheduleCellDidSelected:indexPath];
+            }
+        } else {
+            [self storyCellDidSelected:indexPath];
+        }
+    } else {
+        if (self.stories.count > 0) {
+            [self storyCellDidSelected:indexPath];
+        } else {
+            if (indexPath.row == 2) {
+                [self fullSchedulCellDidSelected:indexPath];
+            } else {
+                [self scheduleCellDidSelected:indexPath];
+            }
+        }
+    }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {

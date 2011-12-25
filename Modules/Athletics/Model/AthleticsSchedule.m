@@ -16,6 +16,7 @@ NSString * const AthleticsScheduleEntityName = @"AthleticsSchedule";
 @dynamic descriptionString;
 @dynamic gender;
 @dynamic schedule_id;
+@dynamic link;
 @dynamic location;
 @dynamic locationLabel;
 @dynamic pastStatus;

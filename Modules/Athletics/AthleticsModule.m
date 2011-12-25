@@ -11,6 +11,7 @@
 #import "AthleticsModel.h"
 #import "AthleticsSportDetailViewController.h"
 #import "AthleticsSportsViewController.h"
+#import "AthleticsScheduleDetailViewController.h"
 @implementation AthleticsModule
 @synthesize dataManager = _dataManager;
 
@@ -72,30 +73,36 @@
         }
         
     } else if ([pageName isEqualToString:LocalPathPageNameDetail]) {
-        AthleticsSportDetailViewController *detailVC = [[[AthleticsSportDetailViewController alloc] init] autorelease];
-        detailVC.dataManager = self.dataManager;
-        vc = detailVC;
-        
-        AthleticsStory *story = [params objectForKey:@"story"];
-        if (story) { // show only one story
-            [detailVC setStory:story];
-            [detailVC setMultiplePages:NO];
-            
+        if ([[params objectForKey:@"type"] isEqualToString:@"schedule"]) {
+            AthleticsScheduleDetailViewController *scheduleDetailVC = [[[AthleticsScheduleDetailViewController alloc] init] autorelease];
+            scheduleDetailVC.currentSchedule = [params objectForKey:@"schedule"];
+            vc = scheduleDetailVC;
         } else {
-            NSArray *stories = [params objectForKey:@"stories"];
-            if (stories) {
-                [detailVC setStories:stories]; 
+            AthleticsSportDetailViewController *detailVC = [[[AthleticsSportDetailViewController alloc] init] autorelease];
+            detailVC.dataManager = self.dataManager;
+            vc = detailVC;
+            
+            AthleticsStory *story = [params objectForKey:@"story"];
+            if (story) { // show only one story
+                [detailVC setStory:story];
+                [detailVC setMultiplePages:NO];
                 
-                NSIndexPath *indexPath = [params objectForKey:@"indexPath"];
-                [detailVC setInitialIndexPath:indexPath];
-                [detailVC setMultiplePages:YES];
+            } else {
+                NSArray *stories = [params objectForKey:@"stories"];
+                if (stories) {
+                    [detailVC setStories:stories]; 
+                    
+                    NSIndexPath *indexPath = [params objectForKey:@"indexPath"];
+                    [detailVC setInitialIndexPath:indexPath];
+                    [detailVC setMultiplePages:YES];
+                }
             }
-        }
-        
-        // TODO: figure out why this (defined in detail vc class) is AthleticsStory
-        AthleticsStory *category = [params objectForKey:@"category"];
-        if (category) {
-            [detailVC setCategory:category];
+            
+            // TODO: figure out why this (defined in detail vc class) is AthleticsStory
+            AthleticsStory *category = [params objectForKey:@"category"];
+            if (category) {
+                [detailVC setCategory:category];
+            }
         }
     } else if ([pageName isEqualToString:LocalPathPageNameItemList]) {
         AthleticsSportsViewController *athleticsSportsVC = [[AthleticsSportsViewController alloc] 

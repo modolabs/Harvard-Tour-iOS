@@ -665,6 +665,7 @@ withKey:(NSString *)key{
     schedule.allDay = [NSNumber numberWithBool:[scheduleDict boolForKey:@"allday"]];
     schedule.descriptionString = [scheduleDict nonemptyStringForKey:@"description"];
     schedule.gender = [scheduleDict nonemptyStringForKey:@"gender"];
+    schedule.link = [scheduleDict nonemptyStringForKey:@"link"];;
     schedule.location = [scheduleDict nonemptyStringForKey:@"location"];
     schedule.locationLabel = [scheduleDict nonemptyStringForKey:@"locationLabel"];
     schedule.pastStatus = [NSNumber numberWithBool:[scheduleDict boolForKey:@"pastStatus"]];
