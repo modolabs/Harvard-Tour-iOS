@@ -313,12 +313,12 @@ NSString * const AthleticsTagBody            = @"body";
     [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:self.currentCategory mergeChanges:NO];
     NSLog(@"%d",!self.currentCategory.lastUpdated);
     NSLog(@"%d",[self.currentCategory.lastUpdated timeIntervalSinceNow] > ATHLETICS_CATEGORY_EXPIRES_TIME);
-    NSLog(@"%d",!self.currentCategory.menu.categories);
+    NSLog(@"%d",!self.currentCategory.menu);
     
     if (!self.currentCategory.lastUpdated
         || [self.currentCategory.lastUpdated timeIntervalSinceNow] > ATHLETICS_CATEGORY_EXPIRES_TIME
         // TODO: make sure the following doesn't result an infinite loop if stories legitimately don't exist
-        || !self.currentCategory.menu.categories)
+        || !self.currentCategory.menu)
     {
         DLog(@"last updated: %@", self.currentCategory.lastUpdated);
         [self requestMenusForCategory:categoryId afterID:nil];

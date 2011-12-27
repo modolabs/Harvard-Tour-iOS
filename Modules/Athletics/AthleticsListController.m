@@ -120,6 +120,9 @@
 
 - (void)setupNavTabbedButtons {
     if (self.categories.count > 0) {
+        if ([_navTabbar respondsToSelector:@selector(setTintColor:)]) {
+            [_navTabbar setTintColor:[[KGOTheme sharedTheme] backgroundColorForApplication]];
+        }
         _navTabbar.frame = CGRectMake(0, self.view.bounds.size.height - 49, self.view.bounds.size.width, 49);
         
         //configure the tabbar.
