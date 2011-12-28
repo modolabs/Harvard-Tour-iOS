@@ -325,8 +325,15 @@ NSString * const AthleticsTagBody            = @"body";
         return;
     }
 
-    NSArray *results = [self.currentCategory.menu.categories sortedArrayUsingDescriptors:nil];
-    
+    NSMutableArray *results = [NSMutableArray arrayWithArray:[self.currentCategory.menu.categories sortedArrayUsingDescriptors:nil]];
+    AthleticsCategory *aCategory = nil;
+    for (aCategory in results) {
+        if (aCategory.isMainCategory.boolValue) {
+            break;
+        }
+    }
+    [results removeObject:aCategory];
+
     if ([self.delegate respondsToSelector:@selector(dataController:didRetrieveMenuCategories:)]) {
         [self.delegate dataController:self didRetrieveMenuCategories:results];
     }
@@ -431,7 +438,6 @@ withKey:(NSString *)key{
         [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:category mergeChanges:NO];
         category.menu = [blockSelf menuWithDictionary:resultDict];
         NSMutableSet *mutableCategories = [category.menu mutableSetValueForKey:@"categories"];
-        //[mutableCategories removeAllObjects];
         NSDictionary *sports = [resultDict dictionaryForKey:@"sports"];
         [sports enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
             AthleticsCategory *menuCategory = [blockSelf menuCategoryWithDictionary:obj withKey:key];

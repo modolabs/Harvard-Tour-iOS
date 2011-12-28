@@ -22,7 +22,7 @@
 
 #define ATHLETICS_LOADMORE_ROW_HEIGHT 50
 #define ATHLETICS_NEWS_ROW_HEIGHT 76
-#define ATHLETICS_MENUCATEGORY_ROW_HEIGHT 50
+#define ATHLETICS_MENUCATEGORY_ROW_HEIGHT 52
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -311,8 +311,12 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger n = self.stories.count;
-    return n;
+    if (showingMenuCategories) {
+        return self.stories.count;
+    } else {
+        return self.stories.count + 1;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -326,6 +330,7 @@
                                            reuseIdentifier:loadMoreIdentifier] autorelease];
         }
         cell.textLabel.text = NSLocalizedString(@"Load more stories", @"new story list");
+        cell.textLabel.textAlignment = UITextAlignmentCenter;
         [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
         // TODO: set color to #999999 while things are loading
         cell.textLabel.textColor = [UIColor colorWithHexString:@"#1A1611"];
