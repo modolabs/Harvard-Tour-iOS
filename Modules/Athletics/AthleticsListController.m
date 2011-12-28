@@ -314,9 +314,19 @@
     if (showingMenuCategories) {
         return self.stories.count;
     } else {
-        return self.stories.count + 1;
+        NSInteger n = self.stories.count;
+        if (showingBookmarks) {
+            return n;
+        }
+        
+        if ([self.dataManager canLoadMoreStories]) {
+            n++;
+        }
+        return n;
     }
     return 0;
+    
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
