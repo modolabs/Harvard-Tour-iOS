@@ -164,6 +164,9 @@
 		EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */; };
 		EB4E4EA8149ADAC400745061 /* PhotoGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */; };
 		EB4E4EA9149ADAC400745061 /* PhotoGridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */; };
+		EB587B3814A3F25100723906 /* IconGridScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB587B3614A3F25100723906 /* IconGridScrollViewController.m */; };
+		EB587B3914A3F25100723906 /* IconGridScrollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB587B3714A3F25100723906 /* IconGridScrollViewController.xib */; };
+		EB587B3D14A40B9200723906 /* IconGridScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB587B3C14A40B9200723906 /* IconGridScrollView.m */; };
 		EB640C6B13FDFFFB00CFAC5B /* libjson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB640C6A13FDFFFB00CFAC5B /* libjson.a */; };
 		EB6BC7F614058A0B0095744E /* MapCategoryListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */; };
 		EB6D02A911E3784100B65CE3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6D02A811E3784100B65CE3 /* MapKit.framework */; };
@@ -499,6 +502,11 @@
 		EB4E4EA5149ADAC200745061 /* PhotoGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoGridViewController.h; sourceTree = "<group>"; };
 		EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoGridViewController.m; sourceTree = "<group>"; };
 		EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoGridViewController.xib; sourceTree = "<group>"; };
+		EB587B3514A3F25100723906 /* IconGridScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconGridScrollViewController.h; sourceTree = "<group>"; };
+		EB587B3614A3F25100723906 /* IconGridScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconGridScrollViewController.m; sourceTree = "<group>"; };
+		EB587B3714A3F25100723906 /* IconGridScrollViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IconGridScrollViewController.xib; sourceTree = "<group>"; };
+		EB587B3B14A40B9200723906 /* IconGridScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconGridScrollView.h; sourceTree = "<group>"; };
+		EB587B3C14A40B9200723906 /* IconGridScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconGridScrollView.m; sourceTree = "<group>"; };
 		EB640C6A13FDFFFB00CFAC5B /* libjson.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libjson.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB6BC7F414058A0B0095744E /* MapCategoryListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapCategoryListViewController.h; sourceTree = "<group>"; };
 		EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapCategoryListViewController.m; sourceTree = "<group>"; };
@@ -974,6 +982,8 @@
 				EB267003149FD6DF00F50997 /* ThumbnailTableViewCell.h */,
 				EB267004149FD6DF00F50997 /* ThumbnailTableViewCell.m */,
 				EB267005149FD6DF00F50997 /* ThumbnailTableViewCell.xib */,
+				EB587B3B14A40B9200723906 /* IconGridScrollView.h */,
+				EB587B3C14A40B9200723906 /* IconGridScrollView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1239,6 +1249,9 @@
 				EB26700814A007F000F50997 /* PhotoDetailViewController.h */,
 				EB26700914A007F100F50997 /* PhotoDetailViewController.m */,
 				EB26700A14A007F100F50997 /* PhotoDetailViewController.xib */,
+				EB587B3514A3F25100723906 /* IconGridScrollViewController.h */,
+				EB587B3614A3F25100723906 /* IconGridScrollViewController.m */,
+				EB587B3714A3F25100723906 /* IconGridScrollViewController.xib */,
 			);
 			path = Photos;
 			sourceTree = "<group>";
@@ -1440,6 +1453,7 @@
 				EB4E4EA9149ADAC400745061 /* PhotoGridViewController.xib in Resources */,
 				EB267007149FD6DF00F50997 /* ThumbnailTableViewCell.xib in Resources */,
 				EB26700C14A007F100F50997 /* PhotoDetailViewController.xib in Resources */,
+				EB587B3914A3F25100723906 /* IconGridScrollViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1608,6 +1622,8 @@
 				EB4E4EA8149ADAC400745061 /* PhotoGridViewController.m in Sources */,
 				EB267006149FD6DF00F50997 /* ThumbnailTableViewCell.m in Sources */,
 				EB26700B14A007F100F50997 /* PhotoDetailViewController.m in Sources */,
+				EB587B3814A3F25100723906 /* IconGridScrollViewController.m in Sources */,
+				EB587B3D14A40B9200723906 /* IconGridScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
