@@ -51,8 +51,7 @@
     [self addTableView:_storyTable];
     self.dataManager.delegate = self;
     //configure these things
-   AthleticsCategory *currentCategory =  (AthleticsCategory *)[self.categories objectAtIndex:self.actieveMenuCategoryIdx];
-    self.navigationItem.title = currentCategory.title;
+    self.navigationItem.title = [self titleForMenuCategory];
     self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
                                                                               style:UIBarButtonItemStylePlain 
                                                                              target:nil 
@@ -66,6 +65,11 @@
     [self.dataManager fetchMenuCategorySchedule:[self.categories objectAtIndex:self.actieveMenuCategoryIdx] 
                                        startId:nil];
     
+    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.width, 30);
+    _bookmarkView = [[KGODetailPageHeaderView alloc] initWithFrame:frame];
+    _bookmarkView.backgroundColor = [UIColor blueColor];
+    [self.view addSubview:_bookmarkView];
+    [self setupBookmarkStatus];
     //    if (self.federatedSearchTerms || self.federatedSearchResults) {
     //        [_navTabbedView showSearchBarAnimated:NO];
     //        [_navTabbedView.searchController setActive:NO animated:NO];
@@ -95,7 +99,8 @@
     _progressView = nil;
     [_storyTable release];
     _storyTable = nil;
-    
+    [_bookmarkView release];
+    _bookmarkView = nil;
     [super viewDidUnload];
 }
 
@@ -111,6 +116,7 @@
     [_progressView release];
     [_storyTable release];
     [_athletcisCell release];
+    [_bookmarkView release];
     self.activeCategoryId = nil;
     self.categories = nil;
     self.schedules = nil;
@@ -120,6 +126,12 @@
 #pragma mark - Navigation 
 - (void)refresh:(id)sender {
     
+}
+
+#pragma mark - Self Functions
+- (NSString *)titleForMenuCategory {
+    AthleticsCategory *currentCategory =  (AthleticsCategory *)[self.categories objectAtIndex:self.actieveMenuCategoryIdx];
+    return currentCategory.title;
 }
 
 #pragma mark -
@@ -132,8 +144,9 @@
 	_lastUpdateLabel.hidden = NO;
 	_lastUpdateLabel.text = text;
 
-    _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    
+    _storyTable.frame = CGRectMake(0, _bookmarkView.frame.size.height, self.view.bounds.size.width,
+                                   self.view.bounds.size.height - 
+                                   _bookmarkView.frame.size.height);
     [UIView animateWithDuration:1.0 delay:2.0 options:0 animations:^(void) {
         _activityView.alpha = 0;
     } completion:^(BOOL finished) {
@@ -162,8 +175,21 @@
     _activityView.hidden = NO;
     _activityView.alpha = 1.0;
 
-    _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width,
-                                   self.view.bounds.size.height - _activityView.frame.size.height);
+    _storyTable.frame = CGRectMake(0, _bookmarkView.frame.size.height, self.view.bounds.size.width,
+                                   self.view.bounds.size.height - _activityView.frame.size.height - _bookmarkView.frame.size.height);
+}
+
+- (void)setupBookmarkStatus {
+    _bookmarkView.delegate = self;
+    _bookmarkView.showsBookmarkButton = YES;
+    _bookmarkView.showsShareButton = NO;
+    _bookmarkView.showsSubtitle = NO;
+    _bookmarkView.titleLabel.text = [self titleForMenuCategory];
+    
+    _storyTable.frame = CGRectMake(0, _bookmarkView.frame.size.height, self.view.bounds.size.width,
+                                   self.view.bounds.size.height - _activityView.frame.size.height - 
+                                   _bookmarkView.frame.size.height);
+    
 }
 
 #pragma mark -
@@ -286,6 +312,7 @@
                                        reuseIdentifier:loadFullSchedulesIdentifier] autorelease];
     }
     cell.textLabel.text = @"Full schedule and results";
+    cell.textLabel.textAlignment = UITextAlignmentCenter;
     return cell;
 }
 

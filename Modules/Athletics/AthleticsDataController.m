@@ -415,6 +415,7 @@ withKey:(NSString *)key{
     category.category = @"sport";
     category.path = @"news";
     category.ivar = key;
+    category.bookmarked = [NSNumber numberWithBool:NO];
     category.isMainCategory = [NSNumber numberWithBool:NO];
     category.moreStories = [NSNumber numberWithInt:-1];
     category.nextSeekId = [NSNumber numberWithInt:0];

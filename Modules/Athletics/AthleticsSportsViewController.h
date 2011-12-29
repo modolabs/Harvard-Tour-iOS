@@ -12,12 +12,14 @@
 #import "KGOTableViewController.h"
 #import "AthleticsDataController.h"
 #import "KGOSearchDisplayController.h"
-@interface AthleticsSportsViewController : KGOTableViewController <KGOSearchBarDelegate,AthleticsDataDelegate> {
+#import "KGODetailPageHeaderView.h"
+@interface AthleticsSportsViewController : KGOTableViewController <KGOSearchBarDelegate,AthleticsDataDelegate,KGODetailPageHeaderDelegate> {
     IBOutlet UILabel *_loadingLabel;
     IBOutlet UILabel *_lastUpdateLabel;
     IBOutlet UIProgressView *_progressView;
     IBOutlet UITableView *_storyTable;
     IBOutlet UIView *_activityView;
+    KGODetailPageHeaderView *_bookmarkView;
     IBOutlet AthleticsTableViewCell *_athletcisCell;
     
     NSString *activeCategoryId;
@@ -37,4 +39,6 @@
 
 
 - (void)setStatusText:(NSString *)text;
+- (NSString *)titleForMenuCategory;
+- (void)setupBookmarkStatus;
 @end

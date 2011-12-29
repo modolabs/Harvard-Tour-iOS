@@ -24,6 +24,7 @@
 @property (nonatomic, retain) NSNumber * nextSeekId;
 @property (nonatomic, retain) NSString * path;
 @property (nonatomic, retain) NSNumber * sortOrder;
+@property (nonatomic, retain) NSNumber * bookmarked;
 @property (nonatomic, retain) NSString * title;
 @property (nonatomic, retain) NSString * url;
 @property (nonatomic, retain) AthleticsMenu *menu;

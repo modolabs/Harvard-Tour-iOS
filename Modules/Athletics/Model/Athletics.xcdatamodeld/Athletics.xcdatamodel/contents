@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11C74" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AthleticsCategory" representedClassName="AthleticsCategory" syncable="YES">
+        <attribute name="bookmarked" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="category_id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isMainCategory" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -59,7 +60,6 @@
     <entity name="AthleticsStory" representedClassName="AthleticsStory" syncable="YES">
         <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="bookmarked" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="featured" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="hasBody" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
@@ -75,7 +75,7 @@
         <relationship name="thumbImage" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsImage" inverseName="thumbParent" inverseEntity="AthleticsImage" syncable="YES"/>
     </entity>
     <elements>
-        <element name="AthleticsCategory" positionX="160" positionY="192" width="128" height="270"/>
+        <element name="AthleticsCategory" positionX="160" positionY="192" width="128" height="300"/>
         <element name="AthleticsImage" positionX="117" positionY="189" width="128" height="75"/>
         <element name="AthleticsImageRep" positionX="160" positionY="192" width="128" height="105"/>
         <element name="AthleticsMenu" positionX="160" positionY="192" width="128" height="75"/>
