@@ -1,5 +1,5 @@
 #import "AthleticsScheduleDetailViewController.h"
-
+#import "Foundation+KGOAdditions.h"
 @implementation AthleticsScheduleDetailViewController
 @synthesize currentSchedule;
 
@@ -63,7 +63,7 @@
     
     double unixtime = [schedule.start doubleValue];
     NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:unixtime];
-    NSString *detailString = [NSString stringWithFormat:@"%@\n%@",startDate.description,schedule.location];
+    NSString *detailString = [NSString stringWithFormat:@"%@\n%@",[startDate weekDateTimeString],schedule.location];
     cell.detailTextLabel.text = detailString;
     cell.detailTextLabel.numberOfLines = 2;
     return [cell autorelease];
@@ -82,7 +82,7 @@
     
     double unixtime = [schedule.start doubleValue];
     NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:unixtime];
-    NSString *detailString = [NSString stringWithFormat:@"%@",startDate.description];
+    NSString *detailString = [NSString stringWithFormat:@"%@",[startDate weekDateTimeString]];
     cell.detailTextLabel.text = detailString;
     return [cell autorelease];
 }

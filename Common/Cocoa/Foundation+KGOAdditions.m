@@ -186,6 +186,13 @@ KGOSign KGOGetIntegerSign(NSInteger x) {
     return result;
 }
 
+- (NSString *)weekDateTimeString {
+    NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];    
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    return [formatter stringForObjectValue:self];
+}
+
 @end
 
 

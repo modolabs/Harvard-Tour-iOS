@@ -6,6 +6,7 @@
 //  Copyright (c) 2011 Symbio Inc. All rights reserved.
 //
 #import "UIKit+KGOAdditions.h"
+#import "Foundation+KGOAdditions.h"
 #import "AthleticsModel.h"
 #import "AthleticsSportsViewController.h"
 #import "AthleticsTableViewCell.h"
@@ -270,7 +271,7 @@
     
     double unixtime = [schedule.start doubleValue];
     NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:unixtime];
-    NSString *detailString = [NSString stringWithFormat:@"%@\n%@",startDate.description,schedule.location];
+    NSString *detailString = [NSString stringWithFormat:@"%@\n%@",[startDate weekDateTimeString],schedule.location];
     cell.detailTextLabel.text = detailString;
     cell.detailTextLabel.numberOfLines = 2;
     return cell;
