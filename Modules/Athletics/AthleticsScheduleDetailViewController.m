@@ -43,9 +43,6 @@
                                                                               style:UIBarButtonItemStylePlain 
                                                                              target:nil 
                                                                              action:nil] autorelease];
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
-                                                                                            target:self 
-                                                                                            action:@selector(refresh:)] autorelease];
     [self addTableView:_scheduleTable];
     
 }

@@ -53,22 +53,7 @@
                                                                              style:UIBarButtonItemStylePlain 
                                                                             target:nil 
                                                                             action:nil] autorelease];
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
-                                                                                           target:self 
-                                                                                           action:@selector(refresh:)] autorelease];
-    
     [self.dataManager fetchCategories];
-    
-//    if (self.federatedSearchTerms || self.federatedSearchResults) {
-//        [_navTabbar showSearchBarAnimated:NO];
-//        [_navTabbar.searchController setActive:NO animated:NO];
-//        _navTabbar.searchController.searchBar.text = self.federatedSearchTerms;
-//        
-//        if (self.federatedSearchResults) {
-//            [_navTabbar.searchController setSearchResults:self.federatedSearchResults
-//                                                 forModuleTag:self.dataManager.moduleTag];
-//        }
-//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -114,9 +99,6 @@
 }
 
 #pragma mark - Navigation 
-- (void)refresh:(id)sender {
-    
-}
 
 - (void)setupNavTabbedButtons {
     if (self.categories.count > 0) {

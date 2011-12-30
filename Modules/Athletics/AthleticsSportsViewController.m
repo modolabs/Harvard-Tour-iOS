@@ -58,25 +58,11 @@
                                                                               style:UIBarButtonItemStylePlain 
                                                                              target:nil 
                                                                              action:nil] autorelease];
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh 
-                                                                                            target:self 
-                                                                                            action:@selector(refresh:)] autorelease];
-    
     [self.dataManager fetchMenuCategoryStories:[self.categories objectAtIndex:self.actieveMenuCategoryIdx] 
                                        startId:nil];
     [self.dataManager fetchMenuCategorySchedule:[self.categories objectAtIndex:self.actieveMenuCategoryIdx] 
                                        startId:nil];
     [self setupBookmarkStatus];
-    //    if (self.federatedSearchTerms || self.federatedSearchResults) {
-    //        [_navTabbedView showSearchBarAnimated:NO];
-    //        [_navTabbedView.searchController setActive:NO animated:NO];
-    //        _navTabbedView.searchController.searchBar.text = self.federatedSearchTerms;
-    //        
-    //        if (self.federatedSearchResults) {
-    //            [_navTabbedView.searchController setSearchResults:self.federatedSearchResults
-    //                                                 forModuleTag:self.dataManager.moduleTag];
-    //        }
-    //    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -122,9 +108,6 @@
 }
 
 #pragma mark - Navigation 
-- (void)refresh:(id)sender {
-    
-}
 
 #pragma mark - Self Functions
 - (NSString *)titleForMenuCategory {
