@@ -15,7 +15,6 @@ NSString * const AthleticsStoryEntityName = @"AthleticsStory";
 
 @dynamic author;
 @dynamic body;
-@dynamic bookmarked;
 @dynamic featured;
 @dynamic hasBody;
 @dynamic identifier;
@@ -62,23 +61,6 @@ NSString * const AthleticsStoryEntityName = @"AthleticsStory";
 
 - (NSString *)subtitle {
     return self.summary;
-}
-
-- (BOOL)isBookmarked {
-    return [self.bookmarked boolValue];
-}
-
-- (void)addBookmark {
-    if (![self isBookmarked]) {
-        self.bookmarked = [NSNumber numberWithBool:YES];
-    }
-    self.searchResult = [NSNumber numberWithInt:0];
-}
-
-- (void)removeBookmark {
-    if ([self isBookmarked]) {
-        self.bookmarked = [NSNumber numberWithBool:NO];
-    }
 }
 
 - (BOOL)didGetSelected:(id)selector

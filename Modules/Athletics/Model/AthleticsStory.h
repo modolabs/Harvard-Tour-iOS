@@ -15,7 +15,6 @@
 
 @property (nonatomic, retain) NSString * author;
 @property (nonatomic, retain) NSString * body;
-@property (nonatomic, retain) NSNumber * bookmarked;
 @property (nonatomic, retain) NSNumber * featured;
 @property (nonatomic, retain) NSNumber * hasBody;
 @property (nonatomic, retain) NSString * identifier;
@@ -34,7 +33,4 @@
 // see if there is any problem with this
 @property (nonatomic, retain) NSString *moduleTag;
 
-- (BOOL)isBookmarked;
-- (void)addBookmark;
-- (void)removeBookmark;
 @end

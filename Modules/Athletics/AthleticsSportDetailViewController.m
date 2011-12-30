@@ -131,9 +131,6 @@
             [values setValue:postDate forKey:@"DATE"];
         }
         
-        NSString *isBookmarked = ([self.story.bookmarked boolValue]) ? @"on" : @"";
-        [values setValue:isBookmarked forKey:@"BOOKMARKED"];
-        
         NSString *maxWidth = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? @"140" : @"320";
         [values setValue:maxWidth forKey:@"THUMBNAIL_MAX_WIDTH"];
         
@@ -163,14 +160,7 @@
             [[UIApplication sharedApplication] openURL:url];
             result = NO;
         } else {
-            if ([[url path] rangeOfString:@"bookmark" options:NSBackwardsSearch].location != NSNotFound) {
-                if ([self.story isBookmarked]) {
-                    [self.story removeBookmark];
-                } else {
-                    [self.story addBookmark];
-                }
-                
-			} else if ([[url path] rangeOfString:@"share" options:NSBackwardsSearch].location != NSNotFound) {
+            if ([[url path] rangeOfString:@"share" options:NSBackwardsSearch].location != NSNotFound) {
                 shareController.actionSheetTitle = @"Share article with a friend";
                 shareController.shareTitle = story.title;
                 shareController.shareBody = story.summary;

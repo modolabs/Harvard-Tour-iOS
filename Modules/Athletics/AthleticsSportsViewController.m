@@ -11,6 +11,7 @@
 #import "AthleticsSportsViewController.h"
 #import "AthleticsTableViewCell.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
+#import "CoreDataManager.h"
 #import <QuartzCore/QuartzCore.h>
 
 #define ATHLETICS_SCHDULES_ROW_HEIGHT 60
@@ -65,10 +66,6 @@
                                        startId:nil];
     [self.dataManager fetchMenuCategorySchedule:[self.categories objectAtIndex:self.actieveMenuCategoryIdx] 
                                        startId:nil];
-    
-    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.width, BOOKMARK_HEIGHT);
-    _bookmarkView = [[KGODetailPageHeaderView alloc] initWithFrame:frame];
-    [self.view addSubview:_bookmarkView];
     [self setupBookmarkStatus];
     //    if (self.federatedSearchTerms || self.federatedSearchResults) {
     //        [_navTabbedView showSearchBarAnimated:NO];
@@ -85,6 +82,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self configureBookmark];
 }
 
 
@@ -179,19 +177,23 @@
                                    self.view.bounds.size.height - _activityView.frame.size.height - BOOKMARK_HEIGHT);
 }
 
+- (void)configureBookmark {
+    [_bookmarkView layoutSubviews];
+    [self.view bringSubviewToFront:_bookmarkView];
+    _storyTable.frame = CGRectMake(0, BOOKMARK_HEIGHT, self.view.bounds.size.width,
+                                   self.view.bounds.size.height - _activityView.frame.size.height - 
+                                   BOOKMARK_HEIGHT);
+}
+
 - (void)setupBookmarkStatus {
-    _bookmarkView.delegate = self;
+    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.width, BOOKMARK_HEIGHT);
+    _bookmarkView = [[KGODetailPageHeaderView alloc] initWithFrame:frame];
     [_bookmarkView setDetailItem:[self.categories objectAtIndex:self.actieveMenuCategoryIdx]];
     _bookmarkView.showsBookmarkButton = YES;
     _bookmarkView.showsShareButton = NO;
     _bookmarkView.showsSubtitle = NO;
     _bookmarkView.titleLabel.text = [self titleForMenuCategory];
-    
-    [self.view bringSubviewToFront:_bookmarkView];
-    _storyTable.frame = CGRectMake(0, BOOKMARK_HEIGHT, self.view.bounds.size.width,
-                                   self.view.bounds.size.height - _activityView.frame.size.height - 
-                                   BOOKMARK_HEIGHT);
-    
+    [self.view addSubview:_bookmarkView];
 }
 
 #pragma mark -

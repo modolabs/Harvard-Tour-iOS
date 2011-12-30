@@ -137,7 +137,6 @@ NSString * const AthleticsTagBody            = @"body";
     return [[CoreDataManager sharedManager] objectsForEntity:AthleticsCategoryEntityName matchingPredicate:pred];
 }
 
-
 #pragma mark - Serach
 
 - (NSDate *)feedListModifiedDate

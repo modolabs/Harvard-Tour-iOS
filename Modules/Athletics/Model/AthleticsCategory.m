@@ -10,6 +10,7 @@
 #import "AthleticsMenu.h"
 #import "AthleticsSchedule.h"
 #import "AthleticsStory.h"
+#import "CoreDataManager.h"
 
 NSString * const AthleticsCategoryEntityName = @"AthleticsCategory";
 @implementation AthleticsCategory
@@ -39,12 +40,14 @@ NSString * const AthleticsCategoryEntityName = @"AthleticsCategory";
 - (void)addBookmark {
     if (![self isBookmarked]) {
         self.bookmarked = [NSNumber numberWithBool:YES];
+        [[CoreDataManager sharedManager] saveDataWithTemporaryMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
     }
 }
 
 - (void)removeBookmark {
     if ([self isBookmarked]) {
         self.bookmarked = [NSNumber numberWithBool:NO];
+        [[CoreDataManager sharedManager] saveDataWithTemporaryMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
     }
 }
 
