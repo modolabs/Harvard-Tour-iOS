@@ -15,6 +15,7 @@
 
 #define ATHLETICS_SCHDULES_ROW_HEIGHT 60
 #define ATHLETICS_NEWS_ROW_HEIGHT 76
+#define BOOKMARK_HEIGHT 50
 
 @implementation AthleticsSportsViewController
 @synthesize dataManager;
@@ -65,9 +66,8 @@
     [self.dataManager fetchMenuCategorySchedule:[self.categories objectAtIndex:self.actieveMenuCategoryIdx] 
                                        startId:nil];
     
-    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.width, 30);
+    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.width, BOOKMARK_HEIGHT);
     _bookmarkView = [[KGODetailPageHeaderView alloc] initWithFrame:frame];
-    _bookmarkView.backgroundColor = [UIColor blueColor];
     [self.view addSubview:_bookmarkView];
     [self setupBookmarkStatus];
     //    if (self.federatedSearchTerms || self.federatedSearchResults) {
@@ -144,9 +144,9 @@
 	_lastUpdateLabel.hidden = NO;
 	_lastUpdateLabel.text = text;
 
-    _storyTable.frame = CGRectMake(0, _bookmarkView.frame.size.height, self.view.bounds.size.width,
+    _storyTable.frame = CGRectMake(0, BOOKMARK_HEIGHT, self.view.bounds.size.width,
                                    self.view.bounds.size.height - 
-                                   _bookmarkView.frame.size.height);
+                                   BOOKMARK_HEIGHT);
     [UIView animateWithDuration:1.0 delay:2.0 options:0 animations:^(void) {
         _activityView.alpha = 0;
     } completion:^(BOOL finished) {
@@ -175,20 +175,22 @@
     _activityView.hidden = NO;
     _activityView.alpha = 1.0;
 
-    _storyTable.frame = CGRectMake(0, _bookmarkView.frame.size.height, self.view.bounds.size.width,
-                                   self.view.bounds.size.height - _activityView.frame.size.height - _bookmarkView.frame.size.height);
+    _storyTable.frame = CGRectMake(0, BOOKMARK_HEIGHT, self.view.bounds.size.width,
+                                   self.view.bounds.size.height - _activityView.frame.size.height - BOOKMARK_HEIGHT);
 }
 
 - (void)setupBookmarkStatus {
     _bookmarkView.delegate = self;
+    [_bookmarkView setDetailItem:[self.categories objectAtIndex:self.actieveMenuCategoryIdx]];
     _bookmarkView.showsBookmarkButton = YES;
     _bookmarkView.showsShareButton = NO;
     _bookmarkView.showsSubtitle = NO;
     _bookmarkView.titleLabel.text = [self titleForMenuCategory];
     
-    _storyTable.frame = CGRectMake(0, _bookmarkView.frame.size.height, self.view.bounds.size.width,
+    [self.view bringSubviewToFront:_bookmarkView];
+    _storyTable.frame = CGRectMake(0, BOOKMARK_HEIGHT, self.view.bounds.size.width,
                                    self.view.bounds.size.height - _activityView.frame.size.height - 
-                                   _bookmarkView.frame.size.height);
+                                   BOOKMARK_HEIGHT);
     
 }
 

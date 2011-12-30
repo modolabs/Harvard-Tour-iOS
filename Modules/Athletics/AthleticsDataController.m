@@ -131,10 +131,10 @@ NSString * const AthleticsTagBody            = @"body";
     return NO;
 }
 
-- (NSArray *)bookmarkedStories
+- (NSArray *)bookmarkedCategories
 {
-    NSPredicate *pred = [NSPredicate predicateWithFormat:@"bookmarked == YES AND ANY categories.moduleTag = %@", self.moduleTag];
-    return [[CoreDataManager sharedManager] objectsForEntity:AthleticsStoryEntityName matchingPredicate:pred];
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"bookmarked == YES"];
+    return [[CoreDataManager sharedManager] objectsForEntity:AthleticsCategoryEntityName matchingPredicate:pred];
 }
 
 
@@ -208,9 +208,9 @@ NSString * const AthleticsTagBody            = @"body";
         [newCategories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                   @"3", @"id", 
                                   @"My Sports", @"title", 
-                                  @"schedule", @"path",
-                                  @"sport", @"category",
-                                  @"baseball", @"ivar",
+                                  @"", @"path",
+                                  @"", @"category",
+                                  @"", @"ivar",
                                   nil]];
         
         for (NSDictionary *enumerator in newCategories) {
@@ -306,6 +306,40 @@ NSString * const AthleticsTagBody            = @"body";
     }
     
     return [matches lastObject];
+}
+
+- (NSMutableArray *)bookmarksForCategoryId:(NSString *)categoryId {
+    AthleticsCategory *aCategory= [self categoryWithId:categoryId];
+    NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
+    if ([aCategory managedObjectContext] != context) {
+        aCategory = (AthleticsCategory *)[context objectWithID:[aCategory objectID]];
+    }
+    [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:aCategory mergeChanges:NO];
+    
+    NSMutableArray *results = [NSMutableArray arrayWithArray:[aCategory.menu.categories sortedArrayUsingDescriptors:nil]];
+    AthleticsCategory *theCategory = nil;
+    for (theCategory in results) {
+        if (theCategory.isMainCategory.boolValue) {
+            break;
+        }
+    }
+    [results removeObject:theCategory];
+    
+    NSMutableIndexSet *mutableIdxSet = [NSMutableIndexSet indexSet];
+    for (int i = 0; i < results.count; i++) {
+        if (!theCategory.bookmarked.boolValue) {
+            [mutableIdxSet addIndex:i];
+        }
+    }
+    [results removeObjectsAtIndexes:mutableIdxSet];
+    return results;
+}
+
+- (void)fetchBookmarks
+{
+    if ([self.delegate respondsToSelector:@selector(dataController:didRetrieveBookmarkedCategories:)]) {
+        [self.delegate dataController:self didRetrieveBookmarkedCategories:[self bookmarkedCategories]];
+    }
 }
 
 - (void)fetchMenusForCategory:(NSString *)categoryId

@@ -259,6 +259,12 @@
     [_storyTable flashScrollIndicators];
 }
 
+- (void)dataController:(AthleticsDataController *)controller didRetrieveBookmarkedCategories:(NSArray *)bookmarkedCategories {
+    self.stories = bookmarkedCategories;
+    [self reloadDataForTableView:_storyTable];
+    [_storyTable flashScrollIndicators];
+}
+
 
 #pragma mark -UITabbar Delegate
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
@@ -278,11 +284,14 @@
     if (![category isEqualToString:self.activeCategoryId]) {
 		self.activeCategoryId = category;
         self.dataManager.delegate = self;
-        if (![self.activeCategoryId isEqualToString:@"0"]) {
+        if ([self.activeCategoryId isEqualToString:@"0"]) {
+            [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
+        } else if ([self.activeCategoryId isEqualToString:@"3"]){
+            showingMenuCategories = YES;
+            [self.dataManager fetchBookmarks];
+        } else {
             showingMenuCategories = YES;
             [self.dataManager fetchMenusForCategory:self.activeCategoryId startId:nil];
-        } else {
-            [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
         }
         // makes request to server if no request has been made this session
         //[self.dataManager requestStoriesForCategory:self.activeCategoryId loadMore:NO forceRefresh:NO];

@@ -19,6 +19,7 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 - (void)dataController:(AthleticsDataController *)controller didRetrieveCategories:(NSArray *)categories;
 - (void)dataController:(AthleticsDataController *)controller didRetrieveStories:(NSArray *)stories;
 - (void)dataController:(AthleticsDataController *)controller didRetrieveMenuCategories:(NSArray *)menuCategories;
+- (void)dataController:(AthleticsDataController *)controller didRetrieveBookmarkedCategories:(NSArray *)bookmarkedCategories;
 - (void)dataController:(AthleticsDataController *)controller didRetrieveSchedules:(NSArray *)schedules;
 
 - (void)dataController:(AthleticsDataController *)controller didMakeProgress:(CGFloat)progress;
@@ -55,7 +56,8 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 - (BOOL)requiresKurogoServer;
 - (void)fetchCategories;
 - (BOOL)canLoadMoreStories;
-- (NSArray *)bookmarkedStories;
+- (NSArray *)bookmarkedCategories;
+- (void)fetchBookmarks;
 - (void)fetchStoriesForCategory:(NSString *)categoryId
                         startId:(NSString *)startId;
 - (void)fetchMenusForCategory:(NSString *)categoryId
