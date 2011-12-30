@@ -22,7 +22,7 @@
 
 #define ATHLETICS_LOADMORE_ROW_HEIGHT 50
 #define ATHLETICS_NEWS_ROW_HEIGHT 76
-#define ATHLETICS_MENUCATEGORY_ROW_HEIGHT 52
+#define ATHLETICS_MENUCATEGORY_ROW_HEIGHT 55
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -201,7 +201,7 @@
     _activityView.alpha = 1.0;
     CGFloat y = _navTabbar != nil ? _navTabbar.frame.size.height : 0;
     _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width,
-                                   self.view.bounds.size.height - y - _activityView.frame.size.height);
+                                   self.view.bounds.size.height - y);
 }
 
 #pragma mark -

@@ -58,12 +58,14 @@
     // 2 gives the tiniest amount of bottom padding for the dek
     CGFloat constraintHeight = self.frame.size.height - _titleLabel.frame.size.height - _titleLabel.frame.origin.y - 2;
     if (constraintHeight >= _dekLabel.font.lineHeight) {
-        CGSize dekSize = [_story.summary sizeWithFont:_dekLabel.font constrainedToSize:CGSizeMake(_dekLabel.frame.size.width, constraintHeight)];
-        _dekLabel.text = _story.summary;
-        CGRect dekFrame = _dekLabel.frame;
-        dekFrame.origin.y = _titleLabel.frame.size.height;
-        dekFrame.size.height = dekSize.height;
-        _dekLabel.frame = dekFrame;
+        if ([_story isKindOfClass:[AthleticsStory class]]) {
+            CGSize dekSize = [_story.summary sizeWithFont:_dekLabel.font constrainedToSize:CGSizeMake(_dekLabel.frame.size.width, constraintHeight)];
+            _dekLabel.text = _story.summary;
+            CGRect dekFrame = _dekLabel.frame;
+            dekFrame.origin.y = _titleLabel.frame.size.height;
+            dekFrame.size.height = dekSize.height;
+            _dekLabel.frame = dekFrame;
+        }
     } else {
         // if not even one line will fit, don't show the deck at all
         _dekLabel.text = nil;
