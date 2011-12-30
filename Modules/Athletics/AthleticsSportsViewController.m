@@ -333,7 +333,12 @@
 }
 
 - (void)fullSchedulCellDidSelected:(NSIndexPath *)indexPath {
-    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:@"scheduleList" forKey:@"type"];
+    [params setObject:self.schedules forKey:@"schedules"];
+    [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameItemList
+                           forModuleTag:self.dataManager.moduleTag
+                                 params:params];
 }
 
 - (void)storyCellDidSelected:(NSIndexPath *)indexPath {
@@ -350,11 +355,11 @@
 
 #pragma mark -KGOTable Methds
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return (self.stories.count > 0) + (self.stories.count > 0);
+    return (self.stories.count > 0) + (self.schedules.count > 0);
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger condition = (self.stories.count > 0) + (self.stories.count > 0);
+    NSInteger condition = (self.stories.count > 0) + (self.schedules.count > 0);
     if (0 == condition) {
         return 0;
     } else if (2 == condition) {
@@ -415,7 +420,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSInteger condition = (self.stories.count > 0) + (self.stories.count > 0);
+    NSInteger condition = (self.stories.count > 0) + (self.schedules.count > 0);
     if (0 == condition) {
         return;
     } else if (2 == condition) {
@@ -442,7 +447,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSInteger condition = (self.stories.count > 0) + (self.stories.count > 0);
+    NSInteger condition = (self.stories.count > 0) + (self.schedules.count > 0);
     if (0 == condition) {
         return nil;
     } else if (2 == condition) {

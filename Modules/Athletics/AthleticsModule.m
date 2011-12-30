@@ -12,6 +12,7 @@
 #import "AthleticsSportDetailViewController.h"
 #import "AthleticsSportsViewController.h"
 #import "AthleticsScheduleDetailViewController.h"
+#import "AthleticsScheduleListViewController.h"
 @implementation AthleticsModule
 @synthesize dataManager = _dataManager;
 
@@ -104,21 +105,33 @@
             }
         }
     } else if ([pageName isEqualToString:LocalPathPageNameItemList]) {
-        AthleticsSportsViewController *athleticsSportsVC = [[AthleticsSportsViewController alloc] 
-                                                            initWithNibName:@"AthleticsSportsViewController" 
-                                                            bundle:nil];
-        athleticsSportsVC.dataManager = self.dataManager;
-        vc = athleticsSportsVC;
-    
-        if ([params objectForKey:@"category"]) {
-            AthleticsCategory *category = [params objectForKey:@"category"];
-            NSIndexPath *indexPath = [params objectForKey:@"indexPath"];
-            NSArray *menuCategories = [params objectForKey:@"menuCategories"];
+        if ([[params objectForKey:@"type"] isEqualToString:@"scheduleList"]) {
+            AthleticsScheduleListViewController *scheduleListVC = [[AthleticsScheduleListViewController alloc] 
+                                                                   initWithNibName:@"AthleticsScheduleListViewController" 
+                                                                   bundle:nil];
+            scheduleListVC.dataManager = self.dataManager;
+            vc = scheduleListVC;
+            if ([params objectForKey:@"schedules"]) {
+                NSArray *schedules = [params objectForKey:@"schedules"];
+                scheduleListVC.schedules = schedules;
+            }
+        } else {
+            AthleticsSportsViewController *athleticsSportsVC = [[AthleticsSportsViewController alloc] 
+                                                                initWithNibName:@"AthleticsSportsViewController" 
+                                                                bundle:nil];
+            athleticsSportsVC.dataManager = self.dataManager;
+            vc = athleticsSportsVC;
             
-            athleticsSportsVC.dataManager.currentCategory = [menuCategories objectAtIndex:indexPath.row];
-            [(AthleticsSportsViewController *)vc setActiveCategoryId:category.category_id];
-            [(AthleticsSportsViewController *)vc setActieveMenuCategoryIdx:indexPath.row];
-            [(AthleticsSportsViewController *)vc setCategories:menuCategories];
+            if ([params objectForKey:@"category"]) {
+                AthleticsCategory *category = [params objectForKey:@"category"];
+                NSIndexPath *indexPath = [params objectForKey:@"indexPath"];
+                NSArray *menuCategories = [params objectForKey:@"menuCategories"];
+                
+                athleticsSportsVC.dataManager.currentCategory = [menuCategories objectAtIndex:indexPath.row];
+                [(AthleticsSportsViewController *)vc setActiveCategoryId:category.category_id];
+                [(AthleticsSportsViewController *)vc setActieveMenuCategoryIdx:indexPath.row];
+                [(AthleticsSportsViewController *)vc setCategories:menuCategories];
+            }
         }
     }
     return vc;

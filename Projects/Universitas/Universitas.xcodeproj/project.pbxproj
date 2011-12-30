@@ -26,6 +26,8 @@
 		4BD493691349144400891968 /* EmergencyContactsSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD493681349144400891968 /* EmergencyContactsSection.m */; };
 		4BD4936C1349146900891968 /* EmergencyContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD4936B1349146900891968 /* EmergencyContact.m */; };
 		4BD4936F13492C2400891968 /* EmergencyContactsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD4936E13492C2400891968 /* EmergencyContactsViewController.m */; };
+		4E0ABEA214ADAFF40045FB85 /* AthleticsScheduleListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E0ABEA014ADAFF40045FB85 /* AthleticsScheduleListViewController.m */; };
+		4E0ABEA314ADAFF40045FB85 /* AthleticsScheduleListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E0ABEA114ADAFF40045FB85 /* AthleticsScheduleListViewController.xib */; };
 		4E89C1F61492108000A1595A /* NewsCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1F11492107E00A1595A /* NewsCategory.m */; };
 		4E89C1F71492108000A1595A /* NewsImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1F31492107E00A1595A /* NewsImage.m */; };
 		4E89C1F81492108000A1595A /* NewsStory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E89C1F51492108000A1595A /* NewsStory.m */; };
@@ -239,6 +241,9 @@
 		4BD4936B1349146900891968 /* EmergencyContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergencyContact.m; sourceTree = "<group>"; };
 		4BD4936D13492C2400891968 /* EmergencyContactsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmergencyContactsViewController.h; sourceTree = "<group>"; };
 		4BD4936E13492C2400891968 /* EmergencyContactsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmergencyContactsViewController.m; sourceTree = "<group>"; };
+		4E0ABE9F14ADAFF40045FB85 /* AthleticsScheduleListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsScheduleListViewController.h; sourceTree = "<group>"; };
+		4E0ABEA014ADAFF40045FB85 /* AthleticsScheduleListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsScheduleListViewController.m; sourceTree = "<group>"; };
+		4E0ABEA114ADAFF40045FB85 /* AthleticsScheduleListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AthleticsScheduleListViewController.xib; sourceTree = "<group>"; };
 		4E89C1F01492107E00A1595A /* NewsCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsCategory.h; sourceTree = "<group>"; };
 		4E89C1F11492107E00A1595A /* NewsCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsCategory.m; sourceTree = "<group>"; };
 		4E89C1F21492107E00A1595A /* NewsImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsImage.h; sourceTree = "<group>"; };
@@ -734,6 +739,9 @@
 				4E907589149B36A300E5A322 /* AthleticsSportsViewController.xib */,
 				4E93255114A5C77100214B6F /* AthleticsScheduleDetailViewController.h */,
 				4E93255214A5C77100214B6F /* AthleticsScheduleDetailViewController.m */,
+				4E0ABE9F14ADAFF40045FB85 /* AthleticsScheduleListViewController.h */,
+				4E0ABEA014ADAFF40045FB85 /* AthleticsScheduleListViewController.m */,
+				4E0ABEA114ADAFF40045FB85 /* AthleticsScheduleListViewController.xib */,
 			);
 			path = Athletics;
 			sourceTree = "<group>";
@@ -1468,6 +1476,7 @@
 				4E89EF891488AE75001402A2 /* AthleticsListController.xib in Resources */,
 				4E89EF8E1488AEDA001402A2 /* AthleticsTableViewCell.xib in Resources */,
 				4E90758A149B36A400E5A322 /* AthleticsSportsViewController.xib in Resources */,
+				4E0ABEA314ADAFF40045FB85 /* AthleticsScheduleListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1641,6 +1650,7 @@
 				4EFD5EFB14A0831100568A5D /* AthleticsCategory.m in Sources */,
 				4EFD5EFE14A0831100568A5D /* AthleticsSchedule.m in Sources */,
 				4E93255314A5C77100214B6F /* AthleticsScheduleDetailViewController.m in Sources */,
+				4E0ABEA214ADAFF40045FB85 /* AthleticsScheduleListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
