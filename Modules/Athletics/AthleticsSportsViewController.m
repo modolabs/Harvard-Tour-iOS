@@ -326,14 +326,18 @@
 
 - (void)storyCellDidSelected:(NSIndexPath *)indexPath {
     AthleticsStory *story = [self.stories objectAtIndex:indexPath.row];
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setObject:@"story" forKey:@"type"];
-    [params setObject:story forKey:@"story"];
-    [params setObject:self.stories forKey:@"stories"];
-    [params setObject:self.dataManager.currentCategory forKey:@"category"];
-    [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail
-                           forModuleTag:self.dataManager.moduleTag
-                                 params:params];
+    if (story.body.length > 0) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setObject:@"story" forKey:@"type"];
+        [params setObject:story forKey:@"story"];
+        [params setObject:self.stories forKey:@"stories"];
+        [params setObject:self.dataManager.currentCategory forKey:@"category"];
+        [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail
+                               forModuleTag:self.dataManager.moduleTag
+                                     params:params];
+    } else {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:story.link]];
+    }
 }
 
 #pragma mark -KGOTable Methds

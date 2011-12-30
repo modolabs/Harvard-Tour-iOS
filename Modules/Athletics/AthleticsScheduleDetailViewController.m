@@ -126,7 +126,10 @@
 
 #pragma mark -UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    NSString *link = self.currentSchedule.link;
+    if (link.length > 0 && 1 == indexPath.row) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:link]];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
