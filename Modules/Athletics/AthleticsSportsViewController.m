@@ -340,6 +340,15 @@
     }
 }
 
+- (void)loadMoreStoryCellDidSelected:(NSIndexPath *)indexPath {
+    AthleticsStory *story = [self.stories lastObject];
+    NSString *lastId = story.identifier;
+    // TODO: doesn't seem right that we need to se this on the datamanager
+    self.dataManager.currentStories = [[self.stories mutableCopy] autorelease];
+    [self.dataManager requestMenuCategoryStoriesForCategory:self.dataManager.currentCategory 
+                                                    afterId:lastId];
+}
+
 #pragma mark -KGOTable Methds
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return (self.stories.count > 0) + (self.schedules.count > 0);
@@ -357,12 +366,20 @@
                 return 3;
             }
         } else {
-            return self.stories.count;
+            NSInteger n = self.stories.count;
+            if ([self.dataManager canLoadMoreStories]) {
+                n++;
+            }
+            return n;
         }
     } else {
         NSInteger scheduleNumber = self.schedules.count;
         if (self.stories.count > 0) {
-            return self.stories.count;
+            NSInteger n = self.stories.count;
+            if ([self.dataManager canLoadMoreStories]) {
+                n++;
+            }
+            return n;
         } else {
             return (scheduleNumber <= 2) ? scheduleNumber : 3;
         }
@@ -418,11 +435,19 @@
                 [self scheduleCellDidSelected:indexPath];
             }
         } else {
-            [self storyCellDidSelected:indexPath];
+            if (indexPath.row == self.stories.count) {
+                [self loadMoreStoryCellDidSelected:indexPath];
+            } else {
+                [self storyCellDidSelected:indexPath];
+            }
         }
     } else {
         if (self.stories.count > 0) {
-            [self storyCellDidSelected:indexPath];
+            if (indexPath.row == self.stories.count) {
+                [self loadMoreStoryCellDidSelected:indexPath];
+            } else {
+                [self storyCellDidSelected:indexPath];
+            }
         } else {
             if (indexPath.row == 2) {
                 [self fullSchedulCellDidSelected:indexPath];

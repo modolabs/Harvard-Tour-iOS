@@ -77,7 +77,8 @@ NSString * const AthleticsTagBody            = @"body";
         NSString *startId = [request.getParams objectForKey:@"start"];
         [self fetchStoriesForCategory:self.currentCategory.category_id startId:startId];
     } else if (request == self.menuCategoryStoriesRequest) {
-        [self fetchMenuCategoryStories:self.currentCategory startId:nil];
+        NSString *startId = [request.getParams objectForKey:@"start"];
+        [self fetchMenuCategoryStories:self.currentCategory startId:startId];
         [self fetchMenuCategorySchedule:self.currentCategory startId:nil];
     } else if ([path isEqualToString:@"sports"]) {    
         [self fetchMenusForCategory:self.currentCategory.category_id startId:nil];
@@ -264,10 +265,9 @@ NSString * const AthleticsTagBody            = @"body";
 }
 
 - (void)fetchMenuCategoryStories:(AthleticsCategory *)menuCategory startId:(NSString *)startId {
-//    if (categoryId && ![categoryId isEqualToString:self.currentCategory.category_id]) {
-//        self.currentCategory = [self categoryWithId:categoryId];
-//    }
-    
+    if (![self.currentCategory isEqual:menuCategory]) {
+        self.currentCategory = menuCategory;
+    }
     NSManagedObjectContext *context = [[CoreDataManager sharedManager] managedObjectContext];
     if ([menuCategory managedObjectContext] != context) {
         menuCategory = (AthleticsCategory *)[context objectWithID:[menuCategory objectID]];
@@ -610,23 +610,29 @@ withKey:(NSString *)key{
 - (void)requestMenuCategoryStoriesForCategory:(AthleticsCategory *)menuCategory afterId:(NSString *)afterId
 {
     // TODO: signal that loading progress is 0
-//    if (![categoryId isEqualToString:self.currentCategory.category_id]) {
-//        self.currentCategory = [self categoryWithId:categoryId];
-//    }
-//    
-//    NSInteger start = 0;
-//    if (afterId) {
-//        NSPredicate *pred = [NSPredicate predicateWithFormat:@"identifier = %@", afterId];
-//        AthleticsStory *story = [[self.currentStories filteredArrayUsingPredicate:pred] lastObject];
-//        if (story) {
-//            NSInteger index = [self.currentStories indexOfObject:story];
-//            if (index != NSNotFound) {
-//                start = index;
-//            }
-//        }
-//    }
+    if (!self.currentCategory || ![self.currentCategory isEqual:menuCategory]) {
+        self.currentCategory = menuCategory;
+    }
+    
+    NSInteger start = 0;
+    if (afterId) {
+        NSPredicate *pred = [NSPredicate predicateWithFormat:@"identifier = %@", afterId];
+        AthleticsStory *story = [[self.currentStories filteredArrayUsingPredicate:pred] lastObject];
+        if (story) {
+            NSInteger index = [self.currentStories indexOfObject:story];
+            if (index != NSNotFound) {
+                start = index;
+            }
+        }
+    }
+    
+    NSInteger moreStories = [self.currentCategory.moreStories integerValue];
+    NSInteger limit = (moreStories && moreStories < LOADMORE_LIMIT) ? moreStories : LOADMORE_LIMIT;
+    
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                            menuCategory.ivar, menuCategory.category,
+                            self.currentCategory.ivar, self.currentCategory.category,
+                            [NSString stringWithFormat:@"%d", start], @"start",
+                            [NSString stringWithFormat:@"%d", limit], @"limit",
                             nil];
     
     KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
@@ -646,14 +652,13 @@ withKey:(NSString *)key{
         AthleticsCategory *mergedCategory = nil;
         for (NSDictionary *storyDict in stories) {            
             AthleticsStory *story = [blockSelf storyWithDictionary:storyDict];            
-            NSMutableSet *mutableCategories = [story mutableSetValueForKey:@"categories"];
             if (!mergedCategory) {
                 mergedCategory = (AthleticsCategory *)[[story managedObjectContext] objectWithID:[category objectID]];
             }
-            if (mergedCategory) {
-                [mutableCategories addObject:mergedCategory];
+            NSMutableSet *mutableStories = [mergedCategory mutableSetValueForKey:@"stories"];
+            if (mutableStories) {
+                [mutableStories addObject:story];
             }
-            story.categories = mutableCategories;
         }
         mergedCategory.moreStories = [resultDict numberForKey:@"moreStories"];
         mergedCategory.lastUpdated = [NSDate date];
