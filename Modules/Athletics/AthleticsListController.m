@@ -54,13 +54,16 @@
                                                                             target:nil 
                                                                             action:nil] autorelease];
     [self.dataManager fetchCategories];
+    //configure display option
+    showingBookmarks = NO;
+    showingMenuCategories = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    [self setupNavTabbedButtons]; // needed for updating bookmark status
+    self.dataManager.delegate = self;
+    [self switchToCategory:activeCategoryId];
 }
 
 
@@ -260,11 +263,9 @@
     }
 }
 
-- (void)switchToCategory:(NSString *)category {
-    showingBookmarks = NO;
-    showingMenuCategories = NO;
-    if (![category isEqualToString:self.activeCategoryId]) {
-		self.activeCategoryId = category;
+- (void)switchToCategory:(NSString *)categoryId {
+    if (![categoryId isEqualToString:self.activeCategoryId]) {
+		self.activeCategoryId = categoryId;
         self.dataManager.delegate = self;
         if ([self.activeCategoryId isEqualToString:@"0"]) {
             [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
@@ -277,6 +278,11 @@
         }
         // makes request to server if no request has been made this session
         //[self.dataManager requestStoriesForCategory:self.activeCategoryId loadMore:NO forceRefresh:NO];
+    } else {
+        if ([self.activeCategoryId isEqualToString:@"3"]) {
+            showingMenuCategories = YES;
+            [self.dataManager fetchBookmarks];
+        }
     }
 }
 
