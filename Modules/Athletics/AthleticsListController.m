@@ -54,9 +54,6 @@
                                                                             target:nil 
                                                                             action:nil] autorelease];
     [self.dataManager fetchCategories];
-    //configure display option
-    showingBookmarks = NO;
-    showingMenuCategories = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -264,6 +261,9 @@
 }
 
 - (void)switchToCategory:(NSString *)categoryId {
+    //configure display option
+    showingBookmarks = NO;
+    showingMenuCategories = NO;
     if (![categoryId isEqualToString:self.activeCategoryId]) {
 		self.activeCategoryId = categoryId;
         self.dataManager.delegate = self;
