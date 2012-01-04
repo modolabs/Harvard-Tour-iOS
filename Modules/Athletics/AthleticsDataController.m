@@ -514,7 +514,7 @@ withKey:(NSString *)key{
     }
     
     NSInteger moreStories = [self.currentCategory.moreStories integerValue];
-    NSInteger limit = (moreStories && moreStories < LOADMORE_LIMIT) ? moreStories : LOADMORE_LIMIT;
+    NSInteger limit = (moreStories >= 0 && moreStories < LOADMORE_LIMIT) ? moreStories : LOADMORE_LIMIT;
     
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                             self.currentCategory.ivar, self.currentCategory.category,
@@ -627,7 +627,7 @@ withKey:(NSString *)key{
     }
     
     NSInteger moreStories = [self.currentCategory.moreStories integerValue];
-    NSInteger limit = (moreStories && moreStories < LOADMORE_LIMIT) ? moreStories : LOADMORE_LIMIT;
+    NSInteger limit = (moreStories >= 0 && moreStories < LOADMORE_LIMIT) ? moreStories : LOADMORE_LIMIT;
     
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                             self.currentCategory.ivar, self.currentCategory.category,
