@@ -24,9 +24,6 @@
     IBOutlet AthleticsTableViewCell *_athletcisCell;
     
     NSString *activeCategoryId;
-    
-    BOOL showingBookmarks;
-    BOOL showingMenuCategories;
 }
 
 @property (nonatomic, retain) AthleticsDataController *dataManager;

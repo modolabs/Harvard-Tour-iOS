@@ -99,6 +99,12 @@
 }
 
 #pragma mark - Navigation 
+- (BOOL)showMunuCategories {
+    if ([self.activeCategoryId isEqualToString:@"0"]) {
+        return NO;
+    }
+    return YES;
+}
 
 - (void)setupNavTabbedButtons {
     if (self.categories.count > 0) {
@@ -261,26 +267,20 @@
 }
 
 - (void)switchToCategory:(NSString *)categoryId {
-    //configure display option
-    showingBookmarks = NO;
-    showingMenuCategories = NO;
     if (![categoryId isEqualToString:self.activeCategoryId]) {
 		self.activeCategoryId = categoryId;
         self.dataManager.delegate = self;
         if ([self.activeCategoryId isEqualToString:@"0"]) {
             [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
         } else if ([self.activeCategoryId isEqualToString:@"3"]){
-            showingMenuCategories = YES;
             [self.dataManager fetchBookmarks];
         } else {
-            showingMenuCategories = YES;
             [self.dataManager fetchMenusForCategory:self.activeCategoryId startId:nil];
         }
         // makes request to server if no request has been made this session
         //[self.dataManager requestStoriesForCategory:self.activeCategoryId loadMore:NO forceRefresh:NO];
     } else {
         if ([self.activeCategoryId isEqualToString:@"3"]) {
-            showingMenuCategories = YES;
             [self.dataManager fetchBookmarks];
         }
     }
@@ -308,14 +308,10 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (showingMenuCategories) {
+    if ([self showMunuCategories]) {
         return self.stories.count;
     } else {
         NSInteger n = self.stories.count;
-        if (showingBookmarks) {
-            return n;
-        }
-        
         if ([self.dataManager canLoadMoreStories]) {
             n++;
         }
@@ -342,7 +338,7 @@
         // TODO: set color to #999999 while things are loading
         cell.textLabel.textColor = [UIColor colorWithHexString:@"#1A1611"];
     } else {
-        if (showingMenuCategories) {
+        if ([self showMunuCategories]) {
             cell = [self tableView:tableView cellForMenuAtIndexPath:indexPath];
         } else {
             NSString *cellIdentifier = [AthleticsTableViewCell commonReuseIdentifier];
@@ -368,7 +364,7 @@
         self.dataManager.currentStories = [[self.stories mutableCopy] autorelease];
         [self.dataManager requestStoriesForCategory:self.activeCategoryId afterId:lastId];
 	} else {
-        if (showingMenuCategories) {
+        if ([self showMunuCategories]) {
             //TODO:Add Menu Categories Methods.
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
             [params setObject:indexPath forKey:@"indexPath"];
@@ -400,7 +396,7 @@
 	if (indexPath.row == self.stories.count) {
         return ATHLETICS_LOADMORE_ROW_HEIGHT;
 	} else {
-        if (showingMenuCategories) {
+        if ([self showMunuCategories]) {
             return ATHLETICS_MENUCATEGORY_ROW_HEIGHT;
         } else {
             return ATHLETICS_NEWS_ROW_HEIGHT;
