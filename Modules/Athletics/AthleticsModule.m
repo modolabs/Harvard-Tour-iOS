@@ -37,17 +37,9 @@
 
 - (UIViewController *)modulePage:(NSString *)pageName params:(NSDictionary *)params
 {
-//    UIViewController *vc = nil;
-//    if ([pageName isEqualToString:LocalPathPageNameHome]) {
-//        vc = [[[AthleticsListController alloc] initWithNibName:@"AthleticsListController"
-//                                                    bundle:nil] autorelease];
-//    }
-//    return vc;
-    
     UIViewController *vc = nil;
     if ([pageName isEqualToString:LocalPathPageNameHome]) {
-        AthleticsListController *athleticsListVC = [[[AthleticsListController alloc] initWithNibName:@"AthleticsListController"
-                                                                                      bundle:nil] autorelease];
+        AthleticsListController *athleticsListVC = [[[AthleticsListController alloc] init] autorelease];
         athleticsListVC.dataManager = self.dataManager;
         vc = athleticsListVC;
         

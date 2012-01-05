@@ -7,23 +7,27 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KGOTabbedControl.h"
+#import "KGOTabbedViewController.h"
 #import "AthleticsTableViewCell.h"
 #import "KGOSearchBar.h"
-
 #import "AthleticsDataController.h"
 #import "KGOSearchDisplayController.h"
-@interface AthleticsListController : KGOTableViewController <UITabBarDelegate,KGOSearchBarDelegate,AthleticsDataDelegate> {
+@interface AthleticsListController : KGOTabbedViewController <KGOSearchBarDelegate,AthleticsDataDelegate,UITableViewDelegate,UITableViewDataSource> {
+    UIView *_contentView;
     
-    IBOutlet UITabBar *_navTabbar;
-    IBOutlet UILabel *_loadingLabel;
-    IBOutlet UILabel *_lastUpdateLabel;
-    IBOutlet UIProgressView *_progressView;
-    IBOutlet UITableView *_storyTable;
-    IBOutlet UIView *_activityView;
+    UILabel *_loadingLabel;
+    UILabel *_lastUpdateLabel;
+    UIProgressView *_progressView;
+    UITableView *_storyTable;
+    UIView *_activityView;
     IBOutlet AthleticsTableViewCell *_athletcisCell;
     
     NSString *activeCategoryId;
+    
+    NSInteger _topNewsTabIndex;
+    NSInteger _menTabIndex;
+    NSInteger _womenTabIndex;
+    NSInteger _mySportsTabIndex;
 }
 
 @property (nonatomic, retain) AthleticsDataController *dataManager;
@@ -33,7 +37,5 @@
 @property (nonatomic, retain) NSArray *categories;
 @property (nonatomic, retain) NSString *activeCategoryId;
 
-- (void)setupNavTabbedButtons;
 - (void)setStatusText:(NSString *)text;
-- (void)switchToCategory:(NSString *)category;
 @end
