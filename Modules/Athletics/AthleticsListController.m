@@ -62,8 +62,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-//    self.dataManager.delegate = self;
-//    [self switchToCategory:activeCategoryId];
+    [self tabbedControl:_tabs didSwitchToTabAtIndex:[_tabs selectedTabIndex]];
 }
 
 
