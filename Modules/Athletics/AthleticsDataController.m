@@ -353,14 +353,10 @@ NSString * const AthleticsTagBody            = @"body";
         self.currentCategory = (AthleticsCategory *)[context objectWithID:[self.currentCategory objectID]];
     }
     [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:self.currentCategory mergeChanges:NO];
-    NSLog(@"%d",!self.currentCategory.lastUpdated);
-    NSLog(@"%d",[self.currentCategory.lastUpdated timeIntervalSinceNow] > ATHLETICS_CATEGORY_EXPIRES_TIME);
-    NSLog(@"%d",!self.currentCategory.menu);
-    
     if (!self.currentCategory.lastUpdated
         || [self.currentCategory.lastUpdated timeIntervalSinceNow] > ATHLETICS_CATEGORY_EXPIRES_TIME
         // TODO: make sure the following doesn't result an infinite loop if stories legitimately don't exist
-        || !self.currentCategory.menu)
+        || !self.currentCategory.menu.categories.count)
     {
         DLog(@"last updated: %@", self.currentCategory.lastUpdated);
         [self requestMenusForCategory:categoryId afterID:nil];
@@ -481,13 +477,27 @@ withKey:(NSString *)key{
         [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:category mergeChanges:NO];
         category.menu = [blockSelf menuWithDictionary:resultDict];
         NSMutableSet *mutableCategories = [category.menu mutableSetValueForKey:@"categories"];
-        NSDictionary *sports = [resultDict dictionaryForKey:@"sports"];
-        [sports enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            AthleticsCategory *menuCategory = [blockSelf menuCategoryWithDictionary:obj withKey:key];
-            if (menuCategory) {
-                [mutableCategories addObject:menuCategory];
+        id sports = [resultDict objectForKey:@"sports"];
+        AthleticsCategory *menuCategory = nil;
+        if ([sports isKindOfClass:[NSArray class]]) {
+            sports = [resultDict arrayForKey:@"sports"];
+            for(NSDictionary *enu in sports) {
+                 menuCategory = [blockSelf menuCategoryWithDictionary:enu withKey:[enu objectForKey:@"key"]];
+                if (menuCategory) {
+                    [mutableCategories addObject:menuCategory];
+                }
             }
-        }];
+        } else if ([sports isKindOfClass:[NSDictionary class]]){
+            sports = [resultDict dictionaryForKey:@"sports"];
+            [sports enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                AthleticsCategory *menuCategory = [blockSelf menuCategoryWithDictionary:obj withKey:key];
+                if (menuCategory) {
+                    [mutableCategories addObject:menuCategory];
+                }
+            }];
+        } else {
+            return 0;
+        }
         category.lastUpdated = [NSDate date];
         [[CoreDataManager sharedManager] saveData];
         return 1;
