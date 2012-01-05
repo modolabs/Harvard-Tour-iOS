@@ -152,9 +152,9 @@
 			<key>APIPath</key>
 			<string>rest</string>
 			<key>Host</key>
-			<string>www.athletics.com</string>
+			<string>build.modolabs.com</string>
 			<key>PathExtension</key>
-			<string></string>
+			<string>public/master</string>
 			<key>UseHTTPS</key>
 			<false/>
 		</dict>
