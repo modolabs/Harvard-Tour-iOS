@@ -547,12 +547,15 @@ withKey:(NSString *)key{
         // need to bring category to local context
         // http://stackoverflow.com/questions/1554623/illegal-attempt-to-establish-a-relationship-xyz-between-objects-in-different-co
         AthleticsCategory *mergedCategory = nil;
+        NSMutableSet *mutableStories = nil;
         for (NSDictionary *storyDict in stories) {            
             AthleticsStory *story = [blockSelf storyWithDictionary:storyDict];            
             if (!mergedCategory) {
                 mergedCategory = (AthleticsCategory *)[[story managedObjectContext] objectWithID:[category objectID]];
             }
-            NSMutableSet *mutableStories = [mergedCategory mutableSetValueForKey:@"stories"];
+            if (!mutableStories) {
+                mutableStories = [mergedCategory mutableSetValueForKey:@"stories"];
+            }
             if (mutableStories) {
                 [mutableStories addObject:story];
             }
