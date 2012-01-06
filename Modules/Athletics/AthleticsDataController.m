@@ -352,11 +352,12 @@ NSString * const AthleticsTagBody            = @"body";
     if ([self.currentCategory managedObjectContext] != context) {
         self.currentCategory = (AthleticsCategory *)[context objectWithID:[self.currentCategory objectID]];
     }
+    NSLog(@"%d",self.currentCategory.menu.categories.count);
     [[[CoreDataManager sharedManager] managedObjectContext] refreshObject:self.currentCategory mergeChanges:NO];
     if (!self.currentCategory.lastUpdated
         || [self.currentCategory.lastUpdated timeIntervalSinceNow] > ATHLETICS_CATEGORY_EXPIRES_TIME
         // TODO: make sure the following doesn't result an infinite loop if stories legitimately don't exist
-        || !self.currentCategory.menu.categories.count)
+        || (self.currentCategory.menu.categories.count <= 0))
     {
         DLog(@"last updated: %@", self.currentCategory.lastUpdated);
         [self requestMenusForCategory:categoryId afterID:nil];
@@ -518,7 +519,7 @@ withKey:(NSString *)key{
         if (story) {
             NSInteger index = [self.currentStories indexOfObject:story];
             if (index != NSNotFound) {
-                start = index;
+                start = ++index;
             }
         }
     }
