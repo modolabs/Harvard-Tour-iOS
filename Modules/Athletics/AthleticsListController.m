@@ -190,9 +190,6 @@
     CGFloat yActivityView = tableFrame.origin.y + newHeight;
     [_activityView setFrame:CGRectMake(activityFrame.origin.x, yActivityView,
                                        activityFrame.size.width, activityFrame.size.height)];
-//    CGFloat y = _navTabbar != nil ? _navTabbar.frame.size.height : 0;
-//    _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width,
-//                                   self.view.bounds.size.height - y);
 }
 
 #pragma mark -KGOTabbedViewController Delegate
@@ -252,6 +249,9 @@
         _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_MYSPORTS;
         [self.dataManager fetchBookmarks];
     }
+    
+    self.tabs.tabFont = [UIFont systemFontOfSize:13];
+    
     view = _contentView;
     return view;
 }
@@ -338,39 +338,6 @@
     [_storyTable reloadData];
     [_storyTable flashScrollIndicators];
 }
-
-
-#pragma mark -UITabbar Delegate
-//- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
-//    NSString *title = item.title;
-//    for (AthleticsCategory *aCategory in self.categories) {
-//        if ([aCategory.title isEqualToString:title]) {
-//            NSString *tagValue = aCategory.category_id;
-//            [self switchToCategory:tagValue];
-//            break;
-//        }
-//    }
-//}
-//
-//- (void)switchToCategory:(NSString *)categoryId {
-//    if (![categoryId isEqualToString:self.activeCategoryId]) {
-//		self.activeCategoryId = categoryId;
-//        self.dataManager.delegate = self;
-//        if ([self.activeCategoryId isEqualToString:@"0"]) {
-//            [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
-//        } else if ([self.activeCategoryId isEqualToString:@"3"]){
-//            [self.dataManager fetchBookmarks];
-//        } else {
-//            [self.dataManager fetchMenusForCategory:self.activeCategoryId startId:nil];
-//        }
-//        // makes request to server if no request has been made this session
-//        //[self.dataManager requestStoriesForCategory:self.activeCategoryId loadMore:NO forceRefresh:NO];
-//    } else {
-//        if ([self.activeCategoryId isEqualToString:@"3"]) {
-//            [self.dataManager fetchBookmarks];
-//        }
-//    }
-//}
 
 #pragma mark -Menu Cell Organization
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForMenuAtIndexPath:(NSIndexPath *)indexPath {
