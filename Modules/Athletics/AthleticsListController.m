@@ -143,6 +143,16 @@
 	_lastUpdateLabel.hidden = NO;
 	_lastUpdateLabel.text = text;
     
+    CGRect tableFrame = _storyTable.frame;
+    CGRect contentFrame = _contentView.frame;
+    CGRect activityFrame = _activityView.frame;
+    
+    CGFloat newHeight = contentFrame.size.height;
+    [_storyTable setFrame:CGRectMake(tableFrame.origin.x, tableFrame.origin.y,
+                                     tableFrame.size.width, newHeight)];
+    CGFloat yActivityView = tableFrame.origin.y + newHeight - activityFrame.size.height;
+    [_activityView setFrame:CGRectMake(activityFrame.origin.x, yActivityView,
+                                       activityFrame.size.width, activityFrame.size.height)];
     [UIView animateWithDuration:1.0 delay:2.0 options:0 animations:^(void) {
         _activityView.alpha = 0;
     } completion:^(BOOL finished) {
@@ -167,19 +177,32 @@
 	_progressView.hidden = NO;
 	_lastUpdateLabel.hidden = YES;
 	_progressView.progress = value;
-    
+    _loadingLabel.text = [NSString stringWithFormat:@"%@",NSLocalizedString(@"Loading", nil)];
     _activityView.hidden = NO;
     _activityView.alpha = 1.0;
+    
+    CGRect tableFrame = _storyTable.frame;
+    CGRect contentFrame = _contentView.frame;
+    CGRect activityFrame = _activityView.frame;
+    CGFloat newHeight = contentFrame.size.height - activityFrame.size.height;
+    [_storyTable setFrame:CGRectMake(tableFrame.origin.x, tableFrame.origin.y,
+                                     tableFrame.size.width, newHeight)];
+    CGFloat yActivityView = tableFrame.origin.y + newHeight;
+    [_activityView setFrame:CGRectMake(activityFrame.origin.x, yActivityView,
+                                       activityFrame.size.width, activityFrame.size.height)];
+//    CGFloat y = _navTabbar != nil ? _navTabbar.frame.size.height : 0;
+//    _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width,
+//                                   self.view.bounds.size.height - y);
 }
 
 #pragma mark -KGOTabbedViewController Delegate
 - (UIView *)tabbedControl:(KGOTabbedControl *)control containerViewAtIndex:(NSInteger)index {
     UIView *view = nil;
     if (!_contentView) {
-        _contentView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 460)] autorelease];
+        _contentView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 373)] autorelease];
     }
     if (!_storyTable) {
-        CGRect tFrame = CGRectMake(0, 0, 320, 369);
+        CGRect tFrame = CGRectMake(0, 0, 320, 373);
         _storyTable = [[UITableView alloc] 
                        initWithFrame:tFrame                     
                        style:UITableViewStylePlain];
@@ -191,16 +214,21 @@
     }
     if (!_activityView) {
         _activityView = [[UIView alloc] initWithFrame:CGRectMake(0, 436, 320, 24)];
+        _activityView.backgroundColor = [UIColor blackColor];
         [_contentView addSubview:_activityView];
         [_activityView release];
     }
     if (!_loadingLabel) {
         _loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 1, 68, 21)];
+        _loadingLabel.backgroundColor = [UIColor clearColor];
+        _loadingLabel.textColor = [UIColor whiteColor];
         [_activityView addSubview:_loadingLabel];
         [_loadingLabel release];
     }
     if (!_lastUpdateLabel) {
         _lastUpdateLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 1, 304, 21)];
+        _lastUpdateLabel.backgroundColor = [UIColor clearColor];
+        _lastUpdateLabel.textColor = [UIColor whiteColor];
         [_activityView addSubview:_lastUpdateLabel];
         [_lastUpdateLabel release];
     }
@@ -283,8 +311,6 @@
         AthleticsCategory *category = [theCategories objectAtIndex:0];
         self.activeCategoryId = category.category_id;
     }
-    
-//    [self setupNavTabbedButtons]; // update button pressed states
     
     // now that we have categories load the stories
     if (self.activeCategoryId) {
