@@ -84,8 +84,8 @@
             imageView.contentMode = self.contentMode;
             imageView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
         }
-        
-        imageView.image = image;
+        CGRect rectByImage = CGRectMake(0, 0, image.size.width, image.size.width);
+        imageView.image = [image imageAtRect:rectByImage];
         imageView.hidden = NO;
         _didDisplayImage = YES;
         [imageView setNeedsLayout];

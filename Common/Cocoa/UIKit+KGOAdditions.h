@@ -6,7 +6,7 @@
 
 + (UIImage *)imageWithPathName:(NSString *)pathName;
 + (UIImage *)blankImageOfSize:(CGSize)size;
-
+- (UIImage *)imageAtRect:(CGRect)rect;
 @end
 
 @interface UIColor (KGOAdditions)

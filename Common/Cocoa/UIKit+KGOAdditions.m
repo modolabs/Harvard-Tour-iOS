@@ -34,6 +34,14 @@
     return image;
 }
 
+- (UIImage *)imageAtRect:(CGRect)rect
+{
+    CGImageRef imageRef = CGImageCreateWithImageInRect([self CGImage], rect);
+    UIImage *subImage = [UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+    return subImage;
+}
+
 @end
 
 @implementation UIColor (KGOAdditions)
