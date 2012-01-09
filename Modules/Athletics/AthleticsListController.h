@@ -20,6 +20,9 @@
     UIProgressView *_progressView;
     UITableView *_storyTable;
     UIView *_activityView;
+    
+    UILabel *_sepratorLine;
+    
     IBOutlet AthleticsTableViewCell *_athletcisCell;
     
     NSString *activeCategoryId;

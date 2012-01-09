@@ -164,8 +164,7 @@
     [_bookmarkView layoutSubviews];
     [self.view bringSubviewToFront:_bookmarkView];
     _storyTable.frame = CGRectMake(0, BOOKMARK_HEIGHT, self.view.bounds.size.width,
-                                   self.view.bounds.size.height - _activityView.frame.size.height - 
-                                   BOOKMARK_HEIGHT);
+                                   self.view.bounds.size.height - BOOKMARK_HEIGHT);
 }
 
 - (void)setupBookmarkStatus {

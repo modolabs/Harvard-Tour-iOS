@@ -32,12 +32,12 @@
 
 
 
-- (void)configureLabelsTheme {
-    _titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyMediaListTitle];
-    _titleLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyMediaListTitle];
+- (void)configureLabelsTheme { 
+    _titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
+    _titleLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertySportListTitle];
     
-    _dekLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyMediaListSubtitle];
-    _dekLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyMediaListSubtitle];
+    _dekLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListSubtitle];
+    _dekLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertySportListSubtitle];
 }
 
 - (void)setStory:(AthleticsStory *)story
@@ -48,7 +48,7 @@
     // title
     NSString *title = [_story.title stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"&apos;"] withString:@"'"];
     _titleLabel.text = title;
-    CGSize constraint = CGSizeMake(_titleLabel.frame.size.width, self.frame.size.height - 10);
+    CGSize constraint = CGSizeMake(_titleLabel.frame.size.width, self.frame.size.height - 30);
     CGSize size = [_story.title sizeWithFont:_titleLabel.font constrainedToSize:constraint];
     CGRect frame = _titleLabel.frame;
     frame.size.height = size.height;

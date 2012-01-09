@@ -23,6 +23,7 @@
 #define ATHLETICS_LOADMORE_ROW_HEIGHT 50
 #define ATHLETICS_NEWS_ROW_HEIGHT 76
 #define ATHLETICS_MENUCATEGORY_ROW_HEIGHT 55
+#define ATHLETICS_TABLEVIEW_SPACING 0
 
 #define ATHLETICS_TABLEVIEW_TAG_TOPNEWS 0
 #define ATHLETICS_TABLEVIEW_TAG_MEN 1
@@ -148,7 +149,7 @@
     CGRect activityFrame = _activityView.frame;
     
     CGFloat newHeight = contentFrame.size.height;
-    [_storyTable setFrame:CGRectMake(tableFrame.origin.x, tableFrame.origin.y,
+    [_storyTable setFrame:CGRectMake(tableFrame.origin.x, tableFrame.origin.y + ATHLETICS_TABLEVIEW_SPACING,
                                      tableFrame.size.width, newHeight)];
     CGFloat yActivityView = tableFrame.origin.y + newHeight - activityFrame.size.height;
     [_activityView setFrame:CGRectMake(activityFrame.origin.x, yActivityView,
@@ -185,7 +186,7 @@
     CGRect contentFrame = _contentView.frame;
     CGRect activityFrame = _activityView.frame;
     CGFloat newHeight = contentFrame.size.height - activityFrame.size.height;
-    [_storyTable setFrame:CGRectMake(tableFrame.origin.x, tableFrame.origin.y,
+    [_storyTable setFrame:CGRectMake(tableFrame.origin.x, tableFrame.origin.y + ATHLETICS_TABLEVIEW_SPACING,
                                      tableFrame.size.width, newHeight)];
     CGFloat yActivityView = tableFrame.origin.y + newHeight;
     [_activityView setFrame:CGRectMake(activityFrame.origin.x, yActivityView,
@@ -203,8 +204,14 @@
     if (!_contentView) {
         _contentView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 373)] autorelease];
     }
+    if (!_sepratorLine) {
+        _sepratorLine = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, ATHLETICS_TABLEVIEW_SPACING)];
+        _sepratorLine.backgroundColor = [UIColor colorWithWhite:0.5 alpha:1.0];
+        [_contentView addSubview:_sepratorLine];
+        [_sepratorLine release];
+    }
     if (!_storyTable) {
-        CGRect tFrame = CGRectMake(0, 0, 320, 373);
+        CGRect tFrame = CGRectMake(0, ATHLETICS_TABLEVIEW_SPACING, 320, 373);
         _storyTable = [[UITableView alloc] 
                        initWithFrame:tFrame                     
                        style:UITableViewStylePlain];
