@@ -98,7 +98,7 @@ NSString * const AthleticsTagBody            = @"body";
 }
 
 - (void)request:(KGORequest *)request didMakeProgress:(CGFloat)progress {
-    if (request == self.storiesRequest) {
+    if (request == self.storiesRequest || request == self.menuCategoryStoriesRequest) {
         //NSString *categoryID = [request.getParams objectForKey:@"categoryID"];
         
         // TODO: see if progress value needs tweaking
@@ -635,7 +635,7 @@ withKey:(NSString *)key{
         if (story) {
             NSInteger index = [self.currentStories indexOfObject:story];
             if (index != NSNotFound) {
-                start = index;
+                start = ++index;
             }
         }
     }
