@@ -292,6 +292,12 @@
         self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         contentView.frame = self.view.bounds;
         
+        KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:@"common/webview.html"];
+        if (template) {
+            htmlString = [template stringWithReplacements:
+                          [NSDictionary dictionaryWithObjectsAndKeys:htmlString, @"BODY", nil]];
+        }
+        
         // TODO: this isn't the correct way to display the content
         // we want to show the title above it as well (separate from nav bar)
         [contentView loadHTMLString:htmlString baseURL:nil];

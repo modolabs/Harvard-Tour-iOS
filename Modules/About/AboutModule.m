@@ -19,7 +19,7 @@
         if (command) {
             __block KGOWebViewController *webVC = [[[KGOWebViewController alloc] init] autorelease];
             webVC.title = [params stringForKey:@"title"];
-            [webVC applyTemplate:@"modules/about/credits.html"];
+            [webVC applyTemplate:@"common/webview.html"];
             
             KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:nil
                                                                                   module:@"about"
