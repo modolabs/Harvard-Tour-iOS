@@ -126,9 +126,9 @@ NSString * const AthleticsTagBody            = @"body";
 
 - (BOOL)canLoadMoreStories
 {
-    if ([self.currentCategory.moreStories intValue] > 0)
+    if ([self.currentCategory.moreStories intValue] > 0) {
         return YES;
-    
+    }
     return NO;
 }
 
