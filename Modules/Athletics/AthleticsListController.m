@@ -192,6 +192,11 @@
                                        activityFrame.size.width, activityFrame.size.height)];
 }
 
+- (void)selfTabConfiguration {
+    self.tabs.tabFont = [UIFont systemFontOfSize:15];
+    self.tabs.tabSpacing = 4;
+}
+
 #pragma mark -KGOTabbedViewController Delegate
 - (UIView *)tabbedControl:(KGOTabbedControl *)control containerViewAtIndex:(NSInteger)index {
     UIView *view = nil;
@@ -249,9 +254,7 @@
         _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_MYSPORTS;
         [self.dataManager fetchBookmarks];
     }
-    
-    self.tabs.tabFont = [UIFont systemFontOfSize:13];
-    
+    [self selfTabConfiguration];
     view = _contentView;
     return view;
 }
