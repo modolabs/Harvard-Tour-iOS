@@ -30,7 +30,50 @@
     return [[self class] commonReuseIdentifier];
 }
 
+- (NSString *)titleByTrimCategoryNameWithTitle:(NSString *)title {
+    NSString *subString = nil;
+    subString = [title stringByReplacingOccurrencesOfString:@"W. " withString:@""];
+    subString = [subString stringByReplacingOccurrencesOfString:@"M. " withString:@""];
+    
+    if ([subString isEqualToString:title]) {
+        if ([subString rangeOfString:@"ball. "].location != NSNotFound) {
+            NSArray *cuts = [subString componentsSeparatedByString:@"ball. "];
+            if (cuts.count > 1) {
+                return [cuts objectAtIndex:1];
+            }
+        } else if ([subString rangeOfString:@"Swimming & Diving."].location != NSNotFound) {
+            NSArray *cuts = [subString componentsSeparatedByString:@"Swimming & Diving."];
+            if (cuts.count > 1) {
+                return [cuts objectAtIndex:1];
+            }
+        }
+        return subString;
+    }
+    NSArray *cuts = [subString componentsSeparatedByString:@". "];
+    if (cuts.count > 1) {
+        NSString *prefix = [NSString stringWithFormat:@"%@. ",[cuts objectAtIndex:0]];
+        subString = [subString stringByReplacingOccurrencesOfString:prefix 
+                                                         withString:@""];
+    }
+    return subString;
+}
 
+- (NSString *)categoryNameWithTitle:(NSString *)title {
+    NSString *subString = [self titleByTrimCategoryNameWithTitle:title];
+    subString = [title stringByReplacingOccurrencesOfString:subString withString:@""];
+    subString = subString.length > 0 ? subString : title;
+    if ([[subString substringFromIndex:subString.length-2] isEqualToString:@". "]) {
+        subString = [subString substringToIndex:subString.length-2];
+    }
+    return subString;
+}
+
+- (NSString *)newStyleTitleStringWithString:(NSString *)srcString {
+    NSString *formattor = [NSString stringWithFormat:@"%@\n%@",
+                           [self categoryNameWithTitle:srcString],
+                           [self titleByTrimCategoryNameWithTitle:srcString]];
+    return formattor;
+}
 
 - (void)configureLabelsTheme { 
     _titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
@@ -47,7 +90,7 @@
     
     // title
     NSString *title = [_story.title stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"&apos;"] withString:@"'"];
-    _titleLabel.text = title;
+    _titleLabel.text = [self newStyleTitleStringWithString:title];
     CGSize constraint = CGSizeMake(_titleLabel.frame.size.width, self.frame.size.height - 30);
     CGSize size = [_story.title sizeWithFont:_titleLabel.font constrainedToSize:constraint];
     CGRect frame = _titleLabel.frame;
