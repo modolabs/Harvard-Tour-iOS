@@ -1,6 +1,6 @@
 #import "NewsModule.h"
 #import "StoryListViewController.h"
-#import "NewsDataController.h"
+#import "StoryDetailViewController.h"
 
 @implementation NewsModule
 @synthesize dataManager;

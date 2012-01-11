@@ -240,7 +240,7 @@ NSString * const CoreDataFilenameSuffix = @"sqlite";
 	
 	NSError *error;
     persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
-	
+    
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
                              [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
                              [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
@@ -311,20 +311,17 @@ NSString * const CoreDataFilenameSuffix = @"sqlite";
     @synchronized(self) {
         [persistentStoreCoordinator release];
         persistentStoreCoordinator = nil;
+        [managedObjectModel release];
+        managedObjectModel = nil;
     }
     
-    if ([[NSFileManager defaultManager] removeItemAtPath:[self storeFileName] error:&error]) {
-        NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-        DLog(@"%@", coordinator);
-        
-        success = coordinator != nil;
-        
-    } else {
-        NSLog(@"could not delete store, %@", [error description]);
-    }
+    success = [[NSFileManager defaultManager] removeItemAtPath:[self storeFileName] error:&error];
     
     if (success) {
+        DLog(@"Core Data store deleted");
         [[NSNotificationCenter defaultCenter] postNotificationName:CoreDataDidDeleteStoreNotification object:self];
+    } else {
+        NSLog(@"could not delete store, %@", [error description]);
     }
     
     return success;

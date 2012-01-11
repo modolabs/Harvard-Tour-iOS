@@ -1,4 +1,5 @@
 #import "ConnectionWrapper.h"
+#import "KGORequest.h"
 
 #define TIMEOUT_INTERVAL	30.0
 
@@ -121,16 +122,7 @@
 											 cachePolicy:	cachePolicy	// Make sure not to cache in case of update for URL
 										 timeoutInterval:	TIMEOUT_INTERVAL];
 	
-    static NSString *userAgent = nil;
-    if (userAgent == nil) {
-        NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-        userAgent = [[NSString alloc] initWithFormat:@"%@/%@ (%@ %@)",
-                     [infoDict objectForKey:@"CFBundleName"],
-                     [infoDict objectForKey:@"CFBundleVersion"],
-                     (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? @"iPad" : @"iPhone",
-                     [[UIDevice currentDevice] systemVersion]];
-    }
-    [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
+    [request setValue:[KGORequest userAgentString] forHTTPHeaderField:@"User-Agent"];
     
 	// 'pre-flight' check to make sure it will go through
 	if(![NSURLConnection canHandleRequest:request]) {	// if the request will fail

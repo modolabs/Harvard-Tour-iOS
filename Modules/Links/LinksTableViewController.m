@@ -312,6 +312,7 @@
         MITThumbnailView *thumbnailView = [[[MITThumbnailView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)] autorelease];
         thumbnailView.userInteractionEnabled = NO;
         NSString *iconURL = [linkDict objectForKey:@"iconURL"];
+        // TODO: create a generic function that makes these kinds of replacements in a safe way
         thumbnailView.imageURL = [iconURL stringByReplacingOccurrencesOfString:@" " withString:@"%20"];            
         [thumbnailView loadImage];
         [iconView addSubview:thumbnailView];

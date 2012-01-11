@@ -155,6 +155,10 @@
 		EB181FBD131EDF30003728FF /* KGOPortletHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB181FB3131EDF30003728FF /* KGOPortletHomeViewController.m */; };
 		EB181FBF131EDF30003728FF /* SpringboardIcon.m in Sources */ = {isa = PBXBuildFile; fileRef = EB181FB5131EDF30003728FF /* SpringboardIcon.m */; };
 		EB181FC5131EDF43003728FF /* MapSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB181FC3131EDF43003728FF /* MapSettingsViewController.m */; };
+		EB267006149FD6DF00F50997 /* ThumbnailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB267004149FD6DF00F50997 /* ThumbnailTableViewCell.m */; };
+		EB267007149FD6DF00F50997 /* ThumbnailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB267005149FD6DF00F50997 /* ThumbnailTableViewCell.xib */; };
+		EB26700B14A007F100F50997 /* PhotoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB26700914A007F100F50997 /* PhotoDetailViewController.m */; };
+		EB26700C14A007F100F50997 /* PhotoDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB26700A14A007F100F50997 /* PhotoDetailViewController.xib */; };
 		EB29B169141EA6C400D8559A /* NewsDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB29B168141EA6C400D8559A /* NewsDataController.m */; };
 		EB46A346134EB942005796E4 /* ThemeConfig-iPad.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB46A345134EB942005796E4 /* ThemeConfig-iPad.plist */; };
 		EB46A348134EB97C005796E4 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB46A347134EB97C005796E4 /* MainWindow-iPad.xib */; };
@@ -169,6 +173,18 @@
 		EB48910913310A930036AEBF /* ExternalURLModule.m in Sources */ = {isa = PBXBuildFile; fileRef = EB48910813310A930036AEBF /* ExternalURLModule.m */; };
 		EB4C2CDF127F138100058748 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EB4C2CDE127F138100058748 /* libsqlite3.dylib */; };
 		EB4C2CE1127F138900058748 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB4C2CE0127F138900058748 /* CFNetwork.framework */; };
+		EB4E4E6E149A7CD400745061 /* PhotosModule.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E6D149A7CD400745061 /* PhotosModule.m */; };
+		EB4E4E8C149A87A100745061 /* Photos.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E8A149A87A100745061 /* Photos.xcdatamodeld */; };
+		EB4E4E8F149A88C100745061 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E8E149A88C100745061 /* Photo.m */; };
+		EB4E4E92149A88C200745061 /* PhotoAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E91149A88C200745061 /* PhotoAlbum.m */; };
+		EB4E4E95149A903F00745061 /* PhotoDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4E94149A903E00745061 /* PhotoDataManager.m */; };
+		EB4E4EA3149ABE9300745061 /* AlbumListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4EA1149ABE9200745061 /* AlbumListViewController.m */; };
+		EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */; };
+		EB4E4EA8149ADAC400745061 /* PhotoGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */; };
+		EB4E4EA9149ADAC400745061 /* PhotoGridViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */; };
+		EB587B3814A3F25100723906 /* IconGridScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB587B3614A3F25100723906 /* IconGridScrollViewController.m */; };
+		EB587B3914A3F25100723906 /* IconGridScrollViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB587B3714A3F25100723906 /* IconGridScrollViewController.xib */; };
+		EB587B3D14A40B9200723906 /* IconGridScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB587B3C14A40B9200723906 /* IconGridScrollView.m */; };
 		EB640C6B13FDFFFB00CFAC5B /* libjson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB640C6A13FDFFFB00CFAC5B /* libjson.a */; };
 		EB6BC7F614058A0B0095744E /* MapCategoryListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */; };
 		EB6D02A911E3784100B65CE3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6D02A811E3784100B65CE3 /* MapKit.framework */; };
@@ -189,8 +205,6 @@
 		EB7F32D710CD6FBB00188BCD /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB7F32D610CD6FBB00188BCD /* AddressBookUI.framework */; };
 		EB83AE4C13C747AA006CCEDB /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB83AE4A13C747AA006CCEDB /* Settings.plist */; };
 		EB83AE5113C747BE006CCEDB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB83AE4F13C747BE006CCEDB /* Localizable.strings */; };
-		EB93486A139ED48500446243 /* NewsStoryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB934867139ED48500446243 /* NewsStoryTableViewCell.m */; };
-		EB93486B139ED48500446243 /* NewsStoryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB934868139ED48500446243 /* NewsStoryTableViewCell.xib */; };
 		EB93486C139ED48500446243 /* StoryListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB934869139ED48500446243 /* StoryListViewController.xib */; };
 		EB9AF2A7130B59C3003B9769 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB9AF298130B56AD003B9769 /* MainWindow.xib */; };
 		EB9AF2BD130B5AC2003B9769 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB138AFC12F22F31004DBB7C /* Config.plist */; };
@@ -491,6 +505,12 @@
 		EB181FB5131EDF30003728FF /* SpringboardIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpringboardIcon.m; sourceTree = "<group>"; };
 		EB181FC2131EDF43003728FF /* MapSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapSettingsViewController.h; sourceTree = "<group>"; };
 		EB181FC3131EDF43003728FF /* MapSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapSettingsViewController.m; sourceTree = "<group>"; };
+		EB267003149FD6DF00F50997 /* ThumbnailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailTableViewCell.h; sourceTree = "<group>"; };
+		EB267004149FD6DF00F50997 /* ThumbnailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbnailTableViewCell.m; sourceTree = "<group>"; };
+		EB267005149FD6DF00F50997 /* ThumbnailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ThumbnailTableViewCell.xib; sourceTree = "<group>"; };
+		EB26700814A007F000F50997 /* PhotoDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoDetailViewController.h; sourceTree = "<group>"; };
+		EB26700914A007F100F50997 /* PhotoDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoDetailViewController.m; sourceTree = "<group>"; };
+		EB26700A14A007F100F50997 /* PhotoDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoDetailViewController.xib; sourceTree = "<group>"; };
 		EB29B167141EA6C400D8559A /* NewsDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsDataController.h; sourceTree = "<group>"; };
 		EB29B168141EA6C400D8559A /* NewsDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsDataController.m; sourceTree = "<group>"; };
 		EB3067FD142BC15B0047C9CF /* FBConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBConnect.h; path = ../../Contrib/Facebook/FBConnect.h; sourceTree = "<group>"; };
@@ -518,6 +538,26 @@
 		EB48910813310A930036AEBF /* ExternalURLModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExternalURLModule.m; sourceTree = "<group>"; };
 		EB4C2CDE127F138100058748 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		EB4C2CE0127F138900058748 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		EB4E4E6C149A7CD400745061 /* PhotosModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotosModule.h; sourceTree = "<group>"; };
+		EB4E4E6D149A7CD400745061 /* PhotosModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotosModule.m; sourceTree = "<group>"; };
+		EB4E4E8B149A87A100745061 /* Photos.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Photos.xcdatamodel; sourceTree = "<group>"; };
+		EB4E4E8D149A88C100745061 /* Photo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Photo.h; sourceTree = "<group>"; };
+		EB4E4E8E149A88C100745061 /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
+		EB4E4E90149A88C200745061 /* PhotoAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoAlbum.h; sourceTree = "<group>"; };
+		EB4E4E91149A88C200745061 /* PhotoAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoAlbum.m; sourceTree = "<group>"; };
+		EB4E4E93149A903E00745061 /* PhotoDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoDataManager.h; sourceTree = "<group>"; };
+		EB4E4E94149A903E00745061 /* PhotoDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoDataManager.m; sourceTree = "<group>"; };
+		EB4E4EA0149ABE9100745061 /* AlbumListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumListViewController.h; sourceTree = "<group>"; };
+		EB4E4EA1149ABE9200745061 /* AlbumListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumListViewController.m; sourceTree = "<group>"; };
+		EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumListViewController.xib; sourceTree = "<group>"; };
+		EB4E4EA5149ADAC200745061 /* PhotoGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoGridViewController.h; sourceTree = "<group>"; };
+		EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoGridViewController.m; sourceTree = "<group>"; };
+		EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PhotoGridViewController.xib; sourceTree = "<group>"; };
+		EB587B3514A3F25100723906 /* IconGridScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconGridScrollViewController.h; sourceTree = "<group>"; };
+		EB587B3614A3F25100723906 /* IconGridScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconGridScrollViewController.m; sourceTree = "<group>"; };
+		EB587B3714A3F25100723906 /* IconGridScrollViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IconGridScrollViewController.xib; sourceTree = "<group>"; };
+		EB587B3B14A40B9200723906 /* IconGridScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconGridScrollView.h; sourceTree = "<group>"; };
+		EB587B3C14A40B9200723906 /* IconGridScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconGridScrollView.m; sourceTree = "<group>"; };
 		EB640C6A13FDFFFB00CFAC5B /* libjson.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libjson.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB6BC7F414058A0B0095744E /* MapCategoryListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapCategoryListViewController.h; sourceTree = "<group>"; };
 		EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapCategoryListViewController.m; sourceTree = "<group>"; };
@@ -545,9 +585,6 @@
 		EB83AE5213C747C5006CCEDB /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EB83AE5413C747CF006CCEDB /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EB83AE5C13C75C0C006CCEDB /* staging.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = staging.xcconfig; sourceTree = "<group>"; };
-		EB934866139ED48500446243 /* NewsStoryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsStoryTableViewCell.h; sourceTree = "<group>"; };
-		EB934867139ED48500446243 /* NewsStoryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsStoryTableViewCell.m; sourceTree = "<group>"; };
-		EB934868139ED48500446243 /* NewsStoryTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewsStoryTableViewCell.xib; sourceTree = "<group>"; };
 		EB934869139ED48500446243 /* StoryListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StoryListViewController.xib; sourceTree = "<group>"; };
 		EB9AF298130B56AD003B9769 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		EBAE863E1215FB0D00F370BE /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -631,7 +668,6 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
-				4B7F835A1458C36B001524FB /* Twitter.framework */,
 				EB1441361309EF7B00396753 /* Application */,
 				EB0336B2133C2B8B00ACF2BB /* Common */,
 				EB1387B912F22DF7004DBB7C /* Contrib */,
@@ -681,6 +717,7 @@
 				DE7720DF10C57E1C00620A7D /* QuartzCore.framework */,
 				29366C19118E401C009D6863 /* libxml2.dylib */,
 				29366C1D118E4151009D6863 /* Security.framework */,
+				4B7F835A1458C36B001524FB /* Twitter.framework */,
 				EB6D02A811E3784100B65CE3 /* MapKit.framework */,
 				A6F2F83C134BAEDD009F597D /* MediaPlayer.framework */,
 			);
@@ -821,6 +858,7 @@
 			isa = PBXGroup;
 			children = (
 				4E89EF831488A830001402A2 /* Athletics */,
+				EB4E4E59149A766A00745061 /* Photos */,
 				562CD69C13B9AE6D00C5CB94 /* Links */,
 				4B3904E3134147D000CD9C6F /* Emergency */,
 				562F4B61133EC6DE000B9344 /* Content */,
@@ -864,9 +902,6 @@
 				EB934869139ED48500446243 /* StoryListViewController.xib */,
 				DE728E6410D6FF4700BFED37 /* StoryDetailViewController.h */,
 				DE728E6510D6FF4700BFED37 /* StoryDetailViewController.m */,
-				EB934866139ED48500446243 /* NewsStoryTableViewCell.h */,
-				EB934867139ED48500446243 /* NewsStoryTableViewCell.m */,
-				EB934868139ED48500446243 /* NewsStoryTableViewCell.xib */,
 			);
 			path = News;
 			sourceTree = "<group>";
@@ -1043,6 +1078,11 @@
 				EBE2CC2013438AEA0037546A /* KGODetailPageHeaderView.m */,
 				EB05DAA61458953100A8F316 /* KGOGradientView.h */,
 				EB05DAA71458953100A8F316 /* KGOGradientView.m */,
+				EB267003149FD6DF00F50997 /* ThumbnailTableViewCell.h */,
+				EB267004149FD6DF00F50997 /* ThumbnailTableViewCell.m */,
+				EB267005149FD6DF00F50997 /* ThumbnailTableViewCell.xib */,
+				EB587B3B14A40B9200723906 /* IconGridScrollView.h */,
+				EB587B3C14A40B9200723906 /* IconGridScrollView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1291,6 +1331,42 @@
 			path = ExternalURL;
 			sourceTree = "<group>";
 		};
+		EB4E4E59149A766A00745061 /* Photos */ = {
+			isa = PBXGroup;
+			children = (
+				EB4E4E89149A878C00745061 /* Model */,
+				EB4E4E6C149A7CD400745061 /* PhotosModule.h */,
+				EB4E4E6D149A7CD400745061 /* PhotosModule.m */,
+				EB4E4E93149A903E00745061 /* PhotoDataManager.h */,
+				EB4E4E94149A903E00745061 /* PhotoDataManager.m */,
+				EB4E4EA0149ABE9100745061 /* AlbumListViewController.h */,
+				EB4E4EA1149ABE9200745061 /* AlbumListViewController.m */,
+				EB4E4EA2149ABE9200745061 /* AlbumListViewController.xib */,
+				EB4E4EA5149ADAC200745061 /* PhotoGridViewController.h */,
+				EB4E4EA6149ADAC300745061 /* PhotoGridViewController.m */,
+				EB4E4EA7149ADAC400745061 /* PhotoGridViewController.xib */,
+				EB26700814A007F000F50997 /* PhotoDetailViewController.h */,
+				EB26700914A007F100F50997 /* PhotoDetailViewController.m */,
+				EB26700A14A007F100F50997 /* PhotoDetailViewController.xib */,
+				EB587B3514A3F25100723906 /* IconGridScrollViewController.h */,
+				EB587B3614A3F25100723906 /* IconGridScrollViewController.m */,
+				EB587B3714A3F25100723906 /* IconGridScrollViewController.xib */,
+			);
+			path = Photos;
+			sourceTree = "<group>";
+		};
+		EB4E4E89149A878C00745061 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				EB4E4E8A149A87A100745061 /* Photos.xcdatamodeld */,
+				EB4E4E90149A88C200745061 /* PhotoAlbum.h */,
+				EB4E4E91149A88C200745061 /* PhotoAlbum.m */,
+				EB4E4E8D149A88C100745061 /* Photo.h */,
+				EB4E4E8E149A88C100745061 /* Photo.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		EB7E9E94143144CC0093B0C7 /* Site */ = {
 			isa = PBXGroup;
 			children = (
@@ -1462,7 +1538,6 @@
 				EB46A348134EB97C005796E4 /* MainWindow-iPad.xib in Resources */,
 				EB46A4B413501A80005796E4 /* Icon-72.png in Resources */,
 				EB163ABA136CFB2F003C69E2 /* Default-Portrait~ipad.png in Resources */,
-				EB93486B139ED48500446243 /* NewsStoryTableViewCell.xib in Resources */,
 				EB93486C139ED48500446243 /* StoryListViewController.xib in Resources */,
 				EB83AE4C13C747AA006CCEDB /* Settings.plist in Resources */,
 				EB83AE5113C747BE006CCEDB /* Localizable.strings in Resources */,
@@ -1477,6 +1552,11 @@
 				4E89EF8E1488AEDA001402A2 /* AthleticsTableViewCell.xib in Resources */,
 				4E90758A149B36A400E5A322 /* AthleticsSportsViewController.xib in Resources */,
 				4E0ABEA314ADAFF40045FB85 /* AthleticsScheduleListViewController.xib in Resources */,
+				EB4E4EA4149ABE9300745061 /* AlbumListViewController.xib in Resources */,
+				EB4E4EA9149ADAC400745061 /* PhotoGridViewController.xib in Resources */,
+				EB267007149FD6DF00F50997 /* ThumbnailTableViewCell.xib in Resources */,
+				EB26700C14A007F100F50997 /* PhotoDetailViewController.xib in Resources */,
+				EB587B3914A3F25100723906 /* IconGridScrollViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1618,7 +1698,6 @@
 				EB0370F11396B6B500AD881F /* KGOLabel.m in Sources */,
 				EB0371401396E84500AD881F /* KGOSearchBar.m in Sources */,
 				EB0371431396E87500AD881F /* KGOSearchResultListTableView.m in Sources */,
-				EB93486A139ED48500446243 /* NewsStoryTableViewCell.m in Sources */,
 				562CD69F13B9AEA600C5CB94 /* LinksModule.m in Sources */,
 				4B2A10B013D609300028298E /* LinksTableViewController.m in Sources */,
 				EB6BC7F614058A0B0095744E /* MapCategoryListViewController.m in Sources */,
@@ -1651,6 +1730,17 @@
 				4E93255314A5C77100214B6F /* AthleticsScheduleDetailViewController.m in Sources */,
 				4E0ABEA214ADAFF40045FB85 /* AthleticsScheduleListViewController.m in Sources */,
 				4EEEC24014B54CD200A39463 /* Foundation+KGOAdditions.m in Sources */,
+				EB4E4E6E149A7CD400745061 /* PhotosModule.m in Sources */,
+				EB4E4E8C149A87A100745061 /* Photos.xcdatamodeld in Sources */,
+				EB4E4E8F149A88C100745061 /* Photo.m in Sources */,
+				EB4E4E92149A88C200745061 /* PhotoAlbum.m in Sources */,
+				EB4E4E95149A903F00745061 /* PhotoDataManager.m in Sources */,
+				EB4E4EA3149ABE9300745061 /* AlbumListViewController.m in Sources */,
+				EB4E4EA8149ADAC400745061 /* PhotoGridViewController.m in Sources */,
+				EB267006149FD6DF00F50997 /* ThumbnailTableViewCell.m in Sources */,
+				EB26700B14A007F100F50997 /* PhotoDetailViewController.m in Sources */,
+				EB587B3814A3F25100723906 /* IconGridScrollViewController.m in Sources */,
+				EB587B3D14A40B9200723906 /* IconGridScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1736,7 +1826,7 @@
 				EB83AE5B13C75B3A006CCEDB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Universitas" */ = {
 			isa = XCConfigurationList;
@@ -1746,7 +1836,7 @@
 				EB83AE5A13C75B3A006CCEDB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
@@ -1811,6 +1901,16 @@
 			);
 			currentVersion = EB181F7A131EDECA003728FF /* PeopleDataModel 5.xcdatamodel */;
 			path = PeopleDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		EB4E4E8A149A87A100745061 /* Photos.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				EB4E4E8B149A87A100745061 /* Photos.xcdatamodel */,
+			);
+			currentVersion = EB4E4E8B149A87A100745061 /* Photos.xcdatamodel */;
+			path = Photos.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

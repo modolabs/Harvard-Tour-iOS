@@ -1,23 +1,19 @@
 #import <UIKit/UIKit.h>
+#import "KGOTableViewController.h"
 #import "NewsDataController.h"
 #import "KGOScrollingTabstrip.h"
 #import "KGOSearchBar.h"
-#import "KGOSearchDisplayController.h"
-#import "StoryDetailViewController.h"
-#import "KGOTableViewController.h"
-#import "MITThumbnailView.h"
 
 @class KGOSearchDisplayController;
-@class NewsStoryTableViewCell;
+@class ThumbnailTableViewCell;
 @class NewsStory;
 
 @interface StoryListViewController : KGOTableViewController <KGOSearchBarDelegate,
 NewsDataDelegate, 
 KGOScrollingTabstripSearchDelegate> {
-//KGOScrollingTabstripDelegate, KGOSearchDisplayDelegate> {
     
 	IBOutlet UITableView *_storyTable;
-    IBOutlet NewsStoryTableViewCell *_storyCell;
+    ThumbnailTableViewCell *_storyCell;
     
 	// Nav Scroll View
 	IBOutlet KGOScrollingTabstrip *_navScrollView;
@@ -39,6 +35,8 @@ KGOScrollingTabstripSearchDelegate> {
 	
 	BOOL showingBookmarks;
 }
+
+@property (nonatomic, retain) IBOutlet ThumbnailTableViewCell *cell;
 
 @property (nonatomic, retain) NewsStory *featuredStory;
 @property (nonatomic, retain) NSArray *stories;
