@@ -11,6 +11,7 @@
 #import "AthleticsTableViewCell.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "UIKit+KGOAdditions.h"
+#import "KGOTheme.h"
 
 @implementation AthleticsListController
 @synthesize dataManager;
@@ -30,6 +31,7 @@
 #define ATHLETICS_TABLEVIEW_TAG_WOMEN 2
 #define ATHLETICS_TABLEVIEW_TAG_MYSPORTS 3
 
+#define ATHLETICS_LABEL_TAG_NULL 4
 - (id)init {
     self = [super init];
     if (self) {
@@ -367,6 +369,24 @@
 
 #pragma mark -KGOTable Methds
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    if (self.stories.count == 0) {
+        UILabel *nullLabel = [[UILabel alloc] initWithFrame:tableView.frame];
+        nullLabel.text = NSLocalizedString(@"To save a favorite, click the star icon while viewing a sport", nil);
+        nullLabel.font = [UIFont boldSystemFontOfSize:16];
+        nullLabel.numberOfLines = 2;
+        nullLabel.textAlignment = UITextAlignmentCenter;
+        nullLabel.lineBreakMode = UILineBreakModeWordWrap;
+        nullLabel.tag = ATHLETICS_LABEL_TAG_NULL;
+        [tableView addSubview:nullLabel];
+    } else {
+        NSArray *subViews = [tableView subviews];
+        for (UIView *view in subViews) {
+            if (view.tag == ATHLETICS_LABEL_TAG_NULL) {
+                [view removeFromSuperview];
+                break;
+            }
+        }
+    }
     return (self.stories.count > 0) ? 1 : 0;
 }
 

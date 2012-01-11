@@ -31,6 +31,7 @@
     NSInteger _menTabIndex;
     NSInteger _womenTabIndex;
     NSInteger _mySportsTabIndex;
+    
 }
 
 @property (nonatomic, retain) AthleticsDataController *dataManager;
