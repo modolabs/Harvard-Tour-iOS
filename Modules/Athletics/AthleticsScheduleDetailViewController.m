@@ -57,12 +57,13 @@
     }
     AthleticsSchedule *schedule = self.currentSchedule;
     cell.textLabel.text = schedule.title;
-    
+    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
     double unixtime = [schedule.start doubleValue];
     NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:unixtime];
     NSString *detailString = [NSString stringWithFormat:@"%@\n%@",[startDate weekDateTimeString],schedule.location];
     cell.detailTextLabel.text = detailString;
     cell.detailTextLabel.numberOfLines = 2;
+    cell.detailTextLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListSubtitle];
     return [cell autorelease];
 }
 
@@ -76,11 +77,12 @@
     }
     AthleticsSchedule *schedule = self.currentSchedule;
     cell.textLabel.text = schedule.title;
-    
+    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
     double unixtime = [schedule.start doubleValue];
     NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:unixtime];
     NSString *detailString = [NSString stringWithFormat:@"%@",[startDate weekDateTimeString]];
     cell.detailTextLabel.text = detailString;
+    cell.detailTextLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListSubtitle];
     return [cell autorelease];
 }
 
@@ -94,8 +96,10 @@
     }
     AthleticsSchedule *schedule = self.currentSchedule;
     cell.textLabel.text = schedule.location;
+    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
     cell.detailTextLabel.text = schedule.link;
     cell.detailTextLabel.numberOfLines = 2;
+    cell.detailTextLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListSubtitle];
     return [cell autorelease];
 }
 

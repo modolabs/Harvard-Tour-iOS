@@ -14,7 +14,7 @@
 #import "CoreDataManager.h"
 #import <QuartzCore/QuartzCore.h>
 
-#define ATHLETICS_SCHDULES_ROW_HEIGHT 60
+#define ATHLETICS_SCHDULES_ROW_HEIGHT 65
 #define ATHLETICS_NEWS_ROW_HEIGHT 76
 #define BOOKMARK_HEIGHT 50
 
@@ -280,12 +280,13 @@
     }
     AthleticsSchedule *schedule = [self.schedules objectAtIndex:indexPath.row];
     cell.textLabel.text = schedule.title;
-    
+    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
     double unixtime = [schedule.start doubleValue];
     NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:unixtime];
     NSString *detailString = [NSString stringWithFormat:@"%@\n%@",[startDate weekDateTimeString],schedule.location];
     cell.detailTextLabel.text = detailString;
     cell.detailTextLabel.numberOfLines = 2;
+    cell.detailTextLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListSubtitle];
     return cell;
 }
 
@@ -299,6 +300,7 @@
     }
     cell.textLabel.text = @"Full schedule and results";
     cell.textLabel.textAlignment = UITextAlignmentCenter;
+    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
     return cell;
 }
 
