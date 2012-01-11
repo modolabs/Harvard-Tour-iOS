@@ -369,7 +369,7 @@
 
 #pragma mark -KGOTable Methds
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if (self.stories.count == 0) {
+    if (self.stories.count == 0 && [self.activeCategoryId isEqualToString:@"3"]) {
         UILabel *nullLabel = [[UILabel alloc] initWithFrame:tableView.frame];
         nullLabel.text = NSLocalizedString(@"To save a favorite, click the star icon while viewing a sport", nil);
         nullLabel.font = [UIFont boldSystemFontOfSize:16];
