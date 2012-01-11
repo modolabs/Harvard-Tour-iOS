@@ -378,6 +378,7 @@
         nullLabel.lineBreakMode = UILineBreakModeWordWrap;
         nullLabel.tag = ATHLETICS_LABEL_TAG_NULL;
         [tableView addSubview:nullLabel];
+        [nullLabel release];
     } else {
         NSArray *subViews = [tableView subviews];
         for (UIView *view in subViews) {
