@@ -240,6 +240,10 @@
         }
 
         UIViewController *vc = [module modulePage:pageName params:params];
+        if (!vc.title && [pageName isEqualToString:LocalPathPageNameHome]) {
+            vc.title = module.shortName;
+        }
+        
         if (vc) {
             // storing mainly for calling viewWillAppear on modal transitions,
             // so assuming it's never deallocated when we try to access it

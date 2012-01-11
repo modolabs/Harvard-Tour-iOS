@@ -1,11 +1,3 @@
-//
-//  LinksModule.m
-//  Universitas
-//
-//  Created by Muhammad J Amjad on 6/28/11.
-//  Copyright 2011 ModoLabs Inc. All rights reserved.
-//
-
 #import "LinksModule.h"
 #import "LinksTableViewController.h"
 

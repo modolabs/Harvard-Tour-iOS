@@ -4,9 +4,9 @@
 #import "EmergencyModule.h"
 
 enum EmergencyLoadingStatus {
-    Loading,
-    Loaded,
-    Failed,
+    EmergencyStatusLoading,
+    EmergencyStatusLoaded,
+    EmergencyStatusFailed,
 };
 
 @interface EmergencyHomeViewController : KGOTableViewController <UIWebViewDelegate> {

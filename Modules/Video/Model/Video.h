@@ -1,8 +1,3 @@
-//
-//  Video.h
-//  Universitas
-//
-
 #import <CoreData/CoreData.h>
 #import "KGOSearchModel.h"
 #import "MITThumbnailView.h"

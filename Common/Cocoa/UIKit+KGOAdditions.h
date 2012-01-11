@@ -2,6 +2,8 @@
 #import <UIKit/UIKit.h>
 #import "KGOHTMLTemplate.h"
 
+#define IS_IPAD_OR_PORTRAIT(orientation) (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad || (orientation) == UIInterfaceOrientationPortrait)
+
 @interface UIImage (KGOAdditions)
 
 + (UIImage *)imageWithPathName:(NSString *)pathName;

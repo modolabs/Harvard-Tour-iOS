@@ -5,6 +5,7 @@
 #import "VideoModule.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "KGOTheme.h"
+#import "ThumbnailTableViewCell.h"
 
 static const NSInteger kVideoListCellThumbnailTag = 0x78;
 
@@ -43,6 +44,7 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 @synthesize videoSections;
 @synthesize activeSectionIndex;
 @synthesize theSearchBar;
+@synthesize cell = _cell;
 
 @synthesize federatedSearchTerms, federatedSearchResults;
 
@@ -141,46 +143,24 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
-                                       reuseIdentifier:CellIdentifier] autorelease];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
-        cell.textLabel.numberOfLines = 2;
-        cell.detailTextLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListSubtitle];
-        cell.detailTextLabel.numberOfLines = 2;
-        cell.indentationLevel = 1;
-        cell.indentationWidth = 120;
-        
-        MITThumbnailView *thumbnailView = [[MITThumbnailView alloc] initWithFrame:CGRectMake(0, 0, 120, 90)];
-        thumbnailView.tag = kVideoListCellThumbnailTag;
-        [cell.contentView addSubview:thumbnailView];
-        [thumbnailView release];
+
+    ThumbnailTableViewCell *cell = (ThumbnailTableViewCell *)[tableView dequeueReusableCellWithIdentifier:
+                                                              [ThumbnailTableViewCell commonReuseIdentifier]];
+    if (!cell) {
+        [[NSBundle mainBundle] loadNibNamed:@"ThumbnailTableViewCell" owner:self options:nil];
+        cell = _cell;
+        cell.thumbnailSize = CGSizeMake(120, tableView.rowHeight);
     }
 
-    if (self.videos.count > indexPath.row) {
-        Video *video = [self.videos objectAtIndex:indexPath.row];
-        MITThumbnailView *thumbnailView = (MITThumbnailView *)[cell.contentView viewWithTag:kVideoListCellThumbnailTag];
-        thumbnailView.delegate = video;
-        cell.textLabel.text = video.title;
-        cell.detailTextLabel.text = video.subtitle;
-        
-        if (![thumbnailView.imageURL isEqualToString:video.thumbnailURLString]) {
-            thumbnailView.imageURL = video.thumbnailURLString;
-            thumbnailView.imageData = nil;
-        }
-        if (!(thumbnailView.imageData)) {
-            if (video.thumbnailImageData) {
-                thumbnailView.imageData = video.thumbnailImageData;
-            }
-            [thumbnailView loadImage];
-        }
-        [thumbnailView displayImage];
-    }
+    Video *video = [self.videos objectAtIndex:indexPath.row];
+    cell.thumbView.delegate = video;
+    cell.titleLabel.text = video.title;
+    cell.subtitleLabel.text = video.subtitle;
+    
+    cell.thumbView.imageURL = video.thumbnailURLString;
+    cell.thumbView.imageData = video.thumbnailImageData;
+    
+    [cell.thumbView loadImage];
     
     return cell;
 }

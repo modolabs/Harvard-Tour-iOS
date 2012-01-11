@@ -2,8 +2,6 @@
 #import "KGOModule.h"
 #import "NewsDataController.h"
 
-@class NewsDataController;
-
 @interface NewsModule : KGOModule <NewsDataDelegate> {
     NSInteger totalResults;
     //id<KGOSearchResultsHolder> *searchDelegate;
