@@ -121,8 +121,8 @@
         [_thumbnailView loadImage];
         
     } else {
-        _thumbnailView.imageURL = nil;
-        [_thumbnailView setPlaceholderImage:[UIImage imageWithPathName:@"modules/news/news-placeholder.png"]];
+        _thumbnailView.imageURL = nil;                                   
+        [_thumbnailView setPlaceholderImage:[UIImage imageWithPathName:@"modules/athletics/athletics-placeholder.png"]];
     }
 }
 
