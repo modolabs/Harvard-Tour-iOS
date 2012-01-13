@@ -269,6 +269,8 @@
                                        reuseIdentifier:loadMoreIdentifier] autorelease];
     }
     cell.textLabel.text = NSLocalizedString(@"Load more stories", @"new story SportsView");
+    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
+    cell.textLabel.textAlignment = UITextAlignmentCenter;
     [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
     // TODO: set color to #999999 while things are loading
     cell.textLabel.textColor = [UIColor colorWithHexString:@"#1A1611"];
@@ -303,7 +305,7 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                        reuseIdentifier:loadFullSchedulesIdentifier] autorelease];
     }
-    cell.textLabel.text = @"Full schedule and results";
+    cell.textLabel.text = NSLocalizedString(@"List 10 more schedule items", nil);
     cell.textLabel.textAlignment = UITextAlignmentCenter;
     cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
     return cell;
