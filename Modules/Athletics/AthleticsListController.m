@@ -416,7 +416,7 @@
         }
         cell.textLabel.text = NSLocalizedString(@"Load more stories", @"new story list");
         cell.textLabel.textAlignment = UITextAlignmentCenter;
-        cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
+        cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
         cell.textLabel.textAlignment = UITextAlignmentCenter;
         [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
         // TODO: set color to #999999 while things are loading

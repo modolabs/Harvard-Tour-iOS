@@ -269,7 +269,7 @@
                                        reuseIdentifier:loadMoreIdentifier] autorelease];
     }
     cell.textLabel.text = NSLocalizedString(@"Load more stories", @"new story SportsView");
-    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
+    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
     cell.textLabel.textAlignment = UITextAlignmentCenter;
     [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
     // TODO: set color to #999999 while things are loading
@@ -307,7 +307,7 @@
     }
     cell.textLabel.text = NSLocalizedString(@"List 10 more schedule items", nil);
     cell.textLabel.textAlignment = UITextAlignmentCenter;
-    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
+    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
     return cell;
 }
 
