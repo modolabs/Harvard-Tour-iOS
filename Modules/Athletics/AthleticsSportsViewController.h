@@ -13,7 +13,7 @@
 #import "AthleticsDataController.h"
 #import "KGOSearchDisplayController.h"
 #import "KGODetailPageHeaderView.h"
-@interface AthleticsSportsViewController : KGOTableViewController <KGOSearchBarDelegate,AthleticsDataDelegate> {
+@interface AthleticsSportsViewController : KGOTableViewController <KGOSearchBarDelegate,AthleticsDataDelegate,KGODetailPageHeaderDelegate> {
     IBOutlet UILabel *_loadingLabel;
     IBOutlet UILabel *_lastUpdateLabel;
     IBOutlet UIProgressView *_progressView;
@@ -42,4 +42,8 @@
 - (NSString *)titleForMenuCategory;
 - (void)setupBookmarkStatus;
 - (void)configureBookmark;
+@end
+
+@interface KGODetailPageHeaderView (Athletics)
+- (void)buttonSizeFitsToMargin;
 @end

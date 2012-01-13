@@ -16,7 +16,8 @@
 
 #define ATHLETICS_SCHDULES_ROW_HEIGHT 65
 #define ATHLETICS_NEWS_ROW_HEIGHT 76
-#define BOOKMARK_HEIGHT 50
+#define BOOKMARK_HEIGHT 10
+#define OFFSIDE 27
 
 @implementation AthleticsSportsViewController
 @synthesize dataManager;
@@ -71,8 +72,6 @@
     [self configureBookmark];
 }
 
-
-
 - (void)viewDidUnload
 {
     [_loadingLabel release];
@@ -125,9 +124,9 @@
 	_lastUpdateLabel.hidden = NO;
 	_lastUpdateLabel.text = text;
 
-    _storyTable.frame = CGRectMake(0, BOOKMARK_HEIGHT, self.view.bounds.size.width,
+    _storyTable.frame = CGRectMake(0, (BOOKMARK_HEIGHT + OFFSIDE), self.view.bounds.size.width,
                                    self.view.bounds.size.height - 
-                                   BOOKMARK_HEIGHT);
+                                   (BOOKMARK_HEIGHT + OFFSIDE));
     [UIView animateWithDuration:1.0 delay:2.0 options:0 animations:^(void) {
         _activityView.alpha = 0;
     } completion:^(BOOL finished) {
@@ -156,15 +155,20 @@
     _activityView.hidden = NO;
     _activityView.alpha = 1.0;
 
-    _storyTable.frame = CGRectMake(0, BOOKMARK_HEIGHT, self.view.bounds.size.width,
-                                   self.view.bounds.size.height - _activityView.frame.size.height - BOOKMARK_HEIGHT);
+    _storyTable.frame = CGRectMake(0, (BOOKMARK_HEIGHT + OFFSIDE), self.view.bounds.size.width,
+                                   self.view.bounds.size.height - _activityView.frame.size.height - (BOOKMARK_HEIGHT + OFFSIDE));
 }
 
 - (void)configureBookmark {
     [_bookmarkView layoutSubviews];
     [self.view bringSubviewToFront:_bookmarkView];
-    _storyTable.frame = CGRectMake(0, BOOKMARK_HEIGHT, self.view.bounds.size.width,
-                                   self.view.bounds.size.height - BOOKMARK_HEIGHT);
+    _storyTable.frame = CGRectMake(0, (BOOKMARK_HEIGHT + OFFSIDE), self.view.bounds.size.width,
+                                   self.view.bounds.size.height - (BOOKMARK_HEIGHT + OFFSIDE));
+}
+
+- (void)headerViewFrameDidChange:(KGODetailPageHeaderView *)headerView {
+    headerView.frame = CGRectMake(0, 0, 320, 38);
+    [headerView buttonSizeFitsToMargin];
 }
 
 - (void)setupBookmarkStatus {
@@ -174,6 +178,7 @@
     _bookmarkView.showsBookmarkButton = YES;
     _bookmarkView.showsShareButton = NO;
     _bookmarkView.showsSubtitle = NO;
+    _bookmarkView.delegate = self;
     _bookmarkView.titleLabel.text = [self titleForMenuCategory];
     [self.view addSubview:_bookmarkView];
 }
@@ -554,4 +559,33 @@
 }
 
 
+@end
+
+@implementation KGODetailPageHeaderView (Athletics)
+- (void)buttonSizeFitsToMargin {
+    CGRect frame = CGRectZero;
+    frame.origin.x = self.bounds.size.width;
+    
+    // if there is no subtitle, make title label narrower
+    // and align buttons at the top.
+    // if there is a subtitle, make title label the full width,
+    // subtitle label narrower, and align buttons with subtitle.
+    frame.origin.y = (_subtitleLabel == nil ? 0 : _titleLabel.frame.size.height);
+    _titleLabel.textAlignment = UITextAlignmentCenter;
+    _titleLabel.frame = CGRectMake(10, 0, 246, 38);
+    _titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
+    for (UIButton *aButton in self.actionButtons) {
+        if (![aButton isDescendantOfView:self]) {
+            [self addSubview:aButton];
+        }
+        
+        frame.size = aButton.frame.size;
+        frame.origin.x -= frame.size.width ;
+        aButton.frame = frame;
+        
+        if (aButton == _bookmarkButton) {
+            [self setupBookmarkButtonImages];
+        }
+    }
+}
 @end
