@@ -13,6 +13,15 @@
 #import "UIKit+KGOAdditions.h"
 #import "KGOTheme.h"
 
+
+
+@interface AthleticsListController (Private)
+
+- (void)setupTabstrip;
+
+@end
+
+
 @implementation AthleticsListController
 @synthesize dataManager;
 @synthesize federatedSearchResults;
@@ -52,7 +61,9 @@
 {
     [super viewDidLoad];
     self.dataManager.delegate = self;
-    
+    [self addTableView:_storyTable];
+    [self setupTabstrip];
+    [_navTabs selectButtonAtIndex:0];
     //configure these things
     self.navigationItem.title = @"Athletics";
     self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
@@ -62,17 +73,13 @@
     [self.dataManager fetchCategories];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self tabbedControl:_tabs didSwitchToTabAtIndex:[_tabs selectedTabIndex]];
-}
-
-
-
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    self.dataManager.delegate = self;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -95,49 +102,51 @@
     return YES;
 }
 
-//- (void)setupNavTabbedButtons {
-//    if (self.categories.count > 0) {
-//        if ([_navTabbar respondsToSelector:@selector(setTintColor:)]) {
-//            [_navTabbar setTintColor:[[KGOTheme sharedTheme] backgroundColorForApplication]];
-//        }
-//        _navTabbar.frame = CGRectMake(0, self.view.bounds.size.height - 49, self.view.bounds.size.width, 49);
-//        
-//        //configure the tabbar.
-//        const NSInteger count = self.categories.count;
-//        AthleticsCategory *activeCategory = nil;
-//        UITabBarItem *barItem = nil;
-//        NSMutableArray *barItems = [NSMutableArray array];
-//        for (int i = 0; i < count; i++) {
-//            AthleticsCategory *aCategory = [self.categories objectAtIndex:i];
-//            barItem = [[UITabBarItem alloc] initWithTitle:aCategory.title 
-//                                                    image:nil 
-//                                                      tag:[aCategory.category_id integerValue]];
-//            [barItems addObject:barItem];
-//            [barItem release];
-//
-//            if ([aCategory.category_id isEqualToString:activeCategoryId]) {
-//                activeCategory = aCategory;
-//            }
-//        }
-//        [_navTabbar setItems:barItems animated:YES];
-//        for (NSUInteger i = 0; i < [_navTabbar items].count; i++) {
-//            barItem = [[_navTabbar items] objectAtIndex:i];
-//            if ([barItem.title isEqualToString:activeCategory.title]) {
-//                [_navTabbar setSelectedItem:barItem];
-//                break;
-//            }
-//        }
-//    } else {
-//        [_navTabbar removeFromSuperview];
-//        _navTabbar = nil;
-//        
-//        CGFloat dh = _activityView.hidden ? 0 : _activityView.frame.size.height;
-//        _storyTable.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - dh);
-//    }
-//}
+#pragma mark - KGOScrollTabs
+- (void)setupTabstrip {
+    _navTabs.delegate = self;
+    [_navTabs addButtonWithTitle:NSLocalizedString(@"Top News", nil)];
+    [_navTabs addButtonWithTitle:NSLocalizedString(@"Men", nil)];
+    [_navTabs addButtonWithTitle:NSLocalizedString(@"Women", nil)];
+    [_navTabs addButtonWithTitle:NSLocalizedString(@"My Sports", nil)];
+    _topNewsTabIndex = 0;
+    _menTabIndex = 1;
+    _womenTabIndex = 2;
+    _mySportsTabIndex = 3;
+    [_navTabs layoutSubviews];
+}
+
+- (void)tabstrip:(KGOScrollingTabstrip *)tabstrip clickedButtonAtIndex:(NSUInteger)index {
+    self.activeCategoryId = [NSString stringWithFormat:@"%d",index];
+    if (index == _topNewsTabIndex) {
+        [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
+        _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_TOPNEWS;
+    } else if (index == _menTabIndex) {
+        [self.dataManager fetchMenusForCategory:self.activeCategoryId startId:nil];
+        _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_MEN;
+    } else if (index == _womenTabIndex) {
+        [self.dataManager fetchMenusForCategory:self.activeCategoryId startId:nil];
+        _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_WOMEN;
+    } else if (index == _mySportsTabIndex) {
+        _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_MYSPORTS;
+        [self.dataManager fetchBookmarks];
+    }
+}
 
 #pragma mark -
 #pragma mark Bottom status bar
+
+- (void)activeViewLayout {
+    CGRect oldTableFrame = _storyTable.frame;
+    CGRect activityFrame = _activityView.frame;
+    
+    CGFloat newHeight = self.view.bounds.size.height - _navTabs.frame.size.height;
+    [_storyTable setFrame:CGRectMake(oldTableFrame.origin.x, oldTableFrame.origin.y,
+                                     oldTableFrame.size.width, newHeight)];
+    CGFloat yActivityView = oldTableFrame.origin.y + newHeight - activityFrame.size.height;
+    [_activityView setFrame:CGRectMake(activityFrame.origin.x, yActivityView,
+                                       activityFrame.size.width, activityFrame.size.height)];
+}
 
 - (void)setStatusText:(NSString *)text {
     _loadingLabel.hidden = YES;
@@ -146,16 +155,8 @@
 	_lastUpdateLabel.hidden = NO;
 	_lastUpdateLabel.text = text;
     
-    CGRect tableFrame = _storyTable.frame;
-    CGRect contentFrame = _contentView.frame;
-    CGRect activityFrame = _activityView.frame;
+    [self activeViewLayout];
     
-    CGFloat newHeight = contentFrame.size.height;
-    [_storyTable setFrame:CGRectMake(tableFrame.origin.x, tableFrame.origin.y + ATHLETICS_TABLEVIEW_SPACING,
-                                     tableFrame.size.width, newHeight)];
-    CGFloat yActivityView = tableFrame.origin.y + newHeight - activityFrame.size.height;
-    [_activityView setFrame:CGRectMake(activityFrame.origin.x, yActivityView,
-                                       activityFrame.size.width, activityFrame.size.height)];
     [UIView animateWithDuration:1.0 delay:2.0 options:0 animations:^(void) {
         _activityView.alpha = 0;
     } completion:^(BOOL finished) {
@@ -184,112 +185,7 @@
     _activityView.hidden = NO;
     _activityView.alpha = 1.0;
     
-    CGRect tableFrame = _storyTable.frame;
-    CGRect contentFrame = _contentView.frame;
-    CGRect activityFrame = _activityView.frame;
-    CGFloat newHeight = contentFrame.size.height - activityFrame.size.height;
-    [_storyTable setFrame:CGRectMake(tableFrame.origin.x, tableFrame.origin.y + ATHLETICS_TABLEVIEW_SPACING,
-                                     tableFrame.size.width, newHeight)];
-    CGFloat yActivityView = tableFrame.origin.y + newHeight;
-    [_activityView setFrame:CGRectMake(activityFrame.origin.x, yActivityView,
-                                       activityFrame.size.width, activityFrame.size.height)];
-}
-
-- (void)selfTabConfiguration {
-    self.tabs.tabFont = [UIFont systemFontOfSize:15];
-    self.tabs.tabSpacing = 4;
-}
-
-#pragma mark -KGOTabbedViewController Delegate
-- (UIView *)tabbedControl:(KGOTabbedControl *)control containerViewAtIndex:(NSInteger)index {
-    UIView *view = nil;
-    if (!_contentView) {
-        _contentView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 373)] autorelease];
-    }
-    if (!_sepratorLine) {
-        _sepratorLine = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, ATHLETICS_TABLEVIEW_SPACING)];
-        _sepratorLine.backgroundColor = [UIColor colorWithWhite:0.5 alpha:1.0];
-        [_contentView addSubview:_sepratorLine];
-        [_sepratorLine release];
-    }
-    if (!_storyTable) {
-        CGRect tFrame = CGRectMake(0, ATHLETICS_TABLEVIEW_SPACING, 320, 373);
-        _storyTable = [[UITableView alloc] 
-                       initWithFrame:tFrame                     
-                       style:UITableViewStylePlain];
-        _storyTable.separatorColor = [UIColor colorWithWhite:0.5 alpha:1.0];
-        _storyTable.delegate = self;
-        _storyTable.dataSource = self;
-        [_contentView addSubview:_storyTable];
-        [_storyTable release];
-    }
-    if (!_activityView) {
-        _activityView = [[UIView alloc] initWithFrame:CGRectMake(0, 436, 320, 24)];
-        _activityView.backgroundColor = [UIColor blackColor];
-        [_contentView addSubview:_activityView];
-        [_activityView release];
-    }
-    if (!_loadingLabel) {
-        _loadingLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 1, 68, 21)];
-        _loadingLabel.backgroundColor = [UIColor clearColor];
-        _loadingLabel.textColor = [UIColor whiteColor];
-        [_activityView addSubview:_loadingLabel];
-        [_loadingLabel release];
-    }
-    if (!_lastUpdateLabel) {
-        _lastUpdateLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 1, 304, 21)];
-        _lastUpdateLabel.backgroundColor = [UIColor clearColor];
-        _lastUpdateLabel.textColor = [UIColor whiteColor];
-        [_activityView addSubview:_lastUpdateLabel];
-        [_lastUpdateLabel release];
-    }
-    if (!_progressView) {
-        _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(80, 7, 232, 9)];
-        [_activityView addSubview:_progressView];
-        [_progressView release];
-    }
-    self.dataManager.delegate = self;
-    self.activeCategoryId = [NSString stringWithFormat:@"%d",index];
-    if (index == _topNewsTabIndex) {
-        [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
-        _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_TOPNEWS;
-    } else if (index == _menTabIndex) {
-        [self.dataManager fetchMenusForCategory:self.activeCategoryId startId:nil];
-        _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_MEN;
-    } else if (index == _womenTabIndex) {
-        [self.dataManager fetchMenusForCategory:self.activeCategoryId startId:nil];
-        _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_WOMEN;
-    } else if (index == _mySportsTabIndex) {
-        _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_MYSPORTS;
-        [self.dataManager fetchBookmarks];
-    }
-    [self selfTabConfiguration];
-    view = _contentView;
-    return view;
-}
-
-- (NSArray *)itemsForTabbedControl:(KGOTabbedControl *)control {
-    NSMutableArray *tabs = [NSMutableArray array];
-    _topNewsTabIndex = NSNotFound;
-    _menTabIndex = NSNotFound;
-    _womenTabIndex = NSNotFound;
-    _mySportsTabIndex = NSNotFound;
-    
-    NSInteger currentTabIndex = 0;
-    
-    [tabs addObject:NSLocalizedString(@"Top News", nil)];
-    _topNewsTabIndex = currentTabIndex++;
-    
-    [tabs addObject:NSLocalizedString(@"Men", nil)];
-    _menTabIndex = currentTabIndex++;
-    
-    [tabs addObject:NSLocalizedString(@"Women", nil)];
-    _womenTabIndex = currentTabIndex++;
-    
-    [tabs addObject:NSLocalizedString(@"My Sports", nil)];
-    _mySportsTabIndex = currentTabIndex;
-        
-    return tabs;
+    [self activeViewLayout];
 }
 
 #pragma mark -

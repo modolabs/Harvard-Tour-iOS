@@ -7,22 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KGOTabbedViewController.h"
+#import "KGOScrollingTabstrip.h"
 #import "AthleticsTableViewCell.h"
 #import "KGOSearchBar.h"
 #import "AthleticsDataController.h"
 #import "KGOSearchDisplayController.h"
-@interface AthleticsListController : KGOTabbedViewController <KGOSearchBarDelegate,AthleticsDataDelegate,UITableViewDelegate,UITableViewDataSource> {
-    UIView *_contentView;
+@interface AthleticsListController : KGOTableViewController <KGOSearchBarDelegate,AthleticsDataDelegate,KGOScrollingTabstripDelegate> {
     
-    UILabel *_loadingLabel;
-    UILabel *_lastUpdateLabel;
-    UIProgressView *_progressView;
-    UITableView *_storyTable;
-    UIView *_activityView;
-    
-    UILabel *_sepratorLine;
-    
+    IBOutlet UILabel *_loadingLabel;
+    IBOutlet UILabel *_lastUpdateLabel;
+    IBOutlet UIProgressView *_progressView;
+    IBOutlet UITableView *_storyTable;
+    IBOutlet UIView *_activityView;
+    IBOutlet KGOScrollingTabstrip *_navTabs;
     IBOutlet AthleticsTableViewCell *_athletcisCell;
     
     NSString *activeCategoryId;

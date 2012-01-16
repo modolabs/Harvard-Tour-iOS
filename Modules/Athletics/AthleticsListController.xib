@@ -106,6 +106,7 @@
 								<string key="NSFrame">{{80, 7}, {232, 9}}</string>
 								<reference key="NSSuperview" ref="472348236"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<float key="IBUIProgress">0.5</float>
@@ -127,7 +128,7 @@
 						<string key="NSFrame">{{0, 42}, {320, 369}}</string>
 						<reference key="NSSuperview" ref="967841948"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
+						<reference key="NSNextKeyView" ref="472348236"/>
 						<reference key="IBUIBackgroundColor" ref="891149399"/>
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -139,17 +140,31 @@
 						<float key="IBUISectionHeaderHeight">22</float>
 						<float key="IBUISectionFooterHeight">22</float>
 					</object>
+					<object class="IBUIView" id="219208292">
+						<reference key="NSNextResponder" ref="967841948"/>
+						<int key="NSvFlags">290</int>
+						<string key="NSFrameSize">{320, 44}</string>
+						<reference key="NSSuperview" ref="967841948"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="805205738"/>
+						<object class="NSColor" key="IBUIBackgroundColor">
+							<int key="NSColorSpace">3</int>
+							<bytes key="NSWhite">MQA</bytes>
+							<object class="NSColorSpace" key="NSCustomColorSpace" id="875667077">
+								<int key="NSID">2</int>
+							</object>
+						</object>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+					</object>
 				</array>
 				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="805205738"/>
+				<reference key="NSNextKeyView" ref="219208292"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MQA</bytes>
-					<object class="NSColorSpace" key="NSCustomColorSpace">
-						<int key="NSID">2</int>
-					</object>
+					<reference key="NSCustomColorSpace" ref="875667077"/>
 				</object>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -205,6 +220,30 @@
 					</object>
 					<int key="connectionID">19</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">_navTabs</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="219208292"/>
+					</object>
+					<int key="connectionID">27</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dataSource</string>
+						<reference key="source" ref="805205738"/>
+						<reference key="destination" ref="372490531"/>
+					</object>
+					<int key="connectionID">28</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="805205738"/>
+						<reference key="destination" ref="372490531"/>
+					</object>
+					<int key="connectionID">29</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -231,6 +270,7 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="472348236"/>
 							<reference ref="805205738"/>
+							<reference ref="219208292"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -264,6 +304,11 @@
 						<reference key="object" ref="738473026"/>
 						<reference key="parent" ref="472348236"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">26</int>
+						<reference key="object" ref="219208292"/>
+						<reference key="parent" ref="967841948"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -272,6 +317,8 @@
 				<string key="-2.CustomClassName">UIResponder</string>
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="10.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="26.CustomClassName">KGOScrollingTabstrip</string>
+				<string key="26.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -282,24 +329,52 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">25</int>
+			<int key="maxID">29</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">AthleticsListController</string>
-					<string key="superclassName">KGOTabbedViewController</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">_athletcisCell</string>
-						<string key="NS.object.0">AthleticsTableViewCell</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">_athletcisCell</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
+					<string key="superclassName">KGOTableViewController</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="_activityView">UIView</string>
+						<string key="_athletcisCell">AthleticsTableViewCell</string>
+						<string key="_lastUpdateLabel">UILabel</string>
+						<string key="_loadingLabel">UILabel</string>
+						<string key="_navTabs">KGOScrollingTabstrip</string>
+						<string key="_progressView">UIProgressView</string>
+						<string key="_storyTable">UITableView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="_activityView">
+							<string key="name">_activityView</string>
+							<string key="candidateClassName">UIView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="_athletcisCell">
 							<string key="name">_athletcisCell</string>
 							<string key="candidateClassName">AthleticsTableViewCell</string>
 						</object>
-					</object>
+						<object class="IBToOneOutletInfo" key="_lastUpdateLabel">
+							<string key="name">_lastUpdateLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="_loadingLabel">
+							<string key="name">_loadingLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="_navTabs">
+							<string key="name">_navTabs</string>
+							<string key="candidateClassName">KGOScrollingTabstrip</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="_progressView">
+							<string key="name">_progressView</string>
+							<string key="candidateClassName">UIProgressView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="_storyTable">
+							<string key="name">_storyTable</string>
+							<string key="candidateClassName">UITableView</string>
+						</object>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/AthleticsListController.h</string>
@@ -333,14 +408,6 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">KGODetailPageHeaderView</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/KGODetailPageHeaderView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
 					<string key="className">KGOLabel</string>
 					<string key="superclassName">UILabel</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -349,38 +416,19 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">KGOTabbedControl</string>
+					<string key="className">KGOScrollingTabstrip</string>
 					<string key="superclassName">UIView</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/KGOTabbedControl.h</string>
+						<string key="minorKey">./Classes/KGOScrollingTabstrip.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">KGOTabbedViewController</string>
+					<string key="className">KGOTableViewController</string>
 					<string key="superclassName">UIViewController</string>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="_tabViewContainer">UIView</string>
-						<string key="_tabViewHeader">KGODetailPageHeaderView</string>
-						<string key="_tabs">KGOTabbedControl</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="_tabViewContainer">
-							<string key="name">_tabViewContainer</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="_tabViewHeader">
-							<string key="name">_tabViewHeader</string>
-							<string key="candidateClassName">KGODetailPageHeaderView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="_tabs">
-							<string key="name">_tabs</string>
-							<string key="candidateClassName">KGOTabbedControl</string>
-						</object>
-					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/KGOTabbedViewController.h</string>
+						<string key="minorKey">./Classes/KGOTableViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

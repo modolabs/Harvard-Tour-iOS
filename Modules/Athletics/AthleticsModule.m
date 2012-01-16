@@ -39,7 +39,8 @@
 {
     UIViewController *vc = nil;
     if ([pageName isEqualToString:LocalPathPageNameHome]) {
-        AthleticsListController *athleticsListVC = [[[AthleticsListController alloc] init] autorelease];
+        AthleticsListController *athleticsListVC = [[AthleticsListController alloc] 
+                                                    initWithNibName:@"AthleticsListController" bundle:nil];
         athleticsListVC.dataManager = self.dataManager;
         vc = athleticsListVC;
         
