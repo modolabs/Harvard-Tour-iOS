@@ -80,6 +80,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     self.dataManager.delegate = self;
+    [_navTabs selectButtonAtIndex:[self.activeCategoryId integerValue]];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
