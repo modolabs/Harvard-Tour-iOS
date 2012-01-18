@@ -62,8 +62,6 @@
     [super viewDidLoad];
     self.dataManager.delegate = self;
     [self addTableView:_storyTable];
-    [self setupTabstrip];
-    [_navTabs selectButtonAtIndex:0];
     //configure these things
     self.navigationItem.title = @"Athletics";
     self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
@@ -71,6 +69,9 @@
                                                                             target:nil 
                                                                             action:nil] autorelease];
     [self.dataManager fetchCategories];
+    
+    [self setupTabstrip];
+    [_navTabs selectButtonAtIndex:0];
 }
 
 - (void)viewDidUnload
