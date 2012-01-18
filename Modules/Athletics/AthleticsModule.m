@@ -80,7 +80,6 @@
             if (story) { // show only one story
                 [detailVC setStory:story];
                 [detailVC setMultiplePages:NO];
-            } else {
                 NSArray *stories = [params objectForKey:@"stories"];
                 if (stories) {
                     [detailVC setStories:stories]; 

@@ -4,7 +4,6 @@
 @class AthleticsStory;
 @class KGOShareButtonController;
 @class AthleticsDataController;
-//@class StoryListViewController;
 
 @protocol AthleticsControllerDelegate <NSObject>
 

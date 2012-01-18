@@ -64,6 +64,10 @@
 	[self.view addSubview: storyView];
 	storyView.delegate = self;
     
+    if (self.stories.count > 0) {
+        multiplePages = YES;
+    }
+    
     if (multiplePages) {
         storyPager = [[KGODetailPager alloc] initWithPagerController:self delegate:self];
         
@@ -80,7 +84,6 @@
     } else {
         [self displayCurrentStory];
     }
-    
 }
 
 
@@ -113,7 +116,6 @@
 }
 
 - (void)displayCurrentStory {
-    
     if ([self.story.hasBody boolValue]) {
         KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:@"modules/news/news_story_template.html"];
         NSMutableDictionary *values = [NSMutableDictionary dictionary];
