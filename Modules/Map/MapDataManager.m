@@ -31,7 +31,7 @@
                                                                       path:@"index"
                                                                    version:1
                                                                     params:nil];
-    _indexRequest.minimumDuration = CATEGORY_INDEX_CACHE_TIME;
+    //_indexRequest.minimumDuration = CATEGORY_INDEX_CACHE_TIME;
     [_indexRequest connect];
 }
 
