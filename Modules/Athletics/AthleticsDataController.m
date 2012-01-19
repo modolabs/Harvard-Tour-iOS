@@ -623,62 +623,67 @@ withKey:(NSString *)key{
 
 - (void)requestMenuCategoryStoriesForCategory:(AthleticsCategory *)menuCategory afterId:(NSString *)afterId
 {
-    // TODO: signal that loading progress is 0
-    if (!self.currentCategory || ![self.currentCategory isEqual:menuCategory]) {
-        self.currentCategory = menuCategory;
-    }
-    
-    NSInteger start = 0;
-    if (afterId) {
-        NSPredicate *pred = [NSPredicate predicateWithFormat:@"identifier = %@", afterId];
-        AthleticsStory *story = [[self.currentStories filteredArrayUsingPredicate:pred] lastObject];
-        if (story) {
-            NSInteger index = [self.currentStories indexOfObject:story];
-            if (index != NSNotFound) {
-                start = ++index;
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	@synchronized(self) 
+    {
+        // TODO: signal that loading progress is 0
+        if (!self.currentCategory || ![self.currentCategory isEqual:menuCategory]) {
+            self.currentCategory = menuCategory;
+        }
+        
+        NSInteger start = 0;
+        if (afterId) {
+            NSPredicate *pred = [NSPredicate predicateWithFormat:@"identifier = %@", afterId];
+            AthleticsStory *story = [[self.currentStories filteredArrayUsingPredicate:pred] lastObject];
+            if (story) {
+                NSInteger index = [self.currentStories indexOfObject:story];
+                if (index != NSNotFound) {
+                    start = ++index;
+                }
             }
         }
-    }
-    
-    NSInteger moreStories = [self.currentCategory.moreStories integerValue];
-    NSInteger limit = (moreStories >= 0 && moreStories < LOADMORE_LIMIT) ? moreStories : LOADMORE_LIMIT;
-    
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                            self.currentCategory.ivar, self.currentCategory.category,
-                            [NSString stringWithFormat:@"%d", start], @"start",
-                            [NSString stringWithFormat:@"%d", limit], @"limit",
-                            nil];
-    
-    KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
-                                                                          module:self.moduleTag
-                                                                            path:menuCategory.path
-                                                                         version:1
-                                                                          params:params];
-    self.menuCategoryStoriesRequest = request;
-    
-    __block AthleticsDataController *blockSelf = self;
-    __block AthleticsCategory *category = menuCategory;
-    [request connectWithCallback:^(id result) {
-        NSDictionary *resultDict = (NSDictionary *)result;
-        NSArray *stories = [resultDict arrayForKey:@"stories"];
-        // need to bring category to local context
-        // http://stackoverflow.com/questions/1554623/illegal-attempt-to-establish-a-relationship-xyz-between-objects-in-different-co
-        AthleticsCategory *mergedCategory = nil;
-        for (NSDictionary *storyDict in stories) {            
-            AthleticsStory *story = [blockSelf storyWithDictionary:storyDict];            
-            if (!mergedCategory) {
-                mergedCategory = (AthleticsCategory *)[[story managedObjectContext] objectWithID:[category objectID]];
+        
+        NSInteger moreStories = [self.currentCategory.moreStories integerValue];
+        NSInteger limit = (moreStories >= 0 && moreStories < LOADMORE_LIMIT) ? moreStories : LOADMORE_LIMIT;
+        
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                self.currentCategory.ivar, self.currentCategory.category,
+                                [NSString stringWithFormat:@"%d", start], @"start",
+                                [NSString stringWithFormat:@"%d", limit], @"limit",
+                                nil];
+        
+        KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
+                                                                              module:self.moduleTag
+                                                                                path:menuCategory.path
+                                                                             version:1
+                                                                              params:params];
+        self.menuCategoryStoriesRequest = request;
+        
+        __block AthleticsDataController *blockSelf = self;
+        __block AthleticsCategory *category = menuCategory;
+        [request connectWithCallback:^(id result) {
+            NSDictionary *resultDict = (NSDictionary *)result;
+            NSArray *stories = [resultDict arrayForKey:@"stories"];
+            // need to bring category to local context
+            // http://stackoverflow.com/questions/1554623/illegal-attempt-to-establish-a-relationship-xyz-between-objects-in-different-co
+            AthleticsCategory *mergedCategory = nil;
+            for (NSDictionary *storyDict in stories) {            
+                AthleticsStory *story = [blockSelf storyWithDictionary:storyDict];            
+                if (!mergedCategory) {
+                    mergedCategory = (AthleticsCategory *)[[story managedObjectContext] objectWithID:[category objectID]];
+                }
+                NSMutableSet *mutableStories = [mergedCategory mutableSetValueForKey:@"stories"];
+                if (mutableStories) {
+                    [mutableStories addObject:story];
+                }
             }
-            NSMutableSet *mutableStories = [mergedCategory mutableSetValueForKey:@"stories"];
-            if (mutableStories) {
-                [mutableStories addObject:story];
-            }
-        }
-        mergedCategory.moreStories = [resultDict numberForKey:@"moreStories"];
-        mergedCategory.lastUpdated = [NSDate date];
-        [[CoreDataManager sharedManager] saveData];
-        return (NSInteger)[stories count];
-    }];
+            mergedCategory.moreStories = [resultDict numberForKey:@"moreStories"];
+            mergedCategory.lastUpdated = [NSDate date];
+            [[CoreDataManager sharedManager] saveData];
+            return (NSInteger)[stories count];
+        }];
+	}
+	[pool release];    
 }
 
 - (AthleticsMenu *)menuWithDictionary:(NSDictionary *)menuDict {
@@ -732,9 +737,7 @@ withKey:(NSString *)key{
         schedule = (AthleticsSchedule *)[[CoreDataManager sharedManager] insertNewObjectForEntityForName:AthleticsScheduleEntityName];
         schedule.schedule_id = ScheduleID;
     }
-    
-//    double unixtime = [[scheduleDict objectForKey:@"start"] doubleValue];
-//    NSDate *start = [NSDate dateWithTimeIntervalSince1970:unixtime];
+
     schedule.allDay = [NSNumber numberWithBool:[scheduleDict boolForKey:@"allday"]];
     schedule.descriptionString = [scheduleDict nonemptyStringForKey:@"description"];
     schedule.gender = [scheduleDict nonemptyStringForKey:@"gender"];

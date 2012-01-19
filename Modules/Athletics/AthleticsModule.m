@@ -75,21 +75,14 @@
             AthleticsSportDetailViewController *detailVC = [[[AthleticsSportDetailViewController alloc] init] autorelease];
             detailVC.dataManager = self.dataManager;
             vc = detailVC;
-            
-            AthleticsStory *story = [params objectForKey:@"story"];
-            if (story) { // show only one story
-                [detailVC setStory:story];
-                [detailVC setMultiplePages:NO];
-                NSArray *stories = [params objectForKey:@"stories"];
-                if (stories) {
-                    [detailVC setStories:stories]; 
-                    
-                    NSIndexPath *indexPath = [params objectForKey:@"indexPath"];
-                    [detailVC setInitialIndexPath:indexPath];
-                    [detailVC setMultiplePages:YES];
-                }
+            NSArray *stories = [params objectForKey:@"stories"];
+            if (stories) {
+                [detailVC setStories:stories]; 
+                
+                NSIndexPath *indexPath = [params objectForKey:@"indexPath"];
+                [detailVC setInitialIndexPath:indexPath];
+                [detailVC setMultiplePages:YES];
             }
-            
             // TODO: figure out why this (defined in detail vc class) is AthleticsStory
             AthleticsStory *category = [params objectForKey:@"category"];
             if (category) {

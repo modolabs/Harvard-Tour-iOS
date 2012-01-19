@@ -82,8 +82,6 @@
         
         [storyPager selectPageAtSection:initialIndexPath.section row:initialIndexPath.row];
     } 
-    
-    [self displayCurrentStory];
 }
 
 
