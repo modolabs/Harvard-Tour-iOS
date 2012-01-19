@@ -81,9 +81,9 @@
         [segmentBarItem release];
         
         [storyPager selectPageAtSection:initialIndexPath.section row:initialIndexPath.row];
-    } else {
-        [self displayCurrentStory];
-    }
+    } 
+    
+    [self displayCurrentStory];
 }
 
 
