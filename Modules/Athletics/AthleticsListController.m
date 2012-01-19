@@ -71,7 +71,6 @@
                                                                             action:nil] autorelease];
     [self setupTabstrip];
     [_navTabs selectButtonAtIndex:0];
-
 }
 
 - (void)viewDidUnload
