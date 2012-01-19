@@ -121,7 +121,7 @@
         [_thumbnailView loadImage];
         
     } else {
-        _thumbnailView.imageURL = nil;                                   
+        _thumbnailView.imageURL = nil;               
         [_thumbnailView setPlaceholderImage:[UIImage imageWithPathName:@"modules/athletics/athletics-placeholder.png"]];
     }
 }

@@ -61,8 +61,8 @@
 {
     [super viewDidLoad];
     self.dataManager.delegate = self;
-    [self addTableView:_storyTable];
     [self.dataManager fetchCategories];
+    [self addTableView:_storyTable];
     //configure these things
     self.navigationItem.title = @"Athletics";
     self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
