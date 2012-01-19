@@ -60,6 +60,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.dataManager fetchCategories];
     self.dataManager.delegate = self;
     [self.dataManager fetchCategories];
     [self addTableView:_storyTable];
@@ -68,9 +69,13 @@
     self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
                                                                              style:UIBarButtonItemStylePlain 
                                                                             target:nil 
+<<<<<<< HEAD
                                                                             action:nil] autorelease];
     [self setupTabstrip];
     [_navTabs selectButtonAtIndex:0];
+=======
+                                                                             action:nil] autorelease];
+>>>>>>> 01ecbc9c0b3abe9bca920f2c31b8064af9b81023
 }
 
 - (void)viewDidUnload
