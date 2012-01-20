@@ -15,22 +15,13 @@
 @end
 
 @interface AthleticsSportDetailViewController : UIViewController <UIWebViewDelegate, KGODetailPagerController, KGODetailPagerDelegate> {
-	//StoryListViewController *athleticsController;
-    id<AthleticsControllerDelegate> athleticsController;
-	
 	KGODetailPager *storyPager;
-    
     UIWebView *storyView;
 	AthleticsStory *story;
     NSArray *stories;
-    
-	KGOShareButtonController *shareController;
     NSIndexPath *initialIndexPath;
-    
     BOOL multiplePages;
 }
-
-@property (nonatomic, retain) id<AthleticsControllerDelegate> athleticsController;
 @property (nonatomic, retain) AthleticsDataController *dataManager;
 
 @property (nonatomic, retain) UIWebView *storyView;
