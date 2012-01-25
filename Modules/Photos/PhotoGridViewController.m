@@ -4,12 +4,12 @@
 
 @implementation PhotoGridViewController
 
-@synthesize dataManager, album, photos;
+@synthesize dataManager = _dataManager, album = _album, photos = _photos;
 
-- (void)layoutGridView
+- (void)layoutPhotos:(NSArray *)photos
 {
     NSMutableArray *views = [NSMutableArray array];
-    for (NSInteger i = 0; i < self.photos.count; i++) {
+    for (NSInteger i = 0; i < photos.count; i++) {
         Photo *aPhoto = [self.photos objectAtIndex:i];
         CGRect frame = CGRectMake(0, 0, 72, 72);
         MITThumbnailView *thumbView = [[[MITThumbnailView alloc] initWithFrame:frame] autorelease];
@@ -23,8 +23,9 @@
         [control addTarget:self action:@selector(thumbnailTapped:) forControlEvents:UIControlEventTouchUpInside];
         [views addObject:control];
     }
-    _iconGrid.icons = views;
-    [_iconGrid setNeedsLayout];
+    //_iconGrid.icons = views;
+    //[_iconGrid setNeedsLayout];
+    [_iconGrid addIcons:views];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -71,7 +72,7 @@
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"sortOrder" ascending:YES];
     self.photos = [self.album.photos sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 
-    [self layoutGridView];
+    [self layoutPhotos:photos];
     
     if (self.photos.count >= [self.album.totalItems integerValue]) {
         _loadingFooter.hidden = YES;

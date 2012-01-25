@@ -63,7 +63,11 @@ currentCategories = _currentCategories, currentStories = _currentStories;
     self.delegate = nil;
     self.searchDelegate = nil;
     self.moduleTag = nil;
+    [self.storiesRequest cancel];
     self.storiesRequest = nil;
+    for (KGORequest *aRequest in self.searchRequests) {
+        [aRequest cancel];
+    }
     self.searchRequests = nil;
 
     [_searchResults release];
