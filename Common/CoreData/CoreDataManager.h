@@ -2,15 +2,15 @@
 #import <CoreData/CoreData.h>
 
 @interface CoreDataManager : NSObject {
-	NSManagedObjectModel *managedObjectModel;
-    NSPersistentStoreCoordinator *persistentStoreCoordinator;
+	NSManagedObjectModel *_managedObjectModel;
+    NSPersistentStoreCoordinator *_persistentStoreCoordinator;
 }
 
-@property (nonatomic, retain, readonly) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
 @property (nonatomic, readonly) NSString *applicationCachesDirectory;
+
+- (NSManagedObjectModel *)managedObjectModel;
 
 + (CoreDataManager *)sharedManager;
 
