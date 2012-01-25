@@ -42,10 +42,21 @@
     self.settingKeys = settingKeys;
 }
 
+- (void)setTableHeight
+{
+    UIFont *font = [[KGOTheme sharedTheme] defaultFont];
+    UIFont *baseFont = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+    CGFloat difference = floorf(2 * (font.lineHeight - baseFont.lineHeight + 1)); // +1 is fudge factor
+
+    // use 44px as standard row height for now
+    self.tableView.rowHeight = 44 + difference;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self loadSettings];
+    [self setTableHeight];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -381,6 +392,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:KGOUserPreferencesDidChangeNotification object:self];
         // reload everything since we might have changed the fonts
         // TODO: this doesn't affect the fonts of section headers
+        [self setTableHeight];
         [self reloadDataForTableView:self.tableView];
     }
 
