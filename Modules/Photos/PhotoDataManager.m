@@ -37,12 +37,11 @@
         }
 
     } else {
-        NSInteger pageSize = 36;
-        NSString *start = [NSString stringWithFormat:@"%d", album.photos.count / pageSize];
+        NSString *start = [NSString stringWithFormat:@"%d", album.photos.count];
         NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                 albumName, @"id",
-                                start, @"page",
-                                @"36", @"limit",
+                                start, @"start",
+                                @"20", @"limit",
                                 nil];
         _photosRequest = [[KGORequestManager sharedManager] requestWithDelegate:self
                                                                          module:self.moduleTag
@@ -80,8 +79,7 @@
         }
         
     } else if (request == _albumsRequest) {
-        // TODO: the API should say something other than "photos"
-        NSArray *albumData = [result arrayForKey:@"photos"];
+        NSArray *albumData = [result arrayForKey:@"albums"];
         NSMutableArray *albums = [NSMutableArray arrayWithCapacity:albumData.count];
         for (NSDictionary *albumDict in albumData) {
             PhotoAlbum *anAlbum = [PhotoAlbum albumWithDictionary:albumDict];

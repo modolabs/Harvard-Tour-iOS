@@ -15,66 +15,62 @@ const GridSpacing GridSpacingZero = {0, 0};
 
 @interface IconGrid (Private)
 
-- (void)layoutRow:(NSArray *)rowIcons yOrigin:(CGFloat)yOrigin width:(CGFloat)rowWidth;
+- (void)layoutRow:(NSArray *)rowIcons width:(CGFloat)rowWidth;
 
 @end
 
 
 @implementation IconGrid
 
-@synthesize delegate, padding, spacing, maxColumns, alignment, icons;
+@synthesize delegate, padding = _padding, spacing = _spacing,
+maxColumns = _maxColumns, alignment = _alignment, icons = _icons;
 
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
-        padding = GridPaddingZero;
-        spacing = GridSpacingZero;
-        maxColumns = 0;
-        alignment = GridIconAlignmentLeft;
+        _padding = GridPaddingZero;
+        _spacing = GridSpacingZero;
+        _maxColumns = 0;
+        _alignment = GridIconAlignmentLeft;
+        
+        _currentX = _currentX = 0;
     }
     return self;
 }
 
-- (CGFloat)topPadding { return padding.top; }
-- (CGFloat)rightPadding { return padding.right; }
-- (CGFloat)bottomPadding { return padding.bottom; }
-- (CGFloat)leftPadding { return padding.left; }
+- (CGFloat)topPadding { return _padding.top; }
+- (CGFloat)rightPadding { return _padding.right; }
+- (CGFloat)bottomPadding { return _padding.bottom; }
+- (CGFloat)leftPadding { return _padding.left; }
 
-- (void)setTopPadding:(CGFloat)value { padding.top = value; }
-- (void)setRightPadding:(CGFloat)value { padding.right = value; }
-- (void)setBottomPadding:(CGFloat)value { padding.bottom = value; }
-- (void)setLeftPadding:(CGFloat)value { padding.left = value; }
+- (void)setTopPadding:(CGFloat)value { _padding.top = value; }
+- (void)setRightPadding:(CGFloat)value { _padding.right = value; }
+- (void)setBottomPadding:(CGFloat)value { _padding.bottom = value; }
+- (void)setLeftPadding:(CGFloat)value { _padding.left = value; }
 
-- (void)layoutSubviews {
-    // modified here b/c we haven't incorporated -removeAllSubviews from UIKit+MITAdditions
-    for (UIView *aView in self.subviews) {
-        [aView removeFromSuperview];
-    }
-    [super layoutSubviews];
-
-    CGFloat availableWidth = self.frame.size.width - self.leftPadding - self.rightPadding;
+- (void)layoutMoreIcons:(NSArray *)icons
+{
+    CGFloat availableWidth = CGRectGetWidth(self.bounds) - self.leftPadding - self.rightPadding;
     if (availableWidth <= 0)
         return;
     
-    CGFloat yOrigin = self.topPadding;
-    
     NSMutableArray *iconsInCurrentRow = [NSMutableArray array];
-    CGFloat currentRowWidth = 0;
+    CGFloat currentRowWidth = _currentX;
     
-    for (UIView *aView in self.icons) {
+    for (UIView *aView in icons) {
         
         CGFloat nextWidthNeeded = currentRowWidth + self.spacing.width + aView.frame.size.width;
         CGFloat iconCount = iconsInCurrentRow.count;
         // if we have a full row or are at the end, layout icons and flush the icons buffer
         if ((iconCount && nextWidthNeeded > availableWidth) || (self.maxColumns && iconCount >= self.maxColumns))
         {
-            [self layoutRow:iconsInCurrentRow yOrigin:yOrigin width:currentRowWidth];
+            [self layoutRow:iconsInCurrentRow width:currentRowWidth];
             
             CGFloat maxHeightInRow = 0;
             for (UIView *rowView in iconsInCurrentRow) {
                 if (rowView.frame.size.height > maxHeightInRow)
                     maxHeightInRow = rowView.frame.size.height;
             }
-            yOrigin += maxHeightInRow + spacing.height;
+            _currentY += maxHeightInRow + _spacing.height;
             
             [iconsInCurrentRow removeAllObjects];
             currentRowWidth = 0;
@@ -84,11 +80,11 @@ const GridSpacing GridSpacingZero = {0, 0};
         [iconsInCurrentRow addObject:aView];
         currentRowWidth += aView.frame.size.width;
         if ([iconsInCurrentRow count] > 1) {
-            currentRowWidth += spacing.width;        
+            currentRowWidth += _spacing.width;        
         }
     }
     // finish the loop
-    [self layoutRow:iconsInCurrentRow yOrigin:yOrigin width:currentRowWidth];
+    [self layoutRow:iconsInCurrentRow width:currentRowWidth];
     
     // resize our frame if it is taller/shorter than the requisite icon space.
     CGFloat maxHeight = 0;
@@ -96,49 +92,70 @@ const GridSpacing GridSpacingZero = {0, 0};
         if (maxHeight < anIcon.frame.size.height)
             maxHeight = anIcon.frame.size.height;
     }
-    if (self.frame.size.height != maxHeight + yOrigin + self.bottomPadding) {
+    
+    CGFloat bottomY = maxHeight + _currentY + self.bottomPadding;
+    
+    if (self.frame.size.height != bottomY) {
         CGRect frame = self.frame;
-        frame.size.height = maxHeight + yOrigin + self.bottomPadding;
+        frame.size.height = bottomY;
         self.frame = frame;
-
+        
 		if ([delegate respondsToSelector:@selector(iconGridFrameDidChange:)]) {
 			[delegate iconGridFrameDidChange:self];
 		}
     }
 }
 
-- (void)layoutRow:(NSArray *)rowIcons yOrigin:(CGFloat)yOrigin width:(CGFloat)rowWidth {
-    CGFloat xOrigin;
-    switch (alignment) {
+- (void)layoutSubviews {
+    for (UIView *aView in self.subviews) {
+        [aView removeFromSuperview];
+    }
+    [super layoutSubviews];
+    
+    _currentX = 0;
+    _currentY = self.topPadding;
+    
+    [self layoutMoreIcons:self.icons];
+}
+
+- (void)layoutRow:(NSArray *)rowIcons width:(CGFloat)rowWidth
+{
+    if (![rowIcons count]) {
+        return;
+    }
+    
+    switch (_alignment) {
         case GridIconAlignmentRight:
-            xOrigin = self.frame.size.width - self.rightPadding - rowWidth;
+            _currentX = self.frame.size.width - self.rightPadding - rowWidth;
             break;
         case GridIconAlignmentCenter:
-            xOrigin = floor((self.frame.size.width - rowWidth) / 2);
+            _currentX = floor((self.frame.size.width - rowWidth) / 2);
             break;
         case GridIconAlignmentLeft:
         default:
-            xOrigin = self.leftPadding;
+            _currentX = self.leftPadding;
             break;
     }
     
     CGRect currentFrame;
     for (UIView *rowView in rowIcons) {
         currentFrame = rowView.frame;
-        rowView.frame = CGRectMake(xOrigin, yOrigin, currentFrame.size.width, currentFrame.size.height);
+        rowView.frame = CGRectMake(_currentX, _currentY, currentFrame.size.width, currentFrame.size.height);
         [self addSubview:rowView];
         
-        xOrigin += currentFrame.size.width + self.spacing.width;
+        _currentX += currentFrame.size.width + self.spacing.width;
     }
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (void)addIcons:(NSArray *)icons
+{
+    [self layoutMoreIcons:icons];
+    if (!self.icons) {
+        self.icons = icons;
+    } else {
+        self.icons = [self.icons arrayByAddingObjectsFromArray:icons];
+    }
 }
-*/
 
 - (void)dealloc {
     [super dealloc];

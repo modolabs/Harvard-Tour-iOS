@@ -20,6 +20,8 @@ extern NSString * const KGOThemePropertyCaption;
 extern NSString * const KGOThemePropertyByline;
 extern NSString * const KGOThemePropertyMediaListTitle;
 extern NSString * const KGOThemePropertyMediaListSubtitle;
+extern NSString * const KGOThemePropertySportListTitle;
+extern NSString * const KGOThemePropertySportListSubtitle;
 extern NSString * const KGOThemePropertyNavListTitle;
 extern NSString * const KGOThemePropertyNavListSubtitle;
 extern NSString * const KGOThemePropertyNavListLabel;

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11C74" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="AthleticsCategory" representedClassName="AthleticsCategory" syncable="YES">
+        <attribute name="bookmarked" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="category_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isMainCategory" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="ivar" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastUpdated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="moduleTag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="moreStories" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="nextSeekId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sortOrder" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="menu" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsMenu" inverseName="categories" inverseEntity="AthleticsMenu" syncable="YES"/>
+        <relationship name="schedules" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AthleticsSchedule" inverseName="category" inverseEntity="AthleticsSchedule" syncable="YES"/>
+        <relationship name="stories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AthleticsStory" inverseName="categories" inverseEntity="AthleticsStory" syncable="YES"/>
+    </entity>
+    <entity name="AthleticsImage" representedClassName="AthleticsImage" syncable="YES">
+        <attribute name="caption" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="credits" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="height" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ordinality" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="width" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="featuredParent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsStory" inverseName="featuredImage" inverseEntity="AthleticsStory" syncable="YES"/>
+        <relationship name="thumbParent" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsStory" inverseName="thumbImage" inverseEntity="AthleticsStory" syncable="YES"/>
+    </entity>
+    <entity name="AthleticsImageRep" syncable="YES">
+        <attribute name="data" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="height" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="width" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="AthleticsMenu" representedClassName="AthleticsMenu" syncable="YES">
+        <attribute name="sportTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AthleticsCategory" inverseName="menu" inverseEntity="AthleticsCategory" syncable="YES"/>
+    </entity>
+    <entity name="AthleticsSchedule" representedClassName="AthleticsSchedule" syncable="YES">
+        <attribute name="allDay" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="descriptionString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="locationLabel" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pastStatus" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="schedule_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sport" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sportName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="start" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsCategory" inverseName="schedules" inverseEntity="AthleticsCategory" syncable="YES"/>
+    </entity>
+    <entity name="AthleticsStory" representedClassName="AthleticsStory" syncable="YES">
+        <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="featured" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="hasBody" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="link" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="postDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="read" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="searchResult" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="topStory" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AthleticsCategory" inverseName="stories" inverseEntity="AthleticsCategory" syncable="YES"/>
+        <relationship name="featuredImage" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsImage" inverseName="featuredParent" inverseEntity="AthleticsImage" syncable="YES"/>
+        <relationship name="thumbImage" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="AthleticsImage" inverseName="thumbParent" inverseEntity="AthleticsImage" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="AthleticsCategory" positionX="160" positionY="192" width="128" height="300"/>
+        <element name="AthleticsImage" positionX="117" positionY="189" width="128" height="75"/>
+        <element name="AthleticsImageRep" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="AthleticsMenu" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="AthleticsSchedule" positionX="160" positionY="192" width="128" height="240"/>
+        <element name="AthleticsStory" positionX="160" positionY="192" width="128" height="285"/>
+    </elements>
+</model>

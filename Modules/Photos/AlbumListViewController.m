@@ -44,9 +44,7 @@
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor clearColor];
-    self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.backgroundView = nil;
+    //self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.rowHeight = 72;
     
     self.dataManager.delegate = self;

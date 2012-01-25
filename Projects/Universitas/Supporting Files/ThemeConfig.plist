@@ -82,6 +82,22 @@
 			<key>size</key>
 			<integer>0</integer>
 		</dict>
+		<key>SportListTitle</key>
+		<dict>
+			<key>bold</key>
+			<true/>
+			<key>color</key>
+			<string>#060606</string>
+			<key>size</key>
+			<integer>-2</integer>
+		</dict>
+		<key>SportListSubtitle</key>
+		<dict>
+			<key>color</key>
+			<string>#060606</string>
+			<key>size</key>
+			<integer>-2</integer>
+		</dict>
 		<key>NavListLabel</key>
 		<dict>
 			<key>bold</key>

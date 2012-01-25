@@ -8,7 +8,7 @@
 
 + (UIImage *)imageWithPathName:(NSString *)pathName;
 + (UIImage *)blankImageOfSize:(CGSize)size;
-
+- (UIImage *)imageAtRect:(CGRect)rect;
 @end
 
 @interface UIColor (KGOAdditions)
@@ -48,4 +48,11 @@
 - (CGFloat)marginWidth;
 
 @end
+
+@interface UITabBar (KGOAdditions)
+
+- (void)drawRect:(CGRect)rect;
+
+@end
+
 

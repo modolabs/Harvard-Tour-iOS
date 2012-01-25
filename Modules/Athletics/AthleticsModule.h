@@ -1,0 +1,20 @@
+//
+//  AthleticsModule.h
+//  Universitas
+//
+//  Created by Liu Mingxing on 12/2/11.
+//  Copyright (c) 2011 Symbio Inc. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import "KGOModule.h"
+#import "AthleticsDataController.h"
+
+@interface AthleticsModule : KGOModule <AthleticsDataDelegate>{
+    AthleticsDataController *_dataManager;
+    NSString *_searchText;
+}
+@property (nonatomic, retain)  AthleticsDataController *dataManager;
+
+- (UIViewController *)modulePage:(NSString *)pageName params:(NSDictionary *)params;
+@end

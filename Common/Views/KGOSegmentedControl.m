@@ -160,7 +160,7 @@
 {
     [self removeAllTabs];
 }
-
+  
 - (void)removeSegmentAtIndex:(NSUInteger)segment animated:(BOOL)animated
 {
     [self removeTabAtIndex:segment animated:animated];
