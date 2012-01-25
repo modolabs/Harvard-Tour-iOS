@@ -78,6 +78,22 @@
 		</dict>
 		<dict>
 			<key>id</key>
+			<string>athletics</string>
+			<key>tag</key>
+			<string>athletics</string>
+			<key>title</key>
+			<string>Athletics</string>
+		</dict>
+		<dict>
+			<key>id</key>
+			<string>photos</string>
+			<key>tag</key>
+			<string>photos</string>
+			<key>title</key>
+			<string>Photos</string>
+		</dict>
+		<dict>
+			<key>id</key>
 			<string>content</string>
 			<key>tag</key>
 			<string>admissions</string>
@@ -92,7 +108,7 @@
 			<key>tag</key>
 			<string>customize</string>
 			<key>title</key>
-			<string>设置</string>
+			<string>Settings</string>
 		</dict>
 		<dict>
 			<key>id</key>

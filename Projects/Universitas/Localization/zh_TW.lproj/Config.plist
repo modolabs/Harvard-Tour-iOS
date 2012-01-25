@@ -70,6 +70,24 @@
 		</dict>
 		<dict>
 			<key>id</key>
+			<string>athletics</string>
+			<key>secondary</key>
+			<false/>
+			<key>tag</key>
+			<string>athletics</string>
+			<key>title</key>
+			<string>Athletics</string>
+		</dict>
+		<dict>
+			<key>id</key>
+			<string>photos</string>
+			<key>tag</key>
+			<string>photos</string>
+			<key>title</key>
+			<string>Photos</string>
+		</dict>
+		<dict>
+			<key>id</key>
 			<string>emergency</string>
 			<key>tag</key>
 			<string>emergency</string>
@@ -142,9 +160,9 @@
 			<key>APIPath</key>
 			<string>rest</string>
 			<key>Host</key>
-			<string>kurogo.org</string>
+			<string>build.modolabs.com</string>
 			<key>PathExtension</key>
-			<string>universitas</string>
+			<string>public/master</string>
 			<key>UseHTTPS</key>
 			<false/>
 		</dict>

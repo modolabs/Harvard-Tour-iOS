@@ -78,6 +78,24 @@
 		</dict>
 		<dict>
 			<key>id</key>
+			<string>photos</string>
+			<key>tag</key>
+			<string>photos</string>
+			<key>title</key>
+			<string>Photos</string>
+		</dict>
+		<dict>
+			<key>id</key>
+			<string>athletics</string>
+			<key>secondary</key>
+			<false/>
+			<key>tag</key>
+			<string>athletics</string>
+			<key>title</key>
+			<string>Athletics</string>
+		</dict>
+		<dict>
+			<key>id</key>
 			<string>content</string>
 			<key>tag</key>
 			<string>admissions</string>
@@ -133,16 +151,6 @@
 			<string>about</string>
 			<key>title</key>
 			<string>About</string>
-		</dict>
-		<dict>
-			<key>id</key>
-			<string>athletics</string>
-			<key>secondary</key>
-			<false/>
-			<key>tag</key>
-			<string>athletics</string>
-			<key>title</key>
-			<string>Athletics</string>
 		</dict>
 	</array>
 	<key>Servers</key>
