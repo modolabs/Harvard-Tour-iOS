@@ -178,6 +178,22 @@ NSString * const KGORequestLastRequestTime = @"last";
 	return success;
 }
 
+- (void)removeFromCache
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *preferences = [userDefaults dictionaryForKey:KGORequestDurationPrefKey];
+    if (!preferences) {
+        return;
+    }
+    NSMutableDictionary *mutablePrefs = [[preferences mutableCopy] autorelease];
+    NSString *requestID = [self.url absoluteString];
+    if ([mutablePrefs objectForKey:requestID]) {
+        [mutablePrefs removeObjectForKey:requestID];
+        [userDefaults setObject:mutablePrefs forKey:KGORequestDurationPrefKey];
+        [userDefaults synchronize];
+    }
+}
+
 - (BOOL)isUnderMinimumDuration
 {
     NSDictionary *preferences = [[NSUserDefaults standardUserDefaults] dictionaryForKey:KGORequestDurationPrefKey];

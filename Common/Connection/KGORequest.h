@@ -95,6 +95,8 @@ typedef enum {
 - (BOOL)connectWithCallback:(JSONObjectHandler)callback;
 - (void)cancel;  // call to stop receiving messages
 
+- (void)removeFromCache; // for requests that have minumumDuration set and failed after passing all sanity checks
+
 + (KGORequestErrorCode)internalCodeForNSError:(NSError *)error;
 + (NSString *)userAgentString;
 
