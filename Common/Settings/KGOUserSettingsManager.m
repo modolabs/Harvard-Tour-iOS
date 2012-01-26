@@ -240,12 +240,12 @@ NSString * const KGOUserSettingKeyServer = @"ServerSelection";
                 NSMutableArray *tempSettings = [NSMutableArray array];
                 
                 for (NSDictionary *moduleData in moduleConfig) {
-                    ModuleTag *tag = [moduleData nonemptyStringForKey:@"tag"];
-                    if ([tag isEqualToString:HomeTag]) {
+                    NSString *moduleId = [moduleData nonemptyStringForKey:@"id"];
+                    if ([moduleId isEqualToString:@"home"]) {
                         continue;
                     }
-                    
-                    NSString *moduleId = [moduleData nonemptyStringForKey:@"id"];
+
+                    ModuleTag *tag = [moduleData nonemptyStringForKey:@"tag"];
                     if (moduleId && tag) {
                         BOOL secondary = NO;
 
