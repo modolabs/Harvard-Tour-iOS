@@ -23,11 +23,6 @@ NSString * const KGOAppConfigKeySocialMedia = @"SocialMedia";
 
 NSString * const UnreadNotificationsKey = @"UnreadNotifications";
 
-#pragma mark Module tags -- need to eliminate!
-
-ModuleTag * const HomeTag       = @"home";
-ModuleTag * const MapTag        = @"map";
-
 #pragma mark App-wide notification names
 
 NSString * const ModuleListDidChangeNotification = @"ModuleListChanged";

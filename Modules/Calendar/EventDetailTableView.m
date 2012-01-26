@@ -11,6 +11,7 @@
 #import "CalendarDetailViewController.h"
 #import "KGOLabel.h"
 #import <EventKitUI/EKEventEditViewController.h>
+#import "MapModule.h"
 
 #define CELL_TITLE_TAG 31415
 #define CELL_SUBTITLE_TAG 271
@@ -470,7 +471,13 @@
         } else if ([accessory isEqualToString:KGOAccessoryTypeMap]) {
             NSArray *annotations = [NSArray arrayWithObject:_event];
             NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:annotations, @"annotations", nil];
-            [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameHome forModuleTag:MapTag params:params];
+            // TODO: redo this when we have cross-module linking
+            for (KGOModule *aModule in [KGO_SHARED_APP_DELEGATE() modules]) {
+                if ([aModule isKindOfClass:[MapModule class]]) {
+                    [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameHome forModuleTag:aModule.tag params:params];
+                    return;
+                }
+            }
         }
     }
 }

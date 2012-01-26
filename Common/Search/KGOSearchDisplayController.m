@@ -224,8 +224,9 @@ maxResultsPerSection;
     }
 }
 
-
+// always return NO until we have cross-module linkage working
 - (BOOL)canShowMapView {
+    /*
     if (self.searchSources.count == 1 && self.searchResults.count) {
         for (id<KGOSearchResult> aResult in self.searchResults) {
             if ([aResult conformsToProtocol:@protocol(MKAnnotation)]) {
@@ -236,6 +237,7 @@ maxResultsPerSection;
             }
         }
     }
+     */
     return NO;
 }
 
@@ -257,11 +259,14 @@ maxResultsPerSection;
 
 #pragma mark KGOSearchBarDelegate
 
+// TODO: redo this when we have a system for cross-module linkage
 - (void)toolbarItemTapped:(UIBarButtonItem *)item {
+    /*
     if ([item.title isEqualToString:NSLocalizedString(@"Map", nil)]) {
         NSDictionary *params = [NSDictionary dictionaryWithObject:self.searchResults forKey:@"searchResults"];
         [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameSearch forModuleTag:MapTag params:params];
     }
+    */
 }
 
 #pragma mark KGOSearchBarDelegate

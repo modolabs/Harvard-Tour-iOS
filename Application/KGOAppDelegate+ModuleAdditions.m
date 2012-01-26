@@ -112,8 +112,9 @@
                     nil];
     }
     KGOModule *homeModule = [KGOModule moduleWithDictionary:homeData];
-    homeModule.hasAccess = YES;
-    [self addModule:homeModule];
+    _homeModule = homeModule;
+    _homeModule.hasAccess = YES;
+    [self addModule:_homeModule];
 }
 
 - (void)loadModulesFromArray:(NSArray *)moduleArray local:(BOOL)isLocal
@@ -160,7 +161,7 @@
 
 - (void)loadNavigationContainer {
     if (!_appHomeScreen && !_appNavController) {    
-        HomeModule *homeModule = (HomeModule *)[self moduleForTag:HomeTag];
+        HomeModule *homeModule = (HomeModule *)_homeModule;
         UIViewController *homeVC = [homeModule modulePage:LocalPathPageNameHome params:nil];
         KGONavigationStyle navStyle = [self navigationStyle];
         switch (navStyle) {

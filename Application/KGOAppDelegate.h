@@ -16,6 +16,7 @@
     NSMutableDictionary *_modulesByTag;
     NSMutableArray *_modules;
     KGOModule *_visibleModule;
+    KGOModule *_homeModule;
 
     // number of concurrent network connections the user should know about. If > 0, spinny in status bar is shown
     NSInteger networkActivityRefCount; 

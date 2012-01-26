@@ -44,11 +44,6 @@ extern NSString * const KGOAppConfigKeySocialMedia;
 
 extern NSString * const UnreadNotificationsKey;
 
-#pragma mark Module tags -- need to eliminate!
-
-extern ModuleTag * const HomeTag;
-extern ModuleTag * const MapTag;
-
 #pragma mark App-wide notification names
 
 extern NSString * const ModuleListDidChangeNotification;
