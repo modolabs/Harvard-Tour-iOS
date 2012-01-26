@@ -31,7 +31,8 @@
                               KGOUserSettingKeyPrimaryModules,
                               KGOUserSettingKeySecondaryModules,
                               KGOUserSettingKeyFont,
-                              KGOUserSettingKeyFontSize, nil];
+                              KGOUserSettingKeyFontSize,
+                              KGOUserSettingKeyResetApp, nil];
     
     for (NSString *aKey in settingsOrder) {
         if ([[KGOUserSettingsManager sharedManager] settingForKey:aKey]) {
@@ -137,7 +138,7 @@
         
         NSDictionary *currentOption = [setting.options dictionaryAtIndex:indexPath.row];
         cellTitle = [currentOption stringForKey:@"title"];
-        if (setting.selectedValue == currentOption) {
+        if ([[setting.selectedValue nonemptyStringForKey:@"id"] isEqualToString:[currentOption nonemptyStringForKey:@"id"]]) {
             accessory = KGOAccessoryTypeCheckmark;
         }
         cellSubtitle = [currentOption nonemptyStringForKey:@"subtitle"];
@@ -384,6 +385,13 @@
     
     if ([key isEqualToString:KGOUserSettingKeyLogin]) {
         [[KGORequestManager sharedManager] logoutKurogoServer];
+    } else if ([key isEqualToString:KGOUserSettingKeyResetApp]) {
+        UIAlertView *av = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Reset App", nil)
+                                                      message:NSLocalizedString(@"Tapping OK will delete all cached data and saved preferences", nil)
+                                                     delegate:self
+                                            cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                                            otherButtonTitles:NSLocalizedString(@"OK", nil), nil] autorelease];
+        [av show];
         
     } else if (![key isEqualToString:KGOUserSettingKeyPrimaryModules] && ![key isEqualToString:KGOUserSettingKeySecondaryModules]) {
         KGOUserSetting *setting = [[KGOUserSettingsManager sharedManager] settingForKey:key];
@@ -397,6 +405,16 @@
     }
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == [alertView firstOtherButtonIndex]) {
+        [KGO_SHARED_APP_DELEGATE() resetAppDataAndSettings];
+        [[NSNotificationCenter defaultCenter] postNotificationName:KGOUserPreferencesDidChangeNotification object:self];
+        [self setTableHeight];
+        [self reloadDataForTableView:self.tableView];
+    }
 }
 
 @end

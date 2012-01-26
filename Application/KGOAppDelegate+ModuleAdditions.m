@@ -14,6 +14,8 @@
 #import "KGORequestManager.h"
 #import "KGONotification.h"
 #import "KGOUserSettingsManager.h"
+#import "CoreDataManager.h"
+#import "KGOUserSettingsManager.h"
 
 @interface KGOAppDelegate (PrivateModuleListAdditions)
 
@@ -216,6 +218,22 @@
         }
     }
     return modelNames;
+}
+
+- (void)resetAppDataAndSettings
+{
+    [[CoreDataManager sharedManager] deleteStore];
+
+    // remove user defaults that interface relies on
+    [[KGOUserSettingsManager sharedManager] wipeSettings];
+
+    // these classes rely on data stored in NSUserDefaults
+    [[KGOSocialMediaController sharedController] logoutAllServices];
+
+    // remove all other manually accessed user defaults
+    // TODO: figure out implications of deleting push notification token
+    [NSUserDefaults resetStandardUserDefaults];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 #pragma mark Navigation

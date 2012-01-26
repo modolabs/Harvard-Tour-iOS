@@ -7,7 +7,7 @@
 
 @class SettingsModule;
 
-@interface SettingsTableViewController : KGOTableViewController {
+@interface SettingsTableViewController : KGOTableViewController <UIAlertViewDelegate> {
     
     NSArray *_settingKeys;
 

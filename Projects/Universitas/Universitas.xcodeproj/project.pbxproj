@@ -193,7 +193,6 @@
 		EB6BC7F614058A0B0095744E /* MapCategoryListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */; };
 		EB6D02A911E3784100B65CE3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6D02A811E3784100B65CE3 /* MapKit.framework */; };
 		EB6D576A14196B1A009EDA9D /* FBDialog.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EB6D576914196B1A009EDA9D /* FBDialog.bundle */; };
-		EB70DC94143E7CBB00E60476 /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB70DC93143E7CBB00E60476 /* Settings.plist */; };
 		EB70DCED1444953900E60476 /* PersonContactGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = EB70DCEC1444953900E60476 /* PersonContactGroup.m */; };
 		EB70DCF01444958300E60476 /* PeopleDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB70DCEF1444958200E60476 /* PeopleDataManager.m */; };
 		EB7E9E9C143152D20093B0C7 /* MITBuildInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7E9E9A143152D20093B0C7 /* MITBuildInfo.m */; };
@@ -519,6 +518,8 @@
 		EB3067FF142BC15B0047C9CF /* FBLoginDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBLoginDialog.h; path = ../../Contrib/Facebook/FBLoginDialog.h; sourceTree = "<group>"; };
 		EB306800142BC15B0047C9CF /* FBDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBDialog.h; path = ../../Contrib/Facebook/FBDialog.h; sourceTree = "<group>"; };
 		EB306804142BC1820047C9CF /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSON.h; path = "../../Contrib/json-framework/Classes/JSON.h"; sourceTree = "<group>"; };
+		EB3E3EA914D0C9860093F3A5 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = zh_CN; path = zh_CN.lproj/Settings.plist; sourceTree = "<group>"; };
+		EB3E3EB914D0C9A20093F3A5 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = zh_TW; path = zh_TW.lproj/Settings.plist; sourceTree = "<group>"; };
 		EB46A345134EB942005796E4 /* ThemeConfig-iPad.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ThemeConfig-iPad.plist"; sourceTree = "<group>"; };
 		EB46A347134EB97C005796E4 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		EB46A397134F653B005796E4 /* KGOSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOSplitViewController.h; sourceTree = "<group>"; };
@@ -574,7 +575,6 @@
 		EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapCategoryListViewController.m; sourceTree = "<group>"; };
 		EB6D02A811E3784100B65CE3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		EB6D576914196B1A009EDA9D /* FBDialog.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBDialog.bundle; path = "facebook-ios-sdk/src/FBDialog.bundle"; sourceTree = "<group>"; };
-		EB70DC93143E7CBB00E60476 /* Settings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Settings.plist; sourceTree = "<group>"; };
 		EB70DCEB1444953900E60476 /* PersonContactGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonContactGroup.h; sourceTree = "<group>"; };
 		EB70DCEC1444953900E60476 /* PersonContactGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonContactGroup.m; sourceTree = "<group>"; };
 		EB70DCEE1444958200E60476 /* PeopleDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeopleDataManager.h; sourceTree = "<group>"; };
@@ -1468,7 +1468,6 @@
 		EBEB7676138AE52A00C011D3 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				EB70DC93143E7CBB00E60476 /* Settings.plist */,
 				EBEB7677138AE55000C011D3 /* KGOUserSetting.h */,
 				EBEB7678138AE55000C011D3 /* KGOUserSetting.m */,
 				EBEB767A138AE5B700C011D3 /* KGOUserSettingsManager.h */,
@@ -1556,7 +1555,6 @@
 				EB7E9EA5143155BD0093B0C7 /* common in Resources */,
 				EB7E9EA6143155BD0093B0C7 /* modules in Resources */,
 				EB7E9F4E14337C630093B0C7 /* ipad in Resources */,
-				EB70DC94143E7CBB00E60476 /* Settings.plist in Resources */,
 				4E89EF891488AE75001402A2 /* AthleticsListController.xib in Resources */,
 				4E89EF8E1488AEDA001402A2 /* AthleticsTableViewCell.xib in Resources */,
 				4E90758A149B36A400E5A322 /* AthleticsSportsViewController.xib in Resources */,
@@ -1794,6 +1792,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				EB83AE4B13C747AA006CCEDB /* en */,
+				EB3E3EA914D0C9860093F3A5 /* zh_CN */,
+				EB3E3EB914D0C9A20093F3A5 /* zh_TW */,
 			);
 			name = Settings.plist;
 			sourceTree = "<group>";

@@ -37,6 +37,8 @@
 - (void)loadNavigationContainer;
 - (NSArray *)coreDataModelNames;
 
+- (void)resetAppDataAndSettings;
+
 #pragma mark Navigation
 
 - (KGOModule *)moduleForTag:(ModuleTag *)aTag;

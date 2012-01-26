@@ -6,6 +6,7 @@ extern NSString * const KGOUserSettingKeyFontSize;
 extern NSString * const KGOUserSettingKeyPrimaryModules;
 extern NSString * const KGOUserSettingKeySecondaryModules;
 extern NSString * const KGOUserSettingKeyModuleOrder;
+extern NSString * const KGOUserSettingKeyResetApp;
 // this string is independent from Settings.plist
 extern NSString * const KGOUserSettingKeyLogin;
 

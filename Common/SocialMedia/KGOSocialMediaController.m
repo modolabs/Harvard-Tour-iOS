@@ -97,6 +97,19 @@ static KGOSocialMediaController *s_controller = nil;
     [_startedServices removeObjectForKey:type];
 }
 
+- (void)logoutAllServices
+{
+    if (_startedServices) {
+        NSArray *keys = [_startedServices allKeys];
+        for (NSString *aKey in keys) {
+            id<KGOSocialMediaService> service = [_startedServices objectForKey:aKey];
+            if ([service isSignedIn]) {
+                [service signout];
+            }
+        }
+    }
+}
+
 - (id)init {
     self = [super init];
     if (self) {

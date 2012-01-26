@@ -86,5 +86,19 @@
 		<key>title</key>
 		<string>Secondary Modules</string>
 	</dict>
+	<key>ResetApp</key>
+	<dict>
+		<key>title</key>
+		<string>Reset App</string>
+		<key>options</key>
+		<array>
+			<dict>
+				<key>id</key>
+				<string>reset</string>
+				<key>title</key>
+				<string>Reset All Data and Settings</string>
+			</dict>
+		</array>
+	</dict>
 </dict>
 </plist>

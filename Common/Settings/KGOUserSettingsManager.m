@@ -12,6 +12,7 @@ NSString * const KGOUserSettingKeyFont = @"Font";
 NSString * const KGOUserSettingKeyFontSize = @"FontSize";
 NSString * const KGOUserSettingKeyPrimaryModules = @"PrimaryModules";
 NSString * const KGOUserSettingKeySecondaryModules = @"SecondaryModules";
+NSString * const KGOUserSettingKeyResetApp = @"ResetApp";
 // this string is independent from Settings.plist
 NSString * const KGOUserSettingKeyLogin = @"Login";
 
@@ -306,7 +307,10 @@ NSString * const KGOUserSettingKeyServer = @"ServerSelection";
         DLog(@"available settings %@", availableSettings);
         DLog(@"saved user settings %@", savedSettings);
 
-        NSArray *stringSettings = [NSArray arrayWithObjects:KGOUserSettingKeyFont, KGOUserSettingKeyFontSize, nil];
+        NSArray *stringSettings = [NSArray arrayWithObjects:
+                                   KGOUserSettingKeyFont,
+                                   KGOUserSettingKeyFontSize,
+                                   KGOUserSettingKeyResetApp, nil];
         for (NSString *key in stringSettings) {
             NSDictionary *settingData = [availableSettings dictionaryForKey:key];
             if (settingData) {

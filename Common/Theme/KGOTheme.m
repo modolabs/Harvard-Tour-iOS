@@ -365,7 +365,8 @@ static KGOTheme *s_sharedTheme = nil;
             [mutableFontDict setObject:fontPref forKey:@"DefaultFont"];
         }
     }
-        
+
+    [fontDict copy];
     fontDict = [mutableFontDict copy];
 }
 
