@@ -14,11 +14,10 @@
 - (void)loadView {
     [super loadView];
     
-    CGRect frame = self.view.bounds;
-    if (_searchBar) {
-        frame.origin.y = _searchBar.frame.size.height;
-        frame.size.height -= _searchBar.frame.size.height;
-    }
+    CGFloat minY = [self minimumAvailableY];
+    CGRect frame = CGRectMake(0, minY,
+                              CGRectGetWidth(self.view.bounds),
+                              CGRectGetHeight(self.view.bounds) - minY);
     _scrollView = [[UIScrollView alloc] initWithFrame:frame];
     _scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _scrollView.contentSize = self.view.bounds.size;
@@ -54,6 +53,13 @@
 {
     [super refreshModules];
 
+    CGFloat minY = [self minimumAvailableY];
+    if (CGRectGetMinY(_scrollView.frame) != minY) {
+        _scrollView.frame = CGRectMake(0, minY,
+                                       CGRectGetWidth(self.view.bounds),
+                                       CGRectGetHeight(self.view.bounds) - minY);
+    }
+
     primaryGrid.icons = [self iconsForPrimaryModules:YES];
     secondGrid.icons = [self iconsForPrimaryModules:NO];
     
@@ -68,10 +74,7 @@
         secondGrid.frame = frame;
     }
     
-    CGFloat scrollHeight = secondGrid.frame.origin.y + secondGrid.frame.size.height; // pad bottom
-    if (_searchBar) {
-        scrollHeight += _searchBar.frame.size.height;
-    }
+    CGFloat scrollHeight = [self minimumAvailableY] + secondGrid.frame.origin.y + secondGrid.frame.size.height; // pad bottom
     if (scrollHeight != _scrollView.contentSize.height) {
         _scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, scrollHeight);
     }

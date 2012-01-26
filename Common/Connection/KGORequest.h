@@ -45,6 +45,7 @@ typedef enum {
 	KGORequestErrorDeviceOffline,
 	KGORequestErrorTimeout,
 	KGORequestErrorBadResponse,
+    KGORequestErrorResponseTypeMismatch,
 	KGORequestErrorVersionMismatch,
 	KGORequestErrorInterrupted,
 	KGORequestErrorServerMessage,

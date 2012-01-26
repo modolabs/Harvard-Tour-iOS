@@ -10,14 +10,11 @@
 - (void)loadView {
     [super loadView];
     
-    CGFloat searchBarHeight = 0;
-    if (_searchBar) {
-        searchBarHeight = _searchBar.frame.size.height;
-    }
+    CGFloat minY = [self minimumAvailableY];
     
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, searchBarHeight,
-                                                               self.view.bounds.size.width,
-                                                               self.view.bounds.size.height - searchBarHeight)
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, minY,
+                                                               CGRectGetWidth(self.view.bounds),
+                                                               CGRectGetHeight(self.view.bounds) - minY)
                                               style:UITableViewStyleGrouped];
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -30,6 +27,14 @@
 
 - (void)refreshModules {
     [super refreshModules];
+
+    CGFloat minY = [self minimumAvailableY];
+    if (CGRectGetMinY(_tableView.frame) != minY) {
+        _tableView.frame = CGRectMake(0, minY,
+                                      CGRectGetWidth(self.view.bounds),
+                                      CGRectGetHeight(self.view.bounds) - minY);
+    }
+    
     [_tableView reloadData];
 }
 

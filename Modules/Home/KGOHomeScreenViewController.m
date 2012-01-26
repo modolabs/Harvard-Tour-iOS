@@ -10,6 +10,7 @@
 #import "KGORequestManager.h"
 #import "Foundation+KGOAdditions.h"
 #import "KGOUserSettingsManager.h"
+#import "KGOLabel.h"
 
 #define MAX_FEDERATED_SEARCH_RESULTS_PER_SECTION 2
 
@@ -106,6 +107,7 @@
     }
     
     [self standbyForServerHello];
+    [self checkAnnouncementBanner];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -131,6 +133,10 @@
     [_preferences release];
     [_searchBar release];
     [_searchController release];
+    
+    _bannerRequest.delegate = nil;
+    _bannerRequest = nil;
+
     [super dealloc];
 }
 
@@ -140,6 +146,126 @@
         return YES;
     }
     return toInterfaceOrientation == UIInterfaceOrientationPortrait;
+}
+
+#pragma mark home screen announcement
+// TODO: separate network stuff into a different class
+
+- (void)checkAnnouncementBanner
+{
+    if (!_bannerRequest) {
+        _bannerRequest = [[KGORequestManager sharedManager] requestWithDelegate:self
+                                                                         module:self.homeModule.tag
+                                                                           path:@"notice"
+                                                                        version:1
+                                                                         params:nil];
+        [_bannerRequest connect];
+    }
+}
+
+- (void)showAnnouncementBanner
+{
+    if (_banner && ![_banner isDescendantOfView:self.view]) {
+        [self.view addSubview:_banner];
+        if (self.loadingView) {
+            [self.view bringSubviewToFront:self.loadingView];
+        }
+
+        if (_searchBar) {
+            _searchBar.frame = CGRectMake(0,
+                                          CGRectGetMaxY(_banner.frame),
+                                          CGRectGetWidth(_searchBar.frame),
+                                          CGRectGetHeight(_searchBar.frame));
+        }
+
+        [self refreshModules];
+    }
+}
+
+- (void)hideAnnouncementBanner
+{
+    if (_banner) {
+        if ([_banner isDescendantOfView:self.view]) {
+            [_banner removeFromSuperview];
+        }
+        if (_searchBar) {
+            _searchBar.frame = CGRectMake(0, 0,
+                                          CGRectGetWidth(_searchBar.frame),
+                                          CGRectGetHeight(_searchBar.frame));
+        }
+        [_banner release];
+        _banner = nil;
+
+        [self refreshModules];
+    }
+}
+
+- (CGFloat)minimumAvailableY
+{
+    if (_searchBar) {
+        return CGRectGetMaxY(_searchBar.frame);
+    }
+    if (_banner) {
+        return CGRectGetMaxY(_banner.frame);
+    }
+    return 0;
+}
+
+- (void)request:(KGORequest *)request didFailWithError:(NSError *)error
+{
+    // if there is no announcement, the response will be null
+    if ([error code] == KGORequestErrorResponseTypeMismatch) {
+        // do nothing, we're not showing a banner
+    }
+}
+
+- (void)request:(KGORequest *)request didReceiveResult:(id)result
+{
+    NSDictionary *notice = [result dictionaryForKey:@"notice"];
+
+    //NSString *unixtime = [notice nonemptyForcedStringForKey:@"unixtime"];
+
+    CGFloat width = CGRectGetWidth(self.view.bounds);
+    CGFloat height = 6;
+    CGRect frame = CGRectMake(0, 0, width, height);
+
+    if (_banner) {
+        [_banner removeFromSuperview];
+        [_banner release];
+    }
+    _banner = [[KGOHomeScreenWidget alloc] initWithFrame:frame];
+
+    // use title for the first line only
+    UIFont *font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentTitle];
+    for (NSString *displayKey in [NSArray arrayWithObjects:@"title", @"text", @"date", nil]) {
+        NSString *displayString = [notice nonemptyStringForKey:displayKey];
+        if (displayString) {
+            KGOLabel *label = [KGOLabel multilineLabelWithText:displayString
+                                                          font:font
+                                                         width:width - 20];
+            CGFloat labelHeight = CGRectGetHeight(label.frame);
+            label.frame = CGRectMake(10, height, width - 20, labelHeight);
+            height += labelHeight;
+            [_banner addSubview:label];
+        }
+        font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentSubtitle];
+    }
+
+    height += 6;
+    _banner.frame = CGRectMake(0, 0, width, height);
+    
+    NSInteger shouldLink = [[result nonemptyForcedStringForKey:@"link"] integerValue];
+    if (shouldLink) {
+        NSString *moduleTag = [result nonemptyStringForKey:@"moduleID"];
+        _banner.module = [KGO_SHARED_APP_DELEGATE() moduleForTag:moduleTag];
+    }
+
+    [self showAnnouncementBanner];
+}
+
+- (void)requestWillTerminate:(KGORequest *)request
+{
+    _bannerRequest = nil;
 }
 
 #pragma mark - Login states
@@ -287,10 +413,7 @@
 }
 
 - (NSArray *)allWidgets:(CGFloat *)topFreePixel :(CGFloat *)bottomFreePixel {
-    CGFloat yOrigin = 0;
-    if (_searchBar) {
-        yOrigin = _searchBar.frame.size.height;
-    }
+    CGFloat yOrigin = [self minimumAvailableY];
     
     CGSize *occupiedAreas = malloc(sizeof(CGSize) * 4);
     

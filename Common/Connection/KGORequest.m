@@ -337,7 +337,7 @@ NSString * const KGORequestLastRequestTime = @"last";
 	BOOL canProceed = [self.result isKindOfClass:self.expectedResponseType];
 	if (!canProceed) { 
 		NSDictionary *errorInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"result type does not match expected response type", @"message", nil];
-		[self terminateWithErrorCode:KGORequestErrorBadResponse userInfo:errorInfo];
+		[self terminateWithErrorCode:KGORequestErrorResponseTypeMismatch userInfo:errorInfo];
 		return;
 	}
     

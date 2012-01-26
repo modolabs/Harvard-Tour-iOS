@@ -143,7 +143,7 @@ NSString * const CurrentKurogoServerSettingKey = @"CURRENT_KUROGO_SERVER";
 					   NSLocalizedString(@"Request is not supported in this version of", nil),
 					   [infoDict objectForKey:@"CFBundleName"]];
 			break;
-		case KGORequestErrorBadResponse: case KGORequestErrorOther:
+		case KGORequestErrorBadResponse: case KGORequestErrorOther: case KGORequestErrorResponseTypeMismatch:
 			title = NSLocalizedString(@"Connection Failed", nil);
 			message = NSLocalizedString(@"Problem connecting to server. Please try again later.", nil);
             canRetry = YES;
