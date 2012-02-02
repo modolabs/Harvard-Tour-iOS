@@ -293,7 +293,7 @@ currentCategories = _currentCategories, currentStories = _currentStories;
         }
         category.title = [categoryDict nonemptyStringForKey:@"title"];
         category.isMainCategory = [NSNumber numberWithBool:YES];
-        category.moreStories = [NSNumber numberWithInt:-1];
+        category.moreStories = [NSNumber numberWithInt:LOADMORE_LIMIT];
         category.nextSeekId = [NSNumber numberWithInt:0];
     }
     return category;
@@ -313,7 +313,7 @@ currentCategories = _currentCategories, currentStories = _currentStories;
         if (story) {
             NSInteger index = [self.currentStories indexOfObject:story];
             if (index != NSNotFound) {
-                start = index;
+                start = index+1;
             }
         }
     }
