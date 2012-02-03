@@ -127,7 +127,7 @@ KGOSign KGOGetIntegerSign(NSInteger x) {
 // TODO: create backwards equivalent of +queryStringWithParameters:
 // so we can parse queries like ?blah[a]=2&blah[b]=3
 + (NSDictionary *)parametersFromQueryString:(NSString *)queryString {
-    NSArray *components = [queryString componentsSeparatedByString:@"&"];
+    NSArray *components = [[queryString stringByReplacingOccurrencesOfString:@"+" withString:@"%20"] componentsSeparatedByString:@"&"];
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     for (NSString *aComponent in components) {
         NSArray *parts = [aComponent componentsSeparatedByString:@"="];
