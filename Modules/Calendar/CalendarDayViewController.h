@@ -9,6 +9,13 @@ bool isOverOneMonth(NSTimeInterval interval);
 bool isOverOneDay(NSTimeInterval interval);
 bool isOverOneHour(NSTimeInterval interval);
 
+typedef enum {
+    KGOCalendarBrowseModeDay, // date pager selects days
+    //KGOCalendarBrowseModeMonth,
+    KGOCalendarBrowseModeLimit, // fixed number of items per page
+    KGOCalendarBrowseModeCategories
+} KGOCalendarBrowseMode;
+
 @interface CalendarDayViewController : KGOTableViewController <KGODatePagerDelegate,
 KGOScrollingTabstripSearchDelegate, CalendarDataManagerDelegate> {
     
@@ -50,7 +57,9 @@ KGOScrollingTabstripSearchDelegate, CalendarDataManagerDelegate> {
 @property(nonatomic, retain) NSArray *currentSections;
 @property(nonatomic, retain) NSDictionary *currentEventsBySection;
 
-@property(nonatomic) BOOL showsGroups;
+@property(nonatomic) BOOL showsGroups; // controls whether or not the tabstrip shows
+@property(nonatomic) KGOCalendarBrowseMode browseMode;
+
 @property(nonatomic) BOOL eventsLoaded;
 
 - (void)clearEvents;

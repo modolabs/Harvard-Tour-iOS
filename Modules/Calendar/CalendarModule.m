@@ -82,7 +82,12 @@ NSString * const KGODataModelNameCalendar = @"Calendar";
         CalendarDayViewController *calendarVC = [[[CalendarDayViewController alloc] initWithNibName:@"CalendarDayViewController"
                                                                                                bundle:nil] autorelease];
         calendarVC.moduleTag = self.tag;
-        calendarVC.showsGroups = ![pageName isEqualToString:LocalPathPageNameCategoryList];
+        if ([pageName isEqualToString:LocalPathPageNameCategoryList]) {
+            calendarVC.browseMode = KGOCalendarBrowseModeCategories;
+        } else {
+            calendarVC.browseMode = KGOCalendarBrowseModeDay;
+            //calendarVC.browseMode = KGOCalendarBrowseModeLimit;
+        }
         
         calendarVC.dataManager = self.dataManager;
         // TODO: we might not need to set the following as long as viewWillAppear is properly invoked

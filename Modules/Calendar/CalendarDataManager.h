@@ -6,7 +6,9 @@
 
 - (void)groupsDidChange:(NSArray *)groups;
 - (void)groupDataDidChange:(KGOCalendarGroup *)group;
-- (void)eventsDidChange:(NSArray *)events calendar:(KGOCalendar *)calendar didReceiveResult:(BOOL)receivedResult;
+- (void)eventsDidChange:(NSArray *)events
+               calendar:(KGOCalendar *)calendar
+       didReceiveResult:(BOOL)receivedResult; // didReceiveResult is a misnomer for "came from network"
 
 @end
 
@@ -34,6 +36,7 @@
 - (BOOL)requestEventsForCalendar:(KGOCalendar *)calendar params:(NSDictionary *)params;
 - (BOOL)requestEventsForCalendar:(KGOCalendar *)calendar startDate:(NSDate *)startDate endDate:(NSDate *)endDate;
 - (BOOL)requestEventsForCalendar:(KGOCalendar *)calendar time:(NSDate *)time;
+- (BOOL)requestEventsForCalendar:(KGOCalendar *)calendar start:(NSDate *)start limit:(NSInteger)limit;
 
 - (void)selectGroupAtIndex:(NSInteger)index;
 

@@ -31,7 +31,7 @@ bool isOverOneHour(NSTimeInterval interval) {
 @synthesize federatedSearchTerms, dataManager, moduleTag, showsGroups, eventsLoaded, currentCalendar = _currentCalendar;
 @synthesize currentSections = _currentSections, currentEventsBySection = _currentEventsBySection,
 groupTitles = _groupTitles;
-@synthesize federatedSearchResults;
+@synthesize federatedSearchResults, browseMode = _browseMode;
 
 - (void)dealloc
 {
@@ -69,10 +69,16 @@ groupTitles = _groupTitles;
     
     _currentGroupIndex = NSNotFound;
     
-    _datePager.contentsController = self;
-    _datePager.delegate = self;
+    if (self.browseMode == KGOCalendarBrowseModeLimit) {
+        [_datePager removeFromSuperview];
+        _datePager = nil;
+    } else {
+        _datePager.contentsController = self;
+        _datePager.delegate = self;
+        [_datePager setDate:[NSDate date]];
+    }
     
-    if (self.showsGroups) {
+    if (self.browseMode != KGOCalendarBrowseModeCategories) {
         _tabstrip.delegate = self;
         _tabstrip.showsSearchButton = YES;
         
@@ -84,8 +90,6 @@ groupTitles = _groupTitles;
         frame.origin.y = _tabstrip.frame.origin.y;
         _datePager.frame = frame;
     }
-    
-    [_datePager setDate:[NSDate date]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -213,10 +217,8 @@ groupTitles = _groupTitles;
     
     if (events.count) {
         // TODO: make sure this set of events is what we last requested
-        NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"startDate" ascending:YES]];
-        NSArray *sortedEvents = [events sortedArrayUsingDescriptors:sortDescriptors];
-        KGOEventWrapper *firstEvent = [sortedEvents objectAtIndex:0];
-        KGOEventWrapper *lastEvent = [sortedEvents lastObject];
+        KGOEventWrapper *firstEvent = [events objectAtIndex:0];
+        KGOEventWrapper *lastEvent = [events lastObject];
         NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
         NSTimeInterval interval = [lastEvent.startDate timeIntervalSinceDate:firstEvent.startDate];
         if (isOverOneMonth(interval)) {
@@ -234,7 +236,7 @@ groupTitles = _groupTitles;
             [formatter setDateFormat:@"h a"]; // default to hourly format
         }
         
-        for (KGOEventWrapper *event in sortedEvents) {
+        for (KGOEventWrapper *event in events) {
             NSString *title = nil;
             if (event.allDay) {
                 title = NSLocalizedString(@"All day", @"section header for all-day events");
@@ -288,7 +290,25 @@ groupTitles = _groupTitles;
         self.eventsLoaded = NO;
         self.tableView.hidden = YES;
         [_loadingView startAnimating];
-        [self.dataManager requestEventsForCalendar:_currentCalendar time:date];
+        switch (self.browseMode) {
+            case KGOCalendarBrowseModeDay:
+                [self.dataManager requestEventsForCalendar:_currentCalendar time:date];
+                break;
+            /*
+            case KGOCalendarBrowseModeMonth:
+            {
+                NSDate *endDate = [date dateByAddingTimeInterval:60*60*24*30]; // TODO: use real time function
+                [self.dataManager requestEventsForCalendar:_currentCalendar startDate:date endDate:endDate];
+            }
+             */
+            case KGOCalendarBrowseModeLimit:
+            {
+                [self.dataManager requestEventsForCalendar:_currentCalendar start:date limit:10];
+            }
+            case KGOCalendarBrowseModeCategories:
+            default:
+                break;
+        }
     }
 }
 

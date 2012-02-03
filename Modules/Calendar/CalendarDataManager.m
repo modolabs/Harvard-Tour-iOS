@@ -177,31 +177,38 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
                 start = dateForMidnightFromInterval(interval);
             }
             
-            NSDate *end = [params objectForKey:@"end"];
-            if (!end) {
-                NSTimeInterval interval = [[params objectForKey:@"time"] doubleValue] + 24*60*60; // add 24 hrs
-                end = dateForMidnightFromInterval(interval);
-            }
-            
             if (start) {
                 [predTemplates addObject:@"start >= %@"];
                 [predArguments addObject:start];
             }
             
-            
-            if (end) {
-                [predTemplates addObject:@"end < %@"];
-                [predArguments addObject:end];
+            NSInteger limit = [[params objectForKey:@"limit"] integerValue];
+            if (limit <= 0) {            
+                NSDate *end = [params objectForKey:@"end"];
+                if (!end) {
+                    NSTimeInterval interval = [[params objectForKey:@"time"] doubleValue] + 24*60*60; // add 24 hrs
+                    end = dateForMidnightFromInterval(interval);
+                }
+                if (end) {
+                    [predTemplates addObject:@"end < %@"];
+                    [predArguments addObject:end];
+                }
             }
             
             NSArray *filteredEvents = nil;
+            NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"start" ascending:YES]];
             if (predTemplates.count) {
                 NSPredicate *pred = [NSPredicate predicateWithFormat:[predTemplates componentsJoinedByString:@" AND "]
                                                        argumentArray:predArguments];
                 
-                filteredEvents = [events filteredArrayUsingPredicate:pred];
+                filteredEvents = [[events filteredArrayUsingPredicate:pred] sortedArrayUsingDescriptors:sortDescriptors];
             } else {
-                filteredEvents = events;
+                filteredEvents = [events sortedArrayUsingDescriptors:sortDescriptors];
+            }
+            
+            limit = MIN(limit, filteredEvents.count);
+            if (limit > 0) {
+                filteredEvents = [filteredEvents subarrayWithRange:NSMakeRange(0, limit)];
             }
             
             NSMutableArray *wrappers = [NSMutableArray arrayWithCapacity:filteredEvents.count];
@@ -251,6 +258,18 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
                             calendar.identifier, @"calendar",
                             calendar.type, @"type",
                             timeString, @"time",
+                            nil];
+    return [self requestEventsForCalendar:calendar params:params];
+}
+
+- (BOOL)requestEventsForCalendar:(KGOCalendar *)calendar start:(NSDate *)start limit:(NSInteger)limit
+{
+    NSString *timeString = [NSString stringWithFormat:@"%.0f", [start timeIntervalSince1970]];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            calendar.identifier, @"calendar",
+                            calendar.type, @"type",
+                            timeString, @"time",
+                            [NSString stringWithFormat:@"%d", limit], @"limit",
                             nil];
     return [self requestEventsForCalendar:calendar params:params];
 }
@@ -401,9 +420,13 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
             [array addObject:event];
             [event convertToKGOEvent];
         }
+
+        NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"startDate" ascending:YES]];
         
         [[CoreDataManager sharedManager] saveData];
-        [self.delegate eventsDidChange:array calendar:calendar didReceiveResult:YES];
+        [self.delegate eventsDidChange:[array sortedArrayUsingDescriptors:sortDescriptors]
+                              calendar:calendar
+                      didReceiveResult:YES];
     }
 }
 
