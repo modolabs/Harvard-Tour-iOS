@@ -153,6 +153,14 @@
 	return [_tableController tableView:tableView heightForRowAtIndexPath:indexPath];
 }
 
+#pragma mark forwarding of UIScrollViewDelegate
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if ([_tableController respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+        [_tableController scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
+}
+
 @end
 
 #pragma mark -
@@ -591,13 +599,6 @@
         cell.detailTextLabel.font = subtitleFont;
         cell.detailTextLabel.textColor = subtitleTextColor;
     }
-	
-    if ([dataSource respondsToSelector:@selector(tableView:manipulatorForCellAtIndexPath:)]) {
-        CellManipulator manipulateCell = [dataSource tableView:tableView manipulatorForCellAtIndexPath:indexPath];
-        if (manipulateCell) {
-            manipulateCell(cell);
-        }
-    }
     
 	if (cachedViews.count) {
 		for (UIView *aView in cachedViews) {
@@ -610,6 +611,20 @@
     }
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	id<KGOTableViewDataSource> dataSource = [self dataSourceForTableView:tableView];
+	
+    if ([dataSource respondsToSelector:@selector(tableView:manipulatorForCellAtIndexPath:)]) {
+        CellManipulator manipulateCell = [dataSource tableView:tableView manipulatorForCellAtIndexPath:indexPath];
+        if (manipulateCell) {
+            manipulateCell(cell);
+        }
+    } else if ([dataSource respondsToSelector:@selector(tableView:willDisplayCell:forRowAtIndexPath:)]) {
+        [dataSource tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
+    }
 }
 
 // implementing this only because it is required by the protocol
@@ -655,7 +670,6 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     NSArray *views = [self tableView:tableView cachedViewsForCellAtIndexPath:indexPath];
     
     if (!views.count) {
