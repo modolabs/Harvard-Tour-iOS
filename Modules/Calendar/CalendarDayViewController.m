@@ -3,6 +3,7 @@
 #import "CalendarModel.h"
 #import "CalendarDetailViewController.h"
 #import "UIKit+KGOAdditions.h"
+#import "Foundation+KGOAdditions.h"
 
 @interface CalendarDayViewController (Private)
 
@@ -28,10 +29,11 @@ bool isOverOneHour(NSTimeInterval interval) {
 
 @implementation CalendarDayViewController
 
-@synthesize federatedSearchTerms, dataManager, moduleTag, showsGroups, eventsLoaded, currentCalendar = _currentCalendar;
+@synthesize federatedSearchTerms, dataManager, moduleTag, eventsLoaded, currentCalendar = _currentCalendar;
 @synthesize currentSections = _currentSections, currentEventsBySection = _currentEventsBySection,
 groupTitles = _groupTitles;
 @synthesize federatedSearchResults, browseMode = _browseMode;
+@synthesize datePager = _datePager, tabstrip = _tabstrip, loadingView = _loadingView, footerView = _footerView;
 
 - (void)dealloc
 {
@@ -45,7 +47,7 @@ groupTitles = _groupTitles;
 {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
+
     // Release any cached data, images, etc that aren't in use.
 }
 
@@ -71,7 +73,8 @@ groupTitles = _groupTitles;
     
     if (self.browseMode == KGOCalendarBrowseModeLimit) {
         [_datePager removeFromSuperview];
-        _datePager = nil;
+        self.datePager = nil;
+        
     } else {
         _datePager.contentsController = self;
         _datePager.delegate = self;
@@ -98,11 +101,19 @@ groupTitles = _groupTitles;
     self.dataManager.delegate = self;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [self hideLoading]; // table height will be reset if we have data before the vc appears
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+
+    self.datePager = nil;
+    self.loadingView = nil;
+    self.tabstrip = nil;
+    self.footerView = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -130,14 +141,39 @@ groupTitles = _groupTitles;
     }
 }
 
+- (void)showLoading
+{
+    if (!_appending) {
+        self.tableView.hidden = YES;
+        [_loadingView startAnimating];
+    }
+    if (self.footerView) {
+        [self.footerView startLoading];
+        self.tableView.tableFooterView = self.footerView;
+    }
+}
+
+- (void)hideLoading
+{
+    if (!_appending) {
+        self.tableView.hidden = NO;
+        [_loadingView stopAnimating];
+    }
+    if (self.footerView) {
+        [self.footerView stopLoading];
+        self.tableView.tableFooterView = nil;
+        CGSize contentSize = self.tableView.contentSize;
+        self.tableView.tableFooterView = self.footerView;
+        self.tableView.contentSize = contentSize;
+    }
+}
+
 - (void)groupDataDidChange:(KGOCalendarGroup *)group
 {
     [self clearCalendars];
     [self clearEvents];
     
     if (group.calendars.count) {
-        [_loadingView stopAnimating];
-        
         UITableViewStyle style;
 
         if (group.calendars.count > 1) {
@@ -161,6 +197,7 @@ groupTitles = _groupTitles;
         }
         
         [self loadTableViewWithStyle:style];
+        [self hideLoading];
 
         if (group.calendars.count == 1) {
             // only one calendar so just pick it
@@ -172,7 +209,7 @@ groupTitles = _groupTitles;
             // multiple calendars in this group -- select the first
             self.currentCalendar = [_currentCalendars objectAtIndex:0];
         }
-        
+
     } else {
         [self.dataManager requestCalendarsForGroup:group];
     }
@@ -201,8 +238,14 @@ groupTitles = _groupTitles;
                                             forModuleTag:self.dataManager.moduleTag];
         }
     }
+    
+    if (self.browseMode == KGOCalendarBrowseModeLimit) {
+        [[NSBundle mainBundle] loadNibNamed:@"OverScrollFooterView" owner:self options:nil];
+        CGSize contentSize = self.tableView.contentSize;
+        self.tableView.tableFooterView = self.loadingView;
+        self.tableView.contentSize = contentSize;
+    }
 }
-
 
 - (void)eventsDidChange:(NSArray *)events calendar:(KGOCalendar *)calendar didReceiveResult:(BOOL)receivedResult
 {
@@ -210,11 +253,18 @@ groupTitles = _groupTitles;
         return;
     }
     
-    [self clearEvents];
+    if (!_appending) {
+        [self clearEvents];
+    }
     
-    NSMutableArray *sectionTitles = [NSMutableArray array];
-    NSMutableDictionary *eventsBySection = [NSMutableDictionary dictionary];
-    
+    if (!self.currentSections) {
+        self.currentSections = [NSMutableArray array];;
+    }
+
+    if (!self.currentEventsBySection) {
+        self.currentEventsBySection = [NSMutableDictionary dictionary];
+    }
+
     if (events.count) {
         // TODO: make sure this set of events is what we last requested
         KGOEventWrapper *firstEvent = [events objectAtIndex:0];
@@ -231,8 +281,6 @@ groupTitles = _groupTitles;
             [formatter setDateFormat:@"h a"];
         
         } else {
-           // [formatter setDateStyle:NSDateFormatterNoStyle];
-           // [formatter setTimeStyle:NSDateFormatterNoStyle];
             [formatter setDateFormat:@"h a"]; // default to hourly format
         }
         
@@ -243,20 +291,19 @@ groupTitles = _groupTitles;
             } else {
                 title = [formatter stringFromDate:event.startDate];
             }
-            NSMutableArray *eventsForCurrentSection = [eventsBySection objectForKey:title];
+            NSMutableArray *eventsForCurrentSection = [self.currentEventsBySection objectForKey:title];
             if (!eventsForCurrentSection) {
                 eventsForCurrentSection = [NSMutableArray array];
-                [eventsBySection setObject:eventsForCurrentSection forKey:title];
-                [sectionTitles addObject:title];
+                [self.currentEventsBySection setObject:eventsForCurrentSection forKey:title];
+                [self.currentSections addObject:title];
             }
-            [eventsForCurrentSection addObject:event];
+            if (![[eventsForCurrentSection mappedArrayUsingBlock:^id(id element) {
+                return [element identifier];
+            }] containsObject:event.identifier]) {
+                [eventsForCurrentSection addObject:event];
+            }
         }
     }
-    
-    self.currentSections = sectionTitles;
-    self.currentEventsBySection = eventsBySection;
-    
-    [_loadingView stopAnimating];
 
     if (receivedResult) {
         self.eventsLoaded = YES;
@@ -264,10 +311,19 @@ groupTitles = _groupTitles;
     
     if (!self.tableView) {
         [self loadTableViewWithStyle:UITableViewStylePlain];
+    } else if (_appending) {
+        NSInteger sections = [self.tableView numberOfSections];
+        if (sections && self.currentSections.count == sections) {
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:sections-1] withRowAnimation:UITableViewRowAnimationNone];
+        } else {
+            [self reloadDataForTableView:self.tableView];
+        }
+        _appending = NO;
     } else {
-        self.tableView.hidden = NO;
         [self reloadDataForTableView:self.tableView];
     }
+    
+    [self hideLoading];
 }
 
 
@@ -287,23 +343,20 @@ groupTitles = _groupTitles;
 - (void)requestEventsForCurrentCalendar:(NSDate *)date
 {
     if (_currentCalendar) {
-        self.eventsLoaded = NO;
-        self.tableView.hidden = YES;
-        [_loadingView startAnimating];
+        if (!_appending) {
+            self.eventsLoaded = NO;
+        }
+        [self showLoading];
         switch (self.browseMode) {
             case KGOCalendarBrowseModeDay:
+            {
                 [self.dataManager requestEventsForCalendar:_currentCalendar time:date];
                 break;
-            /*
-            case KGOCalendarBrowseModeMonth:
-            {
-                NSDate *endDate = [date dateByAddingTimeInterval:60*60*24*30]; // TODO: use real time function
-                [self.dataManager requestEventsForCalendar:_currentCalendar startDate:date endDate:endDate];
             }
-             */
             case KGOCalendarBrowseModeLimit:
             {
                 [self.dataManager requestEventsForCalendar:_currentCalendar start:date limit:10];
+                break;
             }
             case KGOCalendarBrowseModeCategories:
             default:
@@ -318,7 +371,7 @@ groupTitles = _groupTitles;
 {
     if (index != _currentGroupIndex) {
         [self removeTableView:self.tableView];
-        [_loadingView startAnimating];
+        [self showLoading];
 
         _currentGroupIndex = index;
 
@@ -368,7 +421,7 @@ groupTitles = _groupTitles;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     NSInteger num = 1;
-    if (self.currentSections && self.currentEventsBySection) {
+    if (self.browseMode != KGOCalendarBrowseModeCategories) {
         if (self.currentSections.count) {
             num = self.currentSections.count;
         } else {
@@ -380,15 +433,15 @@ groupTitles = _groupTitles;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger num = 0;
-    if (self.currentSections && self.currentEventsBySection) {
+    if (self.browseMode == KGOCalendarBrowseModeCategories) {
+        num = _currentCalendars.count;
+    } else {
         if (self.currentSections.count) {
             NSArray *eventsForSection = [self.currentEventsBySection objectForKey:[self.currentSections objectAtIndex:section]];
             num = eventsForSection.count;
         } else if (self.eventsLoaded) {
             num = 1; // error message
         }
-    } else if (_currentCalendars) {
-        num = _currentCalendars.count;
     }
 
     return num;
@@ -396,7 +449,7 @@ groupTitles = _groupTitles;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (self.currentSections.count >= 1) {
+    if (self.currentSections.count >= 1) { // only true for Day and Limit modes
         return [self.currentSections objectAtIndex:section];
     }
     
@@ -404,62 +457,51 @@ groupTitles = _groupTitles;
 }
 
 - (KGOTableCellStyle)tableView:(UITableView *)tableView styleForCellAtIndexPath:(NSIndexPath *)indexPath {
-    if (_currentCalendars && self.groupTitles.count > 1) {
+    if (self.browseMode == KGOCalendarBrowseModeCategories) {
         return KGOTableCellStyleDefault;
     }
     return KGOTableCellStyleSubtitle;
 }
 
-- (CellManipulator)tableView:(UITableView *)tableView manipulatorForCellAtIndexPath:(NSIndexPath *)indexPath {
-    if (_currentCalendars && self.groupTitles.count > 1) {
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.browseMode == KGOCalendarBrowseModeCategories) {
         KGOCalendar *category = [_currentCalendars objectAtIndex:indexPath.row];
         NSString *title = category.title;
+        [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
+        cell.textLabel.text = title;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
-        return [[^(UITableViewCell *cell) {
-            [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
-            cell.textLabel.text = title;
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        } copy] autorelease];
-        
-    } else if (self.currentSections && self.currentEventsBySection) {
-        if (self.currentSections.count) {
-            NSArray *eventsForSection = [self.currentEventsBySection objectForKey:[self.currentSections objectAtIndex:indexPath.section]];
-            KGOEventWrapper *event = [eventsForSection objectAtIndex:indexPath.row];
-            
-            NSString *title = title = event.title;
-            NSString *subtitle = nil;
-            if (event.allDay) {
-                subtitle = [NSString stringWithFormat:@"%@ %@", [self.dataManager shortDateStringFromDate:event.startDate], NSLocalizedString(@"All day", nil)];
-            } else {
-                subtitle = [self.dataManager shortDateTimeStringFromDate:event.startDate];
-            }
-            return [[^(UITableViewCell *cell) {
-                [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
-                cell.textLabel.text = title;
-                cell.detailTextLabel.text = subtitle;
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            } copy] autorelease];
-        } else if (self.eventsLoaded) {
-            return [[^(UITableViewCell *cell) {
-                cell.textLabel.text = NSLocalizedString(@"No events found", nil);
-                cell.textLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyNavListTitle];
-                cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
-                cell.detailTextLabel.text = @"";
-                cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                cell.accessoryType = UITableViewCellAccessoryNone;
-            } copy] autorelease];
+    } else if (self.currentSections.count) {
+        NSArray *eventsForSection = [self.currentEventsBySection objectForKey:[self.currentSections objectAtIndex:indexPath.section]];
+        KGOEventWrapper *event = [eventsForSection objectAtIndex:indexPath.row];
+        NSString *title = title = event.title;
+        NSString *subtitle = nil;
+        if (event.allDay) {
+            subtitle = [NSString stringWithFormat:@"%@ %@",
+                        [self.dataManager shortDateStringFromDate:event.startDate],
+                        NSLocalizedString(@"All day", nil)];
+        } else {
+            subtitle = [self.dataManager shortDateTimeStringFromDate:event.startDate];
         }
+        cell.textLabel.text = title;
+        cell.detailTextLabel.text = subtitle;
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+    } else if (self.eventsLoaded) {
+        cell.textLabel.text = NSLocalizedString(@"No events found", nil);
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.accessoryType = UITableViewCellAccessoryNone;
     }
-    return nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (_currentCalendars && self.groupTitles.count > 1) {
+    if (self.browseMode == KGOCalendarBrowseModeCategories) {
         KGOCalendar *calendar = [_currentCalendars objectAtIndex:indexPath.row];
         NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:calendar, @"calendar", nil];
         [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameCategoryList forModuleTag:self.moduleTag params:params];
         
-    } else if (self.currentSections && self.currentEventsBySection && self.currentSections.count) {
+    } else if (self.currentSections.count) {
         NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                 self.currentEventsBySection, @"eventsBySection",
                                 self.currentSections, @"sections",
@@ -478,6 +520,23 @@ groupTitles = _groupTitles;
 - (UIViewController *)viewControllerForTabstrip:(KGOScrollingTabstrip *)tabstrip
 {
     return self;
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (self.browseMode == KGOCalendarBrowseModeLimit) {
+        // this difference is the height of the gap between the bottom of the content
+        // and the bottom of the screen.
+        CGFloat overScroll = scrollView.contentOffset.y - (scrollView.contentSize.height - CGRectGetHeight(scrollView.frame));
+        if (overScroll > self.tableView.rowHeight) {
+            NSString *section = [self.currentSections lastObject];
+            if (section) {
+                KGOEventWrapper *event = [[self.currentEventsBySection objectForKey:section] lastObject];
+                _appending = YES;
+                [self requestEventsForCurrentCalendar:event.startDate];
+            }
+        }
+    }
 }
 
 #pragma mark KGOSearchDisplayDelegate

@@ -391,7 +391,6 @@ moduleTag;
     
     NSMutableSet *attendees = [NSMutableSet set];
     NSMutableSet *organizers = [NSMutableSet set];
-    DLog(@"%d participants", _kgoEvent.particpants.count);
     [_kgoEvent.particpants enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
         KGOEventParticipantRelation *relation = (KGOEventParticipantRelation *)obj;
         KGOEventParticipant *participant = relation.participant;
