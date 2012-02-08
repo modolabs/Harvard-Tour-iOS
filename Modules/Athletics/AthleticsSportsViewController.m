@@ -305,7 +305,7 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                        reuseIdentifier:loadFullSchedulesIdentifier] autorelease];
     }
-    cell.textLabel.text = NSLocalizedString(@"List 10 more schedule items", nil);
+    cell.textLabel.text = NSLocalizedString(@"Full Schedule and Results", nil);
     cell.textLabel.textAlignment = UITextAlignmentCenter;
     cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
     return cell;
