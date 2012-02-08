@@ -355,7 +355,8 @@ groupTitles = _groupTitles;
             }
             case KGOCalendarBrowseModeLimit:
             {
-                [self.dataManager requestEventsForCalendar:_currentCalendar start:date limit:10];
+                NSInteger limit = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? 25 : 10;
+                [self.dataManager requestEventsForCalendar:_currentCalendar start:date limit:limit];
                 break;
             }
             case KGOCalendarBrowseModeCategories:
