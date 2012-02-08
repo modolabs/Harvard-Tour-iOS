@@ -61,6 +61,9 @@
 {
     [super viewDidLoad];
     self.dataManager.delegate = self;
+    self.dataManager.currentCategories = nil;
+    self.dataManager.currentCategory = nil;
+    self.dataManager.currentStories = nil;
     [self.dataManager fetchCategories];
     [self addTableView:_storyTable];
     //configure these things

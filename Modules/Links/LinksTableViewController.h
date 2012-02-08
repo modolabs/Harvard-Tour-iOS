@@ -17,17 +17,21 @@ typedef enum {
     
     NSString * description;
     
+    NSString * descriptionFooter;
+    
     LinksDisplayType displayType;
     
     UIView * loadingView;
     UIActivityIndicatorView * loadingIndicator;
     
     UIView * headerView;
+    UIView * footerView;
     
     // views for SpringBoard
     IconGrid *iconGrid;
     UIScrollView *scrollView;
     UILabel *descriptionLabel;
+    UILabel *descriptionFooterLabel;
     
 }
 
@@ -39,5 +43,5 @@ typedef enum {
 - (void) addLoadingView;
 - (void) removeLoadingView;
 - (UIView *)viewForTableHeader;
-
+- (UIView *)viewForTableFooter;
 @end

@@ -62,12 +62,14 @@
     [moduleTag release];
     [linksArray dealloc];
     [description dealloc];
+    [descriptionFooter release];
     self.loadingIndicator = nil;
     self.loadingView = nil;
     iconGrid.delegate = nil;
     [iconGrid release];
     [scrollView release];
     [descriptionLabel release];
+    [descriptionFooterLabel release];
     [super dealloc];
 }
 
@@ -91,9 +93,13 @@
 {
     linksArray = nil;
     description = nil;
+    descriptionFooter = nil;
     
     [descriptionLabel release];
     descriptionLabel = nil;
+    
+    [descriptionFooterLabel release];
+    descriptionFooterLabel = nil;
     
     [iconGrid release];
     iconGrid = nil;
@@ -250,6 +256,7 @@
     
     description = [[result objectForKey:@"description"] retain];
     linksArray = [[result objectForKey:@"links"] retain];
+    descriptionFooter = [[result objectForKey:@"description_footer"] retain];
     
     NSString * displayTypeString = [result objectForKey:@"displayType"];    
     if ([displayTypeString isEqualToString:@"list"])
@@ -262,6 +269,7 @@
     // Display as TableView
     if (displayType == LinksDisplayTypeList) {
         self.tableView.tableHeaderView = [self viewForTableHeader];
+        self.tableView.tableFooterView = [self viewForTableFooter];
         [self.tableView reloadData];
     } else {
         [self.tableView removeFromSuperview];
@@ -296,11 +304,30 @@
         descriptionLabel.text = description;
     }
     
+    if (descriptionFooter && descriptionFooter.length) {
+        if (!descriptionFooterLabel) {
+            descriptionFooterLabel = [[KGOLabel alloc] initWithFrame:CGRectMake(10, 0, self.view.frame.size.width-20, 300)];
+            descriptionFooterLabel.numberOfLines = 0;
+            descriptionFooterLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyPageSubtitle];
+            descriptionFooterLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyPageSubtitle];
+            descriptionFooterLabel.backgroundColor = [UIColor clearColor];
+            [scrollView addSubview:descriptionFooterLabel];
+        }
+        
+        CGSize descriptionSize = [descriptionFooter sizeWithFont:descriptionFooterLabel.font constrainedToSize:descriptionFooterLabel.frame.size];
+        CGRect descriptionFooterFrame = descriptionFooterLabel.frame;
+        descriptionFooterFrame.origin.y = scrollView.frame.size.height - descriptionSize.height;
+        descriptionFooterFrame.size = descriptionSize;
+        descriptionFooterLabel.frame = descriptionFooterFrame;
+        descriptionFooterLabel.text = descriptionFooter;
+    }
+    
     if(!iconGrid) {
-        iconGrid = [[IconGrid alloc] initWithFrame:CGRectMake(0, descriptionLabel.frame.size.height, scrollView.frame.size.width, scrollView.frame.size.height - descriptionLabel.frame.size.height)];
+        iconGrid = [[IconGrid alloc] initWithFrame:CGRectMake(0, descriptionLabel.frame.size.height, scrollView.frame.size.width, scrollView.frame.size.height - descriptionLabel.frame.size.height - descriptionFooterLabel.frame.size.height)];
         iconGrid.delegate = self;
         [scrollView addSubview:iconGrid];
     }
+    
     
     NSMutableArray *icons = [NSMutableArray array];
     
@@ -312,7 +339,6 @@
         MITThumbnailView *thumbnailView = [[[MITThumbnailView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)] autorelease];
         thumbnailView.userInteractionEnabled = NO;
         NSString *iconURL = [linkDict objectForKey:@"iconURL"];
-        // TODO: create a generic function that makes these kinds of replacements in a safe way
         thumbnailView.imageURL = [iconURL stringByReplacingOccurrencesOfString:@" " withString:@"%20"];            
         [thumbnailView loadImage];
         [iconView addSubview:thumbnailView];
@@ -356,6 +382,24 @@
     }
     
     return headerView;
+}
+
+- (UIView *)viewForTableFooter
+{
+    if (!footerView && descriptionFooter && descriptionFooter.length) {
+        // information in header
+        
+        UIFont *font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyPageSubtitle];
+        KGOLabel *nameLabel = [KGOLabel multilineLabelWithText:descriptionFooter font:font width:self.tableView.frame.size.width - 10];
+        nameLabel.frame = CGRectMake(10, 10, nameLabel.frame.size.width, nameLabel.frame.size.height);
+        
+        UIView *footer = [[[UIView alloc] initWithFrame:CGRectMake(5, 20, self.tableView.frame.size.width, nameLabel.frame.size.height + 14)] autorelease];
+        [footer addSubview:nameLabel];
+        
+        footerView = footer;
+    }
+    
+    return footerView;
 }
 
 #pragma mark - IconGrid delegate
