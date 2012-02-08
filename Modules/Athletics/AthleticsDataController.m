@@ -363,8 +363,10 @@ NSString * const AthleticsTagBody            = @"body";
         [self requestMenusForCategory:categoryId afterID:nil];
         return;
     }
-
-    NSMutableArray *results = [NSMutableArray arrayWithArray:[self.currentCategory.menu.categories sortedArrayUsingDescriptors:nil]];
+    
+    NSSortDescriptor *sort = [[[NSSortDescriptor alloc] initWithKey:@"sortOrder" ascending:YES] autorelease];
+    
+    NSMutableArray *results = [NSMutableArray arrayWithArray:[self.currentCategory.menu.categories sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sort, nil]]];
     AthleticsCategory *aCategory = nil;
     for (aCategory in results) {
         if (aCategory.isMainCategory.boolValue) {
@@ -482,16 +484,20 @@ withKey:(NSString *)key{
         AthleticsCategory *menuCategory = nil;
         if ([sports isKindOfClass:[NSArray class]]) {
             sports = [resultDict arrayForKey:@"sports"];
+            int i = 0;
             for(NSDictionary *enu in sports) {
                  menuCategory = [blockSelf menuCategoryWithDictionary:enu withKey:[enu objectForKey:@"key"]];
+                    menuCategory.sortOrder = [NSNumber numberWithInt: i++];
                 if (menuCategory) {
                     [mutableCategories addObject:menuCategory];
                 }
             }
         } else if ([sports isKindOfClass:[NSDictionary class]]){
             sports = [resultDict dictionaryForKey:@"sports"];
+            __block int i = 0;
             [sports enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
                 AthleticsCategory *menuCategory = [blockSelf menuCategoryWithDictionary:obj withKey:key];
+                menuCategory.sortOrder = [NSNumber numberWithInt: i++];
                 if (menuCategory) {
                     [mutableCategories addObject:menuCategory];
                 }
