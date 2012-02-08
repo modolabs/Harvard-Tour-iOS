@@ -302,7 +302,7 @@
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                            reuseIdentifier:loadMoreIdentifier] autorelease];
         }
-        cell.textLabel.text = NSLocalizedString(@"Load more stories", @"new story list");
+        cell.textLabel.text = NSLocalizedString(@"Next 10 stories", @"new story list");
         // TODO: set color to #999999 while things are loading
         cell.textLabel.textColor = [UIColor colorWithHexString:@"#1A1611"];
         
