@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11C74" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="878" systemVersion="11D50" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AthleticsCategory" representedClassName="AthleticsCategory" syncable="YES">
         <attribute name="bookmarked" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
@@ -78,7 +78,7 @@
         <element name="AthleticsCategory" positionX="160" positionY="192" width="128" height="300"/>
         <element name="AthleticsImage" positionX="117" positionY="189" width="128" height="75"/>
         <element name="AthleticsImageRep" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="AthleticsMenu" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="AthleticsMenu" positionX="160" positionY="192" width="128" height="90"/>
         <element name="AthleticsSchedule" positionX="160" positionY="192" width="128" height="240"/>
         <element name="AthleticsStory" positionX="160" positionY="192" width="128" height="285"/>
     </elements>
