@@ -169,8 +169,9 @@
         
         if (showingBookmarks) {
             [_navScrollView selectButtonAtIndex:[_navScrollView bookmarkButtonIndex]];
-            
+            //[_navScrollView setShowsBookmarkButton:YES]; 
         } else {
+            //[_navScrollView setShowsBookmarkButton:NO]; 
             for (NSUInteger i = 0; i < _navScrollView.numberOfButtons; i++) {
                 if ([[_navScrollView buttonTitleAtIndex:i] isEqualToString:activeCategory.title]) {
                     [_navScrollView selectButtonAtIndex:i];
