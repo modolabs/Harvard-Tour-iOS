@@ -176,7 +176,7 @@ photo, photos;
 
 - (IBAction)shareButtonPressed:(id)sender
 {
-    self.shareController = [[KGOShareButtonController alloc] initWithContentsController:self];
+    self.shareController = [[[KGOShareButtonController alloc] initWithContentsController:self] autorelease];
     self.shareController.shareTypes = KGOShareControllerShareTypeEmail | KGOShareControllerShareTypeFacebook | KGOShareControllerShareTypeTwitter;
     
     self.shareController.actionSheetTitle = NSLocalizedString(@"Share Photo", nil);
