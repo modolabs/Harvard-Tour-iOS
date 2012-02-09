@@ -9,6 +9,7 @@
 @synthesize imageView, titleView, titleLabel, subtitleLabel, pagerView,
 prevThumbView, nextThumbView, prevButton, nextButton, pagerLabel, shareButton,
 photo, photos;
+@synthesize shareController = _shareController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -79,7 +80,7 @@ photo, photos;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    
+    [_shareController release];
     self.imageView = nil;
     self.titleView = nil;
     self.titleLabel = nil;
@@ -90,6 +91,7 @@ photo, photos;
     self.nextButton = nil;
     self.pagerLabel = nil;
     self.shareButton = nil;
+    self.shareController = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -174,7 +176,18 @@ photo, photos;
 
 - (IBAction)shareButtonPressed:(id)sender
 {
+    self.shareController = [[KGOShareButtonController alloc] initWithContentsController:self];
+    self.shareController.shareTypes = KGOShareControllerShareTypeEmail | KGOShareControllerShareTypeFacebook | KGOShareControllerShareTypeTwitter;
     
+    self.shareController.actionSheetTitle = NSLocalizedString(@"Share Photo", nil);
+    self.shareController.shareTitle = self.photo.title;
+    self.shareController.shareURL = self.photo.imageURL;
+    
+    [self.shareController shareInView:self.view];
 }
 
+- (void)dealloc {
+    self.shareController = nil;
+    [super dealloc];
+}
 @end
