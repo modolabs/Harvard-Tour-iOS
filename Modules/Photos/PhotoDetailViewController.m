@@ -45,7 +45,7 @@ photo, photos;
     if (currentIndex != NSNotFound) {
         self.pagerLabel.text = [NSString stringWithFormat:
                                 NSLocalizedString(@"Photo %d of %d", nil),
-                                currentIndex,
+                                (currentIndex + 1),
                                 [self.photo.album.totalItems integerValue]];
         
         if (currentIndex > 0) {
