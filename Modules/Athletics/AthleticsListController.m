@@ -12,7 +12,7 @@
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "UIKit+KGOAdditions.h"
 #import "KGOTheme.h"
-
+#import "KGOSearchDisplayController.h"
 
 
 @interface AthleticsListController (Private)
@@ -411,22 +411,18 @@
 }
 
 - (void)resultsHolder:(id<KGOSearchResultsHolder>)resultsHolder didSelectResult:(id<KGOSearchResult>)aResult {
+    KGOSearchDisplayController *displayC = (KGOSearchDisplayController *)resultsHolder;
+    NSArray *results = displayC.results;
     AthleticsStory *story = aResult;
-    if ([[story hasBody] boolValue]) {
-        NSArray *resultStories = [resultsHolder results];
-        NSInteger row = [resultStories indexOfObject:story];
-        NSDictionary *params = nil;
-        if (row != NSNotFound) {
-            params = [NSDictionary dictionaryWithObjectsAndKeys:
-                      resultStories, @"stories",
-                      [NSIndexPath indexPathForRow:row inSection:0], @"indexPath",
-                      nil];
-        } else {
-            params = [NSDictionary dictionaryWithObjectsAndKeys:
-                      aResult, @"story",
-                      nil];
-        }
-        [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail 
+    NSInteger idx = [results indexOfObject:story];
+    if (idx >= 0  && idx < results.count) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setObject:@"story" forKey:@"type"];
+        [params setObject:[NSIndexPath indexPathForRow:idx inSection:0] forKey:@"indexPath"];
+        [params setObject:results forKey:@"stories"];
+        [params setObject:self.dataManager.currentCategory forKey:@"category"];
+        [params setObject:displayC.searchResults forKey:@"stories"];
+        [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail
                                forModuleTag:self.dataManager.moduleTag
                                      params:params];
     } else {
