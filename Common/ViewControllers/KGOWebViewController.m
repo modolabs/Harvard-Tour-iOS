@@ -91,7 +91,7 @@ enum {
         [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
         [button setBackgroundImage:buttomImagePressed forState:UIControlStateHighlighted];
         
-        [button setTitle:NSLocalizedString(@"Exit this screen", nil) forState:UIControlStateNormal];
+        [button setTitle:NSLocalizedString(@"CORE_EXIT_WEBVIEW_BUTTON", @"Exit this screen") forState:UIControlStateNormal];
         [button addTarget:self.parentViewController
                    action:@selector(dismissModalViewControllerAnimated:)
          forControlEvents:UIControlEventTouchUpInside];

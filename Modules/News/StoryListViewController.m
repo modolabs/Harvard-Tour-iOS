@@ -7,6 +7,8 @@
 #import "AnalyticsWrapper.h"
 #import "ThumbnailTableViewCell.h"
 
+#define NEWS_STORY_LOADMORE_COUNT 10
+
 @interface StoryListViewController (Private)
 
 - (void)setupNavScrollButtons;
@@ -42,8 +44,7 @@
     [self addTableView:_storyTable];
 	
     // TODO: configure these strings
-    self.navigationItem.title = @"News";
-    self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil)
+    self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"NEWS_HEADLINES_BACK_ITEM", @"Headlines")
                                                                                style:UIBarButtonItemStylePlain
                                                                              target:nil
                                                                              action:nil] autorelease];
@@ -100,7 +101,7 @@
 - (void)dataController:(NewsDataController *)controller didFailWithCategoryId:(NSString *)categoryId
 {
     if([self.activeCategoryId isEqualToString:categoryId]) {
-        [self setStatusText:NSLocalizedString(@"Update failed", @"news story update failed")];
+        [self setStatusText:NSLocalizedString(@"NEWS_STORY_UPDATE_FAILED", @"Update failed")];
     }
 }
 
@@ -254,8 +255,7 @@
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateStyle:NSDateFormatterMediumStyle];
         [formatter setTimeStyle:NSDateFormatterShortStyle];
-        [self setStatusText:[NSString stringWithFormat:@"%@ %@",
-                             NSLocalizedString(@"Last Updated", nil),
+        [self setStatusText:[NSString stringWithFormat:NSLocalizedString(@"NEWS_LAST_UPDATED_%@", @"Last Update"),
                              [formatter stringFromDate:date]]];
         [formatter release];
     }
@@ -303,7 +303,9 @@
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                            reuseIdentifier:loadMoreIdentifier] autorelease];
         }
-        cell.textLabel.text = NSLocalizedString(@"Next 10 stories", @"new story list");
+        cell.textLabel.text = [NSString stringWithFormat:
+                               NSLocalizedString(@"NEWS_NEXT_%d_STORIES", @"Next %d stories"),
+                               NEWS_STORY_LOADMORE_COUNT];
         // TODO: set color to #999999 while things are loading
         cell.textLabel.textColor = [UIColor colorWithHexString:@"#1A1611"];
         

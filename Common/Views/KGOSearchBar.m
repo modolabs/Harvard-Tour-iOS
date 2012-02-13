@@ -377,7 +377,7 @@
             UIButton *innerButton = [UIButton buttonWithType:UIButtonTypeCustom];
             UIImage *image = [UIImage imageWithPathName:@"common/generic-button-background"];
             UIImage *pressedImage = [UIImage imageWithPathName:@"common/generic-button-background-pressed"];
-            NSString *cancelString = NSLocalizedString(@"Cancel", @"search bar cancel button");
+            NSString *cancelString = NSLocalizedString(@"COMMON_CANCEL", @"Cancel");
             innerButton.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont smallSystemFontSize]];
             CGSize size = [cancelString sizeWithFont:innerButton.titleLabel.font];
             innerButton.frame = CGRectMake(0, 0,

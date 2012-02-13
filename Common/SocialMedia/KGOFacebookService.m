@@ -101,7 +101,7 @@ NSString * const FacebookUsernameKey = @"FBUsername";
 
 - (NSString *)serviceDisplayName
 {
-    return NSLocalizedString(@"Facebook", @"display name for facebook third party service");
+    return NSLocalizedString(@"CORE_FACEBOOK", @"Facebook");
 }
 
 - (NSString *)userDisplayName

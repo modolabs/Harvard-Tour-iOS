@@ -636,8 +636,8 @@
         UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:appDisplayName
                                                              message:[[userInfo objectForKey:@"aps"] objectForKey:@"alert"]
                                                             delegate:self
-                                                   cancelButtonTitle:NSLocalizedString(@"Close", nil)
-                                                   otherButtonTitles:NSLocalizedString(@"View", nil), nil] autorelease];
+                                                   cancelButtonTitle:NSLocalizedString(@"CORE_CLOSE_ALERT_VIEW", @"Close")
+                                                   otherButtonTitles:NSLocalizedString(@"CORE_VIEW_ALERT_VIEW", @"View"), nil] autorelease];
         [alertView show];
     }
 }
@@ -650,7 +650,7 @@
     KGOModule *module = [self moduleForTag:latestNotification.moduleName];
 	[module handleRemoteNotification:latestNotification];
     
-    NSString *viewTitle = NSLocalizedString(@"View", nil);
+    NSString *viewTitle = NSLocalizedString(@"CORE_VIEW_ALERT_VIEW", @"View");
     
     if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:viewTitle]) {
         [module becomeVisible];

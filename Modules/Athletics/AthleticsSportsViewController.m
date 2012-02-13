@@ -55,7 +55,7 @@
     self.dataManager.delegate = self;
     //configure these things
     self.navigationItem.title = [self titleForMenuCategory];
-    self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
+    self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"ATHLETICS_SCHEDULE_BACK_BUTTON", @"Headlines") 
                                                                               style:UIBarButtonItemStylePlain 
                                                                              target:nil 
                                                                              action:nil] autorelease];
@@ -140,7 +140,7 @@
         [formatter setDateStyle:NSDateFormatterMediumStyle];
         [formatter setTimeStyle:NSDateFormatterShortStyle];
         [self setStatusText:[NSString stringWithFormat:@"%@ %@",
-                             NSLocalizedString(@"Last Updated", nil),
+                             NSLocalizedString(@"ATHLETICS_LAST_UPDATED", @"Last Updated"),
                              [formatter stringFromDate:date]]];
         [formatter release];
     }
@@ -189,7 +189,7 @@
 - (void)dataController:(AthleticsDataController *)controller didFailWithCategoryId:(NSString *)categoryId
 {
     if([self.activeCategoryId isEqualToString:categoryId]) {
-        [self setStatusText:NSLocalizedString(@"Update failed", @"news story update failed")];
+        [self setStatusText:NSLocalizedString(@"ATHLETICS_LIST_UPDATE_FAILED", @"Update failed")];
     }
 }
 
@@ -268,7 +268,7 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                        reuseIdentifier:loadMoreIdentifier] autorelease];
     }
-    cell.textLabel.text = NSLocalizedString(@"Load more stories", @"new story SportsView");
+    cell.textLabel.text = NSLocalizedString(@"ATHLETICS_LIST_LOAD_MORE", @"Load more stories");
     cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
     cell.textLabel.textAlignment = UITextAlignmentCenter;
     [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
@@ -305,7 +305,7 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault 
                                        reuseIdentifier:loadFullSchedulesIdentifier] autorelease];
     }
-    cell.textLabel.text = NSLocalizedString(@"Full Schedule and Results", nil);
+    cell.textLabel.text = NSLocalizedString(@"ATHLETICS_FULL_SCHEDULE_AND_RESULTS", @"Full Schedule and Results");
     cell.textLabel.textAlignment = UITextAlignmentCenter;
     cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
     return cell;

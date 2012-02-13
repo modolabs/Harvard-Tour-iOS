@@ -38,7 +38,7 @@ headerView = _headerView;
     if (self.parentCategory.title.length) {
         self.title = self.parentCategory.title;
     } else {
-        self.title = NSLocalizedString(@"Browse", nil);
+        self.title = NSLocalizedString(@"MAP_TITLE_BROWSE", @"Browse");
     }
 
     UITableViewStyle style = UITableViewStyleGrouped;
@@ -106,7 +106,7 @@ headerView = _headerView;
     if (!_loadingView) {
         UIActivityIndicatorView *spinny = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite] autorelease];
 
-        NSString *text = NSLocalizedString(@"Loading...", nil);
+        NSString *text = NSLocalizedString(@"COMMON_INDETERMINATE_LOADING", @"Loading...");
         UIFont *font = [UIFont systemFontOfSize:15];
         CGSize size = [text sizeWithFont:font];
         UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(spinny.frame.size.width, 0, size.width, size.height)] autorelease];

@@ -95,7 +95,7 @@
 {
     [super viewDidLoad];
     
-    self.title = NSLocalizedString(@"Album", @"photo album grid view");
+    self.title = NSLocalizedString(@"PHOTOS_ALBUM_VIEW_TITLE", @"Album");
     
     _titleLabel.text = self.album.title;
     
@@ -108,7 +108,7 @@
     _iconGrid.padding = GridPaddingMake(7, 7, 7, 7);
     _iconGrid.spacing = GridSpacingMake(6, 6);
     
-    _loadingStatusLabel.text = NSLocalizedString(@"Loading more photos", nil);
+    _loadingStatusLabel.text = NSLocalizedString(@"PHOTOS_LOADING_MORE_PHOTOS", @"Loading more photos");
     
     self.dataManager.delegate = self;
     [self.dataManager fetchPhotosForAlbum:self.album.identifier];

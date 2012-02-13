@@ -287,7 +287,7 @@ groupTitles = _groupTitles;
         for (KGOEventWrapper *event in events) {
             NSString *title = nil;
             if (event.allDay) {
-                title = NSLocalizedString(@"All day", @"section header for all-day events");
+                title = NSLocalizedString(@"CALENDAR_ALL_DAY_SECTION_HEADER", @"All day");
             } else {
                 title = [formatter stringFromDate:event.startDate];
             }
@@ -481,7 +481,7 @@ groupTitles = _groupTitles;
         if (event.allDay) {
             subtitle = [NSString stringWithFormat:@"%@ %@",
                         [self.dataManager shortDateStringFromDate:event.startDate],
-                        NSLocalizedString(@"All day", nil)];
+                        NSLocalizedString(@"CALENDAR_ALL_DAY_SUBTITLE", @"All day")];
         } else {
             subtitle = [self.dataManager shortDateTimeStringFromDate:event.startDate];
         }
@@ -490,7 +490,7 @@ groupTitles = _groupTitles;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
     } else if (self.eventsLoaded) {
-        cell.textLabel.text = NSLocalizedString(@"No events found", nil);
+        cell.textLabel.text = NSLocalizedString(@"CALENDAR_NO_EVENTS_FOUND", @"No events found");
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.accessoryType = UITableViewCellAccessoryNone;
     }

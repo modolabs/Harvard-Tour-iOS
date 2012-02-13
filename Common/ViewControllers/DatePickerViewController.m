@@ -8,7 +8,7 @@
 
 - (void)loadView {
     [super loadView];
-	self.title = NSLocalizedString(@"Jump to a Date", nil);
+	self.title = NSLocalizedString(@"CALENDAR_JUMP_TO_DATE", @"Jump to a Date");
 	
     //self.view.backgroundColor = [UIColor clearColor];
     if (!self.date) {
@@ -22,11 +22,11 @@
     [self.view addSubview:scrim];
     [scrim release];
     
-    doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Go", @"DatePickerViewController nav bar")
+    doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CALENDAR_DATE_PICKER_DONE_BUTTON", @"Go")
                                                   style:UIBarButtonItemStylePlain
                                                  target:self
                                                  action:@selector(navBarButtonPressed:)];
-    cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"DatePickerViewController nav bar")
+    cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"COMMON_CANCEL", @"Cancel")
                                                     style:UIBarButtonItemStylePlain
                                                    target:self
                                                    action:@selector(navBarButtonPressed:)];

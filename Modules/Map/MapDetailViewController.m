@@ -72,17 +72,17 @@
     
     NSInteger currentTabIndex = 0;
     if (self.placemark.photoURL) {
-        [tabs addObject:NSLocalizedString(@"Photo", nil)];
+        [tabs addObject:NSLocalizedString(@"MAP_TAB_PHOTO", @"Photo")];
         _photoTabIndex = currentTabIndex;
         currentTabIndex++;
     }
     
     // TODO: add detail tab for placemarks with itemized fields
-    [tabs addObject:NSLocalizedString(@"Details", nil)];
+    [tabs addObject:NSLocalizedString(@"MAP_TAB_DETAILS", @"Details")];
     _detailsTabIndex = currentTabIndex;
     currentTabIndex++;
     
-    [tabs addObject:NSLocalizedString(@"Nearby", nil)];
+    [tabs addObject:NSLocalizedString(@"MAP_TAB_NEARBY", @"Nearby")];
     _nearbyTabIndex = currentTabIndex;
     
     return tabs;
@@ -208,9 +208,7 @@
 {
     [super viewDidLoad];
     
-    // TODO: this is redundant - which string do we want?
-    self.title = NSLocalizedString(@"Info", @"map detail page title");
-    self.navigationItem.title = NSLocalizedString(@"Location Info", nil);
+    self.navigationItem.title = NSLocalizedString(@"MAP_DETAIL_PAGE_TITLE", @"Location Info");
     
     if (self.pager) {
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:self.pager] autorelease];

@@ -39,7 +39,7 @@
     [self addTableView:_scheduleListView];
     self.dataManager.delegate = self;
     self.navigationItem.title = @"Schedule";
-    self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
+    self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"ATHLETICS_SCHEDULE_BACK_BUTTON", @"Headlines") 
                                                                               style:UIBarButtonItemStylePlain 
                                                                              target:nil 
                                                                              action:nil] autorelease];
