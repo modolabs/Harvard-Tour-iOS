@@ -10,7 +10,7 @@
 #import "CoreDataManager.h"
 #import "AthleticsModel.h"
 #import "KGORequest.h"
-
+#import "KGOSearchModel.h"
 #define REQUEST_CATEGORIES_CHANGED 1
 #define REQUEST_CATEGORIES_UNCHANGED 2
 #define LOADMORE_LIMIT 10
@@ -43,7 +43,20 @@ NSString * const AthleticsTagBody            = @"body";
 
 #pragma mark - KGORequestDelegate
 - (void)requestWillTerminate:(KGORequest *)request {
-    
+    if (request == self.storiesRequest) {
+        self.storiesRequest = nil;
+    } else if ([self.searchRequests containsObject:request]) {
+        [self.searchRequests removeObject:request];
+        
+        if (self.searchRequests.count == 0) { // all searches have completed
+            if (_searchResults) {
+                // TODO: use a user-facing string instead of module tag
+                [self.searchDelegate receivedSearchResults:_searchResults forSource:self.moduleTag];
+                [_searchResults release];
+                _searchResults = nil;
+            }
+        }
+    }
 }
 
 - (void)request:(KGORequest *)request didFailWithError:(NSError *)error {
@@ -87,13 +100,18 @@ NSString * const AthleticsTagBody            = @"body";
 
 - (void)request:(KGORequest *)request didReceiveResult:(id)result {
     if ([self.searchRequests containsObject:request]) {
-        for (NSDictionary *storyDict in (NSArray *)result) {
-            AthleticsStory *story = [self storyWithDictionary:storyDict]; 
-            story.searchResult = [NSNumber numberWithInt:1];
-            if([_searchResults indexOfObject:story] == NSNotFound) {
-                [_searchResults addObject:story];
-            }
+        NSDictionary *resultDict = (NSDictionary *)result;
+        NSArray *stories = [resultDict arrayForKey:@"stories"];
+        if (_searchResults) {
+            [_searchResults release];
         }
+        _searchResults = [[NSMutableArray alloc] init];
+        for (NSDictionary *storyDict in stories) {            
+            AthleticsStory *story = [self storyWithDictionary:storyDict]; 
+            [_searchResults addObject:story];
+        }
+
+       [[CoreDataManager sharedManager] saveData];
     }
 }
 
@@ -139,6 +157,48 @@ NSString * const AthleticsTagBody            = @"body";
 }
 
 #pragma mark - Serach
+
+- (void)searchStories:(NSString *)searchTerms
+{
+    // cancel any previous search requests
+    for (KGORequest *request in self.searchRequests) {
+        [request cancel];
+    }
+    
+    if (!_searchResults) {
+        _searchResults = [[NSMutableArray alloc] init];
+    } else {
+        for (AthleticsStory *aStory in _searchResults) {
+            aStory.searchResult = [NSNumber numberWithInt:0];
+        }
+        [_searchResults release];
+        _searchResults = [[NSMutableArray alloc] init];
+    }
+    
+    /*
+     // remove all old search results
+     for (NewsStory *story in [self latestSearchResults]) {
+     story.searchResult = [NSNumber numberWithInt:0];
+     }
+     [[CoreDataManager sharedManager] saveData];
+     */
+    
+    self.searchRequests = [NSMutableSet setWithCapacity:1];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:searchTerms forKey:@"filter"];
+    [params setObject:@"0" forKey:@"x"];
+    [params setObject:@"0" forKey:@"y"];
+    [params setObject:@"topnews" forKey:@"section"];
+        
+    KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
+                                                                          module:self.moduleTag
+                                                                            path:@"search"
+                                                                         version:1
+                                                                          params:params];
+    request.expectedResponseType = [NSDictionary class];
+    [self.searchRequests addObject:request];
+    [request connect];
+}
 
 - (NSDate *)feedListModifiedDate
 {
@@ -757,6 +817,7 @@ withKey:(NSString *)key{
     self.moduleTag = nil;
     self.storiesRequest = nil;
     self.menuCategoryStoriesRequest = nil;
+    [_searchResults release];_searchResults = nil;
     [super dealloc];
 }
 @end

@@ -106,6 +106,7 @@
 #pragma mark - KGOScrollTabs
 - (void)setupTabstrip {
     _navTabs.delegate = self;
+    _navTabs.showsSearchButton = YES;
     [_navTabs addButtonWithTitle:NSLocalizedString(@"Top News", nil)];
     [_navTabs addButtonWithTitle:NSLocalizedString(@"Men", nil)];
     [_navTabs addButtonWithTitle:NSLocalizedString(@"Women", nil)];
@@ -118,6 +119,7 @@
 }
 
 - (void)tabstrip:(KGOScrollingTabstrip *)tabstrip clickedButtonAtIndex:(NSUInteger)index {
+    self.dataManager.delegate = self;
     self.activeCategoryId = [NSString stringWithFormat:@"%d",index];
     if (index == _topNewsTabIndex) {
         [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
@@ -132,6 +134,16 @@
         _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_MYSPORTS;
         [self.dataManager fetchBookmarks];
     }
+}
+
+#pragma mark - KGOScrollingTabstripSearchDelegate
+
+- (BOOL)tabstripShouldShowSearchDisplayController:(KGOScrollingTabstrip *)tabstrip {
+    return YES;
+}
+
+- (UIViewController *)viewControllerForTabstrip:(KGOScrollingTabstrip *)tabstrip {
+    return self;
 }
 
 #pragma mark -
@@ -208,8 +220,10 @@
  {
  }
  */
-- (void)dataController:(AthleticsDataController *)controller didReceiveSearchResults:(NSArray *)results
-{
+-(void)receivedSearchResults:(NSArray *)searchResults forSource:(NSString *)source {
+    self.stories = searchResults;
+    [_storyTable reloadData];
+    [_storyTable flashScrollIndicators];
 }
 
 - (void)dataController:(AthleticsDataController *)controller didRetrieveCategories:(NSArray *)theCategories
@@ -382,15 +396,7 @@
 
 #pragma mark - KGOSearchDisplayDelegate
 
-//- (BOOL)tabstripShouldShowSearchDisplayController:(KGOScrollingTabstrip *)tabstrip
-//{
-//    return YES;
-//}
 
-//- (UIViewController *)viewControllerForTabstrip:(KGOScrollingTabstrip *)tabstrip
-//{
-//    return self;
-//}
 
 - (BOOL)searchControllerShouldShowSuggestions:(KGOSearchDisplayController *)controller {
     return NO;
@@ -431,7 +437,7 @@
 - (void)searchController:(KGOSearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView {
     self.federatedSearchTerms = nil;
     self.federatedSearchResults = nil;
-//    [_navTabbar hideSearchBarAnimated:YES];
+    [_navTabs hideSearchBarAnimated:YES];
 }
 
 
