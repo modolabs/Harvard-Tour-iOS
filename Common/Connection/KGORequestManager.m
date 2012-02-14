@@ -168,6 +168,15 @@ NSString * const CurrentKurogoServerSettingKey = @"CURRENT_KUROGO_SERVER";
             retryOption = NSLocalizedString(@"Retry", nil);
         }
         
+        
+        if ([title isKindOfClass:[NSNull class]]) {
+            title = NSLocalizedString(@"Connection Failed", nil);
+        }
+        if ([message isKindOfClass:[NSNull class]]) {
+            message = NSLocalizedString(@"Problem connecting to server. Please try again later.", nil);
+        }
+        
+        
 		UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:title
                                                              message:message
                                                             delegate:delegate
