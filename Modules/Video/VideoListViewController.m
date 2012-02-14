@@ -59,6 +59,7 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 }
 
 - (void)dealloc {
+    [self.dataManager removeResponseBlockForRequestPath:@"videos"];
     [theSearchBar release];
     [videoSections release];
     [videos release];

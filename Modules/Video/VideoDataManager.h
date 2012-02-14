@@ -26,7 +26,7 @@ typedef void (^VideoDataRequestResponse)(id result);
 
 - (NSArray *)bookmarkedVideos;
 - (void)pruneVideos; 
-
+- (void)removeResponseBlockForRequestPath:(NSString *)path;
 // Key: KGORequest. Value: VideoDataRequestResponse.
 @property (nonatomic, retain) NSMutableDictionary *responseBlocksForRequestPaths; 
 @property (nonatomic, retain) NSMutableSet *pendingRequests; 

@@ -259,6 +259,7 @@ static const CGFloat extraScrollViewHeight = 100.0f;
 
 
 - (void)dealloc {
+    [self.dataManager removeResponseBlockForRequestPath:@"detail"];
     [dataManager release];
     [player release];
     [video release];

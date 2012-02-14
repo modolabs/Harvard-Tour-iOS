@@ -296,4 +296,10 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
     }
 }
 
+- (void)removeResponseBlockForRequestPath:(NSString *)path {
+    if (path) {
+        [self.responseBlocksForRequestPaths removeObjectForKey:path];
+    }
+}
+
 @end
