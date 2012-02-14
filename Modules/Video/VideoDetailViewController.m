@@ -173,6 +173,9 @@ static const CGFloat extraScrollViewHeight = 100.0f;
         [scrollView addSubview:descriptionLabel];
 
     } else {
+        if ([video isFault]) {
+            return;
+        }
         descriptionLabel.text = video.videoDescription;
         CGRect rect = descriptionLabel.frame;
         rect.size.height = [descriptionLabel.text sizeWithFont:font
