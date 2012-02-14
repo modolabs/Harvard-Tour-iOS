@@ -252,6 +252,28 @@
 }
 
 #pragma mark -Menu Cell Organization
+- (BOOL)string:(NSString *)src containString:(NSString *)match {
+    if ([src rangeOfString:match].location != NSNotFound) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (NSString *)titleForDesignated:(AthleticsCategory *)mCategory {
+    if (activeCategoryId.intValue == _mySportsTabIndex) {
+        if ([self string:mCategory.ivar containString:@"m-"]) 
+        {
+            return [NSString stringWithFormat:@"Men's %@",mCategory.title];
+        }
+        if ([self string:mCategory.ivar containString:@"w-"]) 
+        {
+            return [NSString stringWithFormat:@"Women's %@",mCategory.title];
+        }
+    }
+    return mCategory.title;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForMenuAtIndexPath:(NSIndexPath *)indexPath {
     NSString *cellIdentifier = @"athleticsMenuCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
@@ -262,7 +284,9 @@
     AthleticsCategory *menuCategory = [self.stories objectAtIndex:indexPath.row];
     cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyMediaListTitle];
     cell.textLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyMediaListTitle];
-    cell.textLabel.text = menuCategory.title;
+    
+    cell.textLabel.text = [self titleForDesignated:menuCategory];
+    
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
 }
