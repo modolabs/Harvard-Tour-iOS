@@ -10,8 +10,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.loadingLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
-        self.loadingLabel.text = NSLocalizedString(@"Loading...", nil);
-        self.triggerLabel.text = NSLocalizedString(@"Pull down to load more", nil);
+        self.loadingLabel.text = NSLocalizedString(@"COMMON_INDETERMINATE_LOADING", @"Loading...");
+        self.triggerLabel.text = NSLocalizedString(@"CALENDAR_PULL_DOWN_TO_LOAD_MORE", @"Pull down to load more");
     }
     return self;
 }
@@ -21,8 +21,8 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         self.loadingLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
-        self.loadingLabel.text = NSLocalizedString(@"Loading...", nil);
-        self.triggerLabel.text = NSLocalizedString(@"Pull down to load more", nil);
+        self.loadingLabel.text = NSLocalizedString(@"COMMON_INDETERMINATE_LOADING", @"Loading...");
+        self.triggerLabel.text = NSLocalizedString(@"CALENDAR_PULL_DOWN_TO_LOAD_MORE", @"Pull down to load more");
     }
     return self;
 }

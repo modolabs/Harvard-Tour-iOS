@@ -25,7 +25,6 @@
     if (self) {
         // Custom initialization
         
-        self.title = NSLocalizedString(@"Links", nil);
         if ((nil == linksArray) || (nil == description))
             [self addLoadingView];
         

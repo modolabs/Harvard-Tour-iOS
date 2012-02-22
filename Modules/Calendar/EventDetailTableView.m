@@ -171,9 +171,9 @@
 {
     NSArray *attendeeInfo = nil;
     if (_event.attendees.count) {
-        NSString *attendeeString = [NSString stringWithFormat:@"%d %@",
-                                    _event.attendees.count,
-                                    NSLocalizedString(@"others attending", nil)];
+        NSString *attendeeString = [NSString stringWithFormat:
+                                    NSLocalizedString(@"CALENDAR_%d_OTHERS_ATTENDING", @"%d others attending"),
+                                    _event.attendees.count];
         attendeeInfo = [NSArray arrayWithObject:[NSDictionary dictionaryWithObjectsAndKeys:
                                                  attendeeString, @"title",
                                                  KGOAccessoryTypeChevron, @"accessory",
@@ -193,21 +193,21 @@
                 NSString *url = nil;
                 
                 if ([aContact.type isEqualToString:@"phone"]) {
-                    type = NSLocalizedString(@"Organizer phone", nil);
+                    type = NSLocalizedString(@"CALENDAR_ORGANIZER_PHONE", @"Organizer phone");
                     accessory = KGOAccessoryTypePhone;
                     url = [NSString stringWithFormat:@"tel:%@", aContact.value];
                     
                 } else if ([aContact.type isEqualToString:@"email"]) {
-                    type = NSLocalizedString(@"Organizer email", nil);
+                    type = NSLocalizedString(@"CALENDAR_ORGANIZER_EMAIL", @"Organizer email");
                     accessory = KGOAccessoryTypeEmail;
                     
                 } else if ([aContact.type isEqualToString:@"url"]) {
-                    type = NSLocalizedString(@"Event website", nil);
+                    type = NSLocalizedString(@"CALENDAR_EVENT_WEBSITE", @"Event website");
                     accessory = KGOAccessoryTypeExternal;
                     url = aContact.value;
                     
                 } else {
-                    type = NSLocalizedString(@"Contact", nil);
+                    type = NSLocalizedString(@"CALENDAR_CONTACT_INFO", @"Contact");
                     accessory = KGOAccessoryTypeNone;
                 }
                 
@@ -266,14 +266,14 @@
             NSString *url = nil;
             if ([type isEqualToString:@"phone"]) {
                 if (!label) {
-                    label = NSLocalizedString(@"Organizer phone", nil);
+                    label = NSLocalizedString(@"CALENDAR_ORGANIZER_PHONE", @"Organizer phone");
                 }
                 accessory = KGOAccessoryTypePhone;
                 url = [NSString stringWithFormat:@"tel:%@", value];
                 
             } else if ([type isEqualToString:@"email"]) {
                 if (!label) {
-                    label = NSLocalizedString(@"Organizer email", nil);
+                    label = NSLocalizedString(@"CALENDAR_ORGANIZER_EMAIL", @"Organizer email");
                 }
                 accessory = KGOAccessoryTypeEmail;
                 
@@ -528,7 +528,7 @@
     if (_event.allDay) {
         NSString *endDateString = [self.dataManager mediumDateStringFromDate:_event.endDate];
         if ([endDateString isEqualToString:dateString]) {
-            timeString = [NSString stringWithFormat:@"%@\n%@", dateString, NSLocalizedString(@"All day", nil)];
+            timeString = [NSString stringWithFormat:@"%@\n%@", dateString, NSLocalizedString(@"CALENDAR_ALL_DAY_SUBTITLE", @"All day")];
         } else {
             timeString = [NSString stringWithFormat:@"%@ - %@", dateString, endDateString];
 

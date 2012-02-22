@@ -1,5 +1,5 @@
 #import <UIKit/UIKit.h>
-
+#import "KGOShareButtonController.h"
 @class MITThumbnailView, Photo;
 
 @interface PhotoDetailViewController : UIViewController {
@@ -18,6 +18,9 @@
 @property (nonatomic, retain) IBOutlet UIButton *nextButton;
 @property (nonatomic, retain) IBOutlet UILabel *pagerLabel;
 @property (nonatomic, retain) IBOutlet UIButton *shareButton;
+
+@property (nonatomic, retain)  KGOShareButtonController *shareController;
+
 
 - (IBAction)prevButtonPressed:(id)sender;
 - (IBAction)nextButtonPressed:(id)sender;

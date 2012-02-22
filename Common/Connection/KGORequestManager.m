@@ -118,34 +118,34 @@ NSString * const CurrentKurogoServerSettingKey = @"CURRENT_KUROGO_SERVER";
 	
 	switch ([error code]) {
 		case KGORequestErrorBadRequest: case KGORequestErrorUnreachable:
-			title = NSLocalizedString(@"Connection Failed", nil);
-			message = NSLocalizedString(@"Could not connect to server. Please try again later.", nil);
+			title = NSLocalizedString(@"CORE_CONNECTION_FAILED_TITLE", @"Connection Failed");
+			message = NSLocalizedString(@"CORE_CONNECTION_FAILED_MESSAGE", @"Could not connect to server. Please try again later.");
             canRetry = YES;
 			break;
 		case KGORequestErrorDeviceOffline:
-			title = NSLocalizedString(@"Connection Failed", nil);
-			message = NSLocalizedString(@"Please check your Internet connection and try again.", nil);
+			title = NSLocalizedString(@"CORE_DEVICE_OFFLINE_TITLE", @"Connection Failed");
+			message = NSLocalizedString(@"CORE_DEVICE_OFFLINE_MESSAGE", @"Please check your Internet connection and try again.");
             canRetry = YES;
 			break;
 		case KGORequestErrorTimeout:
-			title = NSLocalizedString(@"Connection Timed Out", nil);
-			message = NSLocalizedString(@"Server is taking too long to respond. Please try again later.", nil);
+			title = NSLocalizedString(@"CORE_CONNECTION_TIMED_OUT_TITLE", @"Connection Timed Out");
+			message = NSLocalizedString(@"CORE_CONNECTION_TIMED_OUT_MESSAGE", @"Server is taking too long to respond. Please try again later.");
             canRetry = YES;
 			break;
 		case KGORequestErrorForbidden:
-			title = NSLocalizedString(@"Unauthorized Request", nil);
-			message = NSLocalizedString(@"Unable to perform this request. Please check your login credentials.", nil);
+			title = NSLocalizedString(@"CORE_UNAUTHORIZED_REQUEST_TITLE", @"Unauthorized Request");
+			message = NSLocalizedString(@"CORE_UNAUTHORIZED_REQUEST_MESSAGE", @"Unable to perform this request. Please check your login credentials.");
 			break;
 		case KGORequestErrorVersionMismatch:
-			title = NSLocalizedString(@"Unsupported Request", nil);
+			title = NSLocalizedString(@"CORE_UNSUPPORTED_REQUEST_TITLE", @"Unsupported Request");
 			NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-			message = [NSString stringWithFormat:@"%@ %@",
-					   NSLocalizedString(@"Request is not supported in this version of", nil),
+			message = [NSString stringWithFormat:
+                       NSLocalizedString(@"CORE_UNSUPPORTED_REQUEST_MESSAGE", @"Request is not supported in this version of %@"),
 					   [infoDict objectForKey:@"CFBundleName"]];
 			break;
 		case KGORequestErrorBadResponse: case KGORequestErrorOther: case KGORequestErrorResponseTypeMismatch:
-			title = NSLocalizedString(@"Connection Failed", nil);
-			message = NSLocalizedString(@"Problem connecting to server. Please try again later.", nil);
+			title = NSLocalizedString(@"CORE_CONNECTION_FAILED_TITLE", @"Connection Failed");
+			message = NSLocalizedString(@"CORE_CONNECTION_FAILED_MESSAGE", @"Could not connect to server. Please try again later.");
             canRetry = YES;
 			break;
 		case KGORequestErrorServerMessage:
@@ -165,7 +165,7 @@ NSString * const CurrentKurogoServerSettingKey = @"CURRENT_KUROGO_SERVER";
         
         NSString *retryOption = nil;
         if (canRetry) {
-            retryOption = NSLocalizedString(@"Retry", nil);
+            retryOption = NSLocalizedString(@"CORE_RETRY_REQUEST_BUTTON", @"Retry");
         }
         
         
@@ -180,7 +180,7 @@ NSString * const CurrentKurogoServerSettingKey = @"CURRENT_KUROGO_SERVER";
 		UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:title
                                                              message:message
                                                             delegate:delegate
-                                                   cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                                                   cancelButtonTitle:NSLocalizedString(@"COMMON_CANCEL", @"Cancel")
                                                    otherButtonTitles:retryOption, nil] autorelease];
 		[alertView show];
 	}

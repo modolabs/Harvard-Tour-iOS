@@ -158,7 +158,7 @@
             accessoryTag = KGOAccessoryTypePhone;
 
         } else if(indexPath.row == self.primaryContacts.count) {
-            title = NSLocalizedString(@"More contacts", @"more emergency contacts");
+            title = NSLocalizedString(@"EMERGENCY_MORE_CONTACTS", @"More contacts");
             accessoryTag = KGOAccessoryTypeChevron;
         }
     }
@@ -223,10 +223,10 @@
     
     switch (loadingStatus) {
         case EmergencyStatusLoading:
-            contentText = NSLocalizedString(@"Loading...", @"emergency home screen announcement loading status");
+            contentText = NSLocalizedString(@"COMMON_INDETERMINATE_LOADING", @"Loading...");
             break;
         case EmergencyStatusFailed:
-            contentText = NSLocalizedString(@"Failed to load.", @"emergency home screen announcement loading status");
+            contentText = NSLocalizedString(@"EMERGENCY_STATUS_LOAD_FAILED", @"Failed to load.");
             break;
         case EmergencyStatusLoaded:
             if (_notice) {
@@ -240,7 +240,8 @@
                                "<p class=\"date\">%@</p>"
                                "<div class=\"body\">%@</div>", _notice.title, pubDate, _notice.html];
             } else {
-                contentText = NSLocalizedString(@"<h2 class=\"compact\">No Emergency</h2>", nil);
+                contentText = [NSString stringWithFormat:@"<h2 class=\"compact\">%@</h2>",
+                               NSLocalizedString(@"EMERGENCY_NO_EMERGENCY_MESSAGE", @"No emergency")];
             }
             break;
         default:

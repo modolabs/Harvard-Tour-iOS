@@ -198,16 +198,16 @@ static KGOSocialMediaController *s_controller = nil;
 + (NSString *)localizedNameForService:(NSString *)service
 {
     if ([service isEqualToString:KGOSocialMediaTypeEmail]) {
-        return NSLocalizedString(@"Email", nil);
+        return NSLocalizedString(@"CORE_EMAIL", @"Email");
         
     } else if ([service isEqualToString:KGOSocialMediaTypeFacebook]) {
-        return NSLocalizedString(@"Facebook", nil);
+        return NSLocalizedString(@"CORE_FACEBOOK", @"Facebook");
         
     } else if ([service isEqualToString:KGOSocialMediaTypeTwitter]) {
-        return NSLocalizedString(@"Twitter", nil);
+        return NSLocalizedString(@"CORE_TWITTER", @"Twitter");
         
     } else if ([service isEqualToString:KGOSocialMediaTypeFoursquare]) {
-        return NSLocalizedString(@"foursquare", nil);
+        return NSLocalizedString(@"CORE_FOURSQUARE", @"foursquare");
         
     }
     return service;

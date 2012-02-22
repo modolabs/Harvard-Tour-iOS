@@ -160,9 +160,9 @@
 			<key>APIPath</key>
 			<string>rest</string>
 			<key>Host</key>
-			<string>build.modolabs.com</string>
+			<string>kurogo.org</string>
 			<key>PathExtension</key>
-			<string>public/master</string>
+			<string>universitas</string>
 			<key>UseHTTPS</key>
 			<false/>
 		</dict>

@@ -7,13 +7,13 @@
     NSString *title = nil;
     switch (row) {
         case 0:
-            title = NSLocalizedString(@"Standard", nil);
+            title = NSLocalizedString(@"MAP_TYPE_STANDARD", @"Standard");
             break;
         case 1:
-            title = NSLocalizedString(@"Satellite", nil);
+            title = NSLocalizedString(@"MAP_TYPE_SATELLITE", @"Satellite");
             break;
         case 2:
-            title = NSLocalizedString(@"Hybrid", nil);
+            title = NSLocalizedString(@"MAP_TYPE_HYBRID", @"Hybrid");
             break;
         default:
             break;
@@ -46,7 +46,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == 0) {
-        return NSLocalizedString(@"Map Type", nil);
+        return NSLocalizedString(@"MAP_TYPE", @"Map Type");
     }
     return nil;
 }

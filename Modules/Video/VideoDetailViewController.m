@@ -208,7 +208,7 @@ static const CGFloat extraScrollViewHeight = 100.0f;
 
 - (void)headerView:(KGODetailPageHeaderView *)headerView shareButtonPressed:(id)sender
 {
-    _shareController.actionSheetTitle = NSLocalizedString(@"Share Video", nil);
+    _shareController.actionSheetTitle = NSLocalizedString(@"VIDEO_SHARE_THIS_VIDEO", @"Share Video");
     _shareController.shareTitle = video.title;
     //_shareController.shareBody = video.videoDescription;
     _shareController.shareURL = video.url;
@@ -231,7 +231,7 @@ static const CGFloat extraScrollViewHeight = 100.0f;
 - (void)viewDidLoad {  
     [super viewDidLoad];
 
-    self.navigationItem.title = NSLocalizedString(@"View Video", nil);
+    self.navigationItem.title = NSLocalizedString(@"VIDEO_VIEW_THIS_VIDEO", @"View Video");
     
     [self.player play];
 }

@@ -59,7 +59,7 @@
         
         NSString *cancelTitle = nil;
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            cancelTitle = NSLocalizedString(@"Cancel", @"share action sheet");
+            cancelTitle = NSLocalizedString(@"COMMON_CANCEL", @"Cancel");
         }
         UIActionSheet *shareSheet = [[UIActionSheet alloc] initWithTitle:self.actionSheetTitle
                                                                 delegate:self

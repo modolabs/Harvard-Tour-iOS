@@ -28,6 +28,16 @@
     [_iconGrid addIcons:views];
 }
 
+- (void)updateSubtitleLabel
+{
+    if (self.album.lastUpdate) {
+        NSString *cdot = [NSString stringWithUTF8String:"\u00B7"];
+        _subtitleLabel.text = [NSString stringWithFormat:@"%@ %@ %@ %@ %@",
+                               self.album.type, cdot,
+                               [self.album albumSize], cdot, [self.album lastUpdateString]];
+    }
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -77,6 +87,8 @@
     if (self.photos.count >= [self.album.totalItems integerValue]) {
         _loadingFooter.hidden = YES;
     }
+    
+    [self updateSubtitleLabel];
 }
 
 - (void)iconGridFrameDidChange:(IconGrid *)iconGrid
@@ -95,20 +107,17 @@
 {
     [super viewDidLoad];
     
-    self.title = NSLocalizedString(@"Album", @"photo album grid view");
+    self.title = NSLocalizedString(@"PHOTOS_ALBUM_VIEW_TITLE", @"Album");
     
     _titleLabel.text = self.album.title;
     
-    NSString *cdot = [NSString stringWithUTF8String:"\u00B7"];
-    _subtitleLabel.text = [NSString stringWithFormat:@"%@ %@ %@ %@ %@",
-                           self.album.type, cdot,
-                           [self.album albumSize], cdot, [self.album lastUpdateString]];
+    [self updateSubtitleLabel];
     
     _iconGrid.delegate = self;
     _iconGrid.padding = GridPaddingMake(7, 7, 7, 7);
     _iconGrid.spacing = GridSpacingMake(6, 6);
     
-    _loadingStatusLabel.text = NSLocalizedString(@"Loading more photos", nil);
+    _loadingStatusLabel.text = NSLocalizedString(@"PHOTOS_LOADING_MORE_PHOTOS", @"Loading more photos");
     
     self.dataManager.delegate = self;
     [self.dataManager fetchPhotosForAlbum:self.album.identifier];

@@ -27,7 +27,7 @@
     //self.person.viewed = [NSNumber numberWithBool:YES];
     [[CoreDataManager sharedManager] saveData];
     
-	self.title = NSLocalizedString(@"Info", @"people detail view title");
+	self.title = NSLocalizedString(@"PEOPLE_DETAIL_VIEW_TITLE", @"Info");
     
     [self displayPerson];
 }
@@ -169,9 +169,9 @@
     static NSDictionary *displayLabels = nil;
     if (displayLabels == nil) {    
         displayLabels = [[NSDictionary alloc] initWithObjectsAndKeys:
-                         NSLocalizedString(@"Home", nil), @"home",
-                         NSLocalizedString(@"Work", nil), @"work",
-                         NSLocalizedString(@"Other", nil), @"other",
+                         NSLocalizedString(@"PEOPLE_CONTACT_LABEL_HOME", @"Home"), @"home",
+                         NSLocalizedString(@"PEOPLE_CONTACT_LABEL_WORK", @"Work"), @"work",
+                         NSLocalizedString(@"PEOPLE_CONTACT_LABEL_OTHER", @"Other"), @"other",
                          nil];
     }
     NSString *title = [displayLabels objectForKey:label];
@@ -205,9 +205,9 @@
         
         centerText = YES;
         if (indexPath.row == 0) {
-            title = NSLocalizedString(@"Create New Contact", nil);
+            title = NSLocalizedString(@"PEOPLE_CREATE_NEW_CONTACT", @"Create New Contact");
         } else {
-            title = NSLocalizedString(@"Add to Existing Contact", nil);
+            title = NSLocalizedString(@"PEOPLE_ADD_TO_EXISTING_CONTACT", @"Add to Existing Contact");
         }
 
     } else {
