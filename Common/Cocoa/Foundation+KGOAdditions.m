@@ -152,7 +152,9 @@ KGOSign KGOGetIntegerSign(NSInteger x) {
     int seconds = -(int)[self timeIntervalSinceNow];
     int minutes = seconds / 60;
     if (minutes < 60) {
-        if (minutes == 1) {
+        if (minutes == 0) {
+            result = NSLocalizedString(@"CORE_JUST_NOW", @"just now");
+        } else if (minutes == 1) {
             result = NSLocalizedString(@"CORE_1_MINUTE_AGO", @"1 minute ago");
         } else {
             result = [NSString stringWithFormat:NSLocalizedString(@"CORE_%d_MINUTES_AGO", @"%d minutes ago"), minutes];

@@ -9,6 +9,7 @@
 @synthesize imageView, titleView, titleLabel, subtitleLabel, pagerView,
 prevThumbView, nextThumbView, prevButton, nextButton, pagerLabel, shareButton,
 photo, photos;
+@synthesize shareController = _shareController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,7 +46,7 @@ photo, photos;
     if (currentIndex != NSNotFound) {
         self.pagerLabel.text = [NSString stringWithFormat:
                                 NSLocalizedString(@"PHOTOS_%1$d_OF_%2$d", @"Photo %d of %d"),
-                                currentIndex,
+                                (currentIndex + 1),
                                 [self.photo.album.totalItems integerValue]];
         
         if (currentIndex > 0) {
@@ -79,7 +80,6 @@ photo, photos;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    
     self.imageView = nil;
     self.titleView = nil;
     self.titleLabel = nil;
@@ -90,6 +90,7 @@ photo, photos;
     self.nextButton = nil;
     self.pagerLabel = nil;
     self.shareButton = nil;
+    self.shareController = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -174,7 +175,20 @@ photo, photos;
 
 - (IBAction)shareButtonPressed:(id)sender
 {
+    if (!self.shareController) {
+        self.shareController = [[[KGOShareButtonController alloc] initWithContentsController:self] autorelease];
+        self.shareController.shareTypes = KGOShareControllerShareTypeEmail | KGOShareControllerShareTypeFacebook | KGOShareControllerShareTypeTwitter;
+        
+        self.shareController.actionSheetTitle = NSLocalizedString(@"Share Photo", nil);
+        self.shareController.shareTitle = self.photo.title;
+        self.shareController.shareURL = self.photo.imageURL;
+    }
     
+    [self.shareController shareInView:self.view];
 }
 
+- (void)dealloc {
+    self.shareController = nil;
+    [super dealloc];
+}
 @end

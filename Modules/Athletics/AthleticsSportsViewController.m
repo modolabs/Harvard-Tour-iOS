@@ -204,6 +204,7 @@
  */
 - (void)dataController:(AthleticsDataController *)controller didReceiveSearchResults:(NSArray *)results
 {
+    
 }
 
 - (void)dataController:(AthleticsDataController *)controller didRetrieveCategories:(NSArray *)theCategories

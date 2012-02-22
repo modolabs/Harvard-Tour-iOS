@@ -12,7 +12,7 @@
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "UIKit+KGOAdditions.h"
 #import "KGOTheme.h"
-
+#import "KGOSearchDisplayController.h"
 
 
 @interface AthleticsListController (Private)
@@ -109,6 +109,7 @@
 #pragma mark - KGOScrollTabs
 - (void)setupTabstrip {
     _navTabs.delegate = self;
+    _navTabs.showsSearchButton = YES;
     [_navTabs addButtonWithTitle:NSLocalizedString(@"ATHLETICS_TAB_TOP_NEWS", @"Top News")];
     [_navTabs addButtonWithTitle:NSLocalizedString(@"ATHLETICS_TAB_MEN", @"Men")];
     [_navTabs addButtonWithTitle:NSLocalizedString(@"ATHLETICS_TAB_WOMEN", @"Women")];
@@ -121,6 +122,7 @@
 }
 
 - (void)tabstrip:(KGOScrollingTabstrip *)tabstrip clickedButtonAtIndex:(NSUInteger)index {
+    self.dataManager.delegate = self;
     self.activeCategoryId = [NSString stringWithFormat:@"%d",index];
     if (index == _topNewsTabIndex) {
         [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
@@ -135,6 +137,16 @@
         _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_MYSPORTS;
         [self.dataManager fetchBookmarks];
     }
+}
+
+#pragma mark - KGOScrollingTabstripSearchDelegate
+
+- (BOOL)tabstripShouldShowSearchDisplayController:(KGOScrollingTabstrip *)tabstrip {
+    return YES;
+}
+
+- (UIViewController *)viewControllerForTabstrip:(KGOScrollingTabstrip *)tabstrip {
+    return self;
 }
 
 #pragma mark -
@@ -211,8 +223,10 @@
  {
  }
  */
-- (void)dataController:(AthleticsDataController *)controller didReceiveSearchResults:(NSArray *)results
-{
+-(void)receivedSearchResults:(NSArray *)searchResults forSource:(NSString *)source {
+    self.stories = searchResults;
+    [_storyTable reloadData];
+    [_storyTable flashScrollIndicators];
 }
 
 - (void)dataController:(AthleticsDataController *)controller didRetrieveCategories:(NSArray *)theCategories
@@ -409,15 +423,7 @@
 
 #pragma mark - KGOSearchDisplayDelegate
 
-//- (BOOL)tabstripShouldShowSearchDisplayController:(KGOScrollingTabstrip *)tabstrip
-//{
-//    return YES;
-//}
 
-//- (UIViewController *)viewControllerForTabstrip:(KGOScrollingTabstrip *)tabstrip
-//{
-//    return self;
-//}
 
 - (BOOL)searchControllerShouldShowSuggestions:(KGOSearchDisplayController *)controller {
     return NO;
@@ -432,22 +438,18 @@
 }
 
 - (void)resultsHolder:(id<KGOSearchResultsHolder>)resultsHolder didSelectResult:(id<KGOSearchResult>)aResult {
+    KGOSearchDisplayController *displayC = (KGOSearchDisplayController *)resultsHolder;
+    NSArray *results = displayC.results;
     AthleticsStory *story = aResult;
-    if ([[story hasBody] boolValue]) {
-        NSArray *resultStories = [resultsHolder results];
-        NSInteger row = [resultStories indexOfObject:story];
-        NSDictionary *params = nil;
-        if (row != NSNotFound) {
-            params = [NSDictionary dictionaryWithObjectsAndKeys:
-                      resultStories, @"stories",
-                      [NSIndexPath indexPathForRow:row inSection:0], @"indexPath",
-                      nil];
-        } else {
-            params = [NSDictionary dictionaryWithObjectsAndKeys:
-                      aResult, @"story",
-                      nil];
-        }
-        [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail 
+    NSInteger idx = [results indexOfObject:story];
+    if (idx >= 0  && idx < results.count) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setObject:@"story" forKey:@"type"];
+        [params setObject:[NSIndexPath indexPathForRow:idx inSection:0] forKey:@"indexPath"];
+        [params setObject:results forKey:@"stories"];
+        [params setObject:self.dataManager.currentCategory forKey:@"category"];
+        [params setObject:displayC.searchResults forKey:@"stories"];
+        [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail
                                forModuleTag:self.dataManager.moduleTag
                                      params:params];
     } else {
@@ -458,7 +460,7 @@
 - (void)searchController:(KGOSearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView {
     self.federatedSearchTerms = nil;
     self.federatedSearchResults = nil;
-//    [_navTabbar hideSearchBarAnimated:YES];
+    [_navTabs hideSearchBarAnimated:YES];
 }
 
 

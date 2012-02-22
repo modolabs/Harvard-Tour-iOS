@@ -17,4 +17,5 @@
 @property (nonatomic, retain)  AthleticsDataController *dataManager;
 
 - (UIViewController *)modulePage:(NSString *)pageName params:(NSDictionary *)params;
+
 @end

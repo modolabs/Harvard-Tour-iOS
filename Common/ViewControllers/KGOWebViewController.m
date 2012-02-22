@@ -73,13 +73,13 @@ enum {
         
         _dismissView = [[UIView alloc] initWithFrame:CGRectMake(0, viewHeight - 44, viewWidth, 44)];
         UIImageView *backgroundImageView = [[[UIImageView alloc] initWithFrame:_dismissView.frame] autorelease];
-        [backgroundImageView setImage:[UIImage imageNamed:@"common/linkback-bar"]];
+        [backgroundImageView setImage:[UIImage imageWithPathName:@"common/linkback-bar"]];
         _dismissView = backgroundImageView;
         _dismissView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
         
-        UIImage *buttonImage = [[UIImage imageNamed:@"common/toolbar-button"] 
+        UIImage *buttonImage = [[UIImage imageWithPathName:@"common/toolbar-button"] 
                                  stretchableImageWithLeftCapWidth:10 topCapHeight:10];
-        UIImage *buttomImagePressed = [[UIImage imageNamed:@"common/toolbar-button-pressed"] 
+        UIImage *buttomImagePressed = [[UIImage imageWithPathName:@"common/toolbar-button-pressed"] 
                                         stretchableImageWithLeftCapWidth:10 topCapHeight:10];
         
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
