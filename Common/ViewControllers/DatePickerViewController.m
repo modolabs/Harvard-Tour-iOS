@@ -50,7 +50,7 @@
     datePicker.frame = CGRectMake(0.0, self.view.frame.size.height - datePicker.frame.size.height, datePicker.frame.size.width, datePicker.frame.size.height);
     datePicker.datePickerMode = UIDatePickerModeDate;
     datePicker.date = self.date;
-	datePicker.maximumDate = [NSDate dateWithTimeIntervalSinceNow:2 * 366 * 24 * 3600];
+	datePicker.maximumDate = [NSDate dateWithTimeIntervalSinceNow:1 * 366 * 24 * 3600];
 	datePicker.minimumDate = [NSDate dateWithTimeIntervalSinceNow:-10 * 366 * 24 * 3600];
     [datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:datePicker];
