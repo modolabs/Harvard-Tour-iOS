@@ -72,7 +72,7 @@
         _searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
         _searchBar.placeholder = [NSString stringWithFormat:@"%@ %@",
-                                  NSLocalizedString(@"Search", nil),
+                                  NSLocalizedString(@"CORE_SEARCH_BAR_PLACEHOLDER", @"Search"),
                                   [infoDict objectForKey:@"CFBundleName"]];
         [self.view addSubview:_searchBar];
     }
@@ -85,7 +85,7 @@
     }
     
     // left nav bar button
-	UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Home", @"home back button title")
+	UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"HOME_BACK_BUTTON_TITLE", @"Home")
                                                                       style:UIBarButtonItemStyleBordered
                                                                      target:nil
                                                                      action:nil];	
@@ -333,13 +333,13 @@
 
 // in response to HelloRequestDidFailNotification
 - (void)helloRequestDidFail:(NSNotification *)aNotification {
-    NSString *message = NSLocalizedString(@"Could not connect to server.  Please try again later.",
-                                          @"error message for hello request failure");
-    NSString *retry = NSLocalizedString(@"Retry", @"retry button for hello request failure");
+    NSString *message = NSLocalizedString(@"CORE_HELLO_REQUEST_FAILED_ERROR_MESSAGE",
+                                          @"Could not connect to server.  Please try again later.");
+    NSString *retry = NSLocalizedString(@"CORE_RETRY_REQUEST_BUTTON", @"Retry");
     UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:nil
                                                          message:message
                                                         delegate:self 
-                                               cancelButtonTitle:NSLocalizedString(@"Cancel", @"cancel button for hello request failure")
+                                               cancelButtonTitle:NSLocalizedString(@"COMMON_CANCEL", @"Cancel")
                                                otherButtonTitles:retry, nil] autorelease];
     [alertView show];
 }
@@ -368,7 +368,7 @@
         [spinny startAnimating];
         spinny.autoresizingMask = allMargins;
         
-        NSString *loadingText = NSLocalizedString(@"Loading...", nil);
+        NSString *loadingText = NSLocalizedString(@"COMMON_INDETERMINATE_LOADING", @"Loading...");
         UIFont *font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyBodyText];
         CGSize size = [loadingText sizeWithFont:font];
         UILabel *loadingLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)] autorelease];

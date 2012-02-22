@@ -64,14 +64,14 @@ NSString * const PhotoAlbumEntityName = @"PhotoAlbum";
 - (NSString *)albumSize
 {
     return [NSString stringWithFormat:
-            NSLocalizedString(@"%d photos", @"number of photos in album"),
+            NSLocalizedString(@"PHOTOS_%d_PHOTOS", @"%d photos"),
             [self.totalItems integerValue]];
 }
 
 - (NSString *)lastUpdateString
 {
     return [NSString stringWithFormat:
-            NSLocalizedString(@"Updated %@", @"photo last update description"),
+            NSLocalizedString(@"PHOTOS_LAST_UPDATED_%@", @"Updated %@"),
             [self.lastUpdate agoString]];
 }
 

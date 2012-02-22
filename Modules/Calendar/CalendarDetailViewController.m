@@ -16,7 +16,7 @@
 - (void)loadView {
     [super loadView];
 
-    self.title = NSLocalizedString(@"Event Detail", nil);
+    self.title = NSLocalizedString(@"CALENDAR_EVENT_DETAIL_PAGE_TITLE", @"Event Detail");
     
     _shareController = [(KGOShareButtonController *)[KGOShareButtonController alloc] initWithContentsController:self];
     _shareController.shareTypes = KGOShareControllerShareTypeEmail | KGOShareControllerShareTypeFacebook | KGOShareControllerShareTypeTwitter;

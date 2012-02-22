@@ -44,7 +44,7 @@ photo, photos;
     NSInteger currentIndex = [self.photos indexOfObject:self.photo];
     if (currentIndex != NSNotFound) {
         self.pagerLabel.text = [NSString stringWithFormat:
-                                NSLocalizedString(@"Photo %d of %d", nil),
+                                NSLocalizedString(@"PHOTOS_%1$d_OF_%2$d", @"Photo %d of %d"),
                                 (currentIndex + 1),
                                 [self.photo.album.totalItems integerValue]];
         
@@ -70,7 +70,7 @@ photo, photos;
 {
     [super viewDidLoad];
     
-    self.title = NSLocalizedString(@"Photo", @"photo detail page title");
+    self.title = NSLocalizedString(@"PHOTOS_DETAIL_PAGE_TITLE", @"Photo");
     [self.shareButton setBackgroundImage:[UIImage imageWithPathName:@"common/share"] forState:UIControlStateNormal];
 
     [self displayPhoto];

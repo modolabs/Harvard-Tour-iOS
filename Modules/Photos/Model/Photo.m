@@ -90,7 +90,7 @@ NSString * const PhotoEntityName = @"Photo";
 - (NSString *)lastUpdateString
 {
     return [NSString stringWithFormat:
-            NSLocalizedString(@"Updated %@", @"photo last update description"),
+            NSLocalizedString(@"PHOTOS_LAST_UPDATED_%@", @"Updated %@"),
             [self.pubDate agoString]];
 }
 

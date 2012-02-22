@@ -110,7 +110,7 @@ NSString * const KGODataModelNameCalendar = @"Calendar";
             calendarVC.currentCalendar = calendar;
             calendarVC.title = calendar.title;
         } else {
-            calendarVC.title = NSLocalizedString(@"Events", nil);
+            calendarVC.title = NSLocalizedString(@"CALENDAR_GENERIC_PAGE_TITLE", @"Events");
         }
 
         vc = calendarVC;

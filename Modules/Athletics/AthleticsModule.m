@@ -147,7 +147,9 @@
 
 - (void)didReceiveSearchResults:(NSArray *)results forSearchTerms:(NSString *)searchTerms
 {
-    //[self.searchDelegate receivedSearchResults:results forSource:self.tag];
+    if ([self.searchDelegate respondsToSelector:@selector(receivedSearchResults:forSource:)]) {
+        [self.searchDelegate receivedSearchResults:results forSource:self.tag];
+    }
     self.searchDelegate = nil;
 }
 
@@ -174,7 +176,7 @@
     if (self.searchDelegate) {
         self.dataManager.searchDelegate = self.searchDelegate;
         self.searchDelegate = nil;
-        //[self.dataManager searchStories:_searchText];
+        [self.dataManager searchStories:_searchText];
         [_searchText release];
         _searchText = nil;
     }

@@ -192,7 +192,7 @@
 }
      
 - (UIButton *)toolbarCloseButton {
-    NSString *title = NSLocalizedString(@"News", @"News Module Home");
+    NSString *title = NSLocalizedString(@"NEWS_MODULE_HOME_BUTTON", @"News");
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button addTarget:self action:@selector(goHome:) forControlEvents:UIControlEventTouchUpInside];
     

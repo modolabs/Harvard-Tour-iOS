@@ -12,7 +12,7 @@
 #import "KGOSearchBar.h"
 #import "AthleticsDataController.h"
 #import "KGOSearchDisplayController.h"
-@interface AthleticsListController : KGOTableViewController <KGOSearchBarDelegate,AthleticsDataDelegate,KGOScrollingTabstripDelegate> {
+@interface AthleticsListController : KGOTableViewController <KGOSearchBarDelegate,AthleticsDataDelegate,KGOScrollingTabstripDelegate,KGOScrollingTabstripSearchDelegate> {
     
     IBOutlet UILabel *_loadingLabel;
     IBOutlet UILabel *_lastUpdateLabel;

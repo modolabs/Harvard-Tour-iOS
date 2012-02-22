@@ -261,12 +261,6 @@ maxResultsPerSection;
 
 // TODO: redo this when we have a system for cross-module linkage
 - (void)toolbarItemTapped:(UIBarButtonItem *)item {
-    /*
-    if ([item.title isEqualToString:NSLocalizedString(@"Map", nil)]) {
-        NSDictionary *params = [NSDictionary dictionaryWithObject:self.searchResults forKey:@"searchResults"];
-        [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameSearch forModuleTag:MapTag params:params];
-    }
-    */
 }
 
 #pragma mark KGOSearchBarDelegate
@@ -436,7 +430,7 @@ maxResultsPerSection;
 		&& [self canShowMapView])
 	{
         if (!_searchBar.toolbarItems.count) {
-            [_searchBar addToolbarButtonWithTitle:NSLocalizedString(@"Map", nil)];
+            [_searchBar addToolbarButtonWithTitle:NSLocalizedString(@"CORE_ACTION_MAP", @"Map")];
         }
         [_searchBar showToolbarAnimated:YES];
     }
@@ -489,7 +483,7 @@ maxResultsPerSection;
     NSString *accessoryType = KGOAccessoryTypeChevron;
 
     if (self.maxResultsPerSection && indexPath.row == self.maxResultsPerSection) {
-        title = NSLocalizedString(@"More results", @"more results link in federated search");
+        title = NSLocalizedString(@"CORE_MORE_RESULTS_LINK", @"More results");
 
     } else {
         NSArray *searchResults = [self.multiSearchResults objectForKey:source];
@@ -536,12 +530,12 @@ maxResultsPerSection;
     KGOModule *module = [KGO_SHARED_APP_DELEGATE() moduleForTag:source];
     if (module) {
         return [NSString stringWithFormat:
-                NSLocalizedString(@"%d results from %@", @"search results with known module"),
+                NSLocalizedString(@"CORE_%d_RESULTS_FROM_MODULE", @"%d results from %@"),
                 searchResults.count,
                 module.shortName];
     }
     return [NSString stringWithFormat:
-            NSLocalizedString(@"%d results", @"search results with unknown module"),
+            NSLocalizedString(@"CORE_%d_RESULTS", @"%d results"),
             searchResults.count];
 }
 

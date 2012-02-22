@@ -44,7 +44,7 @@
     _mutableItems = [self.bookmarkedItems mutableCopy];
     self.navigationItem.leftBarButtonItem.enabled = _mutableItems.count > 0;
     
-    self.title = NSLocalizedString(@"Bookmarks", @"title of generic bookmark view controller");
+    self.title = NSLocalizedString(@"CORE_GENERIC_BOOKMARKS_TITLE", @"Bookmarks");
 }
 
 - (void)viewDidUnload
