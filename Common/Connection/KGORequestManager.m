@@ -149,8 +149,8 @@ NSString * const CurrentKurogoServerSettingKey = @"CURRENT_KUROGO_SERVER";
             canRetry = YES;
 			break;
 		case KGORequestErrorServerMessage:
-			title = [[error userInfo] objectForKey:@"title"];
-			message = [[error userInfo] objectForKey:@"message"];
+			title = [[error userInfo] nonemptyStringForKey:@"title"];
+			message = [[error userInfo] nonemptyStringForKey:@"message"];
 			break;
 		case KGORequestErrorInterrupted: // don't show alert
 		default:
@@ -166,14 +166,6 @@ NSString * const CurrentKurogoServerSettingKey = @"CURRENT_KUROGO_SERVER";
         NSString *retryOption = nil;
         if (canRetry) {
             retryOption = NSLocalizedString(@"CORE_RETRY_REQUEST_BUTTON", @"Retry");
-        }
-        
-        
-        if ([title isKindOfClass:[NSNull class]]) {
-            title = NSLocalizedString(@"Connection Failed", nil);
-        }
-        if ([message isKindOfClass:[NSNull class]]) {
-            message = NSLocalizedString(@"Problem connecting to server. Please try again later.", nil);
         }
         
         
