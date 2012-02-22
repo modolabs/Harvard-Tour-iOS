@@ -80,7 +80,6 @@ photo, photos;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    [_shareController release];
     self.imageView = nil;
     self.titleView = nil;
     self.titleLabel = nil;
@@ -176,12 +175,14 @@ photo, photos;
 
 - (IBAction)shareButtonPressed:(id)sender
 {
-    self.shareController = [[[KGOShareButtonController alloc] initWithContentsController:self] autorelease];
-    self.shareController.shareTypes = KGOShareControllerShareTypeEmail | KGOShareControllerShareTypeFacebook | KGOShareControllerShareTypeTwitter;
-    
-    self.shareController.actionSheetTitle = NSLocalizedString(@"Share Photo", nil);
-    self.shareController.shareTitle = self.photo.title;
-    self.shareController.shareURL = self.photo.imageURL;
+    if (!self.shareController) {
+        self.shareController = [[[KGOShareButtonController alloc] initWithContentsController:self] autorelease];
+        self.shareController.shareTypes = KGOShareControllerShareTypeEmail | KGOShareControllerShareTypeFacebook | KGOShareControllerShareTypeTwitter;
+        
+        self.shareController.actionSheetTitle = NSLocalizedString(@"Share Photo", nil);
+        self.shareController.shareTitle = self.photo.title;
+        self.shareController.shareURL = self.photo.imageURL;
+    }
     
     [self.shareController shareInView:self.view];
 }
