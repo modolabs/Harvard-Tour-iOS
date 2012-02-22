@@ -41,7 +41,7 @@ moduleTag;
     } else {
         NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
         [dateFormatter setDateStyle:NSDateFormatterShortStyle];
-        return [NSString stringWithFormat:@"%@ %@", [dateFormatter stringFromDate:self.startDate], NSLocalizedString(@"All day", nil)];
+        return [NSString stringWithFormat:@"%@ %@", [dateFormatter stringFromDate:self.startDate], NSLocalizedString(@"CALENDAR_ALL_DAY_SUBTITLE", @"All day")];
     }
 }
 

@@ -591,7 +591,13 @@
 			}
 		}
 	}
-    
+
+    if ([dataSource respondsToSelector:@selector(tableView:manipulatorForCellAtIndexPath:)]) {
+        CellManipulator manipulateCell = [dataSource tableView:tableView manipulatorForCellAtIndexPath:indexPath];
+        if (manipulateCell) {
+            manipulateCell(cell);
+        }
+    }
     
     cell.textLabel.font = titleFont;
     cell.textLabel.textColor = titleTextColor;
@@ -617,12 +623,7 @@
 {
 	id<KGOTableViewDataSource> dataSource = [self dataSourceForTableView:tableView];
 	
-    if ([dataSource respondsToSelector:@selector(tableView:manipulatorForCellAtIndexPath:)]) {
-        CellManipulator manipulateCell = [dataSource tableView:tableView manipulatorForCellAtIndexPath:indexPath];
-        if (manipulateCell) {
-            manipulateCell(cell);
-        }
-    } else if ([dataSource respondsToSelector:@selector(tableView:willDisplayCell:forRowAtIndexPath:)]) {
+    if ([dataSource respondsToSelector:@selector(tableView:willDisplayCell:forRowAtIndexPath:)]) {
         [dataSource tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
     }
 }

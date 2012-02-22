@@ -12,7 +12,7 @@
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "UIKit+KGOAdditions.h"
 #import "KGOTheme.h"
-
+#import "KGOSearchDisplayController.h"
 
 
 @interface AthleticsListController (Private)
@@ -68,7 +68,7 @@
     [self addTableView:_storyTable];
     //configure these things
     self.navigationItem.title = @"Athletics";
-    self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
+    self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"ATHLETICS_HEADLINES", @"Headlines") 
                                                                              style:UIBarButtonItemStylePlain 
                                                                             target:nil 
                                                                             action:nil] autorelease];
@@ -109,10 +109,11 @@
 #pragma mark - KGOScrollTabs
 - (void)setupTabstrip {
     _navTabs.delegate = self;
-    [_navTabs addButtonWithTitle:NSLocalizedString(@"Top News", nil)];
-    [_navTabs addButtonWithTitle:NSLocalizedString(@"Men", nil)];
-    [_navTabs addButtonWithTitle:NSLocalizedString(@"Women", nil)];
-    [_navTabs addButtonWithTitle:NSLocalizedString(@"My Sports", nil)];
+    _navTabs.showsSearchButton = YES;
+    [_navTabs addButtonWithTitle:NSLocalizedString(@"ATHLETICS_TAB_TOP_NEWS", @"Top News")];
+    [_navTabs addButtonWithTitle:NSLocalizedString(@"ATHLETICS_TAB_MEN", @"Men")];
+    [_navTabs addButtonWithTitle:NSLocalizedString(@"ATHLETICS_TAB_WOMEN", @"Women")];
+    [_navTabs addButtonWithTitle:NSLocalizedString(@"ATHLETICS_TAB_MY_SPORTS", @"My Sports")];
     _topNewsTabIndex = 0;
     _menTabIndex = 1;
     _womenTabIndex = 2;
@@ -121,6 +122,7 @@
 }
 
 - (void)tabstrip:(KGOScrollingTabstrip *)tabstrip clickedButtonAtIndex:(NSUInteger)index {
+    self.dataManager.delegate = self;
     self.activeCategoryId = [NSString stringWithFormat:@"%d",index];
     if (index == _topNewsTabIndex) {
         [self.dataManager fetchStoriesForCategory:self.activeCategoryId startId:nil];
@@ -135,6 +137,16 @@
         _storyTable.tag = ATHLETICS_TABLEVIEW_TAG_MYSPORTS;
         [self.dataManager fetchBookmarks];
     }
+}
+
+#pragma mark - KGOScrollingTabstripSearchDelegate
+
+- (BOOL)tabstripShouldShowSearchDisplayController:(KGOScrollingTabstrip *)tabstrip {
+    return YES;
+}
+
+- (UIViewController *)viewControllerForTabstrip:(KGOScrollingTabstrip *)tabstrip {
+    return self;
 }
 
 #pragma mark -
@@ -174,7 +186,7 @@
         [formatter setDateStyle:NSDateFormatterMediumStyle];
         [formatter setTimeStyle:NSDateFormatterShortStyle];
         [self setStatusText:[NSString stringWithFormat:@"%@ %@",
-                             NSLocalizedString(@"Last Updated", nil),
+                             NSLocalizedString(@"ATHLETICS_LAST_UPDATED", @"Last Updated"),
                              [formatter stringFromDate:date]]];
         [formatter release];
     }
@@ -185,7 +197,7 @@
 	_progressView.hidden = NO;
 	_lastUpdateLabel.hidden = YES;
 	_progressView.progress = value;
-    _loadingLabel.text = [NSString stringWithFormat:@"%@",NSLocalizedString(@"Loading", nil)];
+    _loadingLabel.text = NSLocalizedString(@"COMMON_LOADING", @"Loading...");
     _activityView.hidden = NO;
     _activityView.alpha = 1.0;
     
@@ -198,7 +210,7 @@
 - (void)dataController:(AthleticsDataController *)controller didFailWithCategoryId:(NSString *)categoryId
 {
     if([self.activeCategoryId isEqualToString:categoryId]) {
-        [self setStatusText:NSLocalizedString(@"Update failed", @"news story update failed")];
+        [self setStatusText:NSLocalizedString(@"ATHLETICS_UPDATE_FAILED", @"Update failed")];
     }
 }
 
@@ -211,8 +223,10 @@
  {
  }
  */
-- (void)dataController:(AthleticsDataController *)controller didReceiveSearchResults:(NSArray *)results
-{
+-(void)receivedSearchResults:(NSArray *)searchResults forSource:(NSString *)source {
+    self.stories = searchResults;
+    [_storyTable reloadData];
+    [_storyTable flashScrollIndicators];
 }
 
 - (void)dataController:(AthleticsDataController *)controller didRetrieveCategories:(NSArray *)theCategories
@@ -271,7 +285,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if (self.stories.count == 0 && [self.activeCategoryId isEqualToString:@"3"]) {
         UILabel *nullLabel = [[UILabel alloc] initWithFrame:tableView.frame];
-        nullLabel.text = NSLocalizedString(@"To save a favorite, click the star icon while viewing a sport", nil);
+        nullLabel.text = NSLocalizedString(@"ATHLETICS_BOOKMARK_INSTRUCTIONS", @"To save a favorite, click the star icon while viewing a sport");
         nullLabel.font = [UIFont boldSystemFontOfSize:16];
         nullLabel.numberOfLines = 2;
         nullLabel.textAlignment = UITextAlignmentCenter;
@@ -314,7 +328,7 @@
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                            reuseIdentifier:loadMoreIdentifier] autorelease];
         }
-        cell.textLabel.text = NSLocalizedString(@"Load more stories", @"new story list");
+        cell.textLabel.text = NSLocalizedString(@"ATHLETICS_LOAD_MORE_STORIES", @"Load more stories");
         cell.textLabel.textAlignment = UITextAlignmentCenter;
         cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
         cell.textLabel.textAlignment = UITextAlignmentCenter;
@@ -385,15 +399,7 @@
 
 #pragma mark - KGOSearchDisplayDelegate
 
-//- (BOOL)tabstripShouldShowSearchDisplayController:(KGOScrollingTabstrip *)tabstrip
-//{
-//    return YES;
-//}
 
-//- (UIViewController *)viewControllerForTabstrip:(KGOScrollingTabstrip *)tabstrip
-//{
-//    return self;
-//}
 
 - (BOOL)searchControllerShouldShowSuggestions:(KGOSearchDisplayController *)controller {
     return NO;
@@ -408,22 +414,18 @@
 }
 
 - (void)resultsHolder:(id<KGOSearchResultsHolder>)resultsHolder didSelectResult:(id<KGOSearchResult>)aResult {
+    KGOSearchDisplayController *displayC = (KGOSearchDisplayController *)resultsHolder;
+    NSArray *results = displayC.results;
     AthleticsStory *story = aResult;
-    if ([[story hasBody] boolValue]) {
-        NSArray *resultStories = [resultsHolder results];
-        NSInteger row = [resultStories indexOfObject:story];
-        NSDictionary *params = nil;
-        if (row != NSNotFound) {
-            params = [NSDictionary dictionaryWithObjectsAndKeys:
-                      resultStories, @"stories",
-                      [NSIndexPath indexPathForRow:row inSection:0], @"indexPath",
-                      nil];
-        } else {
-            params = [NSDictionary dictionaryWithObjectsAndKeys:
-                      aResult, @"story",
-                      nil];
-        }
-        [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail 
+    NSInteger idx = [results indexOfObject:story];
+    if (idx >= 0  && idx < results.count) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setObject:@"story" forKey:@"type"];
+        [params setObject:[NSIndexPath indexPathForRow:idx inSection:0] forKey:@"indexPath"];
+        [params setObject:results forKey:@"stories"];
+        [params setObject:self.dataManager.currentCategory forKey:@"category"];
+        [params setObject:displayC.searchResults forKey:@"stories"];
+        [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail
                                forModuleTag:self.dataManager.moduleTag
                                      params:params];
     } else {
@@ -434,7 +436,7 @@
 - (void)searchController:(KGOSearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView {
     self.federatedSearchTerms = nil;
     self.federatedSearchResults = nil;
-//    [_navTabbar hideSearchBarAnimated:YES];
+    [_navTabs hideSearchBarAnimated:YES];
 }
 
 

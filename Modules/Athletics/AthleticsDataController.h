@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "KGORequestManager.h"
+
 #define ATHLETICS_CATEGORY_EXPIRES_TIME 7200.0
 static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 @class AthleticsDataController,AthleticsCategory,AthleticsStory,AthleticsMenu,AthleticsSchedule;
@@ -58,6 +59,7 @@ static NSString * const FeedListModifiedDateKey = @"feedListModifiedDateArray";
 - (BOOL)canLoadMoreStories;
 - (NSArray *)bookmarkedCategories;
 - (void)fetchBookmarks;
+- (void)searchStories:(NSString *)searchTerms;
 - (void)fetchStoriesForCategory:(NSString *)categoryId
                         startId:(NSString *)startId;
 - (void)fetchMenusForCategory:(NSString *)categoryId
