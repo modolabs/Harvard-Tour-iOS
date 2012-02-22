@@ -3,10 +3,10 @@
 #import "Foundation+KGOAdditions.h"
 #import "CalendarModel.h"
 
-#define EVENT_TIMEOUT -3600
+#define EVENT_TIMEOUT -300
 
-#define CALENDAR_GROUP_EXPIRE_TIME 7200
-#define CALENDAR_LIST_EXPIRE_TIME 7200
+#define CALENDAR_GROUP_EXPIRE_TIME 900
+#define CALENDAR_LIST_EXPIRE_TIME 900
 
 @implementation CalendarDataManager
 
@@ -171,8 +171,11 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
             NSMutableArray *predTemplates = [NSMutableArray array];
             NSMutableArray *predArguments = [NSMutableArray array];
             
-            NSDate *start = [params objectForKey:@"start"];
-            if (!start) {
+            NSDate *start = nil;
+            NSString *startString = [params objectForKey:@"start"];
+            if (startString) {
+                start = [NSDate dateWithTimeIntervalSince1970:[startString doubleValue]];
+            } else {
                 NSTimeInterval interval = [[params objectForKey:@"time"] doubleValue];
                 start = dateForMidnightFromInterval(interval);
             }
@@ -183,9 +186,12 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
             }
             
             NSInteger limit = [[params objectForKey:@"limit"] integerValue];
-            if (limit <= 0) {            
-                NSDate *end = [params objectForKey:@"end"];
-                if (!end) {
+            if (limit <= 0) {
+                NSDate *end = nil;
+                NSString *endString = [params objectForKey:@"end"];
+                if (endString) {
+                    end = [NSDate dateWithTimeIntervalSince1970:[endString doubleValue]];
+                } else {
                     NSTimeInterval interval = [[params objectForKey:@"time"] doubleValue] + 24*60*60; // add 24 hrs
                     end = dateForMidnightFromInterval(interval);
                 }
@@ -206,22 +212,21 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
                 filteredEvents = [events sortedArrayUsingDescriptors:sortDescriptors];
             }
             
-            limit = MIN(limit, filteredEvents.count);
-            if (limit > 0) {
+            if (filteredEvents.count >= limit) { // limit is 0 if unspecified
                 filteredEvents = [filteredEvents subarrayWithRange:NSMakeRange(0, limit)];
-            }
-            
-            NSMutableArray *wrappers = [NSMutableArray arrayWithCapacity:filteredEvents.count];
-            for (KGOEvent *event in filteredEvents) {
-                KGOEventWrapper *wrapper = [[[KGOEventWrapper alloc] initWithKGOEvent:event] autorelease];
-                wrapper.moduleTag = self.moduleTag;
-                [wrappers addObject:wrapper];
-            }
-            
-            [self.delegate eventsDidChange:wrappers calendar:calendar didReceiveResult:NO];
-            
-            if (wrappers.count) {
-                return YES;
+                
+                NSMutableArray *wrappers = [NSMutableArray arrayWithCapacity:filteredEvents.count];
+                for (KGOEvent *event in filteredEvents) {
+                    KGOEventWrapper *wrapper = [[[KGOEventWrapper alloc] initWithKGOEvent:event] autorelease];
+                    wrapper.moduleTag = self.moduleTag;
+                    [wrappers addObject:wrapper];
+                }
+                
+                [self.delegate eventsDidChange:wrappers calendar:calendar didReceiveResult:NO];
+                
+                if (wrappers.count) {
+                    return YES;
+                }
             }
         }
     }
@@ -264,11 +269,11 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
 
 - (BOOL)requestEventsForCalendar:(KGOCalendar *)calendar start:(NSDate *)start limit:(NSInteger)limit
 {
-    NSString *timeString = [NSString stringWithFormat:@"%.0f", [start timeIntervalSince1970]];
+    NSString *startString = [NSString stringWithFormat:@"%.0f", [start timeIntervalSince1970]];
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                             calendar.identifier, @"calendar",
                             calendar.type, @"type",
-                            timeString, @"time",
+                            startString, @"start",
                             [NSString stringWithFormat:@"%d", limit], @"limit",
                             nil];
     return [self requestEventsForCalendar:calendar params:params];
@@ -325,8 +330,6 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
 */
 - (void)request:(KGORequest *)request didReceiveResult:(id)result
 {
-    DLog(@"received result: %@", [result description]);
-
 #pragma mark Request - groups
     if (request == _groupsRequest) {
 

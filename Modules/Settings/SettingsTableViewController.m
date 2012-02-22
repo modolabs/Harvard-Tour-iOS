@@ -126,11 +126,11 @@
         NSDictionary *dictionary = [[KGORequestManager sharedManager] sessionInfo];
         NSString *name = [[dictionary dictionaryForKey:@"user"] nonemptyStringForKey:@"name"];
         if (name) {
-            cellTitle = [NSString stringWithFormat:NSLocalizedString(@"You are signed in as %@", nil), name];
+            cellTitle = [NSString stringWithFormat:NSLocalizedString(@"SETTINGS_SIGNED_IN_AS_%@", @"You are signed in as %@"), name];
         } else {
-            cellTitle = NSLocalizedString(@"You are signed in anonymously", nil);
+            cellTitle = NSLocalizedString(@"SETTINGS_SIGNED_IN_ANONYMOUSLY", @"You are signed in anonymously");
         }
-        cellSubtitle = NSLocalizedString(@"Tap to sign out", nil);
+        cellSubtitle = NSLocalizedString(@"SETTINGS_TAP_TO_SIGN_OUT", @"Tap to sign out");
 
     } else {
         
@@ -254,7 +254,7 @@
         }
         
         if ((isPrimaryModuleSection || isSecondaryModuleSection) && !editButton) {
-            NSString *title = NSLocalizedString(@"Edit", @"module reordering enablement button");
+            NSString *title = NSLocalizedString(@"SETTINGS_MODULE_ORDER_EDIT_BUTTON", @"Edit");
             editButton = [UIButton genericButtonWithTitle:title];
             editButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
             CGRect frame = editButton.frame;
@@ -279,8 +279,8 @@
 
 - (void)editModuleButtonPressed:(id)sender
 {
-    NSString *editTitle = NSLocalizedString(@"Edit", @"module reordering button");
-    NSString *doneTitle = NSLocalizedString(@"Done", @"module reordering button");
+    NSString *editTitle = NSLocalizedString(@"SETTINGS_MODULE_ORDER_EDIT_BUTTON", @"Edit");
+    NSString *doneTitle = NSLocalizedString(@"SETTINGS_MODULE_ORDER_DONE_BUTTON", @"Done");
     
     // only allow one section to be edited at a time
     if ((sender == _primaryEditButton && _isEditingPrimary)
@@ -386,11 +386,11 @@
     if ([key isEqualToString:KGOUserSettingKeyLogin]) {
         [[KGORequestManager sharedManager] logoutKurogoServer];
     } else if ([key isEqualToString:KGOUserSettingKeyResetApp]) {
-        UIAlertView *av = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Reset App", nil)
-                                                      message:NSLocalizedString(@"Tapping OK will delete all cached data and saved preferences", nil)
+        UIAlertView *av = [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"SETTINGS_RESET_APP", @"Reset App")
+                                                      message:NSLocalizedString(@"SETTINGS_RESET_APP_WARNING", @"Tapping OK will delete all cached data and saved preferences")
                                                      delegate:self
-                                            cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-                                            otherButtonTitles:NSLocalizedString(@"OK", nil), nil] autorelease];
+                                            cancelButtonTitle:NSLocalizedString(@"COMMON_CANCEL", @"Cancel")
+                                            otherButtonTitles:NSLocalizedString(@"COMMON_OK", @"OK"), nil] autorelease];
         [av show];
         
     } else if (![key isEqualToString:KGOUserSettingKeyPrimaryModules] && ![key isEqualToString:KGOUserSettingKeySecondaryModules]) {

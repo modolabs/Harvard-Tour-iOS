@@ -126,7 +126,7 @@
     }
 
     // set up search bar
-    _searchBar.placeholder = NSLocalizedString(@"Map Search Placeholder", nil);
+    _searchBar.placeholder = NSLocalizedString(@"MAP_SEARCH_PLACEHOLDER", @"Map Search Placeholder");
 	_searchController = [[KGOSearchDisplayController alloc] initWithSearchBar:_searchBar delegate:self contentsController:self];
     if (self.searchTerms) {
         _searchBar.text = self.searchTerms;
@@ -297,7 +297,7 @@
 
 - (IBAction)settingsButtonPressed {
 	MapSettingsViewController *vc = [[[MapSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
-    vc.title = NSLocalizedString(@"Map Settings", nil);
+    vc.title = NSLocalizedString(@"MAP_SETTINGS_TITLE", @"Map Settings");
     vc.view.backgroundColor = [[KGOTheme sharedTheme] backgroundColorForApplication];
     
     UINavigationController *navC = [[[UINavigationController alloc] initWithRootViewController:vc] autorelease];
@@ -401,7 +401,7 @@
     } else {
         DLog(@"distance %.1f is out of bounds", [_userLocation distanceFromLocation:location]);
         
-        NSString *message = NSLocalizedString(@"Cannot show your location because you are too far away", @"map home screen geo button");
+        NSString *message = NSLocalizedString(@"MAP_TOO_FAR_ALERT_MESSAGE", @"Cannot show your location because you are too far away");
         UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:nil
                                                              message:message
                                                             delegate:nil

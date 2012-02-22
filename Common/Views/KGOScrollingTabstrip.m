@@ -174,7 +174,6 @@ NSInteger const kBookmarkButtonIndex = 8765913;
 // TODO: get config values for tabstrip
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
     if (!_backgroundImageView) {
         UIImage *backgroundImage = [UIImage imageWithPathName:@"common/scrolltabs-background-opaque.png"];
         _backgroundImageView = [[[UIImageView alloc] initWithImage:[backgroundImage stretchableImageWithLeftCapWidth:0 topCapHeight:0]] autorelease];
@@ -208,13 +207,17 @@ NSInteger const kBookmarkButtonIndex = 8765913;
     }
     [allButtons addObjectsFromArray:_buttons];
     
+    NSArray *oldButtons = [_contentView subviews];
+    UIView *oldButton = nil;
+    for (oldButton in oldButtons) {
+        [oldButton removeFromSuperview];
+    }
+    [_contentView setFrame:CGRectMake(0, 0, 320, 44)];
+    
     for (UIButton *aButton in allButtons) {
         aButton.frame = CGRectMake(xOffset, aButton.frame.origin.y, aButton.frame.size.width, aButton.frame.size.height);
         xOffset += aButton.frame.size.width + SCROLL_TAB_HORIZONTAL_MARGIN;
-        if (![aButton isDescendantOfView:_contentView]) {
-            [_contentView addSubview:aButton];
-        }
-        
+        [_contentView addSubview:aButton];
         if (_contentView.frame.size.width < xOffset) {
             _contentView.frame = CGRectMake(_contentView.frame.origin.x, _contentView.frame.origin.y, xOffset, _contentView.frame.size.height);
             _scrollView.contentSize = _contentView.frame.size;
@@ -255,6 +258,13 @@ NSInteger const kBookmarkButtonIndex = 8765913;
         
         // only do this if we start the scroller in a different position
         //[self showHideScrollButtons];
+    } else {
+        if (_leftScrollButton) {
+            _leftScrollButton.hidden = YES;
+        }
+        if (_rightScrollButton) {
+            _rightScrollButton.hidden = YES;
+        }
     }
     
     if (self.searchBar) {

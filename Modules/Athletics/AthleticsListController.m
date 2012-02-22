@@ -61,11 +61,14 @@
 {
     [super viewDidLoad];
     self.dataManager.delegate = self;
+    self.dataManager.currentCategories = nil;
+    self.dataManager.currentCategory = nil;
+    self.dataManager.currentStories = nil;
     [self.dataManager fetchCategories];
     [self addTableView:_storyTable];
     //configure these things
     self.navigationItem.title = @"Athletics";
-    self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Headlines", nil) 
+    self.navigationItem.backBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"ATHLETICS_HEADLINES", @"Headlines") 
                                                                              style:UIBarButtonItemStylePlain 
                                                                             target:nil 
                                                                             action:nil] autorelease];
@@ -107,10 +110,10 @@
 - (void)setupTabstrip {
     _navTabs.delegate = self;
     _navTabs.showsSearchButton = YES;
-    [_navTabs addButtonWithTitle:NSLocalizedString(@"Top News", nil)];
-    [_navTabs addButtonWithTitle:NSLocalizedString(@"Men", nil)];
-    [_navTabs addButtonWithTitle:NSLocalizedString(@"Women", nil)];
-    [_navTabs addButtonWithTitle:NSLocalizedString(@"My Sports", nil)];
+    [_navTabs addButtonWithTitle:NSLocalizedString(@"ATHLETICS_TAB_TOP_NEWS", @"Top News")];
+    [_navTabs addButtonWithTitle:NSLocalizedString(@"ATHLETICS_TAB_MEN", @"Men")];
+    [_navTabs addButtonWithTitle:NSLocalizedString(@"ATHLETICS_TAB_WOMEN", @"Women")];
+    [_navTabs addButtonWithTitle:NSLocalizedString(@"ATHLETICS_TAB_MY_SPORTS", @"My Sports")];
     _topNewsTabIndex = 0;
     _menTabIndex = 1;
     _womenTabIndex = 2;
@@ -183,7 +186,7 @@
         [formatter setDateStyle:NSDateFormatterMediumStyle];
         [formatter setTimeStyle:NSDateFormatterShortStyle];
         [self setStatusText:[NSString stringWithFormat:@"%@ %@",
-                             NSLocalizedString(@"Last Updated", nil),
+                             NSLocalizedString(@"ATHLETICS_LAST_UPDATED", @"Last Updated"),
                              [formatter stringFromDate:date]]];
         [formatter release];
     }
@@ -194,7 +197,7 @@
 	_progressView.hidden = NO;
 	_lastUpdateLabel.hidden = YES;
 	_progressView.progress = value;
-    _loadingLabel.text = [NSString stringWithFormat:@"%@",NSLocalizedString(@"Loading", nil)];
+    _loadingLabel.text = NSLocalizedString(@"COMMON_LOADING", @"Loading...");
     _activityView.hidden = NO;
     _activityView.alpha = 1.0;
     
@@ -207,7 +210,7 @@
 - (void)dataController:(AthleticsDataController *)controller didFailWithCategoryId:(NSString *)categoryId
 {
     if([self.activeCategoryId isEqualToString:categoryId]) {
-        [self setStatusText:NSLocalizedString(@"Update failed", @"news story update failed")];
+        [self setStatusText:NSLocalizedString(@"ATHLETICS_UPDATE_FAILED", @"Update failed")];
     }
 }
 
@@ -282,7 +285,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if (self.stories.count == 0 && [self.activeCategoryId isEqualToString:@"3"]) {
         UILabel *nullLabel = [[UILabel alloc] initWithFrame:tableView.frame];
-        nullLabel.text = NSLocalizedString(@"To save a favorite, click the star icon while viewing a sport", nil);
+        nullLabel.text = NSLocalizedString(@"ATHLETICS_BOOKMARK_INSTRUCTIONS", @"To save a favorite, click the star icon while viewing a sport");
         nullLabel.font = [UIFont boldSystemFontOfSize:16];
         nullLabel.numberOfLines = 2;
         nullLabel.textAlignment = UITextAlignmentCenter;
@@ -325,7 +328,7 @@
             cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                            reuseIdentifier:loadMoreIdentifier] autorelease];
         }
-        cell.textLabel.text = NSLocalizedString(@"Load more stories", @"new story list");
+        cell.textLabel.text = NSLocalizedString(@"ATHLETICS_LOAD_MORE_STORIES", @"Load more stories");
         cell.textLabel.textAlignment = UITextAlignmentCenter;
         cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
         cell.textLabel.textAlignment = UITextAlignmentCenter;

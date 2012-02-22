@@ -340,7 +340,7 @@ NSString * const KGOUserSettingKeyServer = @"ServerSelection";
 #ifdef DEBUG
         KGOUserSetting *serverSetting = [[[KGOUserSetting alloc] init] autorelease];
         [serverSetting _setKey:KGOUserSettingKeyServer];
-        [serverSetting _setTitle:NSLocalizedString(@"Server", @"heading for server selection in settings")];
+        [serverSetting _setTitle:NSLocalizedString(@"CORE_SETTINGS_SERVER_TITLE", @"Server")];
         [serverSetting _setUnrestricted:NO];
         
         NSArray *configTitles = [NSArray arrayWithObjects:

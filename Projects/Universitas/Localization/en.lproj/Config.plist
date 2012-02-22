@@ -112,7 +112,7 @@
 		</dict>
 		<dict>
 			<key>id</key>
-			<string>fullweb</string>
+			<string>url</string>
 			<key>payload</key>
 			<dict>
 				<key>url</key>
@@ -124,21 +124,6 @@
 			<string>fullweb</string>
 			<key>title</key>
 			<string>Full Website</string>
-		</dict>
-		<dict>
-			<key>id</key>
-			<string>fullweb</string>
-			<key>payload</key>
-			<dict>
-				<key>url</key>
-				<string>http://m.modolabs.com</string>
-			</dict>
-			<key>secondary</key>
-			<true/>
-			<key>tag</key>
-			<string>mobileweb</string>
-			<key>title</key>
-			<string>Mobile Website</string>
 		</dict>
 		<dict>
 			<key>id</key>
@@ -158,9 +143,9 @@
 			<key>APIPath</key>
 			<string>rest</string>
 			<key>Host</key>
-			<string>www.athletics.com</string>
+			<string>build.modolabs.com</string>
 			<key>PathExtension</key>
-			<string></string>
+			<string>public/master</string>
 			<key>UseHTTPS</key>
 			<false/>
 		</dict>

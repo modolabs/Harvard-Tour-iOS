@@ -35,7 +35,7 @@ federatedSearchResults;
 
     _searchBar = [[KGOSearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 44)];
     _searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	_searchBar.placeholder = NSLocalizedString(@"Search", nil);
+	_searchBar.placeholder = NSLocalizedString(@"PEOPLE_SEARCH_PLACEHOLDER", @"Search");
 
     if (!_searchController) {
         _searchController = [[KGOSearchDisplayController alloc] initWithSearchBar:self.searchBar delegate:self contentsController:self];
@@ -49,7 +49,7 @@ federatedSearchResults;
 	self.tableView = [self addTableViewWithFrame:frame style:UITableViewStyleGrouped];
     
     // search hint
-    NSString *searchHints = NSLocalizedString(@"Tip: You can search above by a person's first or last name or email address.", nil);
+    NSString *searchHints = NSLocalizedString(@"PEOPLE_SEARCH_TIP", @"Tip: You can search above by a person's first or last name or email address.");
 	UIFont *hintsFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyBodyText];
     KGOLabel *hintsLabel = [KGOLabel multilineLabelWithText:searchHints font:hintsFont width:self.tableView.frame.size.width - 30];
     hintsLabel.frame = CGRectMake(15, 5, hintsLabel.frame.size.width, hintsLabel.frame.size.height);
@@ -187,7 +187,7 @@ federatedSearchResults;
     // making this button into a cell assumes that this table is being created as a grouped table view
     if (indexPath.section == 2) {
         UIFont *font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
-        NSString *title = NSLocalizedString(@"Clear Recents", nil);
+        NSString *title = NSLocalizedString(@"PEOPLE_CLEAR_RECENTS", @"Clear Recents");
         CGSize size = [title sizeWithFont:font];
         
         // 20 is internal padding of grouped table view
@@ -277,7 +277,7 @@ federatedSearchResults;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == 1) {
-        return NSLocalizedString(@"Recently Viewed", nil);
+        return NSLocalizedString(@"PEOPLE_RECENTLY_VIEWED", @"Recently Viewed");
     }
     return nil;
 }
@@ -327,17 +327,17 @@ federatedSearchResults;
 
 - (void)promptToClearRecents
 {
-	UIActionSheet *sheet = [[[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Clear Recents?", nil)
+	UIActionSheet *sheet = [[[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"PEOPLE_CLEAR_RECENTS_CONFIRMATION", @"Clear Recents?")
                                                         delegate:self
-                                               cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
-                                          destructiveButtonTitle:NSLocalizedString(@"Clear", nil)
+                                               cancelButtonTitle:NSLocalizedString(@"COMMON_CANCEL", @"Cancel")
+                                          destructiveButtonTitle:NSLocalizedString(@"PEOPLE_ACTION_SHEET_CLEAR", @"Clear")
                                                otherButtonTitles:nil] autorelease];
     [sheet showInView:self.view];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-	if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"Clear", nil)]) {
+	if ([[actionSheet buttonTitleAtIndex:buttonIndex] isEqualToString:NSLocalizedString(@"PEOPLE_ACTION_SHEET_CLEAR", @"Clear")]) {
         [_recentlyViewed release];
         _recentlyViewed = nil;
 		[KGOPersonWrapper clearRecentlyViewed];

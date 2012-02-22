@@ -85,8 +85,8 @@ NSString * const KGODataModelNameCalendar = @"Calendar";
         if ([pageName isEqualToString:LocalPathPageNameCategoryList]) {
             calendarVC.browseMode = KGOCalendarBrowseModeCategories;
         } else {
-            calendarVC.browseMode = KGOCalendarBrowseModeDay;
-            //calendarVC.browseMode = KGOCalendarBrowseModeLimit;
+            //calendarVC.browseMode = KGOCalendarBrowseModeDay;
+            calendarVC.browseMode = KGOCalendarBrowseModeLimit;
         }
         
         calendarVC.dataManager = self.dataManager;
@@ -110,7 +110,7 @@ NSString * const KGODataModelNameCalendar = @"Calendar";
             calendarVC.currentCalendar = calendar;
             calendarVC.title = calendar.title;
         } else {
-            calendarVC.title = NSLocalizedString(@"Events", nil);
+            calendarVC.title = NSLocalizedString(@"CALENDAR_GENERIC_PAGE_TITLE", @"Events");
         }
 
         vc = calendarVC;

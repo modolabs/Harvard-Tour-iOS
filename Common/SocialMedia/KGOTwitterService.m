@@ -157,7 +157,7 @@ static NSString * const TwitterServiceName = @"Twitter";
 
 - (NSString *)serviceDisplayName
 {
-    return NSLocalizedString(@"Twitter", nil);
+    return NSLocalizedString(@"CORE_SOCIAL_OPTION_TWITTER", @"Twitter");
 }
 
 #pragma mark TwitterViewControllerDelegate
@@ -235,20 +235,20 @@ static NSString * const TwitterServiceName = @"Twitter";
     DLog(@"%@", error);
 	
 	if (error.code == TwitterResponseCodeUnauthorized) {
-		errorTitle = NSLocalizedString(@"Login failed", nil);
-		errorMessage = NSLocalizedString(@"Unable to log in to Twitter, please check your credentials and try again.", nil);
+		errorTitle = NSLocalizedString(@"CORE_TWITTER_LOGIN_FAILED_TITLE", @"Login failed");
+		errorMessage = NSLocalizedString(@"CORE_TWITTER_LOGIN_FAILED_MESSAGE", @"Unable to log in to Twitter, please check your credentials and try again.");
 		
 		[self signout];
 		
 	} else {
-		errorTitle = NSLocalizedString(@"Connection Failed", nil);
-		errorMessage = NSLocalizedString(@"Unable to connect to Twitter, please try again later.", nil);
+		errorTitle = NSLocalizedString(@"CORE_TWITTER_CONNECTION_FAILED_TITLE", @"Connection Failed");
+		errorMessage = NSLocalizedString(@"CORE_TWITTER_CONNECTION_FAILED_MESSAGE", @"Unable to connect to Twitter, please try again later.");
 	}
 	
 	UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:errorTitle 
 														 message:errorMessage
 														delegate:alertViewDelegate
-											   cancelButtonTitle:NSLocalizedString(@"OK", nil) 
+											   cancelButtonTitle:NSLocalizedString(@"COMMON_OK", @"OK") 
 											   otherButtonTitles:nil] autorelease];
 	[alertView show];
 }

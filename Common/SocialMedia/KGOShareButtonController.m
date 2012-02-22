@@ -59,7 +59,7 @@
         
         NSString *cancelTitle = nil;
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            cancelTitle = NSLocalizedString(@"Cancel", @"share action sheet");
+            cancelTitle = NSLocalizedString(@"COMMON_CANCEL", @"Cancel");
         }
         UIActionSheet *shareSheet = [[UIActionSheet alloc] initWithTitle:self.actionSheetTitle
                                                                 delegate:self
@@ -76,7 +76,11 @@
     }
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex < 0) {
+        return;
+    }
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         if (buttonIndex == [actionSheet cancelButtonIndex]) {

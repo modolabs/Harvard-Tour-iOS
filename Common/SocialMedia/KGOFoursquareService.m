@@ -78,7 +78,7 @@
 
 - (NSString *)serviceDisplayName
 {
-    return NSLocalizedString(@"foursquare", nil);
+    return NSLocalizedString(@"CORE_FOURSQUARE", @"foursquare");
 }
 
 @end

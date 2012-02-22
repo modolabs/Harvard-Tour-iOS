@@ -41,7 +41,7 @@ moduleTag;
     } else {
         NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
         [dateFormatter setDateStyle:NSDateFormatterShortStyle];
-        return [NSString stringWithFormat:@"%@ %@", [dateFormatter stringFromDate:self.startDate], NSLocalizedString(@"All day", nil)];
+        return [NSString stringWithFormat:@"%@ %@", [dateFormatter stringFromDate:self.startDate], NSLocalizedString(@"CALENDAR_ALL_DAY_SUBTITLE", @"All day")];
     }
 }
 
@@ -391,7 +391,6 @@ moduleTag;
     
     NSMutableSet *attendees = [NSMutableSet set];
     NSMutableSet *organizers = [NSMutableSet set];
-    DLog(@"%d participants", _kgoEvent.particpants.count);
     [_kgoEvent.particpants enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
         KGOEventParticipantRelation *relation = (KGOEventParticipantRelation *)obj;
         KGOEventParticipant *participant = relation.participant;
