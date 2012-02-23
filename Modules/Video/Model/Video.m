@@ -54,10 +54,16 @@
 @dynamic date;
 @dynamic sortOrder;
 @dynamic bookmarked;
+@dynamic downloaded;
 
 @synthesize moduleTag;
+@synthesize thumbView;
 
-- (void)dealloc {
+- (void)dealloc
+{
+    self.moduleTag = nil;
+    self.thumbView.delegate = nil;
+    self.thumbView = nil;
 
     [super dealloc];
 }
@@ -163,5 +169,12 @@
                                         params:params];
 }
 
+- (void)willSave
+{
+    if ([self isDeleted]) {
+        DLog(@"video \"%@\" is deleted", self.title);
+        self.thumbView.delegate = nil;
+    }
+}
 
 @end

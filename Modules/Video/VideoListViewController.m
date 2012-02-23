@@ -158,6 +158,8 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 
     Video *video = [self.videos objectAtIndex:indexPath.row];
     cell.thumbView.delegate = video;
+    video.thumbView = cell.thumbView;
+
     cell.titleLabel.text = video.title;
     cell.subtitleLabel.text = video.subtitle;
     
