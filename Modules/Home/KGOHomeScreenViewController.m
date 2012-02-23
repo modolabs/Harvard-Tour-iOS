@@ -552,7 +552,7 @@
         
         anIcon.enabled = aModule.enabled;
         
-        DLog(@"created home screen icon for %@: %@", aModule.tag, [anIcon description]);
+        DLog(@"%@ icon: %.0f x %.0f", aModule.tag, anIcon.frame.size.width, anIcon.frame.size.height);
     }
     
     return icons;
