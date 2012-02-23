@@ -2,7 +2,7 @@
 #import "KGORequestManager.h"
 #import "VideoDataManager.h"
 
-@interface VideoModule : KGOModule {
+@interface VideoModule : KGOModule <VideoDataDelegate> {
 
 }
 

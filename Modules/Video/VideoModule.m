@@ -15,7 +15,7 @@ NSString * const KGODataModelNameVideo = @"Video";
     [super willLaunch];
     if (!self.dataManager) {
         self.dataManager = [[[VideoDataManager alloc] init] autorelease];
-        self.dataManager.moduleTag = self.tag;
+        self.dataManager.module = self;
     }
 }
 
@@ -84,26 +84,22 @@ NSString * const KGODataModelNameVideo = @"Video";
     return YES;
 }
 
+- (void)dataManager:(VideoDataManager *)manager didReceiveVideos:(NSArray *)videos
+{
+    [self.searchDelegate receivedSearchResults:videos forSource:self.tag];
+}
+
 - (void)performSearchWithText:(NSString *)searchText 
                        params:(NSDictionary *)params 
                      delegate:(id<KGOSearchResultsHolder>)delegate {
     
     self.searchDelegate = delegate;
-    
-    // TODO: Get section
-    __block VideoModule *blockSelf = self;
-    [self.dataManager requestSearchOfSection:self.searchSection 
-                                       query:searchText
-                                thenRunBlock:^(id result) {
-                                    if ([result isKindOfClass:[NSArray class]])
-                                    {
-                                        [blockSelf.searchDelegate receivedSearchResults:result
-                                                                              forSource:blockSelf.tag];
-                                    }
-                                }];
+    self.dataManager.delegate = self;
+    [self.dataManager searchSection:self.searchSection forQuery:searchText];
 }
 
 - (void)dealloc {
+    dataManager.delegate = nil;
     [dataManager release];
     [super dealloc];
 }

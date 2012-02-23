@@ -9,6 +9,7 @@
 @class ThumbnailTableViewCell;
 
 @interface VideoListViewController : UITableViewController <
+VideoDataDelegate,
 KGOScrollingTabstripSearchDelegate> {
 
     BOOL showingBookmarks;

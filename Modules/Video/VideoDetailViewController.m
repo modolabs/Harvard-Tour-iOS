@@ -118,13 +118,11 @@ static const CGFloat extraScrollViewHeight = 100.0f;
 
 - (void)loadView {
     [super loadView];
+
+    self.dataManager.delegate = self;
     
     _shareController = [[KGOShareButtonController alloc] initWithContentsController:self];
     _shareController.shareTypes = KGOShareControllerShareTypeEmail | KGOShareControllerShareTypeFacebook | KGOShareControllerShareTypeTwitter;
-    
-    if (self.section) {
-        [self requestVideoForDetailView];
-    }
     
     self.scrollView = [[[UIScrollView alloc] initWithFrame:self.view.bounds] autorelease];
     self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -142,19 +140,22 @@ static const CGFloat extraScrollViewHeight = 100.0f;
     // when coming from federated search we don't know which section we're in
     if (self.section) {
         // TODO: don't request this every time we're loaded
-        [self requestVideoForDetailView];
+        [self.dataManager requestVideoForSection:self.section videoID:self.video.videoID];
     }
     
     [self.view addSubview:scrollView];
 }
 
-- (void)requestVideoForDetailView {
-    __block VideoDetailViewController *blockSelf = self;
-    [self.dataManager requestVideoForDetailSection:self.section
-                                        andVideoID:(NSString *)self.video.videoID 
-                                      thenRunBlock:^(id result) {
-                                          [blockSelf setDescription];
-                                      }];
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.dataManager.delegate = self;
+}
+
+#pragma mark VideoDataDelegate
+
+- (void)dataManager:(VideoDataManager *)manager didReceiveVideo:(Video *)video
+{
+    [self setDescription];
 }
 
 - (void)setDescription
@@ -173,9 +174,6 @@ static const CGFloat extraScrollViewHeight = 100.0f;
         [scrollView addSubview:descriptionLabel];
 
     } else {
-        if ([video isFault]) {
-            return;
-        }
         descriptionLabel.text = video.videoDescription;
         CGRect rect = descriptionLabel.frame;
         rect.size.height = [descriptionLabel.text sizeWithFont:font
@@ -259,7 +257,7 @@ static const CGFloat extraScrollViewHeight = 100.0f;
 
 
 - (void)dealloc {
-    [self.dataManager removeResponseBlockForRequestPath:@"detail"];
+    self.dataManager.delegate = nil;
     [dataManager release];
     [player release];
     [video release];

@@ -3,98 +3,22 @@
 #import "Foundation+KGOAdditions.h"
 #import "Video.h"
 #import "VideoTag.h"
+#import "VideoModule.h"
 
 NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
 
 #pragma mark Private methods
 
-@interface VideoDataManager (Private)
-
-- (void)storeResult:(id)result forRequest:(KGORequest *)request;
-- (BOOL)isRequestInProgressForPath:(NSString *)path;
-
-@end
-
-@implementation VideoDataManager (Private)
-
-- (void)storeResult:(id)result forRequest:(KGORequest *)request {
-    if ([request.path isEqualToString:@"sections"]) {
-        self.sections = result;
-        [[NSUserDefaults standardUserDefaults] setObject:self.sections
-                                                  forKey:KurogoVideoSectionsArrayKey];
-    }
-    else if ([request.path isEqualToString:@"videos"]) {
-        // queue unneeded videos to be deleted.
-        // if new results still contain videos with the same id, we will take them out of the remove queue
-        NSMutableDictionary *removedVideos = [NSMutableDictionary dictionary];
-        [self.videos enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            Video *video = (Video *)obj;
-            [removedVideos setObject:video forKey:video.videoID];
-        }];
-        self.videos = [NSMutableArray array];
-        
-        NSInteger order = 0;
-        for (NSDictionary *dict in result) {
-            Video *video = [Video videoWithDictionary:dict];
-            if (video) {
-                video.moduleTag = self.moduleTag;
-                video.source = [request.getParams objectForKey:@"section"];
-                [self.videos addObject:video];
-                video.sortOrder = [NSNumber numberWithInt:order++];
-                [removedVideos removeObjectForKey:video.videoID];
-            }
-        }
-        
-        [removedVideos enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            [[CoreDataManager sharedManager] deleteObject:obj];
-        }];
-        
-        [[CoreDataManager sharedManager] saveData];
-    }
-    else if ([request.path isEqualToString:@"search"]) {
-        // Clear old stuff.
-        [[CoreDataManager sharedManager] deleteObjects:self.videosFromCurrentSearch];
-        [self.videosFromCurrentSearch removeAllObjects];
-        
-        for (NSDictionary *dict in result) {
-            Video *video = [Video videoWithDictionary:dict];
-            video.moduleTag = self.moduleTag;
-            video.source = [NSString stringWithFormat:@"search: %@|%@", 
-                            [request.getParams objectForKey:@"q"],
-                            [request.getParams objectForKey:@"section"]];
-            [self.videosFromCurrentSearch addObject:video];
-        }
-    }
-    else if ([request.path isEqualToString:@"detail"]) {
-        Video *video = [Video videoWithDictionary:result];
-        video.moduleTag = self.moduleTag;
-        video.source = [request.getParams objectForKey:@"section"];
-        self.detailVideo = video;
-        [[CoreDataManager sharedManager] saveData];
-    }
-}
-
-- (BOOL)isRequestInProgressForPath:(NSString *)path {
-    if ([self.responseBlocksForRequestPaths objectForKey:path])
-    {
-        return YES;
-    }
-    return NO;
-}
-
-@end
-
 
 @implementation VideoDataManager
 
-@synthesize responseBlocksForRequestPaths;
-@synthesize moduleTag;
+@synthesize module;
 @synthesize sections;
-@synthesize pendingRequests;
 @synthesize videos;
 @synthesize videosFromCurrentSearch;
-@synthesize detailVideo; 
- 
+@synthesize detailVideo;
+@synthesize delegate;
+
 
 #pragma mark NSObject
 
@@ -102,57 +26,66 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
 {
     self = [super init];
 	if (self) {
-        self.responseBlocksForRequestPaths = [NSMutableDictionary dictionaryWithCapacity:3];
-        self.pendingRequests = [NSMutableSet setWithCapacity:3];
         self.videos = [NSMutableArray arrayWithCapacity:30];
         self.videosFromCurrentSearch = [NSMutableArray arrayWithCapacity:30];
     }
 	return self;
 }
 
-- (void)dealloc {    
+- (void)dealloc {
+    [_sectionsRequest cancel];
+    [_videosRequest cancel];
+    [_detailRequest cancel];
+    
     [videosFromCurrentSearch release];
-    [videos release];
-    [responseBlocksForRequestPaths release];
-    [moduleTag release];
+    [module release];
     [sections release];
-    [pendingRequests release];
     [detailVideo release];
     [super dealloc];
 }
 
 #pragma mark Public
 
-
-- (BOOL)requestSectionsThenRunBlock:(VideoDataRequestResponse)responseBlock {
+- (BOOL)requestSections
+{
     BOOL succeeded = NO;
     
-    if ([self isRequestInProgressForPath:@"sections"] || ![[KGORequestManager sharedManager] isReachable]) {
+    if (_sectionsRequest) {
+        return succeeded;
+    }
+    
+    if (![[KGORequestManager sharedManager] isReachable]) {
         // Get last saved sections.
         self.sections = [[NSUserDefaults standardUserDefaults] objectForKey:KurogoVideoSectionsArrayKey];        
-        responseBlock(self.sections);
+        if (self.sections && [self.delegate respondsToSelector:@selector(dataManager:didReceiveSections:)]) {
+            [self.delegate dataManager:self didReceiveSections:self.sections];
+        }
+
     } else {
-        KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self
-                                                                              module:self.moduleTag
-                                                                                path:@"sections"
-                                                                             version:1
-                                                                              params:nil];
-        request.expectedResponseType = [NSArray class];
-        [self.responseBlocksForRequestPaths setObject:[[responseBlock copy] autorelease] 
-                                               forKey:request.path];
-        [self.pendingRequests addObject:request];
-        [request connect];
-        succeeded = YES;
+        _sectionsRequest = [[KGORequestManager sharedManager] requestWithDelegate:self
+                                                                           module:self.module.tag
+                                                                             path:@"sections"
+                                                                          version:1
+                                                                           params:nil];
+        _sectionsRequest.expectedResponseType = [NSArray class];
+
+        succeeded = [_sectionsRequest connect];
     } 
     
     return succeeded;
 }
 
-- (BOOL)requestVideosForSection:(NSString *)section thenRunBlock:(VideoDataRequestResponse)responseBlock {
-    
-    
+- (BOOL)requestVideosForSection:(NSString *)section
+{
     BOOL succeeded = NO;
-    if ([self isRequestInProgressForPath:@"videos"] || ![[KGORequestManager sharedManager] isReachable]) {
+    
+    if (_videosRequest) {
+        [_videosRequest cancel];
+    }
+    
+    if (![[KGORequestManager sharedManager] isReachable]) {
+        
+        _videosRequest = nil;
         
         // Get last saved videos for this section.
         NSPredicate *pred = [NSPredicate predicateWithFormat:@"source == %@", section];
@@ -163,55 +96,60 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
         if (fetchedVideos) {
             [self.videos addObjectsFromArray:fetchedVideos];
         }
-        responseBlock(self.videos);
+        
+        if ([self.delegate respondsToSelector:@selector(dataManager:didReceiveVideos:)]) {
+            [self.delegate dataManager:self didReceiveVideos:self.videos];
+        }
+
     }    
     else {
         NSDictionary *params = [NSDictionary dictionaryWithObject:section forKey:@"section"];
-        KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self 
-                                                                              module:self.moduleTag 
-                                                                                path:@"videos"
-                                                                             version:1
-                                                                              params:params];
-        request.expectedResponseType = [NSArray class];
+        _videosRequest = [[KGORequestManager sharedManager] requestWithDelegate:self
+                                                                        module:self.module.tag 
+                                                                          path:@"videos"
+                                                                       version:1
+                                                                        params:params];
+        _videosRequest.expectedResponseType = [NSArray class];
         
-        [self.responseBlocksForRequestPaths setObject:[[responseBlock copy] autorelease]
-                                               forKey:request.path];
-        [self.pendingRequests addObject:request];
-        [request connect];
-        succeeded = YES;
+        succeeded = [_videosRequest connect];
     }    
     
     return succeeded;
 }
 
-- (BOOL)requestVideoForDetailSection:(NSString *)section andVideoID:(NSString *)videoID 
-                        thenRunBlock:(VideoDataRequestResponse)responseBlock
+// TODO: make this method also fetch from core data in offline conditions
+- (BOOL)requestVideoForSection:(NSString *)section videoID:(NSString *)videoID
 {
     BOOL succeeded = NO;
+    
+    if (_detailRequest) {
+        [_detailRequest cancel];
+    }
+    
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                             section, @"section", videoID, @"videoid", nil];
     
-    KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self 
-                                                                          module:self.moduleTag 
-                                                                            path:@"detail"
-                                                                         version:1
-                                                                          params:params];
-    request.expectedResponseType = [NSDictionary class];
-    [self.responseBlocksForRequestPaths setObject:[[responseBlock copy] autorelease]
-                                           forKey:request.path];
-    [self.pendingRequests addObject:request];
-    if([request connect])
-        succeeded = YES;
-    
+    _detailRequest = [[KGORequestManager sharedManager] requestWithDelegate:self
+                                                                    module:self.module.tag 
+                                                                      path:@"detail"
+                                                                   version:1
+                                                                    params:params];
+    _detailRequest.expectedResponseType = [NSDictionary class];
+
+    succeeded = [_detailRequest connect];
+
     return succeeded;
 }
 
-- (BOOL)requestSearchOfSection:(NSString *)section 
-                         query:(NSString *)query 
-                  thenRunBlock:(VideoDataRequestResponse)responseBlock {
+- (BOOL)searchSection:(NSString *)section forQuery:(NSString *)query
+{
     BOOL succeeded = NO;
     
-    if ([self isRequestInProgressForPath:@"search"] || ![[KGORequestManager sharedManager] isReachable]) {
+    if (_videosRequest) {
+        [_videosRequest cancel];
+    }
+    
+    if (![[KGORequestManager sharedManager] isReachable]) {
         // Get last searched-for videos.
         NSPredicate *pred = [NSPredicate predicateWithFormat:
                              @"source == 'search: %@|%@'", query, section];
@@ -220,25 +158,24 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
         if (fetchedVideos) {
             [self.videosFromCurrentSearch addObjectsFromArray:fetchedVideos];
         }
-        responseBlock(self.videosFromCurrentSearch);
+        
+        if ([self.delegate respondsToSelector:@selector(dataManager:didReceiveVideos:)]) {
+            [self.delegate dataManager:self didReceiveVideos:self.videosFromCurrentSearch];
+        }
     }    
     else {
         NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
                                 query, @"q",
                                 section, @"section",
                                 nil];
-        KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:self 
-                                                                              module:self.moduleTag 
-                                                                                path:@"search"
-                                                                             version:1
-                                                                              params:params];
-        request.expectedResponseType = [NSArray class];
+        _videosRequest = [[KGORequestManager sharedManager] requestWithDelegate:self 
+                                                                         module:self.module.tag 
+                                                                           path:@"search"
+                                                                        version:1
+                                                                         params:params];
+        _videosRequest.expectedResponseType = [NSArray class];
         
-        [self.responseBlocksForRequestPaths setObject:[[responseBlock copy] autorelease]
-                                               forKey:request.path];
-        [self.pendingRequests addObject:request];
-        [request connect];
-        succeeded = YES;
+        succeeded = [_videosRequest connect];
     } 
     return succeeded;
 }
@@ -264,42 +201,97 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
 
 
 #pragma mark KGORequestDelegate
+
 - (void)requestWillTerminate:(KGORequest *)request
 {
-    [self.responseBlocksForRequestPaths removeObjectForKey:request.path];
-    [self.pendingRequests removeObject:request];
-}
-
-- (void)request:(KGORequest *)request didFailWithError:(NSError *)error
-{
-    [[KGORequestManager sharedManager] showAlertForError:error request:request];
+    if (request == _sectionsRequest) {
+        _sectionsRequest = nil;
+    } else if (request == _detailRequest) {
+        _detailRequest = nil;
+    } else if (request == _videosRequest) {
+        _videosRequest = nil;
+    }
 }
 
 - (void)request:(KGORequest *)request didReceiveResult:(id)result
 {
-    [self storeResult:result forRequest:request];
-    
-    VideoDataRequestResponse responseBlock = [self.responseBlocksForRequestPaths objectForKey:request.path];
-    if (responseBlock) {        
-        if ([request.path isEqualToString:@"sections"]) {
-            responseBlock(result);
+    if (request == _sectionsRequest) {
+#pragma mark Request result - sections
+        self.sections = result;
+        [[NSUserDefaults standardUserDefaults] setObject:self.sections
+                                                  forKey:KurogoVideoSectionsArrayKey];
+        
+        if ([self.delegate respondsToSelector:@selector(dataManager:didReceiveSections:)]) {
+            [self.delegate dataManager:self didReceiveSections:self.sections];
         }
-        else if ([request.path isEqualToString:@"videos"]) {
-            responseBlock(self.videos);
-        }
-        else if ([request.path isEqualToString:@"search"]) {
-            responseBlock(self.videosFromCurrentSearch);
-        }
-        else if ([request.path isEqualToString:@"detail"]) {
-            responseBlock(self.detailVideo);
-        }
-    }
-}
 
-- (void)removeResponseBlockForRequestPath:(NSString *)path {
-    if (path) {
-        [self.responseBlocksForRequestPaths removeObjectForKey:path];
+    } else if (request == _detailRequest) {
+#pragma mark Request result - detail
+        Video *video = [Video videoWithDictionary:result];
+        video.moduleTag = self.module.tag;
+        video.source = [request.getParams objectForKey:@"section"];
+        self.detailVideo = video;
+        [[CoreDataManager sharedManager] saveData];
+        
+        
+        if ([self.delegate respondsToSelector:@selector(dataManager:didReceiveVideo:)]) {
+            [self.delegate dataManager:self didReceiveVideo:video];
+        }
+
+    } else if (request == _videosRequest) {
+#pragma mark Request result - videos
+        // queue unneeded videos to be deleted.
+        // if new results still contain videos with the same id, we will take them out of the remove queue
+        NSString *query = [_videosRequest.getParams objectForKey:@"q"];
+        NSMutableArray *activeVideos = nil;
+        NSMutableDictionary *removedVideos = [NSMutableDictionary dictionary];
+        if (!query) {
+            activeVideos = self.videos;;
+        } else {
+            activeVideos = self.videosFromCurrentSearch;
+        }
+        [activeVideos enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            Video *video = (Video *)obj;
+            [removedVideos setObject:video forKey:video.videoID];
+        }];
+        activeVideos = [NSMutableArray array];
+        
+        NSInteger order = 0;
+        for (NSDictionary *dict in result) {
+            Video *video = [Video videoWithDictionary:dict];
+            if (video) {
+                video.moduleTag = self.module.tag;
+
+                NSString *section = [_videosRequest.getParams objectForKey:@"section"];
+                if (query) { // this is a search
+                    video.source = [NSString stringWithFormat:@"search: %@|%@", query, section];
+                } else {
+                    video.source = section;
+                    video.sortOrder = [NSNumber numberWithInt:order++];
+                }
+                
+                [activeVideos addObject:video];
+                [removedVideos removeObjectForKey:video.videoID];
+            }
+        }
+
+        if (query) {
+            self.videosFromCurrentSearch = activeVideos;
+        } else {
+            self.videos = activeVideos;
+        }
+        
+        [removedVideos enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            [[CoreDataManager sharedManager] deleteObject:obj];
+        }];
+        
+        [[CoreDataManager sharedManager] saveData];
+        
+        if ([self.delegate respondsToSelector:@selector(dataManager:didReceiveVideos:)]) {
+            [self.delegate dataManager:self didReceiveVideos:activeVideos];
+        }
     }
+    
 }
 
 @end

@@ -1,40 +1,46 @@
 #import <Foundation/Foundation.h>
 #import "KGORequestManager.h"
-//#import "Reachability.h"
 #import "Video.h"
+
+@class VideoDataManager, VideoModule;
+
+@protocol VideoDataDelegate <NSObject>
+
+@optional
+
+- (void)dataManager:(VideoDataManager *)manager didReceiveSections:(NSArray *)sections;
+- (void)dataManager:(VideoDataManager *)manager didReceiveVideos:(NSArray *)videos;
+- (void)dataManager:(VideoDataManager *)manager didReceiveVideo:(Video *)video;
+
+@end
+
 
 typedef void (^VideoDataRequestResponse)(id result);
 
-@class VideoDataManager; 
-
 @interface VideoDataManager : NSObject<KGORequestDelegate> {
+    
+    KGORequest *_sectionsRequest;
+    KGORequest *_videosRequest;
+    KGORequest *_detailRequest;
     
 }
 
 #pragma mark Public
-- (BOOL)requestSectionsThenRunBlock:(VideoDataRequestResponse)responseBlock;
-
-- (BOOL)requestVideosForSection:(NSString *)section 
-                   thenRunBlock:(VideoDataRequestResponse)responseBlock;
-
-- (BOOL)requestVideoForDetailSection:(NSString *)section andVideoID:(NSString *)videoID 
-                   thenRunBlock:(VideoDataRequestResponse)responseBlock;
-
-- (BOOL)requestSearchOfSection:(NSString *)section 
-                         query:(NSString *)query
-                  thenRunBlock:(VideoDataRequestResponse)responseBlock;
+- (BOOL)requestSections;
+- (BOOL)searchSection:(NSString *)section forQuery:(NSString *)query;
+- (BOOL)requestVideosForSection:(NSString *)section;
+- (BOOL)requestVideoForSection:(NSString *)section videoID:(NSString *)videoID;
 
 - (NSArray *)bookmarkedVideos;
 - (void)pruneVideos; 
-- (void)removeResponseBlockForRequestPath:(NSString *)path;
-// Key: KGORequest. Value: VideoDataRequestResponse.
-@property (nonatomic, retain) NSMutableDictionary *responseBlocksForRequestPaths; 
-@property (nonatomic, retain) NSMutableSet *pendingRequests; 
-@property (nonatomic, retain) ModuleTag *moduleTag;
+
+@property (nonatomic, retain) VideoModule *module;
 @property (nonatomic, retain) NSArray *sections;
 @property (nonatomic, retain) NSMutableArray *videos;
 @property (nonatomic, retain) NSMutableArray *videosFromCurrentSearch;
 @property (nonatomic, retain) Video *detailVideo;
+
+@property (nonatomic, assign) id<VideoDataDelegate> delegate;
 
 
 
