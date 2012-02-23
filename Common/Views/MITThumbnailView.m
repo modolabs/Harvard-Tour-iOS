@@ -133,9 +133,6 @@
     self.imageData = data;
     BOOL validImage = [self displayImage];
     if (validImage) {
-        if ([(NSManagedObject *)self.delegate isFault]) {
-            return;
-        }
         [self.delegate thumbnail:self didLoadData:data];
     }
     
