@@ -14,33 +14,28 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
 
 @synthesize module;
 @synthesize sections;
-@synthesize videos;
-@synthesize videosFromCurrentSearch;
-@synthesize detailVideo;
 @synthesize delegate;
 
 
 #pragma mark NSObject
 
+/*
 - (id)init
 {
     self = [super init];
 	if (self) {
-        self.videos = [NSMutableArray arrayWithCapacity:30];
-        self.videosFromCurrentSearch = [NSMutableArray arrayWithCapacity:30];
     }
 	return self;
 }
+*/
 
 - (void)dealloc {
     [_sectionsRequest cancel];
     [_videosRequest cancel];
     [_detailRequest cancel];
     
-    [videosFromCurrentSearch release];
     [module release];
     [sections release];
-    [detailVideo release];
     [super dealloc];
 }
 
@@ -93,15 +88,11 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
         NSArray *fetchedVideos = [[CoreDataManager sharedManager] objectsForEntity:@"Video" 
                                                                  matchingPredicate:pred
                                                                    sortDescriptors:[NSArray arrayWithObject:sort]];
-        if (fetchedVideos) {
-            [self.videos addObjectsFromArray:fetchedVideos];
-        }
-        
-        if ([self.delegate respondsToSelector:@selector(dataManager:didReceiveVideos:)]) {
-            [self.delegate dataManager:self didReceiveVideos:self.videos];
-        }
 
-    }    
+        if (fetchedVideos && [self.delegate respondsToSelector:@selector(dataManager:didReceiveVideos:)]) {
+            [self.delegate dataManager:self didReceiveVideos:fetchedVideos];
+        }
+    }
     else {
         NSDictionary *params = [NSDictionary dictionaryWithObject:section forKey:@"section"];
         _videosRequest = [[KGORequestManager sharedManager] requestWithDelegate:self
@@ -155,12 +146,9 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
                              @"source == 'search: %@|%@'", query, section];
         NSArray *fetchedVideos = [[CoreDataManager sharedManager] objectsForEntity:@"Video" 
                                                                  matchingPredicate:pred];
-        if (fetchedVideos) {
-            [self.videosFromCurrentSearch addObjectsFromArray:fetchedVideos];
-        }
         
-        if ([self.delegate respondsToSelector:@selector(dataManager:didReceiveVideos:)]) {
-            [self.delegate dataManager:self didReceiveVideos:self.videosFromCurrentSearch];
+        if (fetchedVideos && [self.delegate respondsToSelector:@selector(dataManager:didReceiveVideos:)]) {
+            [self.delegate dataManager:self didReceiveVideos:fetchedVideos];
         }
     }    
     else {
@@ -185,20 +173,6 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"bookmarked == YES"];
     return [[CoreDataManager sharedManager] objectsForEntity:@"Video" matchingPredicate:pred];
 }
-
-
-- (void)pruneVideos
-{
-    NSPredicate *bookmarked = [NSPredicate predicateWithFormat:@"bookmarked == YES"];
-    self.videos = [NSMutableArray arrayWithArray:[self.videos filteredArrayUsingPredicate:bookmarked]];
-    
-    NSPredicate *notBookmarked = [NSPredicate predicateWithFormat:@"bookmarked != YES"];
-    NSArray *nonBookmarkedVideos = [[CoreDataManager sharedManager] objectsForEntity:@"Video"
-                                                                   matchingPredicate:notBookmarked];
-
-    [[CoreDataManager sharedManager] deleteObjects:nonBookmarkedVideos];
-}
-
 
 #pragma mark KGORequestDelegate
 
@@ -230,7 +204,6 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
         Video *video = [Video videoWithDictionary:result];
         video.moduleTag = self.module.tag;
         video.source = [request.getParams objectForKey:@"section"];
-        self.detailVideo = video;
         [[CoreDataManager sharedManager] saveData];
         
         
@@ -243,18 +216,23 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
         // queue unneeded videos to be deleted.
         // if new results still contain videos with the same id, we will take them out of the remove queue
         NSString *query = [_videosRequest.getParams objectForKey:@"q"];
-        NSMutableArray *activeVideos = nil;
-        NSMutableDictionary *removedVideos = [NSMutableDictionary dictionary];
-        if (!query) {
-            activeVideos = self.videos;;
+        NSString *section = [_videosRequest.getParams objectForKey:@"section"];
+
+        NSPredicate *pred = nil;
+        if (query) { // this is a search
+            pred = [NSPredicate predicateWithFormat:@"source == 'search: %@|%@'", query, section];
         } else {
-            activeVideos = self.videosFromCurrentSearch;
+            pred = [NSPredicate predicateWithFormat:@"source == %@", section];
         }
-        [activeVideos enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSArray *fetchedVideos = [[CoreDataManager sharedManager] objectsForEntity:@"Video" 
+                                                                 matchingPredicate:pred];
+        
+        NSMutableDictionary *removedVideos = [NSMutableDictionary dictionary];
+        [fetchedVideos enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             Video *video = (Video *)obj;
             [removedVideos setObject:video forKey:video.videoID];
         }];
-        activeVideos = [NSMutableArray array];
+        NSMutableArray *activeVideos = [NSMutableArray array];
         
         NSInteger order = 0;
         for (NSDictionary *dict in result) {
@@ -262,7 +240,6 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
             if (video) {
                 video.moduleTag = self.module.tag;
 
-                NSString *section = [_videosRequest.getParams objectForKey:@"section"];
                 if (query) { // this is a search
                     video.source = [NSString stringWithFormat:@"search: %@|%@", query, section];
                 } else {
@@ -273,12 +250,6 @@ NSString * const KurogoVideoSectionsArrayKey = @"Kurogo video sections array";
                 [activeVideos addObject:video];
                 [removedVideos removeObjectForKey:video.videoID];
             }
-        }
-
-        if (query) {
-            self.videosFromCurrentSearch = activeVideos;
-        } else {
-            self.videos = activeVideos;
         }
         
         [removedVideos enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {

@@ -32,13 +32,9 @@ typedef void (^VideoDataRequestResponse)(id result);
 - (BOOL)requestVideoForSection:(NSString *)section videoID:(NSString *)videoID;
 
 - (NSArray *)bookmarkedVideos;
-- (void)pruneVideos; 
 
 @property (nonatomic, retain) VideoModule *module;
 @property (nonatomic, retain) NSArray *sections;
-@property (nonatomic, retain) NSMutableArray *videos;
-@property (nonatomic, retain) NSMutableArray *videosFromCurrentSearch;
-@property (nonatomic, retain) Video *detailVideo;
 
 @property (nonatomic, assign) id<VideoDataDelegate> delegate;
 
