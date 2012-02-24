@@ -5,7 +5,7 @@
 #import "KGOSearchDisplayController.h"
 #import "UIKit+KGOAdditions.h"
 #import "SpringboardIcon.h"
-
+#import "KGOHomeScreenWidget.h"
 
 @implementation KGOSpringboardViewController
 
@@ -32,7 +32,7 @@
     }
     
     if (!secondGrid) {
-        secondGrid = [[[IconGrid alloc] initWithFrame:CGRectMake(0, primaryGrid.frame.origin.y + primaryGrid.frame.size.height,
+        secondGrid = [[[IconGrid alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(primaryGrid.frame),
                                                                  self.view.bounds.size.width, 1)] autorelease];
         secondGrid.padding = [self secondaryModuleListMargins];
         secondGrid.spacing = [self secondaryModuleListSpacing];
@@ -43,23 +43,56 @@
     [_scrollView addSubview:secondGrid];
 }
 
+- (void)showAnnouncementBanner
+{
+    [_scrollView addSubview:self.banner];
+    [super showAnnouncementBanner];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self iconGridFrameDidChange:secondGrid];
 }
 
-- (void)refreshModules
+- (void)refreshHeights
 {
-    [super refreshModules];
-
+    
     CGFloat minY = [self minimumAvailableY];
     if (CGRectGetMinY(_scrollView.frame) != minY) {
         _scrollView.frame = CGRectMake(0, minY,
                                        CGRectGetWidth(self.view.bounds),
                                        CGRectGetHeight(self.view.bounds) - minY);
     }
+    
+    CGFloat primaryGridY = self.banner != nil ? CGRectGetMaxY(self.banner.frame) : 0;
+    if (CGRectGetMinY(primaryGrid.frame) != primaryGridY) {
+        primaryGrid.frame = CGRectMake(0, primaryGridY,
+                                       CGRectGetWidth(primaryGrid.frame),
+                                       CGRectGetHeight(primaryGrid.frame));
+    }
+    
+    CGFloat secondGridY = CGRectGetMaxY(primaryGrid.frame);
+    if (CGRectGetMinY(secondGrid.frame) != secondGridY) {
+        secondGrid.frame = CGRectMake(0, secondGridY,
+                                      CGRectGetWidth(secondGrid.frame),
+                                      CGRectGetHeight(secondGrid.frame));
+    }
+    
+    CGFloat scrollHeight = [self minimumAvailableY] + CGRectGetMaxY(secondGrid.frame);
+    if (scrollHeight != _scrollView.contentSize.height) {
+        _scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, scrollHeight);
+    }
+    
+    [_scrollView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+}
 
+- (void)refreshModules
+{
+    [super refreshModules];
+    
+    [self refreshHeights];
+    
     primaryGrid.icons = [self iconsForPrimaryModules:YES];
     secondGrid.icons = [self iconsForPrimaryModules:NO];
     
@@ -67,19 +100,9 @@
     [secondGrid setNeedsLayout];
 }
 
-- (void)iconGridFrameDidChange:(IconGrid *)iconGrid {
-    if (iconGrid == primaryGrid) {
-        CGRect frame = secondGrid.frame;
-        frame.origin.y = iconGrid.frame.origin.y + iconGrid.frame.size.height;
-        secondGrid.frame = frame;
-    }
-    
-    CGFloat scrollHeight = [self minimumAvailableY] + secondGrid.frame.origin.y + secondGrid.frame.size.height; // pad bottom
-    if (scrollHeight != _scrollView.contentSize.height) {
-        _scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, scrollHeight);
-    }
-    
-    [_scrollView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+- (void)iconGridFrameDidChange:(IconGrid *)iconGrid
+{
+    [self refreshHeights];
 }
 
 - (void)dealloc {

@@ -37,6 +37,8 @@ NSString * const KGODidLoginNotification = @"LoginComplete";
 NSString * const KGODidLogoutNotification = @"LogoutComplete";
 
 NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
+NSString * const KGOAppDidResetNotification = @"ApplicationDidReset";
+NSString * const KGOServerDidChangeNotification = @"ServerDidChange";
 
 #pragma mark Error domains
 

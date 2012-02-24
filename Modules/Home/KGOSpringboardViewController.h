@@ -14,5 +14,7 @@
     IconGrid *secondGrid;
 }
 
+- (void)refreshHeights;
+
 @end
 

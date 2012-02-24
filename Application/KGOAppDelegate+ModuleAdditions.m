@@ -235,6 +235,9 @@
     // TODO: figure out implications of deleting push notification token
     [NSUserDefaults resetStandardUserDefaults];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:KGOAppDidResetNotification
+                                                        object:self];
 }
 
 #pragma mark Navigation

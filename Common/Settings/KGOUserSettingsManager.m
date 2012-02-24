@@ -154,6 +154,9 @@ NSString * const KGOUserSettingKeyServer = @"ServerSelection";
     
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:KGOUserSettingPreferenceKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:KGOUserPreferencesDidChangeNotification
+                                                        object:self];
 }
 
 - (void)setModuleOrder:(NSArray *)order primary:(BOOL)primary

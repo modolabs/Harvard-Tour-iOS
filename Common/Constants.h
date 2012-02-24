@@ -58,6 +58,8 @@ extern NSString * const KGODidLogoutNotification;
 extern NSString * const KGODidLoginNotification;
 
 extern NSString * const CoreDataDidDeleteStoreNotification;
+extern NSString * const KGOAppDidResetNotification;
+extern NSString * const KGOServerDidChangeNotification;
 
 #pragma mark Error domains
 

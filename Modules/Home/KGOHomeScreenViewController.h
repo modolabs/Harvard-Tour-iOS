@@ -18,7 +18,6 @@ UIAlertViewDelegate, KGORequestDelegate> { // TODO: separate this class from the
     NSArray *_secondaryModules;
     
     KGORequest *_bannerRequest;
-    KGOHomeScreenWidget *_banner;
 }
 
 @property (nonatomic, retain) KGOModule *homeModule;
@@ -27,6 +26,8 @@ UIAlertViewDelegate, KGORequestDelegate> { // TODO: separate this class from the
 @property (nonatomic, readonly) NSArray *secondaryModules;
 @property (nonatomic, readonly) CGRect springboardFrame;
 @property (nonatomic, retain) UIView *loadingView;
+
+@property (nonatomic, retain) KGOHomeScreenWidget *banner;
 
 - (void)checkAnnouncementBanner;
 - (void)showAnnouncementBanner;

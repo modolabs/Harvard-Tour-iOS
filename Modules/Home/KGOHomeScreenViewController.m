@@ -28,7 +28,8 @@
 
 @implementation KGOHomeScreenViewController
 
-@synthesize primaryModules = _primaryModules, secondaryModules = _secondaryModules, homeModule, loadingView;
+@synthesize primaryModules = _primaryModules, secondaryModules = _secondaryModules, homeModule,
+loadingView, banner = _banner;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -48,16 +49,28 @@
     return self;
 }
 
+- (void)contactServer
+{
+    [self standbyForServerHello];
+    [self checkAnnouncementBanner];
+}
+
 - (void)subscribeToModuleChangeNotifications
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(moduleListDidChange:)
-                                                 name:ModuleListDidChangeNotification
-                                               object:nil];
+    for (NSString *aNotification in [NSArray arrayWithObjects:
+                                     ModuleListDidChangeNotification,
+                                     KGOUserPreferencesDidChangeNotification,
+                                     nil])
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(moduleListDidChange:)
+                                                     name:aNotification
+                                                   object:nil];
+    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(moduleListDidChange:)
-                                                 name:KGOUserPreferencesDidChangeNotification
+                                             selector:@selector(contactServer)
+                                                 name:KGOServerDidChangeNotification
                                                object:nil];
 }
 
@@ -106,8 +119,7 @@
         _searchController.maxResultsPerSection = MAX_FEDERATED_SEARCH_RESULTS_PER_SECTION;
     }
     
-    [self standbyForServerHello];
-    [self checkAnnouncementBanner];
+    [self contactServer];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -165,17 +177,9 @@
 
 - (void)showAnnouncementBanner
 {
-    if (_banner && ![_banner isDescendantOfView:self.view]) {
-        [self.view addSubview:_banner];
+    if (_banner) {
         if (self.loadingView) {
             [self.view bringSubviewToFront:self.loadingView];
-        }
-
-        if (_searchBar) {
-            _searchBar.frame = CGRectMake(0,
-                                          CGRectGetMaxY(_banner.frame),
-                                          CGRectGetWidth(_searchBar.frame),
-                                          CGRectGetHeight(_searchBar.frame));
         }
 
         [self refreshModules];
@@ -185,16 +189,11 @@
 - (void)hideAnnouncementBanner
 {
     if (_banner) {
-        if ([_banner isDescendantOfView:self.view]) {
+        if ([_banner superview]) {
             [_banner removeFromSuperview];
         }
-        if (_searchBar) {
-            _searchBar.frame = CGRectMake(0, 0,
-                                          CGRectGetWidth(_searchBar.frame),
-                                          CGRectGetHeight(_searchBar.frame));
-        }
-        [_banner release];
-        _banner = nil;
+        
+        self.banner = nil;
 
         [self refreshModules];
     }
@@ -202,11 +201,11 @@
 
 - (CGFloat)minimumAvailableY
 {
-    if (_searchBar) {
-        return CGRectGetMaxY(_searchBar.frame);
-    }
     if (_banner) {
         return CGRectGetMaxY(_banner.frame);
+    }
+    if (_searchBar) {
+        return CGRectGetMaxY(_searchBar.frame);
     }
     return 0;
 }
@@ -215,52 +214,72 @@
 {
     // if there is no announcement, the response will be null
     if ([error code] == KGORequestErrorResponseTypeMismatch) {
-        // do nothing, we're not showing a banner
+        [self hideAnnouncementBanner];
     }
 }
 
 - (void)request:(KGORequest *)request didReceiveResult:(id)result
 {
-    NSDictionary *notice = [result dictionaryForKey:@"notice"];
-
-    //NSString *unixtime = [notice nonemptyForcedStringForKey:@"unixtime"];
-
-    CGFloat width = CGRectGetWidth(self.view.bounds);
-    CGFloat height = 6;
-    CGRect frame = CGRectMake(0, 0, width, height);
-
     if (_banner) {
         [_banner removeFromSuperview];
-        [_banner release];
     }
-    _banner = [[KGOHomeScreenWidget alloc] initWithFrame:frame];
 
-    // use title for the first line only
-    UIFont *font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentTitle];
-    for (NSString *displayKey in [NSArray arrayWithObjects:@"title", @"text", @"date", nil]) {
-        NSString *displayString = [notice nonemptyStringForKey:displayKey];
+    NSDictionary *notice = [result dictionaryForKey:@"notice"];
+    
+    if (notice) {
+        CGFloat width = CGRectGetWidth(self.view.bounds);
+        CGFloat x = 0;
+        CGFloat height = 44;
+        CGRect frame = CGRectMake(0, 0, width, height);
+        
+        self.banner = [[[KGOHomeScreenWidget alloc] initWithFrame:frame] autorelease];
+        _banner.backgroundColor = [[KGOTheme sharedTheme] backgroundColorForPlainSectionHeader];
+        
+        NSString *displayString = [notice nonemptyStringForKey:@"title"];
         if (displayString) {
-            KGOLabel *label = [KGOLabel multilineLabelWithText:displayString
-                                                          font:font
-                                                         width:width - 20];
-            CGFloat labelHeight = CGRectGetHeight(label.frame);
-            label.frame = CGRectMake(10, height, width - 20, labelHeight);
-            height += labelHeight;
+            
+            UIImage *carat = [UIImage imageWithPathName:@"common/action-arrow"];
+            if (carat) {
+                UIImageView *imageView = [[[UIImageView alloc] initWithImage:carat] autorelease];
+                imageView.frame = CGRectMake(width - carat.size.width - 7,
+                                             floorf((height - carat.size.height) / 2),
+                                             carat.size.width, carat.size.height);
+                [_banner addSubview:imageView];
+                width -= carat.size.width + 7;
+            }
+            
+            UIImage *alertImage = [UIImage imageWithPathName:@"common/alert"];
+            if (alertImage) {
+                UIImageView *imageView = [[[UIImageView alloc] initWithImage:alertImage] autorelease];
+                imageView.frame = CGRectMake(7, floorf((height - alertImage.size.height) / 2),
+                                             alertImage.size.width, alertImage.size.height);
+                [_banner addSubview:imageView];
+                width -= alertImage.size.width + 7;
+                x += alertImage.size.width + 7;
+            }
+            
+            x += 7; // left padding
+            width -= 14; // padding on either side
+            
+            UIFont *font = [UIFont fontWithName:[[KGOTheme sharedTheme] defaultFontName] size:14];
+            UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(x, 0, width, height)] autorelease];
+            label.text = displayString;
+            label.font = font;
+            label.numberOfLines = 2;
+            label.backgroundColor = [UIColor clearColor];
+            label.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertySectionHeader];
             [_banner addSubview:label];
         }
-        font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentSubtitle];
-    }
+        
+        NSInteger shouldLink = [[result nonemptyForcedStringForKey:@"link"] integerValue];
+        if (shouldLink) {
+            NSString *moduleTag = [result nonemptyStringForKey:@"moduleID"];
+            _banner.module = [KGO_SHARED_APP_DELEGATE() moduleForTag:moduleTag];
+        }
 
-    height += 6;
-    _banner.frame = CGRectMake(0, 0, width, height);
-    
-    NSInteger shouldLink = [[result nonemptyForcedStringForKey:@"link"] integerValue];
-    if (shouldLink) {
-        NSString *moduleTag = [result nonemptyStringForKey:@"moduleID"];
-        _banner.module = [KGO_SHARED_APP_DELEGATE() moduleForTag:moduleTag];
-    }
+        [self showAnnouncementBanner];
 
-    [self showAnnouncementBanner];
+    }
 }
 
 - (void)requestWillTerminate:(KGORequest *)request
