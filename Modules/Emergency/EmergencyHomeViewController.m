@@ -73,12 +73,9 @@
     [super viewDidLoad];
     self.notice = nil;
     EmergencyDataManager *manager = [EmergencyDataManager managerForTag:_module.tag];
+    [manager fetchLatestEmergencyNotice];
     
-    if(_module.noticeFeedExists) {
-        [manager fetchLatestEmergencyNotice];
-    }
-    
-    if(_module.contactsFeedExists) {
+    if (_module.contactsFeedExists) {
         // load cached contacts
         self.primaryContacts = [manager primaryContacts];
         _hasMoreContact = [manager hasSecondaryContacts];
@@ -272,14 +269,23 @@
     id object = [notification object];
     EmergencyDataManager *manager = [EmergencyDataManager managerForTag:_module.tag];
     if (object == manager) {    
-        enum EmergencyNoticeStatus status = [[[notification userInfo] objectForKey:@"EmergencyStatus"] intValue];
+        enum EmergencyNoticeStatus emStatus = [[[notification userInfo] objectForKey:@"EmergencyStatus"] intValue];
         loadingStatus = EmergencyStatusLoaded;
-        
-        if (status == NoCurrentEmergencyNotice) {
-            self.notice = nil;
-        } else if (status == EmergencyNoticeActive) {
-            // reset content values
-            self.notice = [[EmergencyDataManager managerForTag:_module.tag] latestEmergency];
+
+        // TODO: noticeFeedExists should be set by the data manager instead of this view
+        switch (emStatus) {
+            case NoCurrentEmergencyNotice:
+                self.notice = nil;
+                self.module.noticeFeedExists = YES;
+                break;
+            case EmergencyNoticeActive:
+                self.notice = [[EmergencyDataManager managerForTag:_module.tag] latestEmergency];
+                self.module.noticeFeedExists = YES;
+                break;
+            case EmergencyNoticeDisabled:
+                self.notice = nil;
+                self.module.noticeFeedExists = NO;
+                break;
         }
         self.contentDivHeight = nil;
         

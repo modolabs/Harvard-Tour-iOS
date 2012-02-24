@@ -12,7 +12,6 @@ NSString * const EmergencyContactsPathPageName = @"contacts";
     self = [super initWithDictionary:moduleDict];
     if(self) {
         // for now we hard code these settings
-        noticeFeedExists = YES;
         contactsFeedExists = YES;
     }
     return self;

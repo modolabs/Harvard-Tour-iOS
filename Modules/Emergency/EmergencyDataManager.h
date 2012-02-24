@@ -3,6 +3,7 @@
 #import "EmergencyModel.h"
 
 enum EmergencyNoticeStatus {
+    EmergencyNoticeDisabled,         // feed does not exist
     NoCurrentEmergencyNotice,        // feed exists, but currently empty (no emergency is going on)
     EmergencyNoticeActive,           // feed exists and emergency notice found
 };

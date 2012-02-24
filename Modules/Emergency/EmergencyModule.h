@@ -9,7 +9,7 @@ extern NSString * const EmergencyContactsPathPageName;
 	
 }
 
-@property (readonly) BOOL noticeFeedExists;
-@property (readonly) BOOL contactsFeedExists;
+@property (nonatomic) BOOL noticeFeedExists;
+@property (nonatomic) BOOL contactsFeedExists;
 @end
 

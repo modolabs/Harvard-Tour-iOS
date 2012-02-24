@@ -64,20 +64,24 @@ NSString * const EmergencyContactsRetrievedNotification = @"EmergencyContactsRet
         
         [[CoreDataManager sharedManager] deleteObjects:cachedNotices];
         
-        id notice = [emergencyNoticeResult objectForKey:@"notice"];
-        if(notice != [NSNull null]) {
-            NSDictionary *noticeDict = (NSDictionary *)notice;
-            EmergencyNotice *noticeObject = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:EmergencyNoticeEntityName];
-            noticeObject.title = [noticeDict nonemptyStringForKey:@"title"];
-            noticeObject.pubDate = [NSDate dateWithTimeIntervalSince1970:[[notice objectForKey:@"unixtime"] doubleValue]];
-            noticeObject.html = [noticeDict nonemptyStringForKey:@"text"];
-            noticeObject.moduleTag = tag;
-            retval = EmergencyNoticeActive;
+        if ([emergencyNoticeResult boolForKey:@"noticeEnabled"]) {
+
+            id notice = [emergencyNoticeResult objectForKey:@"notice"];
+            if ([notice isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *noticeDict = (NSDictionary *)notice;
+                EmergencyNotice *noticeObject = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:EmergencyNoticeEntityName];
+                noticeObject.title = [noticeDict nonemptyStringForKey:@"title"];
+                noticeObject.pubDate = [NSDate dateWithTimeIntervalSince1970:[[notice objectForKey:@"unixtime"] doubleValue]];
+                noticeObject.html = [noticeDict nonemptyStringForKey:@"text"];
+                noticeObject.moduleTag = tag;
+                retval = EmergencyNoticeActive;
+            } else {
+                retval = NoCurrentEmergencyNotice;
+            }
+            [[CoreDataManager sharedManager] saveData];
         } else {
-            retval = NoCurrentEmergencyNotice;
+            retval = EmergencyNoticeDisabled;
         }
-        [[CoreDataManager sharedManager] saveData];
-        
         return retval;
     }];
 }
