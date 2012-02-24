@@ -151,6 +151,10 @@ static const CGFloat extraScrollViewHeight = 100.0f;
     self.dataManager.delegate = self;
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    self.dataManager.delegate = nil;
+}
+
 #pragma mark VideoDataDelegate
 
 - (void)dataManager:(VideoDataManager *)manager didReceiveVideo:(Video *)video
@@ -257,7 +261,6 @@ static const CGFloat extraScrollViewHeight = 100.0f;
 
 
 - (void)dealloc {
-    self.dataManager.delegate = nil;
     [dataManager release];
     [player release];
     [video release];

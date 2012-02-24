@@ -31,12 +31,12 @@ NSString * const KGODataModelNameVideo = @"Video";
 - (UIViewController *)modulePage:(NSString *)pageName params:(NSDictionary *)params {
     UIViewController *vc = nil;
     if ([pageName isEqualToString:LocalPathPageNameHome]) {
-        VideoListViewController *listVC = [[[VideoListViewController alloc] initWithStyle:UITableViewStylePlain] autorelease];
+        VideoListViewController *listVC = [[[VideoListViewController alloc] initWithNibName:@"VideoListViewController" bundle:nil] autorelease];
         listVC.dataManager = self.dataManager;
         vc = listVC;
     
     } else if ([pageName isEqualToString:LocalPathPageNameSearch]) {
-        VideoListViewController *listVC = [[[VideoListViewController alloc] initWithStyle:UITableViewStylePlain] autorelease];
+        VideoListViewController *listVC = [[VideoListViewController alloc] initWithNibName:@"VideoListViewController" bundle:nil];
         listVC.dataManager = self.dataManager;
         
         NSString *searchText = [params objectForKey:@"q"];

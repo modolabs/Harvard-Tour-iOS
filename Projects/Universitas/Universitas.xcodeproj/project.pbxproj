@@ -45,6 +45,7 @@
 		4E8F88691499DC8100141835 /* AthleticsMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E8F88681499DC8000141835 /* AthleticsMenu.m */; };
 		4E90758A149B36A400E5A322 /* AthleticsSportsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E907589149B36A300E5A322 /* AthleticsSportsViewController.xib */; };
 		4E93255314A5C77100214B6F /* AthleticsScheduleDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E93255214A5C77100214B6F /* AthleticsScheduleDetailViewController.m */; };
+		4ED552DC14F7895C00EF53EB /* VideoListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4ED552DB14F7895C00EF53EB /* VideoListViewController.xib */; };
 		4EEEC24014B54CD200A39463 /* Foundation+KGOAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EEEC23F14B54CD200A39463 /* Foundation+KGOAdditions.m */; };
 		4EFD5EFB14A0831100568A5D /* AthleticsCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EFD5EFA14A0831100568A5D /* AthleticsCategory.m */; };
 		4EFD5EFE14A0831100568A5D /* AthleticsSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EFD5EFD14A0831100568A5D /* AthleticsSchedule.m */; };
@@ -291,6 +292,7 @@
 		4E907589149B36A300E5A322 /* AthleticsSportsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AthleticsSportsViewController.xib; sourceTree = "<group>"; };
 		4E93255114A5C77100214B6F /* AthleticsScheduleDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsScheduleDetailViewController.h; sourceTree = "<group>"; };
 		4E93255214A5C77100214B6F /* AthleticsScheduleDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AthleticsScheduleDetailViewController.m; sourceTree = "<group>"; };
+		4ED552DB14F7895C00EF53EB /* VideoListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoListViewController.xib; sourceTree = "<group>"; };
 		4EE1075A1490A17E00F03EC4 /* Athletics 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Athletics 2.xcdatamodel"; sourceTree = "<group>"; };
 		4EE1076D1490A2E900F03EC4 /* AthleticsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AthleticsModel.h; sourceTree = "<group>"; };
 		4EEEC23E14B54CD200A39463 /* Foundation+KGOAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Foundation+KGOAdditions.h"; sourceTree = "<group>"; };
@@ -846,6 +848,7 @@
 				A627E6AB134A65FD00403110 /* VideoDataManager.m */,
 				A627E6AC134A65FD00403110 /* VideoListViewController.h */,
 				A627E6AD134A65FD00403110 /* VideoListViewController.m */,
+				4ED552DB14F7895C00EF53EB /* VideoListViewController.xib */,
 				A6F2F818134BAC75009F597D /* VideoDetailViewController.h */,
 				A6F2F819134BAC75009F597D /* VideoDetailViewController.m */,
 				A6F2FA1F134BE23F009F597D /* VideoWebViewController.h */,
@@ -1577,6 +1580,7 @@
 				EB66FE9F14A2BAA600B9A734 /* secret in Resources */,
 				EB587B3914A3F25100723906 /* IconGridScrollViewController.xib in Resources */,
 				EB63FA7614E0708100C33576 /* OverScrollFooterView.xib in Resources */,
+				4ED552DC14F7895C00EF53EB /* VideoListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

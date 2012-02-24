@@ -22,7 +22,6 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 @implementation VideoListViewController
 
 @synthesize dataManager;
-@synthesize navScrollView;
 @synthesize videos = _videos;
 @synthesize videoSections;
 @synthesize activeSectionIndex;
@@ -33,12 +32,12 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 
 #pragma mark NSObject
 
-- (id)initWithStyle:(UITableViewStyle)style {
-    self = [super initWithStyle:style];
-	if (self) {
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
         self.activeSectionIndex = 0;
-	}
-	return self;
+    }
+    return self;
 }
 
 - (void)dealloc {
@@ -46,7 +45,6 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
     [theSearchBar release];
     [videoSections release];
     [_videos release];
-    [navScrollView release];
     [dataManager release];
 
     self.federatedSearchTerms = nil;
@@ -56,10 +54,38 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 }
 
 #pragma mark VideoDataDelegate
+- (void)setupNavScrollButtons {
+    BOOL bookmarkSelected = NO;
+    if ([_navScrollView numberOfButtons] > 0 && [_navScrollView indexOfSelectedButton] == NSNotFound) {
+        bookmarkSelected = YES;
+    }
+    
+    [_navScrollView removeAllRegularButtons];
+    
+    for (NSDictionary *sectionInfo in self.videoSections) {
+        [_navScrollView addButtonWithTitle:[sectionInfo objectForKey:@"title"]];
+    }
+    
+    if ([self.dataManager bookmarkedVideos].count) {
+        [_navScrollView setShowsBookmarkButton:YES]; 
+    } else {
+        [_navScrollView setShowsBookmarkButton:NO]; 
+    }
+    
+    if (bookmarkSelected && [self.dataManager bookmarkedVideos].count > 0) {
+        [_navScrollView selectButtonAtIndex:[_navScrollView bookmarkButtonIndex]];
+    } else {
+        [_navScrollView selectButtonAtIndex:self.activeSectionIndex];
+    }
+    
+    [_navScrollView setNeedsLayout];
+}
+
 
 - (void)requestVideosForActiveSection { 
     if (self.videoSections.count > self.activeSectionIndex) {
         NSString *section = [[self.videoSections objectAtIndex:self.activeSectionIndex] objectForKey:@"value"];
+        self.dataManager.delegate = self;
         [self.dataManager requestVideosForSection:section];
     }
 }
@@ -67,46 +93,37 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 - (void)dataManager:(VideoDataManager *)manager didReceiveSections:(NSArray *)sections
 {
     self.videoSections = (NSArray *)sections;
-    for (NSDictionary *sectionInfo in self.videoSections) {
-        [self.navScrollView addButtonWithTitle:[sectionInfo objectForKey:@"title"]];
-    }
-    [self.navScrollView selectButtonAtIndex:self.activeSectionIndex];
-    [self.navScrollView setNeedsLayout];
+    [self setupNavScrollButtons]; // update button pressed states
     [self requestVideosForActiveSection];
 }
 
 - (void)dataManager:(VideoDataManager *)manager didReceiveVideos:(NSArray *)videos
 {
     self.videos = videos;
-    [self.tableView reloadData];
+    [_videoTable reloadData];
 }
 
-#pragma mark UIViewController
-
-- (void)loadView {
-    [super loadView];
-    
-    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.width, 44);
-    self.navScrollView = [[[KGOScrollingTabstrip alloc] initWithFrame:frame] autorelease];
-    self.navScrollView.showsSearchButton = YES;
-    self.navScrollView.delegate = self;
+- (void)setupNavScrollView {
+    _navScrollView.showsSearchButton = YES;
+    _navScrollView.delegate = self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.tableView.rowHeight = 90.0f;
-    
+    [self setupNavScrollView];
+    [self addTableView:_videoTable];
+    _videoTable.rowHeight = 90.0f;
     self.dataManager.delegate = self;
     [self.dataManager requestSections];
     self.navigationItem.title = [[KGO_SHARED_APP_DELEGATE() moduleForTag:self.dataManager.module.tag] shortName];
     
     if (self.federatedSearchTerms || self.federatedSearchResults) {
-        [self.navScrollView showSearchBarAnimated:NO];
-        [self.navScrollView.searchController setActive:NO animated:NO];
-        self.navScrollView.searchController.searchBar.text = self.federatedSearchTerms;
+        [_navScrollView showSearchBarAnimated:NO];
+        [_navScrollView.searchController setActive:NO animated:NO];
+        _navScrollView.searchController.searchBar.text = self.federatedSearchTerms;
         
         if (self.federatedSearchResults) {
-            [self.navScrollView.searchController setSearchResults:self.federatedSearchResults
+            [_navScrollView.searchController setSearchResults:self.federatedSearchResults
                                                  forModuleTag:self.dataManager.module.tag];
         }
     }
@@ -114,16 +131,8 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
     self.dataManager.delegate = self;
-    
-    if ([self.dataManager bookmarkedVideos].count) {
-        [self.navScrollView setShowsBookmarkButton:YES]; 
-    } else {
-        [self.navScrollView setShowsBookmarkButton:NO]; 
-    }
-    
-    [self.navScrollView setNeedsLayout];
+    [self setupNavScrollButtons];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -186,18 +195,6 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
     }
 }
 
-// TODO: the scrolling tabstrip is not a section header.
-// it is a control for selecting what table to show, and not logically part of the table below it.
-// also it can mess with section headers in the search results table view.
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    return self.navScrollView;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return self.navScrollView.frame.size.height;
-}
-
 #pragma mark KGOScrollingTabstripDelegate
 
 - (void)tabstrip:(KGOScrollingTabstrip *)tabstrip clickedButtonAtIndex:(NSUInteger)index {
@@ -212,7 +209,7 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
 - (void)tabstripBookmarkButtonPressed:(id)sender {
     showingBookmarks = YES;
     self.videos = [self.dataManager bookmarkedVideos];
-    [self.tableView reloadData];
+    [_videoTable reloadData];
 }
 
 - (BOOL)tabstripShouldShowSearchDisplayController:(KGOScrollingTabstrip *)tabstrip
@@ -259,8 +256,8 @@ static const NSInteger kVideoListCellThumbnailTag = 0x78;
     }
     self.federatedSearchTerms = nil;
     self.federatedSearchResults = nil;
-    [self.navScrollView hideSearchBarAnimated:YES];
-    [self.navScrollView selectButtonAtIndex:self.activeSectionIndex];
+    [_navScrollView hideSearchBarAnimated:YES];
+    [_navScrollView selectButtonAtIndex:self.activeSectionIndex];
 }
 
 @end

@@ -8,16 +8,17 @@
 
 @class ThumbnailTableViewCell;
 
-@interface VideoListViewController : UITableViewController <
+@interface VideoListViewController : KGOTableViewController <
 VideoDataDelegate,
 KGOScrollingTabstripSearchDelegate> {
 
     BOOL showingBookmarks;
     ThumbnailTableViewCell *_cell;
+    IBOutlet UITableView *_videoTable;
+    IBOutlet KGOScrollingTabstrip *_navScrollView;
 }
 
 @property (nonatomic, retain) VideoDataManager *dataManager;
-@property (nonatomic, retain) KGOScrollingTabstrip *navScrollView;
 @property (nonatomic, retain) NSArray *videos;
 // Array of NSDictionaries containing title and value keys.
 @property (nonatomic, retain) NSArray *videoSections;
