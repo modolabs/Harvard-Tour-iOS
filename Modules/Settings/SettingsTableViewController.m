@@ -152,9 +152,9 @@
             BOOL isHidden = [[KGOUserSettingsManager sharedManager] isModuleHidden:moduleTag primary:_isEditingPrimary];
             UIImage *image = nil;
             if (isHidden) {
-                image = [UIImage imageWithPathName:@"common/checkbox-unchecked"];
+                image = [UIImage imageWithPathName:@"common/checkbox_normal"];
             } else {
-                image = [UIImage imageWithPathName:@"common/checkbox-checked"];
+                image = [UIImage imageWithPathName:@"common/checkbox_selected"];
             }
             
             button = [UIButton buttonWithType:UIButtonTypeCustom];
