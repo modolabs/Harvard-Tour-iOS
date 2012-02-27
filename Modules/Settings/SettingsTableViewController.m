@@ -138,7 +138,8 @@
         
         NSDictionary *currentOption = [setting.options dictionaryAtIndex:indexPath.row];
         cellTitle = [currentOption stringForKey:@"title"];
-        if ([[setting.selectedValue nonemptyStringForKey:@"id"] isEqualToString:[currentOption nonemptyStringForKey:@"id"]]) {
+        
+        if ([setting.selectedValue isKindOfClass:[NSDictionary class]] && [[setting.selectedValue nonemptyStringForKey:@"id"] isEqualToString:[currentOption nonemptyStringForKey:@"id"]]) {
             accessory = KGOAccessoryTypeCheckmark;
         }
         cellSubtitle = [currentOption nonemptyStringForKey:@"subtitle"];
