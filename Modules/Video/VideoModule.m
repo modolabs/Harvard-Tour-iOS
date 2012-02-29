@@ -36,7 +36,7 @@ NSString * const KGODataModelNameVideo = @"Video";
         vc = listVC;
     
     } else if ([pageName isEqualToString:LocalPathPageNameSearch]) {
-        VideoListViewController *listVC = [[VideoListViewController alloc] initWithNibName:@"VideoListViewController" bundle:nil];
+        VideoListViewController *listVC = [[[VideoListViewController alloc] initWithNibName:@"VideoListViewController" bundle:nil] autorelease];
         listVC.dataManager = self.dataManager;
         
         NSString *searchText = [params objectForKey:@"q"];

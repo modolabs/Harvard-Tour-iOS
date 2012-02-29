@@ -39,8 +39,8 @@
 {
     UIViewController *vc = nil;
     if ([pageName isEqualToString:LocalPathPageNameHome]) {
-        AthleticsListController *athleticsListVC = [[AthleticsListController alloc] 
-                                                    initWithNibName:@"AthleticsListController" bundle:nil];
+        AthleticsListController *athleticsListVC = [[[AthleticsListController alloc] 
+                                                     initWithNibName:@"AthleticsListController" bundle:nil] autorelease];
         athleticsListVC.dataManager = self.dataManager;
         vc = athleticsListVC;
         
@@ -51,7 +51,7 @@
         
     } else if ([pageName isEqualToString:LocalPathPageNameSearch]) {
         AthleticsListController *athleticsListVC = [[[AthleticsListController alloc] initWithNibName:@"AthleticsListController"
-                                                                                      bundle:nil] autorelease];
+                                                                                              bundle:nil] autorelease];
         athleticsListVC.dataManager = self.dataManager;
         self.dataManager.delegate = athleticsListVC;
         vc = athleticsListVC;
@@ -91,9 +91,9 @@
         }
     } else if ([pageName isEqualToString:LocalPathPageNameItemList]) {
         if ([[params objectForKey:@"type"] isEqualToString:@"scheduleList"]) {
-            AthleticsScheduleListViewController *scheduleListVC = [[AthleticsScheduleListViewController alloc] 
-                                                                   initWithNibName:@"AthleticsScheduleListViewController" 
-                                                                   bundle:nil];
+            AthleticsScheduleListViewController *scheduleListVC = [[[AthleticsScheduleListViewController alloc] 
+                                                                    initWithNibName:@"AthleticsScheduleListViewController" 
+                                                                    bundle:nil] autorelease];
             scheduleListVC.dataManager = self.dataManager;
             vc = scheduleListVC;
             if ([params objectForKey:@"schedules"]) {
@@ -101,9 +101,9 @@
                 scheduleListVC.schedules = schedules;
             }
         } else {
-            AthleticsSportsViewController *athleticsSportsVC = [[AthleticsSportsViewController alloc] 
-                                                                initWithNibName:@"AthleticsSportsViewController" 
-                                                                bundle:nil];
+            AthleticsSportsViewController *athleticsSportsVC = [[[AthleticsSportsViewController alloc] 
+                                                                 initWithNibName:@"AthleticsSportsViewController" 
+                                                                 bundle:nil] autorelease];
             athleticsSportsVC.dataManager = self.dataManager;
             vc = athleticsSportsVC;
             

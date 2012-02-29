@@ -52,8 +52,8 @@
     static NSString *topicIdentifier = @"nonLinkIdentifier";
     cell = [tableView dequeueReusableCellWithIdentifier:topicIdentifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
-                                      reuseIdentifier:topicIdentifier];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
+                                       reuseIdentifier:topicIdentifier] autorelease];
     }
     AthleticsSchedule *schedule = self.currentSchedule;
     cell.textLabel.text = schedule.title;
@@ -64,7 +64,7 @@
     cell.detailTextLabel.text = detailString;
     cell.detailTextLabel.numberOfLines = 2;
     cell.detailTextLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListSubtitle];
-    return [cell autorelease];
+    return cell;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView topicCellForIndexPath:(NSIndexPath *)indexPath {
@@ -72,8 +72,8 @@
     static NSString *topicIdentifier = @"topicIdentifier";
     cell = [tableView dequeueReusableCellWithIdentifier:topicIdentifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
-                                      reuseIdentifier:topicIdentifier];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
+                                       reuseIdentifier:topicIdentifier] autorelease];
     }
     AthleticsSchedule *schedule = self.currentSchedule;
     cell.textLabel.text = schedule.title;
@@ -83,7 +83,7 @@
     NSString *detailString = [NSString stringWithFormat:@"%@",[startDate weekDateTimeString]];
     cell.detailTextLabel.text = detailString;
     cell.detailTextLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListSubtitle];
-    return [cell autorelease];
+    return cell;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView linkCellForIndexPath:(NSIndexPath *)indexPath {
@@ -91,8 +91,8 @@
     static NSString *topicIdentifier = @"linkIdentifier";
     cell = [tableView dequeueReusableCellWithIdentifier:topicIdentifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
-                                      reuseIdentifier:topicIdentifier];
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle 
+                                       reuseIdentifier:topicIdentifier] autorelease];
     }
     AthleticsSchedule *schedule = self.currentSchedule;
     cell.textLabel.text = schedule.location;
@@ -100,7 +100,7 @@
     cell.detailTextLabel.text = schedule.link;
     cell.detailTextLabel.numberOfLines = 2;
     cell.detailTextLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListSubtitle];
-    return [cell autorelease];
+    return cell;
 }
 
 #pragma mark -TableView DataSource
