@@ -146,7 +146,6 @@
 
     CGFloat loadingY = CGRectGetMinY(_loadingFooter.frame);
     if (scrollView.contentOffset.y + CGRectGetHeight(self.view.frame) > loadingY) {
-        NSLog(@"asdfgasgawregr");
         [self.dataManager fetchPhotosForAlbum:self.album.identifier];
     }
 }
