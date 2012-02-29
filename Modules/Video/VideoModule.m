@@ -63,8 +63,13 @@ NSString * const KGODataModelNameVideo = @"Video";
 
     } else if ([pageName isEqualToString:LocalPathPageNameWebViewDetail]) {
         Video *video = [params objectForKey:@"video"];
+        NSString *validUrl = video.url;
+        if (!validUrl && validUrl.length <= 1) {
+            validUrl = video.mobileURL;
+        }
+        NSLog(@"(%@)",validUrl);
         VideoWebViewController *webVC = [[[VideoWebViewController alloc]
-                                          initWithURL:[NSURL URLWithString:video.url]] autorelease];
+                                          initWithURL:[NSURL URLWithString:validUrl]] autorelease];
         webVC.navigationItem.title = video.title; 
         vc = webVC;
     }

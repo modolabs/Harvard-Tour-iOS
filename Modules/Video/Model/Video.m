@@ -100,6 +100,7 @@
     self.duration = [dictionary numberForKey:@"duration"];
     self.videoDescription = [dictionary nonemptyStringForKey:@"description"];
     self.url = [dictionary nonemptyStringForKey:@"url"];
+    self.mobileURL = [dictionary stringForKey:@"mobileURL"];
     NSDictionary *dateDict = [dictionary dictionaryForKey:@"published"];
     if (dateDict) {
         self.published = [Video dateFromPublishedDictionary:dateDict];
