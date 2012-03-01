@@ -1,11 +1,3 @@
-//
-//  AthleticsMenu.h
-//  Universitas
-//
-//  Created by Liu Mingxing on 12/15/11.
-//  Copyright (c) 2011 Symbio Inc. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 

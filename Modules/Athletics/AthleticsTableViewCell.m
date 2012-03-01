@@ -1,11 +1,3 @@
-//
-//  AthleticsTableViewCell.m
-//  Universitas
-//
-//  Created by Liu Mingxing on 12/2/11.
-//  Copyright (c) 2011 Symbio Inc. All rights reserved.
-//
-
 #import "AthleticsTableViewCell.h"
 #import "KGOTheme.h"
 #import "UIKit+KGOAdditions.h"
@@ -68,7 +60,7 @@
     return subString;
 }
 
-- (NSString *)newStyleTitleStringWithString:(NSString *)srcString {
+- (NSString *)titleStringForString:(NSString *)srcString {
     NSString *formattor = [NSString stringWithFormat:@"%@\n%@",
                            [self categoryNameWithTitle:srcString],
                            [self titleByTrimCategoryNameWithTitle:srcString]];
@@ -90,7 +82,7 @@
     
     // title
     NSString *title = [_story.title stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"&apos;"] withString:@"'"];
-    _titleLabel.text = [self newStyleTitleStringWithString:title];
+    _titleLabel.text = [self titleStringForString:title];
     CGSize constraint = CGSizeMake(_titleLabel.frame.size.width, self.frame.size.height - 30);
     CGSize size = [_story.title sizeWithFont:_titleLabel.font constrainedToSize:constraint];
     CGRect frame = _titleLabel.frame;

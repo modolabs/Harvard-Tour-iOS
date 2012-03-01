@@ -366,7 +366,7 @@ static KGOTheme *s_sharedTheme = nil;
         }
     }
 
-    [fontDict copy];
+    [fontDict release];
     fontDict = [mutableFontDict copy];
 }
 
