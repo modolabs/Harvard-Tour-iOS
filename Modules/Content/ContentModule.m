@@ -14,10 +14,12 @@
         
     } else if ([pageName isEqualToString:LocalPathPageNameDetail]) {
         NSString *key = [params nonemptyStringForKey:@"key"];
-        if (key) {
+        NSString *group = [params nonemptyStringForKey:@"group"];
+        if (key || group) {
             ContentTableViewController *cvc = [[[ContentTableViewController alloc] init] autorelease];
             cvc.moduleTag = self.tag;
             cvc.feedKey = key;
+            cvc.feedGroup = group;
             cvc.title = [params stringForKey:@"title"];
             vc = cvc;
         }

@@ -15,14 +15,17 @@ UITableViewDataSource, UITableViewDelegate> {
 
 @property (nonatomic, retain) NSMutableDictionary *feedTitles;
 @property (nonatomic, retain) NSMutableArray *feedKeys;
+@property (nonatomic, retain) NSMutableArray *feedGroups;
 
 @property (nonatomic, retain) ModuleTag * moduleTag;
 @property (nonatomic, retain) UIView *loadingView;
 
 @property (nonatomic, retain) NSString *feedKey;
+@property (nonatomic, retain) NSString *feedGroup;
 
 @property (nonatomic, retain) KGORequest *pagesRequest;
 @property (nonatomic, retain) KGORequest *pageRequest;
+@property (nonatomic, retain) KGORequest *groupRequest;
 
 // if there are multiple feeds, show a list
 @property (nonatomic, retain) UITableView *tableView;
@@ -35,6 +38,6 @@ UITableViewDataSource, UITableViewDelegate> {
 - (void)removeLoadingView;
 
 - (void)requestPageContent;
-
+- (void)requestGroupContent;
 @end
 
