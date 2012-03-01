@@ -1,6 +1,13 @@
 #import <UIKit/UIKit.h>
 #import "KGORequestManager.h"
 
+typedef enum _RequestPhase {
+    RequestPhasePages = 100,
+    RequestPhaseGroup,
+    RequestPhasePage,
+    RequestPhaseDetail,
+}RequestPhase;
+
 
 @interface ContentTableViewController : UIViewController <KGORequestDelegate,
 UITableViewDataSource, UITableViewDelegate> {
@@ -10,7 +17,8 @@ UITableViewDataSource, UITableViewDelegate> {
     UIView * loadingView;
 
     ModuleTag * moduleTag;
-    
+    RequestPhase _currentPhase;
+    RequestPhase _goPhase;
 }
 
 @property (nonatomic, retain) NSMutableDictionary *feedTitles;
@@ -33,6 +41,8 @@ UITableViewDataSource, UITableViewDelegate> {
 // if there's only one feed, show it directly
 @property (nonatomic, retain) UIWebView *contentView;
 @property (nonatomic, retain) NSString *contentTitle;
+@property (nonatomic, assign)  RequestPhase currentPhase;
+@property (nonatomic, assign)  RequestPhase goPhase;
 
 - (void)addLoadingView;
 - (void)removeLoadingView;
