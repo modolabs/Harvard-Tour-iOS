@@ -11,14 +11,20 @@
 
 @synthesize feedTitles, feedKeys;
 @synthesize feedKey = _feedKey;
+@synthesize feedGroups;
+@synthesize feedGroup;
+@synthesize groupRequest;
+@synthesize currentPhase = _currentPhase;
+@synthesize goPhase = _goPhase;
 
 - (void)loadView
 {
     [super loadView];
     
-    if (self.feedKey) {
+    if (self.currentPhase == RequestPhaseGroup) {
+        [self requestGroupContent];
+    } else if (self.currentPhase == RequestPhasePage) {
         [self requestPageContent];
-        
     } else {
         self.pagesRequest = [[KGORequestManager sharedManager] requestWithDelegate:self
                                                                             module:self.moduleTag
@@ -33,7 +39,9 @@
 
 - (void)requestPageContent
 {
-    NSDictionary *params = [NSDictionary dictionaryWithObject:self.feedKey forKey:@"key"];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    if (self.feedGroup) [params setObject:self.feedGroup forKey:@"group"];
+    [params setObject:self.feedKey forKey:@"key"];
     self.pageRequest = [[KGORequestManager sharedManager] requestWithDelegate:self
                                                                        module:self.moduleTag                            
                                                                          path:@"page"
@@ -42,6 +50,19 @@
     self.pageRequest.expectedResponseType = [NSString class];
     
     [self.pageRequest connect];
+}
+
+- (void)requestGroupContent
+{
+    NSDictionary *params = [NSDictionary dictionaryWithObject:self.feedGroup forKey:@"group"];
+    self.groupRequest = [[KGORequestManager sharedManager] requestWithDelegate:self
+                                                                       module:self.moduleTag                            
+                                                                         path:@"pages"
+                                                                      version:1
+                                                                       params:params];
+    self.groupRequest.expectedResponseType = [NSDictionary class];
+    
+    [self.groupRequest connect];
 }
 
 - (void)addLoadingView
@@ -146,6 +167,17 @@
 
 #pragma mark - Table view data source
 
+- (NSString *)keyForIndex:(NSInteger)idx {
+    if (self.feedKeys.count > 0 && idx < self.feedKeys.count) {
+        return [self.feedKeys objectAtIndex:idx];
+    } else {
+        if (self.feedGroups.count > 0 && idx < self.feedGroups.count) {
+            return [self.feedGroups objectAtIndex:idx];
+        }
+    }
+    return nil;
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 
@@ -157,7 +189,7 @@
 {
 
     // Return the number of rows in the section.
-    return self.feedKeys.count;
+    return self.feedTitles.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -172,7 +204,7 @@
     // Configure the cell...
     
     
-    cell.textLabel.text = [feedTitles stringForKey:[feedKeys objectAtIndex:indexPath.row]];
+    cell.textLabel.text = [feedTitles stringForKey:[self keyForIndex:indexPath.row]];
     [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
@@ -220,15 +252,48 @@
 
 #pragma mark - Table view delegate
 
+- (void)dic:(NSMutableDictionary *)dic setObject:(id)obj forKey:(id)aKey {
+    if (obj) {
+        [dic setObject:obj forKey:aKey];
+    }
+}
+
+- (NSString *)array:(NSArray *)array objectAtIndex:(NSInteger)idx {
+    if (idx >= array.count) {
+        return nil;
+    } else {
+        return [array objectAtIndex:idx];
+    }
+}
+
+- (RequestPhase)phaseByKey:(NSString *)aKey group:(NSString *)aGroup {
+    if (self.currentPhase == RequestPhasePages) {
+        if (aGroup) {
+            self.goPhase = RequestPhaseGroup;
+        } else {
+            self.goPhase = RequestPhasePage;
+        }
+    } else if (self.currentPhase == RequestPhaseGroup) {
+        self.goPhase = RequestPhasePage;
+    } else if (self.currentPhase == RequestPhasePage) {
+        self.goPhase = RequestPhaseDetail;
+    } else {
+        self.goPhase = 0;
+    }
+    return self.goPhase;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *feedKey = [feedKeys objectAtIndex:indexPath.row];
-    NSString *title = [self.feedTitles objectForKey:feedKey];
-        
-    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                            feedKey, @"key",
-                            title, @"title",
-                            nil];
+    NSString *key = [self array:self.feedKeys objectAtIndex:indexPath.row];
+    NSString *group = [self array:self.feedGroups objectAtIndex:indexPath.row];
+    NSString *title = [self.feedTitles objectForKey:key ? key : group];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [self dic:params setObject:key forKey:@"key"];
+    [self dic:params setObject:group forKey:@"group"];
+    [self dic:params setObject:title forKey:@"title"];
+    RequestPhase go = [self phaseByKey:key group:group];
+    [params setObject:[NSNumber numberWithInt:go] forKey:@"phase"];
     [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail forModuleTag:self.moduleTag params:params];
 }
 
@@ -240,6 +305,9 @@
     }
     else if (request == self.pagesRequest) {
         self.pagesRequest = nil;
+    } 
+    else if (request == self.groupRequest) {
+        self.groupRequest = nil;
     }
 }
 
@@ -255,22 +323,28 @@
         NSInteger numberOfFeeds = pages.count;
 
         self.feedTitles = [NSMutableDictionary dictionaryWithCapacity:numberOfFeeds];
+        self.feedGroups = [NSMutableArray arrayWithCapacity:numberOfFeeds];
         self.feedKeys = [NSMutableArray arrayWithCapacity:numberOfFeeds];
         
         for (NSDictionary *pageDict in pages) {
-            NSString *key = [pageDict nonemptyStringForKey:@"key"];
+            NSString *group = [pageDict nonemptyStringForKey:@"group"];
             NSString *title = [pageDict stringForKey:@"title"];
-            if (key && title) {
-                [feedKeys addObject:key];
-                [feedTitles setValue:title forKey:key];
-            }
+            NSString *key = [pageDict forcedStringForKey:@"key"];
+
+            if (group) [self.feedGroups addObject:group];
+            if (key) [self.feedKeys addObject:key];
+            if (title) [self.feedTitles setValue:title forKey:group ? group : key];            
         }
         
         // if only one feed, then directly show the feed contents in the WebView
         if (numberOfFeeds == 1) {
-            self.feedKey = [feedKeys objectAtIndex:0];
-            [self requestPageContent];
-
+            if (self.feedGroups.count == 1) {
+                self.feedGroup = [self.feedGroups objectAtIndex:0];
+                [self requestGroupContent];
+            } else {
+                self.feedKey = [self.feedKeys objectAtIndex:0];
+                [self requestPageContent];
+            }
         } else {
             self.tableView = [[[UITableView alloc] initWithFrame:self.view.bounds
                                                            style:UITableViewStyleGrouped] autorelease];
@@ -303,6 +377,45 @@
         [contentView loadHTMLString:htmlString baseURL:nil];
         [self.view addSubview:contentView];
         
+    } 
+    else if (request == self.groupRequest) {
+        
+        DLog(@"%@", [result description]);
+        
+        NSDictionary *resultDict = (NSDictionary *)result;
+        
+        NSArray *pages = (NSArray *)[resultDict arrayForKey:@"pages"];
+        NSInteger numberOfFeeds = pages.count;
+        
+        self.feedTitles = [NSMutableDictionary dictionaryWithCapacity:numberOfFeeds];
+        self.feedKeys = [NSMutableArray arrayWithCapacity:numberOfFeeds];
+        self.feedGroups = [NSMutableArray arrayWithCapacity:numberOfFeeds];
+        for (NSDictionary *pageDict in pages) {
+            NSString *key = [pageDict forcedStringForKey:@"key"];
+            NSString *title = [pageDict stringForKey:@"title"];
+            NSString *group = [pageDict stringForKey:@"group"];
+
+            if(key) [self.feedKeys addObject:key];
+            if(group) [self.feedGroups addObject:group];
+            if(title) [self.feedTitles setValue:title forKey:key];
+        }
+        
+        // if only one feed, then directly show the feed contents in the WebView
+        if (numberOfFeeds == 1) {
+            self.feedKey = [self.feedKeys objectAtIndex:0];
+            self.feedGroup = [self.feedGroups objectAtIndex:0];
+            [self requestPageContent];
+        } else {
+            self.tableView = [[[UITableView alloc] initWithFrame:self.view.bounds
+                                                           style:UITableViewStyleGrouped] autorelease];
+            self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            
+            [self.view addSubview:self.tableView];
+            self.tableView.delegate = self;
+            self.tableView.dataSource = self;
+            
+            [self removeLoadingView];
+        }
     }
 }
 
