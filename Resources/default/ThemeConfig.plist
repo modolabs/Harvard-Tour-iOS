@@ -177,7 +177,7 @@
 		<key>BackgroundColor</key>
 		<string>modules/home/home-background.png</string>
 		<key>ModuleIconSize</key>
-		<string>66 66</string>
+		<string>60 60</string>
 		<key>ModuleLabelFont</key>
 		<dict>
 			<key>color</key>
@@ -186,15 +186,15 @@
 			<integer>-2</integer>
 		</dict>
 		<key>ModuleLabelTitleMargin</key>
-		<integer>2</integer>
+		<integer>12</integer>
 		<key>ModuleListMargins</key>
-		<string>20 12 0 12</string>
+		<string>10 12 0 12</string>
 		<key>ModuleListSpacing</key>
-		<string>9 32</string>
+		<string>9 9</string>
 		<key>NavigationStyle</key>
 		<string>Springboard</string>
 		<key>SecondaryModuleIconSize</key>
-		<string>52 52</string>
+		<string>36 36</string>
 		<key>SecondaryModuleLabelFont</key>
 		<dict>
 			<key>color</key>
@@ -203,11 +203,11 @@
 			<integer>-2</integer>
 		</dict>
 		<key>SecondaryModuleLabelTitleMargin</key>
-		<integer>8</integer>
+		<integer>4</integer>
 		<key>SecondaryModuleListMargins</key>
-		<string>84 14 0 14</string>
+		<string>0 14 0 14</string>
 		<key>SecondaryModuleListSpacing</key>
-		<string>28 30</string>
+		<string>9 28</string>
 		<key>ShowsSearchBar</key>
 		<true/>
 	</dict>
