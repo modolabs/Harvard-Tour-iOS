@@ -65,7 +65,7 @@
         imagePath = [NSString stringWithFormat:@"common/toolbar-segmented-%@", imagePosition];
     }
     
-    return [[UIImage imageWithPathName:imagePath] stretchableImageWithLeftCapWidth:15.0 topCapHeight:0];
+    return [[UIImage imageWithPathName:imagePath] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0];
 }
 
 - (UIColor *)textColorForState:(KGOTabState)state {

@@ -461,7 +461,7 @@
 
 	if (!_mapListToggle) {
 		_mapListToggle = [[KGOSegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:mapButton, listButton, nil]];
-        _mapListToggle.frame = CGRectMake(0, 0, width, 31);
+        _mapListToggle.frame = CGRectMake(0, 0, width, 40);
         _mapListToggle.tabFont = [UIFont boldSystemFontOfSize:[UIFont smallSystemFontSize]];
         _mapListToggle.selectedSegmentIndex = 0;
 		[_mapListToggle addTarget:self action:@selector(mapListSelectionChanged:) forControlEvents:UIControlEventValueChanged];

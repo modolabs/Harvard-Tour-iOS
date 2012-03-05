@@ -4,6 +4,8 @@
 <dict>
 	<key>Colors</key>
 	<dict>
+		<key>NavListSelectionColor</key>
+		<string>#0050A3</string>
 		<key>AppBackground</key>
 		<string>common/body-background.png</string>
 		<key>NavBarTintColor</key>

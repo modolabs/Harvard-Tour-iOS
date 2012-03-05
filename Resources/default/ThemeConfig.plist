@@ -181,16 +181,16 @@
 		<key>ModuleLabelFont</key>
 		<dict>
 			<key>color</key>
-			<string>#333333</string>
+			<string>#505050</string>
 			<key>size</key>
 			<integer>-2</integer>
 		</dict>
 		<key>ModuleLabelTitleMargin</key>
-		<integer>12</integer>
+		<integer>8</integer>
 		<key>ModuleListMargins</key>
-		<string>10 12 0 12</string>
+		<string>14 12 0 12</string>
 		<key>ModuleListSpacing</key>
-		<string>9 9</string>
+		<string>8 20</string>
 		<key>NavigationStyle</key>
 		<string>Springboard</string>
 		<key>SecondaryModuleIconSize</key>
@@ -198,16 +198,16 @@
 		<key>SecondaryModuleLabelFont</key>
 		<dict>
 			<key>color</key>
-			<string>#333333</string>
+			<string>#666666</string>
 			<key>size</key>
-			<integer>-2</integer>
+			<integer>-3</integer>
 		</dict>
 		<key>SecondaryModuleLabelTitleMargin</key>
-		<integer>4</integer>
+		<integer>10</integer>
 		<key>SecondaryModuleListMargins</key>
-		<string>0 14 0 14</string>
+		<string>40 14 0 14</string>
 		<key>SecondaryModuleListSpacing</key>
-		<string>9 28</string>
+		<string>28 34</string>
 		<key>ShowsSearchBar</key>
 		<true/>
 	</dict>

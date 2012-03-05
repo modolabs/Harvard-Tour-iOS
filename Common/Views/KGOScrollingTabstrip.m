@@ -175,7 +175,7 @@ NSInteger const kBookmarkButtonIndex = 8765913;
 - (void)layoutSubviews {
     [super layoutSubviews];
     if (!_backgroundImageView) {
-        UIImage *backgroundImage = [UIImage imageWithPathName:@"common/scrolltabs-background-opaque.png"];
+        UIImage *backgroundImage = [UIImage imageWithPathName:@"common/scrolltabs-background.png"];
         _backgroundImageView = [[[UIImageView alloc] initWithImage:[backgroundImage stretchableImageWithLeftCapWidth:0 topCapHeight:0]] autorelease];
         _backgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         _backgroundImageView.frame = self.bounds;

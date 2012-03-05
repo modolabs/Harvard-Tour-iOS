@@ -85,8 +85,8 @@ NSString * const KGODataModelNameCalendar = @"Calendar";
         if ([pageName isEqualToString:LocalPathPageNameCategoryList]) {
             calendarVC.browseMode = KGOCalendarBrowseModeCategories;
         } else {
-            //calendarVC.browseMode = KGOCalendarBrowseModeDay;
-            calendarVC.browseMode = KGOCalendarBrowseModeLimit;
+            calendarVC.browseMode = KGOCalendarBrowseModeDay;
+            //calendarVC.browseMode = KGOCalendarBrowseModeLimit;
         }
         
         calendarVC.dataManager = self.dataManager;

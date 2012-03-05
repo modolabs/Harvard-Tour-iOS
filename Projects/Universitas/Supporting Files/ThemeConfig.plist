@@ -5,7 +5,7 @@
 	<key>Colors</key>
 	<dict>
 		<key>NavListSelectionColor</key>
-		<string>#66ccff</string>
+		<string>#0050A3</string>
 		<key>AppBackground</key>
 		<string>common/body-background.png</string>
 		<key>NavBarTintColor</key>
@@ -220,37 +220,37 @@
 		<key>BackgroundColor</key>
 		<string>modules/home/home-background.png</string>
 		<key>ModuleIconSize</key>
-		<string>66 66</string>
+		<string>60 60</string>
 		<key>ModuleLabelFont</key>
 		<dict>
 			<key>color</key>
-			<string>#333333</string>
+			<string>#505050</string>
 			<key>size</key>
 			<integer>-2</integer>
 		</dict>
 		<key>ModuleLabelTitleMargin</key>
-		<integer>2</integer>
+		<integer>8</integer>
 		<key>ModuleListMargins</key>
-		<string>20 12 0 12</string>
+		<string>14 12 0 12</string>
 		<key>ModuleListSpacing</key>
-		<string>9 32</string>
+		<string>8 20</string>
 		<key>NavigationStyle</key>
 		<string>Springboard</string>
 		<key>SecondaryModuleIconSize</key>
-		<string>52 52</string>
+		<string>36 36</string>
 		<key>SecondaryModuleLabelFont</key>
 		<dict>
 			<key>color</key>
-			<string>#333333</string>
+			<string>#666666</string>
 			<key>size</key>
-			<integer>-2</integer>
+			<integer>-3</integer>
 		</dict>
 		<key>SecondaryModuleLabelTitleMargin</key>
-		<integer>8</integer>
+		<integer>10</integer>
 		<key>SecondaryModuleListMargins</key>
-		<string>84 14 0 14</string>
+		<string>40 14 0 14</string>
 		<key>SecondaryModuleListSpacing</key>
-		<string>28 30</string>
+		<string>28 34</string>
 		<key>ShowsSearchBar</key>
 		<true/>
 	</dict>
