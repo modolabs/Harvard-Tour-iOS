@@ -327,6 +327,7 @@ NSString * const kHTTPSURIScheme = @"https";
             
             [[CoreDataManager sharedManager] deleteStore];
             [defaults setObject:newServer forKey:CurrentKurogoServerSettingKey];
+            [defaults synchronize];
             
             [[NSNotificationCenter defaultCenter] postNotificationName:KGOServerDidChangeNotification
                                                                 object:self];
