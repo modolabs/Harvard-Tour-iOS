@@ -140,8 +140,8 @@
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateHighlighted];
     
-    UIImage *background = [UIImage imageWithPathName:@"common/generic-button-background"];
-    UIImage *pressedBackground = [UIImage imageWithPathName:@"common/generic-button-background-pressed"];
+    UIImage *background = [UIImage imageWithPathName:@"common/toolbar-button"];
+    UIImage *pressedBackground = [UIImage imageWithPathName:@"common/toolbar-button"];
     
     [button setBackgroundImage:[background stretchableImageWithLeftCapWidth:8 topCapHeight:8]
                       forState:UIControlStateNormal];
@@ -165,8 +165,8 @@
     [button setImage:image forState:UIControlStateNormal];
     [button setImage:image forState:UIControlStateHighlighted];
     
-    UIImage *background = [UIImage imageWithPathName:@"common/generic-button-background"];
-    UIImage *pressedBackground = [UIImage imageWithPathName:@"common/generic-button-background-pressed"];
+    UIImage *background = [UIImage imageWithPathName:@"common/toolbar-button"];
+    UIImage *pressedBackground = [UIImage imageWithPathName:@"common/toolbar-button"];
     
     [button setBackgroundImage:[background stretchableImageWithLeftCapWidth:8 topCapHeight:8]
                       forState:UIControlStateNormal];

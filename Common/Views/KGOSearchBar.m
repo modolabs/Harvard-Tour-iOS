@@ -375,8 +375,8 @@
             // we can't easily estimate the size of a UIBarButtonSystemItem,
             // so we have to create our own and and provide our own width
             UIButton *innerButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            UIImage *image = [UIImage imageWithPathName:@"common/generic-button-background"];
-            UIImage *pressedImage = [UIImage imageWithPathName:@"common/generic-button-background-pressed"];
+            UIImage *image = [UIImage imageWithPathName:@"common/toolbar-button"];
+            UIImage *pressedImage = [UIImage imageWithPathName:@"common/toolbar-button-pressed"];
             NSString *cancelString = NSLocalizedString(@"COMMON_CANCEL", @"Cancel");
             innerButton.titleLabel.font = [UIFont boldSystemFontOfSize:[UIFont smallSystemFontSize]];
             CGSize size = [cancelString sizeWithFont:innerButton.titleLabel.font];

@@ -204,8 +204,8 @@
         UIButton *settingsButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [settingsButton setImage:settingsImage forState:UIControlStateNormal];
         
-        UIImage *background = [UIImage imageWithPathName:@"common/generic-button-background"];
-        UIImage *pressedBackground = [UIImage imageWithPathName:@"common/generic-button-background-pressed"];
+        UIImage *background = [UIImage imageWithPathName:@"common/toolbar-button"];
+        UIImage *pressedBackground = [UIImage imageWithPathName:@"common/toolbar-button-pressed"];
         
         [settingsButton setBackgroundImage:[background stretchableImageWithLeftCapWidth:8 topCapHeight:8]
                                   forState:UIControlStateNormal];

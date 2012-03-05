@@ -46,8 +46,8 @@
     
     _loginHintLabel.text = NSLocalizedString(@"CORE_SIGN_INTO_TWITTER_MESSAGE", @"Sign into your Twitter account.");
     
-    UIImage *backgroundImage = [[UIImage imageWithPathName:@"common/generic-button-background.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
-    UIImage *backgroundImagePressed = [[UIImage imageWithPathName:@"common/generic-button-background-pressed.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
+    UIImage *backgroundImage = [[UIImage imageWithPathName:@"common/toolbar-button.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
+    UIImage *backgroundImagePressed = [[UIImage imageWithPathName:@"common/toolbar-button-pressed.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
 
     [_signInButton setBackgroundImage:backgroundImage forState:UIControlStateNormal];
     [_signInButton setBackgroundImage:backgroundImagePressed forState:UIControlStateHighlighted];
