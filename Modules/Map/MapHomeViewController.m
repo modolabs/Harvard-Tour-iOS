@@ -40,8 +40,8 @@
     _settingsButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_settingsButton setImage:[UIImage imageWithPathName:@"modules/map/map-button-settings"] forState:UIControlStateNormal];
         
-    UIImage *normalImage = [UIImage imageWithPathName:@"common/secondary-toolbar-button"];
-    UIImage *pressedImage = [UIImage imageWithPathName:@"common/secondary-toolbar-button-pressed"];
+    UIImage *normalImage = [UIImage imageWithPathName:@"common/toolbar-button"];
+    UIImage *pressedImage = [UIImage imageWithPathName:@"common/toolbar-button-pressed"];
     CGRect frame = CGRectZero;
     if (normalImage) {
         frame.size = normalImage.size;

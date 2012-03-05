@@ -206,8 +206,8 @@
     button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 1.0, 0); // needed to center text vertically within button
     CGSize size = [button.titleLabel.text sizeWithFont:button.titleLabel.font];
     
-    UIImage *stretchableButtonImage = [[UIImage imageWithPathName:@"common/secondary-toolbar-button.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:0];
-    UIImage *stretchableButtonImagePressed = [[UIImage imageWithPathName:@"common/secondary-toolbar-button-pressed.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:0];
+    UIImage *stretchableButtonImage = [[UIImage imageWithPathName:@"common/toolbar-button.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:0];
+    UIImage *stretchableButtonImagePressed = [[UIImage imageWithPathName:@"common/toolbar-button-pressed.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:0];
     
     [button setBackgroundImage:stretchableButtonImage forState:UIControlStateNormal];
     [button setBackgroundImage:stretchableButtonImagePressed forState:UIControlStateHighlighted];
