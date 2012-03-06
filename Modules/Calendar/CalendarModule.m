@@ -116,7 +116,8 @@ NSString * const KGODataModelNameCalendar = @"Calendar";
         vc = calendarVC;
         
     } else if ([pageName isEqualToString:LocalPathPageNameDetail]) {
-        CalendarDetailViewController *detailVC = [[[CalendarDetailViewController alloc] init] autorelease];
+        CalendarDetailViewController *detailVC = [[[CalendarDetailViewController alloc] initWithNibName:@"CalendarDetailViewController"
+                                                                                                 bundle:nil] autorelease];
         detailVC.indexPath = [params objectForKey:@"currentIndexPath"];
         detailVC.eventsBySection = [params objectForKey:@"eventsBySection"];
         detailVC.sections = [params objectForKey:@"sections"];
