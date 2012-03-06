@@ -229,23 +229,33 @@
     return contactInfo;
 }
 
-#define DESCRIPTION_LABEL_TAG 5
+#define DESCRIPTION_WEBVIEW_TAG 5
+
+- (NSInteger)numberOfOccurString:(NSString *)match inString:(NSString *)src {
+    return [[src componentsSeparatedByString:match] count] - 1; 
+}
 
 - (NSArray *)sectionForExtendedInfo
 {
     NSArray *extendedInfo = nil;
     
     if (_event.summary) {
+        _event.summary = [_event.summary stringByReplacingOccurrencesOfString:@"\n" withString:@"<br>"];
+        CGFloat offset = [self numberOfOccurString:@"<br>" inString:_event.summary] * 10;
+        //just use the label to calculate the height of the webview.
         KGOLabel *label = [KGOLabel multilineLabelWithText:_event.summary
                                                       font:[[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyBodyText]
                                                      width:self.frame.size.width - 40];
-        label.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyBodyText];
-        label.tag = DESCRIPTION_LABEL_TAG;
         CGRect frame = label.frame;
-        frame.origin = CGPointMake(10, 10);
-        label.frame = frame;
-        
-        extendedInfo = [NSArray arrayWithObject:label];
+        frame = CGRectMake(10, 10, 310, frame.size.height + offset);
+        UIWebView *webView = [[UIWebView alloc] initWithFrame:frame];
+        webView.tag = DESCRIPTION_WEBVIEW_TAG;
+        KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:@"modules/calendar/events_template.html"];
+        NSMutableDictionary *values = [NSMutableDictionary dictionary];
+        [values setValue:(_event.summary ? _event.summary : @"") forKey:@"BODY"];
+        [webView loadTemplate:template values:values];
+        extendedInfo = [NSArray arrayWithObject:webView];
+        [webView release];
     }
     return extendedInfo;
 }
@@ -381,7 +391,7 @@
 
     } else {
         cell.imageView.image = nil;
-        UIView *view = [cell viewWithTag:DESCRIPTION_LABEL_TAG];
+        UIView *view = [cell viewWithTag:DESCRIPTION_WEBVIEW_TAG];
         [view removeFromSuperview];
     }
         
@@ -413,7 +423,7 @@
                                          contentViewWidth, subtitleSize.height);
         
     } else {
-        if ([cellData isKindOfClass:[UILabel class]]) {
+        if ([cellData isKindOfClass:[UIWebView class]]) {
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             [cell.contentView addSubview:cellData];
         }
@@ -425,7 +435,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     id cellData = [[_sections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    if ([cellData isKindOfClass:[UILabel class]]) {
+    if ([cellData isKindOfClass:[UIWebView class]]) {
         return [(UILabel *)cellData frame].size.height + 20;
     }
     
