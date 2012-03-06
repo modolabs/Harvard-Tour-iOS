@@ -259,7 +259,7 @@
 		<key>NavBarTitle</key>
 		<string>modules/home/logo-home.png</string>
 		<key>SearchBarBackground</key>
-		<string>common/searchbar-background.png</string>
+		<string>common/toolbar-background.png</string>
 		<key>SearchBarDropShadow</key>
 		<string>common/bar-drop-shadow.png</string>
 	</dict>

@@ -5,7 +5,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Foundation+KGOAdditions.h"
 
-#define TOOLBAR_BUTTON_PADDING 5
+#define TOOLBAR_BUTTON_PADDING 8
 #define TOOLBAR_BUTTON_SPACING 6
 #define TOOLBAR_MINIMUM_WIDTH 1
 #define TOOLBAR_ANIMATION_DURATION 0.3
