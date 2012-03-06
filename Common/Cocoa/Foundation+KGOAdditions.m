@@ -195,6 +195,20 @@ KGOSign KGOGetIntegerSign(NSInteger x) {
     return [formatter stringForObjectValue:self];
 }
 
+- (NSString *)dayTimeString {
+    NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];    
+    [formatter setDateStyle:kCFDateFormatterNoStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    return [formatter stringForObjectValue:self];
+}
+
+- (NSString *)weekDateString {
+    NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];    
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:kCFDateFormatterNoStyle];
+    return [formatter stringForObjectValue:self];
+}
+
 @end
 
 

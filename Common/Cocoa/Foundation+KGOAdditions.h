@@ -38,6 +38,10 @@ KGOSign KGOGetIntegerSign(NSInteger x);
 
 - (NSString *)weekDateTimeString;
 
+- (NSString *)dayTimeString;
+
+- (NSString *)weekDateString;
+
 @end
 
 
