@@ -26,7 +26,7 @@
         _selectedTabIndex = NSNotFound;
         
         self.tabSpacing = 10;
-        self.tabPadding = 5;
+        self.tabPadding = 8;
         // TODO: use config for font
         self.tabFont = [UIFont boldSystemFontOfSize:15];
     }
@@ -41,7 +41,7 @@
         _selectedTabIndex = NSNotFound;
         
         self.tabSpacing = 10;
-        self.tabPadding = 5;
+        self.tabPadding = 8;
         // TODO: use config for font
         self.tabFont = [UIFont boldSystemFontOfSize:15];
         
@@ -67,7 +67,7 @@
         }
         
         self.tabSpacing = 10;
-        self.tabPadding = 5;
+        self.tabPadding = 8;
         // TODO: use config for font
         self.tabFont = [UIFont boldSystemFontOfSize:15];
 
@@ -345,7 +345,7 @@
                          forState:UIControlStateNormal];
             [button setTitleColor:[self textColorForState:KGOTabStatePressed]
                          forState:UIControlStateHighlighted];
-            button;
+            break;
         case KGOTabStateDisabled:
             [button setBackgroundImage:[self backgroundImageForState:KGOTabStateDisabled atIndex:index]
                               forState:UIControlStateNormal];

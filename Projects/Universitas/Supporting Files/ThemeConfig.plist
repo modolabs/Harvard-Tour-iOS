@@ -17,7 +17,7 @@
 		<key>SearchBarTintColor</key>
 		<string>#666666</string>
 		<key>SecondaryCellBackground</key>
-		<string>#AAFFFFFF</string>
+		<string>#F6F6F6</string>
 		<key>TableSeparator</key>
 		<string>#C0C0BF</string>
 	</dict>
@@ -56,9 +56,9 @@
 		<key>ContentTitle</key>
 		<dict>
 			<key>color</key>
-			<string>#171717</string>
+			<string>#003366</string>
 			<key>font</key>
-			<string>Helvetica</string>
+			<string>Georgia</string>
 			<key>size</key>
 			<integer>7</integer>
 		</dict>
@@ -259,7 +259,7 @@
 		<key>NavBarTitle</key>
 		<string>modules/home/logo-home.png</string>
 		<key>SearchBarBackground</key>
-		<string>common/searchbar-background.png</string>
+		<string>common/toolbar-background.png</string>
 		<key>SearchBarDropShadow</key>
 		<string>common/bar-drop-shadow.png</string>
 	</dict>
