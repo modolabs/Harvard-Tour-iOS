@@ -106,7 +106,6 @@
 		EB033765133C2B8C00ACF2BB /* KGOToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = EB033727133C2B8C00ACF2BB /* KGOToolbar.m */; };
 		EB033766133C2B8C00ACF2BB /* MITThumbnailView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB033729133C2B8C00ACF2BB /* MITThumbnailView.m */; };
 		EB033767133C2B8C00ACF2BB /* KGOTabbedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EB03372B133C2B8C00ACF2BB /* KGOTabbedControl.m */; };
-		EB03376B133D26F100ACF2BB /* EventDetailTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB03376A133D26E400ACF2BB /* EventDetailTableView.m */; };
 		EB0338441340DB0500ACF2BB /* Calendar.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EB0338331340DB0500ACF2BB /* Calendar.xcdatamodeld */; };
 		EB0338451340DB0500ACF2BB /* KGOAttendeeWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0338371340DB0500ACF2BB /* KGOAttendeeWrapper.m */; };
 		EB0338461340DB0500ACF2BB /* KGOCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0338391340DB0500ACF2BB /* KGOCalendar.m */; };
@@ -217,6 +216,8 @@
 		EBAE86451215FB4900F370BE /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAE86441215FB4900F370BE /* Default@2x.png */; };
 		EBB121F1133A917200A4BD1D /* CalendarDayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB121EF133A913100A4BD1D /* CalendarDayViewController.m */; };
 		EBB121F2133A917200A4BD1D /* CalendarDayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB121F0133A915200A4BD1D /* CalendarDayViewController.xib */; };
+		EBDF990E15052AD500CBE555 /* CalendarDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBDF990D15052AD500CBE555 /* CalendarDetailViewController.xib */; };
+		EBDF991115052C7600CBE555 /* KGODetailPageHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBDF991015052C7600CBE555 /* KGODetailPageHeaderView.xib */; };
 		EBE242C113AFD3030082C277 /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBE242BC13AFD3030082C277 /* libfacebook_ios_sdk.a */; };
 		EBE2CC1E1342AD2F0037546A /* KGOBookmarksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE2CC1D1342AD2F0037546A /* KGOBookmarksViewController.m */; };
 		EBE2CC2113438AEA0037546A /* KGODetailPageHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE2CC2013438AEA0037546A /* KGODetailPageHeaderView.m */; };
@@ -410,8 +411,6 @@
 		EB033729133C2B8C00ACF2BB /* MITThumbnailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MITThumbnailView.m; sourceTree = "<group>"; };
 		EB03372A133C2B8C00ACF2BB /* KGOTabbedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOTabbedControl.h; sourceTree = "<group>"; };
 		EB03372B133C2B8C00ACF2BB /* KGOTabbedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KGOTabbedControl.m; sourceTree = "<group>"; };
-		EB033769133D26D600ACF2BB /* EventDetailTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventDetailTableView.h; sourceTree = "<group>"; };
-		EB03376A133D26E400ACF2BB /* EventDetailTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventDetailTableView.m; sourceTree = "<group>"; };
 		EB0338341340DB0500ACF2BB /* Calendar.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Calendar.xcdatamodel; sourceTree = "<group>"; };
 		EB0338351340DB0500ACF2BB /* CalendarModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarModel.h; sourceTree = "<group>"; };
 		EB0338361340DB0500ACF2BB /* KGOAttendeeWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOAttendeeWrapper.h; sourceTree = "<group>"; };
@@ -617,6 +616,8 @@
 		EBC1C7041347B8D20045CE9C /* kurogo.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = kurogo.xcconfig; sourceTree = "<group>"; };
 		EBC1C7051347B8D20045CE9C /* release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = release.xcconfig; sourceTree = "<group>"; };
 		EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = kurogo_debug.xcconfig; sourceTree = "<group>"; };
+		EBDF990D15052AD500CBE555 /* CalendarDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalendarDetailViewController.xib; sourceTree = "<group>"; };
+		EBDF991015052C7600CBE555 /* KGODetailPageHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KGODetailPageHeaderView.xib; sourceTree = "<group>"; };
 		EBE242BC13AFD3030082C277 /* libfacebook_ios_sdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libfacebook_ios_sdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE2CC1C1342AD2E0037546A /* KGOBookmarksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOBookmarksViewController.h; sourceTree = "<group>"; };
 		EBE2CC1D1342AD2F0037546A /* KGOBookmarksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KGOBookmarksViewController.m; sourceTree = "<group>"; };
@@ -1093,6 +1094,7 @@
 				EB03371B133C2B8C00ACF2BB /* HarvardNavigationController.m */,
 				EBE2CC1F13438AEA0037546A /* KGODetailPageHeaderView.h */,
 				EBE2CC2013438AEA0037546A /* KGODetailPageHeaderView.m */,
+				EBDF991015052C7600CBE555 /* KGODetailPageHeaderView.xib */,
 				EB05DAA61458953100A8F316 /* KGOGradientView.h */,
 				EB05DAA71458953100A8F316 /* KGOGradientView.m */,
 				EB267003149FD6DF00F50997 /* ThumbnailTableViewCell.h */,
@@ -1197,13 +1199,12 @@
 				EB1440C21309EEA000396753 /* CalendarDataManager.m */,
 				EB1440C31309EEA000396753 /* CalendarDetailViewController.h */,
 				EB1440C41309EEA000396753 /* CalendarDetailViewController.m */,
+				EBDF990D15052AD500CBE555 /* CalendarDetailViewController.xib */,
 				EB1440C81309EEA000396753 /* CalendarModule.h */,
 				EB1440C91309EEA000396753 /* CalendarModule.m */,
 				EBB121EE133A912500A4BD1D /* CalendarDayViewController.h */,
 				EBB121EF133A913100A4BD1D /* CalendarDayViewController.m */,
 				EBB121F0133A915200A4BD1D /* CalendarDayViewController.xib */,
-				EB033769133D26D600ACF2BB /* EventDetailTableView.h */,
-				EB03376A133D26E400ACF2BB /* EventDetailTableView.m */,
 				EB63FA7814E070CF00C33576 /* OverScrollFooterView.h */,
 				EB63FA7914E070CF00C33576 /* OverScrollFooterView.m */,
 				EB63FA7514E0708100C33576 /* OverScrollFooterView.xib */,
@@ -1581,6 +1582,8 @@
 				EB587B3914A3F25100723906 /* IconGridScrollViewController.xib in Resources */,
 				EB63FA7614E0708100C33576 /* OverScrollFooterView.xib in Resources */,
 				4ED552DC14F7895C00EF53EB /* VideoListViewController.xib in Resources */,
+				EBDF990E15052AD500CBE555 /* CalendarDetailViewController.xib in Resources */,
+				EBDF991115052C7600CBE555 /* KGODetailPageHeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1677,7 +1680,6 @@
 				EB033765133C2B8C00ACF2BB /* KGOToolbar.m in Sources */,
 				EB033766133C2B8C00ACF2BB /* MITThumbnailView.m in Sources */,
 				EB033767133C2B8C00ACF2BB /* KGOTabbedControl.m in Sources */,
-				EB03376B133D26F100ACF2BB /* EventDetailTableView.m in Sources */,
 				562F4B79133EFA10000B9344 /* ContentModule.m in Sources */,
 				562F4B7A133EFA10000B9344 /* ContentTableViewController.m in Sources */,
 				EB0338441340DB0500ACF2BB /* Calendar.xcdatamodeld in Sources */,
