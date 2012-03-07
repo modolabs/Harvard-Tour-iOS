@@ -31,6 +31,9 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
     [super viewDidLoad];
 
     self.title = NSLocalizedString(@"CALENDAR_EVENT_DETAIL_PAGE_TITLE", @"Event Detail");
+
+    _descriptionSectionId = NSNotFound;
+    _descriptionHeight = 0;
     
     _shareController = [(KGOShareButtonController *)[KGOShareButtonController alloc] initWithContentsController:self];
     _shareController.shareTypes = KGOShareControllerShareTypeEmail | KGOShareControllerShareTypeFacebook | KGOShareControllerShareTypeTwitter;
@@ -96,6 +99,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
     
     NSArray *extendedInfo = [self sectionForExtendedInfo];
     if (extendedInfo.count) {
+        _descriptionSectionId = mutableSections.count;
         [mutableSections addObject:extendedInfo];
     }
     NSArray *sections = [self sectionsForFields];
@@ -201,36 +205,39 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
     return contactInfo;
 }
 
-- (NSInteger)numberOfOccurString:(NSString *)match inString:(NSString *)src {
-    return [[src componentsSeparatedByString:match] count] - 1; 
-}
-
 - (NSArray *)sectionForExtendedInfo
 {
     NSArray *extendedInfo = nil;
-    
     if (_event.summary) {
-        _event.summary = [_event.summary stringByReplacingOccurrencesOfString:@"\n" withString:@"<br>"];
+        if (!_descriptionView) {
+            CGRect frame = CGRectMake(0, 0,
+                                      CGRectGetWidth(self.tableView.bounds),
+                                      self.tableView.rowHeight); // placeholder height
+            _descriptionView = [[UIWebView alloc] initWithFrame:frame];
+            _descriptionView.delegate = self;
+            _descriptionView.tag = DESCRIPTION_WEBVIEW_TAG; // set this so we can remove it from the cell that has it
+        }
         
-        CGFloat offset = [self numberOfOccurString:@"<br>" inString:_event.summary] * 10;
-        
-        //just use the label to calculate the height of the webview.
-        KGOLabel *label = [KGOLabel multilineLabelWithText:_event.summary
-                                                      font:[[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyBodyText]
-                                                     width:self.tableView.frame.size.width - 40];
-        
-        CGRect frame = CGRectMake(10, 10, 310, label.frame.size.height + offset);
-        UIWebView *webView = [[UIWebView alloc] initWithFrame:frame];
-        
-        webView.tag = DESCRIPTION_WEBVIEW_TAG;
-        KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:@"modules/calendar/events_template.html"];
+        KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:@"common/webview.html"];
         NSMutableDictionary *values = [NSMutableDictionary dictionary];
-        [values setValue:(_event.summary ? _event.summary : @"") forKey:@"BODY"];
-        [webView loadTemplate:template values:values];
-        extendedInfo = [NSArray arrayWithObject:webView];
-        [webView release];
+        [values setValue:_event.summary forKey:@"BODY"];
+        [_descriptionView loadTemplate:template values:values];
+        extendedInfo = [NSArray arrayWithObject:_descriptionView];
     }
     return extendedInfo;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    NSString *output = [webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"];
+    _descriptionHeight = [output floatValue];
+    if (_descriptionHeight && _descriptionHeight != CGRectGetHeight(_descriptionView.frame)) {
+        CGRect frame = _descriptionView.frame;
+        frame.size.height = _descriptionHeight;
+        _descriptionView.frame = frame;
+        
+        NSIndexSet *sections = [NSIndexSet indexSetWithIndex:_descriptionSectionId];
+        [self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationNone];
+    }
 }
 
 - (NSArray *)sectionsForFields
@@ -366,7 +373,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
         UIView *view = [cell viewWithTag:DESCRIPTION_WEBVIEW_TAG];
         [view removeFromSuperview];
     }
-    
+
     if ([cellData isKindOfClass:[NSDictionary class]]) {  
         UILabel *titleLabel = (UILabel *)[cell viewWithTag:CELL_TITLE_TAG];
         UILabel *subtitleLabel = (UILabel *)[cell viewWithTag:CELL_SUBTITLE_TAG];
@@ -393,7 +400,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
                                       contentViewWidth, titleSize.height);
         subtitleLabel.frame = CGRectMake(CELL_LABELS_HORIZONTAL_PADDING, titleSize.height + CELL_LABELS_VERTICAL_PADDING, 
                                          contentViewWidth, subtitleSize.height);
-        
+
     } else {
         if ([cellData isKindOfClass:[UIWebView class]]) {
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -407,8 +414,9 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     id cellData = [[_detailSections objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    
     if ([cellData isKindOfClass:[UIWebView class]]) {
-        return [(UIWebView *)cellData frame].size.height + 20;
+        return _descriptionHeight;
     }
     
     // calculate height
@@ -618,6 +626,8 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
 }
 
 - (void)dealloc {
+    _descriptionView.delegate = nil;
+    [_descriptionView release];
     [_event release];
 	[_shareController release];
     [_detailSections release];

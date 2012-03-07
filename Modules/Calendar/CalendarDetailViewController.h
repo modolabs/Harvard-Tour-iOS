@@ -10,12 +10,17 @@
 
 @interface CalendarDetailViewController : UIViewController <KGODetailPageHeaderDelegate,
 KGODetailPagerController, KGODetailPagerDelegate, CalendarDataManagerDelegate,
-UITableViewDataSource, UITableViewDelegate,
+UITableViewDataSource, UITableViewDelegate, UIWebViewDelegate,
 MFMailComposeViewControllerDelegate, EKEventEditViewDelegate>
 {
     KGOEventWrapper *_event;
     KGOShareButtonController *_shareController;
     NSArray *_detailSections;
+
+    // for description section
+    NSInteger _descriptionSectionId;
+    CGFloat _descriptionHeight;
+    UIWebView *_descriptionView;
 }
 
 @property (nonatomic, retain) KGOEventWrapper *event;
