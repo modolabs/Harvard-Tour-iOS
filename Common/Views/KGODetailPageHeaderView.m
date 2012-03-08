@@ -7,6 +7,13 @@
 #define MAX_TITLE_LINES 4
 #define MAX_SUBTITLE_LINES 5
 
+@interface KGODetailPageHeaderView (Private)
+
+// triggered when title or subtitle changes so the height needs to be recalculated
+- (void)contentDidChange;
+
+@end
+
 @implementation KGODetailPageHeaderView
 
 @synthesize showsShareButton, showsBookmarkButton, delegate;
@@ -69,8 +76,19 @@ titleLabel = _titleLabel, subtitleLabel = _subtitleLabel, buttonContainer = _but
     
     self.titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentTitle];
     self.subtitleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentSubtitle];
-    
-    
+}
+
+// triggered when title or subtitle changes so the height needs to be recalculated
+- (void)contentDidChange
+{
+    CGFloat y = fmaxf(CGRectGetMaxY(self.buttonContainer.frame), CGRectGetMaxY(self.subtitleLabel.frame)) + 10;
+    if (y != CGRectGetMaxY(self.frame)) {
+        self.frame = CGRectMake(CGRectGetMinX(self.frame), CGRectGetMinY(self.frame),
+                                CGRectGetWidth(self.frame), y);
+        if ([self.delegate respondsToSelector:@selector(headerViewFrameDidChange:)]) {
+            [self.delegate headerViewFrameDidChange:self];
+        }
+    }
 }
 
 - (BOOL)showsShareButton
@@ -112,6 +130,26 @@ titleLabel = _titleLabel, subtitleLabel = _subtitleLabel, buttonContainer = _but
 - (void)setTitle:(NSString *)title
 {
     self.titleLabel.text = title;
+    
+    self.titleLabel.text = _detailItem.title;
+    if (self.titleLabel.text.length) {
+        CGSize size = [self.titleLabel.text sizeWithFont:self.titleLabel.font
+                                       constrainedToSize:CGSizeMake(CGRectGetWidth(self.titleLabel.frame), 200)
+                                           lineBreakMode:UILineBreakModeWordWrap];
+        self.titleLabel.frame = CGRectMake(CGRectGetMinX(self.titleLabel.frame), CGRectGetMinY(self.titleLabel.frame),
+                                           CGRectGetWidth(self.titleLabel.frame), size.height);
+
+        // subtitle and button go 10px below bottom of title
+        CGFloat y = CGRectGetMaxY(self.titleLabel.frame) + 10;
+        CGRect frame = self.buttonContainer.frame;
+        frame.origin.y = y;
+        self.buttonContainer.frame = frame;
+
+        frame = self.subtitleLabel.frame;
+        frame.origin.y = y;
+        self.subtitleLabel.frame = frame;
+    }
+    [self contentDidChange];
 }
 
 - (void)setSubtitle:(NSString *)subtitle
@@ -119,16 +157,17 @@ titleLabel = _titleLabel, subtitleLabel = _subtitleLabel, buttonContainer = _but
     self.subtitleLabel.text = subtitle;
 
     if (self.showsSubtitle && self.subtitleLabel.text) {
-        CGFloat y = CGRectGetMinY(self.buttonContainer.frame);
         CGFloat subWidth = CGRectGetMinX(self.buttonContainer.frame) - 10;
         CGSize size = [self.subtitleLabel.text sizeWithFont:self.subtitleLabel.font
                                           constrainedToSize:CGSizeMake(subWidth, 200)];
-        self.subtitleLabel.frame = CGRectMake(CGRectGetMinX(self.subtitleLabel.frame), y,
+        self.subtitleLabel.frame = CGRectMake(CGRectGetMinX(self.subtitleLabel.frame),
+                                              CGRectGetMinY(self.subtitleLabel.frame),
                                               subWidth, size.height);
         self.subtitleLabel.hidden = NO;
     } else {
         self.subtitleLabel.hidden = YES;
     }
+    [self contentDidChange];
 }
 
 - (id<KGOSearchResult>)detailItem
@@ -140,27 +179,11 @@ titleLabel = _titleLabel, subtitleLabel = _subtitleLabel, buttonContainer = _but
 {
     [_detailItem release];
     _detailItem = [item retain];
-
-    self.titleLabel.text = _detailItem.title;
-    if (self.titleLabel.text.length) {
-        CGSize size = [self.titleLabel.text sizeWithFont:self.titleLabel.font
-                                       constrainedToSize:CGSizeMake(CGRectGetWidth(self.titleLabel.frame), 200)];
-        self.titleLabel.frame = CGRectMake(CGRectGetMinX(self.titleLabel.frame), CGRectGetMinY(self.titleLabel.frame),
-                                           CGRectGetWidth(self.titleLabel.frame), size.height);
-    }
+    
+    self.title = _detailItem.title;
 
     if ([_detailItem respondsToSelector:@selector(subtitle)]) {
         self.subtitle = [_detailItem subtitle];
-    }
-    
-    CGFloat y = fmaxf(CGRectGetMaxY(self.buttonContainer.frame), CGRectGetMaxY(self.subtitleLabel.frame)) + 10;
-
-    if (y != CGRectGetMaxY(self.frame)) {
-        self.frame = CGRectMake(CGRectGetMinX(self.frame), CGRectGetMinY(self.frame),
-                                CGRectGetWidth(self.frame), y);
-        if ([self.delegate respondsToSelector:@selector(headerViewFrameDidChange:)]) {
-            [self.delegate headerViewFrameDidChange:self];
-        }
     }
 }
 
