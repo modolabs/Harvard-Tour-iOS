@@ -30,8 +30,6 @@ federatedSearchResults;
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-    
-    self.title = @"People";
 
     _searchBar = [[KGOSearchBar alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 44)];
     _searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;

@@ -36,8 +36,6 @@
     
     self.tableView.backgroundColor = [[KGOTheme sharedTheme] backgroundColorForApplication];
     
-    self.title = @"About";
-    
     self.request = [[KGORequestManager sharedManager] requestWithDelegate:self
                                                                    module:@"about"
                                                                      path:@"index"
