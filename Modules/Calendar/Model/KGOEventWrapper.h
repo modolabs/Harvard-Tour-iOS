@@ -3,7 +3,8 @@
 #import <MapKit/MapKit.h>
 #import "KGOSearchModel.h"
 
-@class EKEvent, KGOEvent, KGOAttendeeWrapper, KGOCalendar;
+@class EKEvent, KGOEvent, KGOAttendeeWrapper, KGOCalendar,
+EKEventEditViewController, CalendarDataManager;
 
 @interface KGOEventWrapper : NSObject <KGOSearchResult, MKAnnotation> {
     
@@ -31,6 +32,7 @@
 @property (nonatomic, retain) NSDictionary *rrule; // recurrenceRule in EKEvent
 @property (nonatomic, retain) NSSet *organizers;   // set of KGOAttendeeWrapper objects
 @property (nonatomic, retain) NSSet *attendees;    // set of KGOAttendeeWrapper objects
+@property (nonatomic, retain) NSString *ekIdentifier;
 
 // core data only -- no eventkit counterpart
 @property (nonatomic) CLLocationCoordinate2D coordinate;
@@ -41,7 +43,8 @@
 @property (nonatomic, retain) NSDictionary *userInfo;
 
 // set by the data controller
-@property (nonatomic, retain) ModuleTag *moduleTag;
+@property (nonatomic, retain) ModuleTag *moduleTag; // TODO: remove moduleTag
+@property (nonatomic, assign) CalendarDataManager *dataManager;
 
 // server api
 
@@ -53,6 +56,7 @@
 - (id)initWithEKEvent:(EKEvent *)event;
 - (EKEvent *)convertToEKEvent;
 - (BOOL)saveToEventStore;
+- (EKEventEditViewController *)editViewController;
 
 @property (nonatomic, retain) EKEvent *EKEvent; // setting this will override core data if saved
 

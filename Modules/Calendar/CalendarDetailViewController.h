@@ -43,6 +43,7 @@ MFMailComposeViewControllerDelegate, EKEventEditViewDelegate>
 - (NSArray *)sectionsForFields;
 
 - (UIView *)viewForTableHeader;
+- (NSString *)dateDescriptionForEvent:(KGOEventWrapper *)event;
 
 @end
 

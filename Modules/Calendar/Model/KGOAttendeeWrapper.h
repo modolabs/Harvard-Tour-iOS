@@ -9,14 +9,10 @@
     EKParticipant *_ekAttendee;
     KGOEventParticipant *_kgoAttendee;
     KGOEventParticipantRelation *_relation;
-
-    NSString *_name;
-    EKParticipantType _attendeeType;
-    EKParticipantStatus _attendeeStatus;
-    
-    KGOEventWrapper *_event;
     
 }
+
+@property (nonatomic, retain) ModuleTag *moduleTag;
 
 @property (nonatomic, retain) KGOEventWrapper *event;
 @property (nonatomic, retain) KGOEventWrapper *organizedEvent;

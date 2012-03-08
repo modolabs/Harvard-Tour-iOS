@@ -25,4 +25,12 @@
     return relation;
 }
 
+// remove when coredata branch is merged
++ (KGOEventParticipantRelation *)relationWithEvent:(KGOEvent *)event
+                                       participant:(KGOEventParticipant *)participant
+                                            module:(ModuleTag *)moduleTag
+{
+    return [[self class] relationWithEvent:event participant:participant];
+}
+
 @end

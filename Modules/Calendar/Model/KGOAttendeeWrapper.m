@@ -10,7 +10,8 @@ name = _name,
 attendeeType = _attendeeType,
 attendeeStatus = _attendeeStatus,
 event = _event,
-organizedEvent;
+organizedEvent = _organizedEvent,
+moduleTag = _moduleTag;
 
 - (id)initWithDictionary:(NSDictionary *)dictionary
 {
@@ -20,6 +21,20 @@ organizedEvent;
         self.identifier = [dictionary nonemptyStringForKey:@"id"];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    self.event = nil;
+    self.organizedEvent = nil;
+    self.identifier = nil;
+    self.name = nil;
+    self.contactInfo = nil;
+    self.EKAttendee = nil;
+    self.KGOAttendee = nil;
+    self.moduleTag = nil;
+
+    [super dealloc];
 }
 
 #pragma mark EventKit

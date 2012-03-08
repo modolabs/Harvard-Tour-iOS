@@ -2,6 +2,7 @@
 #import "CoreDataManager.h"
 #import "Foundation+KGOAdditions.h"
 #import "CalendarModel.h"
+#import <EventKit/EventKit.h>
 
 #define EVENT_TIMEOUT -300
 
@@ -61,6 +62,14 @@
 - (NSString *)shortDateTimeStringFromDate:(NSDate *)date
 {
     return [[_dateFormatters objectForKey:@"dateTime"] stringFromDate:date];
+}
+
+- (EKEventStore *)eventStore
+{
+    if (!_eventStore) {
+        _eventStore = [[EKEventStore alloc] init];
+    }
+    return _eventStore;
 }
 
 - (KGOCalendarGroup *)currentGroup
@@ -223,6 +232,7 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
                 NSMutableArray *wrappers = [NSMutableArray arrayWithCapacity:filteredEvents.count];
                 for (KGOEvent *event in filteredEvents) {
                     KGOEventWrapper *wrapper = [[[KGOEventWrapper alloc] initWithKGOEvent:event] autorelease];
+                    wrapper.dataManager = self;
                     wrapper.moduleTag = self.moduleTag;
                     [wrappers addObject:wrapper];
                 }
@@ -373,6 +383,7 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
     if (request == _groupsRequest) {
 
         NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sortOrder" ascending:YES];
+        NSString *currentIdentifier = _currentGroup.identifier;
         NSArray *oldGroups = [[CoreDataManager sharedManager] objectsForEntity:KGOEntityNameCalendarGroup
                                                              matchingPredicate:nil
                                                                sortDescriptors:[NSArray arrayWithObject:sort]];
@@ -403,7 +414,7 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
 
         if (groupsDidChange) {
             NSArray *newGroupIDs = [newGroups mappedArrayUsingBlock:identifiersFromGroups];
-            if (![newGroupIDs containsObject:_currentGroup.identifier]) {
+            if (_currentGroup && ![newGroupIDs containsObject:currentIdentifier]) {
                 [_currentGroup release];
                 _currentGroup = [[newGroups objectAtIndex:0] retain];
             }
@@ -460,7 +471,8 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
         NSMutableArray *array = [NSMutableArray array];
         for (NSInteger i = 0; i < returned; i++) {
             NSDictionary *aDict = [eventDicts objectAtIndex:i];
-            KGOEventWrapper *event = [[[KGOEventWrapper alloc] initWithDictionary:aDict] autorelease];
+            KGOEventWrapper *event = [[[KGOEventWrapper alloc] initWithDictionary:aDict module:self.moduleTag] autorelease];
+            event.dataManager = self;
             event.moduleTag = self.moduleTag;
             [event addCalendar:calendar];
             [array addObject:event];
@@ -513,6 +525,8 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
     [_detailRequests release];
     
     [_currentGroup release];
+    
+    [_eventStore release];
     
     [super dealloc];
 }

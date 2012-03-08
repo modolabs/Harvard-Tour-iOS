@@ -1,6 +1,8 @@
 #import "KGOEventWrapper.h"
 #import <EventKit/EventKit.h>
+#import <EventKitUI/EventKitUI.h>
 #import "CalendarModel.h"
+#import "CalendarDataManager.h"
 #import "Foundation+KGOAdditions.h"
 #import "UIKit+KGOAdditions.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
@@ -23,6 +25,9 @@ calendars = _calendars,
 bookmarked = _bookmarked, 
 userInfo = _userInfo,
 moduleTag = _moduleTag;
+@synthesize ekIdentifier = _ekIdentifier;
+@synthesize EKEvent = _ekEvent;
+@synthesize dataManager = _dataManager;
 
 #pragma mark KGOSearchResult
 
@@ -52,15 +57,6 @@ moduleTag = _moduleTag;
 }
 
 #pragma mark -
-
-+ (EKEventStore *)sharedEventStore
-{
-    static EKEventStore *s_eventStore = nil;
-    if (s_eventStore == nil) {
-        s_eventStore = [[EKEventStore alloc] init];
-    }
-    return s_eventStore;
-}
 
 - (id)initWithDictionary:(NSDictionary *)dictionary module:(ModuleTag *)moduleTag
 {
@@ -120,6 +116,13 @@ moduleTag = _moduleTag;
     self.lastUpdate = [NSDate date];
 }
 
+- (void)dealloc
+{
+    self.EKEvent = nil;
+    self.KGOEvent = nil;
+    [super dealloc];
+}
+
 #pragma mark eventkit
 
 - (id)initWithEKEvent:(EKEvent *)event
@@ -134,7 +137,8 @@ moduleTag = _moduleTag;
 - (EKEvent *)convertToEKEvent
 {
     [_ekEvent release];
-    _ekEvent = [[KGOEventWrapper sharedEventStore] eventWithIdentifier:self.identifier];
+    EKEventStore *eventStore = [[[EKEventStore alloc] init] autorelease];
+    _ekEvent = [eventStore eventWithIdentifier:self.identifier];
     _ekEvent.location = self.location;
     _ekEvent.title = self.title;
     _ekEvent.endDate = self.endDate;
@@ -149,31 +153,37 @@ moduleTag = _moduleTag;
 - (BOOL)saveToEventStore
 {
     NSError *error = nil;
+    EKEventStore *eventStore = [[[EKEventStore alloc] init] autorelease];
     // TODO: determine whether to use EKSpanThisEvent or EKSpanFutureEvents
-    return [[KGOEventWrapper sharedEventStore] saveEvent:_ekEvent span:EKSpanThisEvent error:&error];
+    return [eventStore saveEvent:_ekEvent span:EKSpanThisEvent error:&error];
 }
 
-- (EKEvent *)EKEvent
+- (EKEventEditViewController *)editViewController
 {
-    return _ekEvent;
-}
-
-- (void)setEKEvent:(EKEvent *)event
-{
-    [_ekEvent release];
-    _ekEvent = [event retain];
+    EKEventStore *eventStore = self.dataManager.eventStore;
+    if (!self.EKEvent) {
+        if (self.ekIdentifier) {
+            self.EKEvent = [eventStore eventWithIdentifier:self.ekIdentifier];
+        }
+        if (!self.EKEvent) {
+            self.EKEvent = [EKEvent eventWithEventStore:eventStore];
+            self.EKEvent.calendar = [eventStore defaultCalendarForNewEvents];
+            self.EKEvent.location = self.location;
+            self.EKEvent.title = self.title;
+            self.EKEvent.endDate = self.endDate;
+            self.EKEvent.startDate = self.startDate;
+            self.EKEvent.notes = self.summary;
+            self.EKEvent.allDay = self.allDay;
+            // TODO: read recurrenceRule, attendees, and organizer
+            
+            self.ekIdentifier = _ekEvent.eventIdentifier;
+        }
+    }
     
-    self.identifier = event.eventIdentifier;
-    self.endDate = event.endDate;
-    self.startDate = event.startDate;
-    self.lastUpdate = event.lastModifiedDate;
-    self.allDay = event.allDay;
-    self.location = event.location;
-    self.title = event.title;
-    self.summary = event.notes;
-
-    // TODO: write recurrenceRule.  attendees and organizer are
-    // not writeable as of the latest SDK.
+    EKEventEditViewController *vc = [[[EKEventEditViewController alloc] init] autorelease];
+    vc.event = self.EKEvent;
+    vc.eventStore = eventStore;
+    return vc;
 }
 
 #pragma mark - core data
@@ -293,6 +303,7 @@ moduleTag = _moduleTag;
         _kgoEvent = [[KGOEvent eventWithID:self.identifier module:self.moduleTag] retain];
     }
 
+    _kgoEvent.ekIdentifier = self.ekIdentifier;
     _kgoEvent.title = self.title;
     _kgoEvent.location = self.location;
     _kgoEvent.briefLocation = self.briefLocation;
@@ -390,6 +401,7 @@ moduleTag = _moduleTag;
     _kgoEvent = [event retain];
 
     if (!self.identifier)    self.identifier    = _kgoEvent.identifier;
+    if (!self.ekIdentifier)  self.ekIdentifier  = _kgoEvent.ekIdentifier;
     if (!self.title)         self.title         = _kgoEvent.title;
     if (!self.location)      self.location      = _kgoEvent.location;
     if (!self.briefLocation) self.briefLocation = _kgoEvent.briefLocation;

@@ -27,6 +27,8 @@
 @property (nonatomic, retain) NSNumber * allDay;
 @property (nonatomic, retain) NSData * fields;
 
+// new in v3
+@property (nonatomic, retain) NSString * ekIdentifier;
 
 + (KGOEvent *)eventWithID:(NSString *)identifier module:(ModuleTag *)moduleTag;
 + (KGOEvent *)findEventWithID:(NSString *)identifier module:(ModuleTag *)moduleTag;

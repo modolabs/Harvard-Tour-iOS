@@ -15,7 +15,7 @@
 
 @end
 
-@class KGOCalendarGroup;
+@class KGOCalendarGroup, EKEventStore;
 
 @interface CalendarDataManager : NSObject <KGORequestDelegate> {
     
@@ -29,11 +29,14 @@
     
     NSDictionary *_dateFormatters;
     
+    EKEventStore *_eventStore;
+    
 }
 
 @property (nonatomic, assign) id<CalendarDataManagerDelegate> delegate;
 @property (nonatomic, readonly) KGOCalendarGroup *currentGroup;
 @property (nonatomic, retain) ModuleTag *moduleTag;
+@property (nonatomic, readonly) EKEventStore *eventStore;
 
 - (BOOL)requestGroups;
 - (BOOL)requestCalendarsForGroup:(KGOCalendarGroup *)group;

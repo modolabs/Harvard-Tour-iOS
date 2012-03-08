@@ -210,8 +210,9 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
     NSArray *extendedInfo = nil;
     if (_event.summary) {
         if (!_descriptionView) {
+            CGFloat margin = [self.tableView marginWidth]; // will be zero for plain style tableview
             CGRect frame = CGRectMake(0, 0,
-                                      CGRectGetWidth(self.tableView.bounds),
+                                      CGRectGetWidth(self.tableView.bounds) - 2 * margin,
                                       self.tableView.rowHeight); // placeholder height
             _descriptionView = [[UIWebView alloc] initWithFrame:frame];
             _descriptionView.delegate = self;
@@ -305,6 +306,32 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
     return sections;
 }
 
+- (NSString *)dateDescriptionForEvent:(KGOEventWrapper *)event
+{
+    NSString *dateString = [self.dataManager mediumDateStringFromDate:_event.startDate];
+    NSString *timeString = nil;
+    if (_event.allDay) {
+        NSString *endDateString = [self.dataManager mediumDateStringFromDate:_event.endDate];
+        if ([endDateString isEqualToString:dateString]) {
+            timeString = [NSString stringWithFormat:@"%@\n%@", dateString, NSLocalizedString(@"CALENDAR_ALL_DAY_SUBTITLE", @"All day")];
+        } else {
+            timeString = [NSString stringWithFormat:@"%@ - %@", dateString, endDateString];
+            
+        }
+    } else {
+        if (_event.endDate) {
+            timeString = [NSString stringWithFormat:@"%@\n%@-%@",
+                          dateString,
+                          [self.dataManager shortTimeStringFromDate:_event.startDate],
+                          [self.dataManager shortTimeStringFromDate:_event.endDate]];
+        } else {
+            timeString = [NSString stringWithFormat:@"%@\n%@",
+                          dateString,
+                          [self.dataManager shortTimeStringFromDate:_event.startDate]];
+        }
+    }
+    return timeString;
+}
 
 #pragma mark - UITableView
 
@@ -512,59 +539,15 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
                                      action:@selector(calendarButtonPressed:)];
     }
     self.headerView.detailItem = self.event;
-    
-    // time
-    NSString *dateString = [self.dataManager mediumDateStringFromDate:_event.startDate];
-    NSString *timeString = nil;
-    if (_event.allDay) {
-        NSString *endDateString = [self.dataManager mediumDateStringFromDate:_event.endDate];
-        if ([endDateString isEqualToString:dateString]) {
-            timeString = [NSString stringWithFormat:@"%@\n%@", dateString, NSLocalizedString(@"CALENDAR_ALL_DAY_SUBTITLE", @"All day")];
-        } else {
-            timeString = [NSString stringWithFormat:@"%@ - %@", dateString, endDateString];
-            
-        }
-    } else {
-        if (_event.endDate) {
-            timeString = [NSString stringWithFormat:@"%@\n%@-%@",
-                          dateString,
-                          [self.dataManager shortTimeStringFromDate:_event.startDate],
-                          [self.dataManager shortTimeStringFromDate:_event.endDate]];
-        } else {
-            timeString = [NSString stringWithFormat:@"%@\n%@",
-                          dateString,
-                          [self.dataManager shortTimeStringFromDate:_event.startDate]];
-        }
-    }
-    self.headerView.subtitle = timeString;
-    
+    self.headerView.subtitle = [self dateDescriptionForEvent:_event];
     return self.headerView;
 }
 
-- (void)calendarButtonPressed:(id)sender {
-    
-    EKEventStore *eventStore = [[[EKEventStore alloc] init] autorelease];
-    
-    EKEvent *newEvent = [EKEvent eventWithEventStore:eventStore];
-    newEvent.calendar = [eventStore defaultCalendarForNewEvents];
-    
-    newEvent.title = self.event.title;
-    newEvent.startDate = self.event.startDate;
-    newEvent.endDate = self.event.endDate;
-    
-    if (self.event.location.length > 0)
-        newEvent.location = self.event.location;
-    
-    if (self.event.summary) {
-        newEvent.notes = self.event.summary;
-    }
-    
-    
-    EKEventEditViewController *eventViewController = [[[EKEventEditViewController alloc] init] autorelease];
-    eventViewController.event = newEvent;
-    eventViewController.eventStore = eventStore;
+- (void)calendarButtonPressed:(id)sender
+{
+    EKEventEditViewController *eventViewController = [self.event editViewController];
     eventViewController.editViewDelegate = self;
-    [self presentModalViewController:eventViewController animated:YES];    
+    [self presentModalViewController:eventViewController animated:YES];
 }
 
 - (void)headerViewFrameDidChange:(KGODetailPageHeaderView *)headerView
@@ -614,7 +597,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
 - (void)eventEditViewController:(EKEventEditViewController *)controller 
           didCompleteWithAction:(EKEventEditViewAction)action
 {
-    [controller dismissModalViewControllerAnimated:YES];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 // MFMailComposeViewControllerDelegate

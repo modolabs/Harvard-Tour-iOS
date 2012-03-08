@@ -618,6 +618,7 @@
 		EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = kurogo_debug.xcconfig; sourceTree = "<group>"; };
 		EBDF990D15052AD500CBE555 /* CalendarDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CalendarDetailViewController.xib; sourceTree = "<group>"; };
 		EBDF991015052C7600CBE555 /* KGODetailPageHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KGODetailPageHeaderView.xib; sourceTree = "<group>"; };
+		EBDF996515091D7900CBE555 /* Calendar v3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Calendar v3.xcdatamodel"; sourceTree = "<group>"; };
 		EBE242BC13AFD3030082C277 /* libfacebook_ios_sdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libfacebook_ios_sdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBE2CC1C1342AD2E0037546A /* KGOBookmarksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KGOBookmarksViewController.h; sourceTree = "<group>"; };
 		EBE2CC1D1342AD2F0037546A /* KGOBookmarksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KGOBookmarksViewController.m; sourceTree = "<group>"; };
@@ -1934,10 +1935,11 @@
 		EB0338331340DB0500ACF2BB /* Calendar.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				EBDF996515091D7900CBE555 /* Calendar v3.xcdatamodel */,
 				A198B2DC145A0D7C00CFAC40 /* Calendar v2.xcdatamodel */,
 				EB0338341340DB0500ACF2BB /* Calendar.xcdatamodel */,
 			);
-			currentVersion = A198B2DC145A0D7C00CFAC40 /* Calendar v2.xcdatamodel */;
+			currentVersion = EBDF996515091D7900CBE555 /* Calendar v3.xcdatamodel */;
 			path = Calendar.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

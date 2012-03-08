@@ -24,6 +24,7 @@ NSString * const KGOEntityNameEvent = @"KGOEvent";
 @dynamic particpants;
 @dynamic allDay;
 @dynamic fields;
+@dynamic ekIdentifier;
 
 + (KGOEvent *)findEventWithID:(NSString *)identifier
 {
@@ -101,5 +102,16 @@ NSString * const KGOEntityNameEvent = @"KGOEvent";
     [self didChangeValueForKey:@"particpants" withSetMutation:NSKeyValueMinusSetMutation usingObjects:value];
 }
 
+// remove these methods when coredata branch is merged
+
++ (KGOEvent *)eventWithID:(NSString *)identifier module:(ModuleTag *)moduleTag
+{
+    return [[self class] eventWithID:identifier];
+}
+
++ (KGOEvent *)findEventWithID:(NSString *)identifier module:(ModuleTag *)moduleTag
+{
+    return [[self class] findEventWithID:identifier];
+}
 
 @end
