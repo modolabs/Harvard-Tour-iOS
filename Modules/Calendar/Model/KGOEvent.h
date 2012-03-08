@@ -28,7 +28,7 @@
 @property (nonatomic, retain) NSData * fields;
 
 
-+ (KGOEvent *)eventWithID:(NSString *)identifier;
-+ (KGOEvent *)findEventWithID:(NSString *)identifier;
++ (KGOEvent *)eventWithID:(NSString *)identifier module:(ModuleTag *)moduleTag;
++ (KGOEvent *)findEventWithID:(NSString *)identifier module:(ModuleTag *)moduleTag;
 
 @end

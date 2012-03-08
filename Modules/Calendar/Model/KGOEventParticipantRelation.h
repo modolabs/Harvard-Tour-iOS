@@ -11,6 +11,8 @@
 @property (nonatomic, retain) KGOEvent * event;
 @property (nonatomic, retain) KGOEventParticipant * participant;
 
-+ (KGOEventParticipantRelation *)relationWithEvent:(KGOEvent *)event participant:(KGOEventParticipant *)participant;
++ (KGOEventParticipantRelation *)relationWithEvent:(KGOEvent *)event
+                                       participant:(KGOEventParticipant *)participant
+                                            module:(ModuleTag *)moduleTag;
 
 @end

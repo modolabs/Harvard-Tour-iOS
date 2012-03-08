@@ -22,7 +22,7 @@ coordinate = _coordinate,
 calendars = _calendars,
 bookmarked = _bookmarked, 
 userInfo = _userInfo,
-moduleTag;
+moduleTag = _moduleTag;
 
 #pragma mark KGOSearchResult
 
@@ -62,7 +62,7 @@ moduleTag;
     return s_eventStore;
 }
 
-- (id)initWithDictionary:(NSDictionary *)dictionary
+- (id)initWithDictionary:(NSDictionary *)dictionary module:(ModuleTag *)moduleTag
 {
     NSString *identifier = [dictionary nonemptyStringForKey:@"id"];
     if (!identifier) {
@@ -73,8 +73,9 @@ moduleTag;
     self = [super init];
     if (self) {
         self.identifier = identifier;
+        self.moduleTag = moduleTag;
         
-        KGOEvent *storedEvent = [KGOEvent findEventWithID:self.identifier];
+        KGOEvent *storedEvent = [KGOEvent findEventWithID:self.identifier module:moduleTag];
         if (storedEvent) {
             self.KGOEvent = storedEvent;
         }
@@ -203,7 +204,9 @@ moduleTag;
         }
 
         for (KGOEventParticipant *anOrganizer in unwrappedOrganizers) {
-            KGOEventParticipantRelation *relation = [KGOEventParticipantRelation relationWithEvent:_kgoEvent participant:anOrganizer];
+            KGOEventParticipantRelation *relation = [KGOEventParticipantRelation relationWithEvent:_kgoEvent
+                                                                                       participant:anOrganizer
+                                                                                            module:self.moduleTag];
             relation.isOrganizer = [NSNumber numberWithBool:YES];
         }
         
@@ -211,7 +214,9 @@ moduleTag;
         for (KGOAttendeeWrapper *wrapper in _organizers) {
             [wrapper convertToKGOAttendee];
             KGOEventParticipant *anOrganizer = [wrapper KGOAttendee];
-            KGOEventParticipantRelation *relation = [KGOEventParticipantRelation relationWithEvent:_kgoEvent participant:anOrganizer];
+            KGOEventParticipantRelation *relation = [KGOEventParticipantRelation relationWithEvent:_kgoEvent
+                                                                                       participant:anOrganizer
+                                                                                            module:self.moduleTag];
             relation.isOrganizer = [NSNumber numberWithBool:YES];
         }
     }
@@ -249,7 +254,9 @@ moduleTag;
         }
         
         for (KGOEventParticipant *anAttendee in unwrappedAttendees) {
-            KGOEventParticipantRelation *relation = [KGOEventParticipantRelation relationWithEvent:_kgoEvent participant:anAttendee];
+            KGOEventParticipantRelation *relation = [KGOEventParticipantRelation relationWithEvent:_kgoEvent
+                                                                                       participant:anAttendee
+                                                                                            module:self.moduleTag];
             relation.isAttendee = [NSNumber numberWithBool:YES];
         }
         
@@ -257,7 +264,9 @@ moduleTag;
         for (KGOAttendeeWrapper *wrapper in _attendees) {
             [wrapper convertToKGOAttendee];
             KGOEventParticipant *anAttendee = [wrapper KGOAttendee];
-            KGOEventParticipantRelation *relation = [KGOEventParticipantRelation relationWithEvent:_kgoEvent participant:anAttendee];
+            KGOEventParticipantRelation *relation = [KGOEventParticipantRelation relationWithEvent:_kgoEvent
+                                                                                       participant:anAttendee
+                                                                                            module:self.moduleTag];
             relation.isAttendee = [NSNumber numberWithBool:YES];
         }
     }
@@ -281,7 +290,7 @@ moduleTag;
 - (KGOEvent *)convertToKGOEvent
 {
     if (!_kgoEvent) {
-        _kgoEvent = [[KGOEvent eventWithID:self.identifier] retain];
+        _kgoEvent = [[KGOEvent eventWithID:self.identifier module:self.moduleTag] retain];
     }
 
     _kgoEvent.title = self.title;
@@ -298,13 +307,19 @@ moduleTag;
         [[CoreDataManager sharedManager] deleteObject:aRelation];
     }
     _kgoEvent.particpants = nil;
-    
+
+    NSString *moduleTag = [NSString stringWithString:self.moduleTag];
+
     [[self unwrappedOrganizers] enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
-        KGOEventParticipantRelation *relation = [KGOEventParticipantRelation relationWithEvent:_kgoEvent participant:obj];
+        KGOEventParticipantRelation *relation = [KGOEventParticipantRelation relationWithEvent:_kgoEvent
+                                                                                   participant:obj
+                                                                                        module:moduleTag];
         relation.isOrganizer = [NSNumber numberWithBool:YES];
     }];
     [[self unwrappedAttendees] enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
-        KGOEventParticipantRelation *relation = [KGOEventParticipantRelation relationWithEvent:_kgoEvent participant:obj];
+        KGOEventParticipantRelation *relation = [KGOEventParticipantRelation relationWithEvent:_kgoEvent
+                                                                                   participant:obj
+                                                                                        module:moduleTag];
         relation.isAttendee = [NSNumber numberWithBool:YES];
     }];
     
@@ -391,10 +406,12 @@ moduleTag;
     
     NSMutableSet *attendees = [NSMutableSet set];
     NSMutableSet *organizers = [NSMutableSet set];
+    NSString *moduleTag = [NSString stringWithString:self.moduleTag];
     [_kgoEvent.particpants enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
         KGOEventParticipantRelation *relation = (KGOEventParticipantRelation *)obj;
         KGOEventParticipant *participant = relation.participant;
         KGOAttendeeWrapper *wrapper = [[[KGOAttendeeWrapper alloc] initWithKGOAttendee:participant] autorelease];
+        wrapper.moduleTag = moduleTag;
         if ([relation.isAttendee boolValue]) {
             [attendees addObject:wrapper];
         } else if ([relation.isOrganizer boolValue]) {

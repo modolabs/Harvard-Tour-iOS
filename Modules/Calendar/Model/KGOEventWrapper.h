@@ -10,49 +10,29 @@
     EKEvent *_ekEvent;
     KGOEvent *_kgoEvent;
     
-    // same type in eventkit and core data
-    
-    NSString * _identifier;
-    NSDate *_endDate;
-    NSDate *_startDate;
-    NSDate *_lastUpdate; // lastModifiedDate in EKEvent
-    BOOL _allDay;         // comes out of userInfo
-    NSString *_location;
-    NSString *_title;
-    NSString *_summary; // notes in EKEvent
-    
-    // different type in eventkit and core data
-    
-    NSDictionary *_rrule; // recurrenceRule in EKEvent
     NSSet *_attendees;
     NSSet *_organizers; // KGOEventParticipant, EKParticipant
-    
-    // core data only -- no eventkit counterpart
-    
-    CLLocationCoordinate2D _coordinate;
-    NSMutableSet *_calendars;
-    BOOL _bookmarked;
-    NSString *_briefLocation;
-    NSDictionary *fields;
-    NSDictionary *_userInfo;
     
     // not yet supported EKEvent properties: alarms, availability, isDetached,
     // status, calendar (this will be always set to local) 
 }
 
+// same type in eventkit and core data
 @property (nonatomic, retain) NSString *identifier;
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, retain) NSDate *startDate;
 @property (nonatomic, retain) NSDate *endDate;
-@property (nonatomic, retain) NSDate *lastUpdate;
+@property (nonatomic, retain) NSDate *lastUpdate; // lastModifiedDate in EKEvent
 @property (nonatomic, retain) NSString *location;
-@property (nonatomic, retain) NSString *summary;
-@property (nonatomic, retain) NSDictionary *rrule;
-@property (nonatomic, retain) NSSet *organizers; // set of KGOAttendeeWrapper objects
-@property (nonatomic, retain) NSSet *attendees;  // set of KGOAttendeeWrapper objects
-@property (nonatomic) BOOL allDay;                  // comes out of userInfo
+@property (nonatomic, retain) NSString *summary;  // notes in EKEvent
+@property (nonatomic) BOOL allDay;                // comes out of userInfo
 
-// non-eventkit properties
+// different type in eventkit and core data
+@property (nonatomic, retain) NSDictionary *rrule; // recurrenceRule in EKEvent
+@property (nonatomic, retain) NSSet *organizers;   // set of KGOAttendeeWrapper objects
+@property (nonatomic, retain) NSSet *attendees;    // set of KGOAttendeeWrapper objects
+
+// core data only -- no eventkit counterpart
 @property (nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic, retain) NSMutableSet *calendars;
 @property (nonatomic) BOOL bookmarked;
@@ -60,12 +40,12 @@
 @property (nonatomic, retain) NSDictionary *fields;
 @property (nonatomic, retain) NSDictionary *userInfo;
 
-// allow this to be set by the data controller
+// set by the data controller
 @property (nonatomic, retain) ModuleTag *moduleTag;
 
 // server api
 
-- (id)initWithDictionary:(NSDictionary *)dictionary;
+- (id)initWithDictionary:(NSDictionary *)dictionary module:(ModuleTag *)moduleTag;
 - (void)updateWithDictionary:(NSDictionary *)dictionary;
 
 // eventkit
