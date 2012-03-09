@@ -10,6 +10,10 @@
 @property (nonatomic, retain) NSString * identifier;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSSet* contactInfo;
-@property (nonatomic, retain) NSSet* events;
+
+// new in v3. gone: events
+@property (nonatomic, retain) NSSet* attendedEvents;
+@property (nonatomic, retain) NSSet* organizedEvents;
+
 
 @end

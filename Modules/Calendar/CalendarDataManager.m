@@ -2,6 +2,7 @@
 #import "CoreDataManager.h"
 #import "Foundation+KGOAdditions.h"
 #import "CalendarModel.h"
+#import <EventKit/EventKit.h>
 
 #define EVENT_TIMEOUT -300
 
@@ -29,15 +30,16 @@
         [dateTimeDF setDateStyle:NSDateFormatterShortStyle];
         [dateTimeDF setTimeStyle:NSDateFormatterShortStyle];
         
-        //NSDateFormatter *DF = [[[NSDateFormatter alloc] init] autorelease];
-        
-        
         _dateFormatters = [[NSDictionary alloc] initWithObjectsAndKeys:
                            mediumDayDF, @"mediumDay",
                            shortDayDF, @"shortDay",
                            shortTimeDF, @"shortTime",
                            dateTimeDF, @"dateTime",
                            nil];
+
+        _categoriesRequests = [[NSMutableDictionary alloc] init];
+        _eventsRequests = [[NSMutableDictionary alloc] init];
+        _detailRequests = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -60,6 +62,14 @@
 - (NSString *)shortDateTimeStringFromDate:(NSDate *)date
 {
     return [[_dateFormatters objectForKey:@"dateTime"] stringFromDate:date];
+}
+
+- (EKEventStore *)eventStore
+{
+    if (!_eventStore) {
+        _eventStore = [[EKEventStore alloc] init];
+    }
+    return _eventStore;
 }
 
 - (KGOCalendarGroup *)currentGroup
@@ -88,7 +98,9 @@
     
     if (oldGroups) {
         success = YES;
-        [self.delegate groupsDidChange:oldGroups];
+        if ([self.delegate respondsToSelector:@selector(groupsDidChange:)]) {
+            [self.delegate groupsDidChange:oldGroups];
+        }
     }
     
     if ([[KGORequestManager sharedManager] isReachable]) {
@@ -115,7 +127,9 @@
     BOOL success = NO;
     if (group.calendars.count) {
         success = YES;
-        [self.delegate groupDataDidChange:group];
+        if ([self.delegate respondsToSelector:@selector(groupDataDidChange:)]) {
+            [self.delegate groupDataDidChange:group];
+        }
     }
         
     if ([[KGORequestManager sharedManager] isReachable]) {
@@ -181,14 +195,14 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
             }
             
             if (start) {
-                [predTemplates addObject:@"start >= %@"];
+                [predTemplates addObject:@"startDate >= %@"];
                 [predArguments addObject:start];
             }
             
             NSInteger limit = [[params objectForKey:@"limit"] integerValue];
             if (limit <= 0) {
                 NSDate *end = nil;
-                NSString *endString = [params objectForKey:@"end"];
+                NSString *endString = [params objectForKey:@"endDate"];
                 if (endString) {
                     end = [NSDate dateWithTimeIntervalSince1970:[endString doubleValue]];
                 } else {
@@ -196,13 +210,14 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
                     end = dateForMidnightFromInterval(interval);
                 }
                 if (end) {
-                    [predTemplates addObject:@"end < %@"];
+                    [predTemplates addObject:@"endDate < %@"];
                     [predArguments addObject:end];
                 }
             }
             
             NSArray *filteredEvents = nil;
-            NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"start" ascending:YES]];
+            NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"startDate"
+                                                                                              ascending:YES]];
             if (predTemplates.count) {
                 NSPredicate *pred = [NSPredicate predicateWithFormat:[predTemplates componentsJoinedByString:@" AND "]
                                                        argumentArray:predArguments];
@@ -214,17 +229,15 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
             
             if (filteredEvents.count >= limit) { // limit is 0 if unspecified
                 filteredEvents = [filteredEvents subarrayWithRange:NSMakeRange(0, limit)];
-                
-                NSMutableArray *wrappers = [NSMutableArray arrayWithCapacity:filteredEvents.count];
                 for (KGOEvent *event in filteredEvents) {
-                    KGOEventWrapper *wrapper = [[[KGOEventWrapper alloc] initWithKGOEvent:event] autorelease];
-                    wrapper.moduleTag = self.moduleTag;
-                    [wrappers addObject:wrapper];
+                    event.dataManager = self;
                 }
                 
-                [self.delegate eventsDidChange:wrappers calendar:calendar didReceiveResult:NO];
+                if ([self.delegate respondsToSelector:@selector(eventsDidChange:calendar:didReceiveResult:)]) {
+                    [self.delegate eventsDidChange:filteredEvents calendar:calendar didReceiveResult:NO];
+                }
                 
-                if (wrappers.count) {
+                if (filteredEvents.count) {
                     return YES;
                 }
             }
@@ -299,6 +312,38 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
     return [self requestEventsForCalendar:calendar params:params];
 }
 
+- (BOOL)requestDetailsForEvent:(KGOEvent *)event
+{
+    if (!event.identifier.length) {
+        return NO;
+    }
+    
+    KGORequest *request = [_detailRequests objectForKey:event.identifier];
+    if (request) {
+        return NO;
+    }
+    
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            event.identifier, @"id",
+                            [NSString stringWithFormat:@"%.0f", [event.startDate timeIntervalSince1970]], @"start",
+                            nil];
+    DLog(@"requesting event details %@", params);
+    request = [[KGORequestManager sharedManager] requestWithDelegate:self
+                                                              module:self.moduleTag
+                                                                path:@"detail"
+                                                             version:1
+                                                              params:params];
+
+    [_detailRequests setObject:request forKey:event.identifier];
+    [_detailRequestEvents setObject:event forKey:event.identifier];
+    return [request connect];
+}
+
+- (void)request:(KGORequest *)request didFailWithError:(NSError *)error
+{
+    DLog(@"request failed: %@", [error description]);
+}
+
 #pragma mark KGORequestDelegate
 
 
@@ -334,6 +379,7 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
     if (request == _groupsRequest) {
 
         NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"sortOrder" ascending:YES];
+        NSString *currentIdentifier = _currentGroup.identifier;
         NSArray *oldGroups = [[CoreDataManager sharedManager] objectsForEntity:KGOEntityNameCalendarGroup
                                                              matchingPredicate:nil
                                                                sortDescriptors:[NSArray arrayWithObject:sort]];
@@ -364,7 +410,7 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
 
         if (groupsDidChange) {
             NSArray *newGroupIDs = [newGroups mappedArrayUsingBlock:identifiersFromGroups];
-            if (![newGroupIDs containsObject:_currentGroup.identifier]) {
+            if (_currentGroup && ![newGroupIDs containsObject:currentIdentifier]) {
                 [_currentGroup release];
                 _currentGroup = [[newGroups objectAtIndex:0] retain];
             }
@@ -374,7 +420,9 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
                 }
             }
             [[CoreDataManager sharedManager] saveData];
-            [self.delegate groupsDidChange:newGroups];
+            if ([self.delegate respondsToSelector:@selector(groupsDidChange:)]) {
+                [self.delegate groupsDidChange:newGroups];
+            }
         }
 #pragma mark Request - calendars
     } else if ([request.path isEqualToString:@"calendars"]) {
@@ -391,7 +439,9 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
                         [calendar addGroupsObject:self.currentGroup];
                     }
                 }
-                [self.delegate groupDataDidChange:self.currentGroup];
+                if ([self.delegate respondsToSelector:@selector(groupDataDidChange:)]) {
+                    [self.delegate groupDataDidChange:self.currentGroup];
+                }
             }
         }
 
@@ -417,19 +467,30 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
         NSMutableArray *array = [NSMutableArray array];
         for (NSInteger i = 0; i < returned; i++) {
             NSDictionary *aDict = [eventDicts objectAtIndex:i];
-            KGOEventWrapper *event = [[[KGOEventWrapper alloc] initWithDictionary:aDict] autorelease];
-            event.moduleTag = self.moduleTag;
-            [event addCalendar:calendar];
+            KGOEvent *event = [KGOEvent eventWithDictionary:aDict module:self.moduleTag];
+            event.dataManager = self;
+            [event addCalendarsObject:calendar];
             [array addObject:event];
-            [event convertToKGOEvent];
         }
 
         NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"startDate" ascending:YES]];
         
         [[CoreDataManager sharedManager] saveData];
-        [self.delegate eventsDidChange:[array sortedArrayUsingDescriptors:sortDescriptors]
-                              calendar:calendar
-                      didReceiveResult:YES];
+        if ([self.delegate respondsToSelector:@selector(eventsDidChange:calendar:didReceiveResult:)]) {
+            [self.delegate eventsDidChange:[array sortedArrayUsingDescriptors:sortDescriptors]
+                                  calendar:calendar
+                          didReceiveResult:YES];
+        }
+#pragma mark Request - detail
+    } else if ([request.path isEqualToString:@"detail"]) {
+        NSString *eventID = [result nonemptyForcedStringForKey:@"id"];
+        KGOEvent *event = [_detailRequestEvents objectForKey:eventID];
+        if (event) {
+            [event updateWithDictionary:result];
+            if ([self.delegate respondsToSelector:@selector(eventDetailsDidChange:)]) {
+                [self.delegate eventDetailsDidChange:event];
+            }
+        }
     }
 }
 
@@ -451,7 +512,14 @@ NSDate *dateForMidnightFromInterval(NSTimeInterval interval)
     }];
     [_eventsRequests release];
     
+    [_detailRequests enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [(KGORequest *)obj cancel];
+    }];
+    [_detailRequests release];
+    
     [_currentGroup release];
+    
+    [_eventStore release];
     
     [super dealloc];
 }

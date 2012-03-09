@@ -116,7 +116,8 @@ NSString * const KGODataModelNameCalendar = @"Calendar";
         vc = calendarVC;
         
     } else if ([pageName isEqualToString:LocalPathPageNameDetail]) {
-        CalendarDetailViewController *detailVC = [[[CalendarDetailViewController alloc] init] autorelease];
+        CalendarDetailViewController *detailVC = [[[CalendarDetailViewController alloc] initWithNibName:@"CalendarDetailViewController"
+                                                                                                 bundle:nil] autorelease];
         detailVC.indexPath = [params objectForKey:@"currentIndexPath"];
         detailVC.eventsBySection = [params objectForKey:@"eventsBySection"];
         detailVC.sections = [params objectForKey:@"sections"];
@@ -143,8 +144,8 @@ NSString * const KGODataModelNameCalendar = @"Calendar";
     NSMutableArray *searchResults = [NSMutableArray arrayWithCapacity:[(NSArray *)resultArray count]];
     for (id aResult in resultArray) {
         DLog(@"%@", [aResult description]);
-        KGOEventWrapper *anEvent = [[[KGOEventWrapper alloc] initWithDictionary:aResult] autorelease];
-        anEvent.moduleTag = self.tag;
+        KGOEvent *anEvent = [KGOEvent eventWithDictionary:aResult module:self.tag];
+        anEvent.dataManager = self.dataManager;
         [searchResults addObject:anEvent];
     }
     [self.searchDelegate receivedSearchResults:searchResults forSource:self.tag];

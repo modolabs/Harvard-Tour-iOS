@@ -1,6 +1,5 @@
 #import "KGOEventParticipant.h"
 #import "KGOEventContactInfo.h"
-#import "KGOEventParticipantRelation.h"
 
 NSString * const KGOEntityNameEventAttendee = @"KGOEventParticipant";
 
@@ -9,7 +8,8 @@ NSString * const KGOEntityNameEventAttendee = @"KGOEventParticipant";
 @dynamic identifier;
 @dynamic name;
 @dynamic contactInfo;
-@dynamic events;
+@dynamic organizedEvents;
+@dynamic attendedEvents;
 
 - (void)addContactInfoObject:(KGOEventContactInfo *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];

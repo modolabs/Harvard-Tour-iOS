@@ -561,10 +561,10 @@
     // and align buttons at the top.
     // if there is a subtitle, make title label the full width,
     // subtitle label narrower, and align buttons with subtitle.
-    frame.origin.y = (_subtitleLabel == nil ? 0 : _titleLabel.frame.size.height);
-    _titleLabel.textAlignment = UITextAlignmentCenter;
-    _titleLabel.frame = CGRectMake(10, 0, 246, 38);
-    _titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
+    frame.origin.y = (self.subtitleLabel == nil ? 0 : self.titleLabel.frame.size.height);
+    self.titleLabel.textAlignment = UITextAlignmentCenter;
+    self.titleLabel.frame = CGRectMake(10, 0, 246, 38);
+    self.titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
     for (UIButton *aButton in self.actionButtons) {
         if (![aButton isDescendantOfView:self]) {
             [self addSubview:aButton];
@@ -574,7 +574,7 @@
         frame.origin.x -= frame.size.width ;
         aButton.frame = frame;
         
-        if (aButton == _bookmarkButton) {
+        if (aButton == self.bookmarkButton) {
             [self setupBookmarkButtonImages];
         }
     }
