@@ -34,6 +34,7 @@ static NSString * RecentSearchesTag = @"recent";
 @synthesize searchBar = _searchBar, active = _active, delegate = _delegate,
 searchContentsController = _searchContentsController,
 searchTableController = _searchTableController,
+isFederatedSearch = _isFederatedSearch,
 //searchResults = _searchResults,
 searchSources = _searchSources,
 multiSearchResults = _multiSearchResults,
@@ -48,6 +49,7 @@ maxResultsPerSection;
     self = [super init];
     if (self) {
         self.showsSearchOverlay = YES;
+        self.isFederatedSearch = NO;
         
         _searchBar = [searchBar retain];
         _searchBar.delegate = self;
@@ -528,15 +530,30 @@ maxResultsPerSection;
     NSString *source = [self.searchSources objectAtIndex:section];
     NSArray *searchResults = [self.multiSearchResults objectForKey:source];
     KGOModule *module = [KGO_SHARED_APP_DELEGATE() moduleForTag:source];
-    if (module) {
-        return [NSString stringWithFormat:
-                NSLocalizedString(@"CORE_%d_RESULTS_FROM_MODULE", @"%d results from %@"),
-                searchResults.count,
-                module.shortName];
+    
+    if (self.isFederatedSearch && module) {
+        if (searchResults.count == 1) {
+            return [NSString stringWithFormat:
+                    NSLocalizedString(@"CORE_1_RESULT_FROM_MODULE", @"1 result from %@"),
+                    module.shortName];
+        } else {
+            return [NSString stringWithFormat:
+                    NSLocalizedString(@"CORE_%d_RESULTS_FROM_MODULE", @"%d results from %@"),
+                    searchResults.count,
+                    module.shortName];
+        }
+    } else {
+        if (searchResults.count == 1) {
+            return [NSString stringWithFormat:
+                    NSLocalizedString(@"CORE_1_MATCH", @"%d match found"), 
+                    searchResults.count];
+
+        } else {
+            return [NSString stringWithFormat:
+                    NSLocalizedString(@"CORE_%d_MATCHES", @"%d matches found"),
+                    searchResults.count];
+        }
     }
-    return [NSString stringWithFormat:
-            NSLocalizedString(@"CORE_%d_RESULTS", @"%d results"),
-            searchResults.count];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

@@ -117,6 +117,7 @@ loadingView, banner = _banner;
     if (_searchBar && !_searchController) {
         _searchController = [[KGOSearchDisplayController alloc] initWithSearchBar:_searchBar delegate:self contentsController:self];
         _searchController.maxResultsPerSection = MAX_FEDERATED_SEARCH_RESULTS_PER_SECTION;
+        _searchController.isFederatedSearch = YES;
     }
     
     [self contactServer];

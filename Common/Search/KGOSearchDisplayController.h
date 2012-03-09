@@ -39,6 +39,7 @@
     id<KGOSearchDisplayDelegate> _delegate;
     //NSArray *_searchResults;
     BOOL _showingOnlySearchResults;
+    BOOL _isFederatedSearch;
 
     KGOSearchBar *_searchBar;
     BOOL _active;
@@ -49,6 +50,7 @@
 }
 
 @property (nonatomic) BOOL showsSearchOverlay;
+@property (nonatomic) BOOL isFederatedSearch;
 
 @property (nonatomic, readonly) BOOL showingOnlySearchResults; // NO if tableview includes search suggestions
 @property (nonatomic, readonly) id<KGOSearchDisplayDelegate> delegate;
