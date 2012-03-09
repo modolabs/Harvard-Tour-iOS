@@ -34,7 +34,7 @@
             [self setImage:image forState:UIControlStateNormal];
             
             // TODO: add config setting for icon titles to be displayed on springboard
-            NSString *title = [self.module.longName stringByReplacingOccurrencesOfString:@" " withString:@"\n"];
+            NSString *title = [self.module.homeName stringByReplacingOccurrencesOfString:@" " withString:@"\n"];
             [self setTitle:title forState:UIControlStateNormal];
             
             if (self.module.secondary) {

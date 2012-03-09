@@ -43,8 +43,9 @@
 
 - (NSArray *)widgetViews; // array of KGOHomeScreenWidget objects, ordered by z-index
 
-@property (nonatomic, copy) NSString *shortName; // what label shows up on home screen
+@property (nonatomic, copy) NSString *shortName; 
 @property (nonatomic, copy) NSString *longName;
+@property (nonatomic, copy) NSString *homeName; // what label shows up on home screen
 
 @property (nonatomic, retain) UIImage *tabBarImage;
 @property (nonatomic, retain) UIImage *listViewImage;

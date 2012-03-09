@@ -6,7 +6,7 @@
 
 @implementation KGOModule
 
-@synthesize tag = _tag, shortName = _shortName, longName = _longName;
+@synthesize tag = _tag, shortName = _shortName, longName = _longName, homeName = _homeName;
 @synthesize enabled, hidden, badgeValue, secondary, apiMaxVersion, apiMinVersion, hasAccess;
 @synthesize tabBarImage, iconImage, listViewImage;
 @synthesize searchDelegate;
@@ -48,6 +48,7 @@
     if (title) {
         self.shortName = title;
         self.longName = title;
+        self.homeName = title;
     }
     
     id homeConfig = [moduleDict objectForKey:@"home"];
@@ -55,6 +56,10 @@
         self.hidden = YES;
     } else if ([homeConfig isKindOfClass:[NSDictionary class]]) {
         self.secondary = [[homeConfig stringForKey:@"type"] isEqualToString:@"secondary"];
+        NSString *title = [homeConfig nonemptyStringForKey:@"title"];
+        if (title) {
+            self.homeName = title;
+        }
     }
     // everything above is server syntax
     
