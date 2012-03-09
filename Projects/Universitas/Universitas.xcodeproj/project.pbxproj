@@ -1820,7 +1820,6 @@
 		EB83AE5713C75B2B006CCEDB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 			};
 			name = Debug;
 		};
@@ -1837,7 +1836,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EB83AE5C13C75C0C006CCEDB /* staging.xcconfig */;
 			buildSettings = {
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 			};
 			name = Staging;
 		};
@@ -1854,7 +1852,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7051347B8D20045CE9C /* release.xcconfig */;
 			buildSettings = {
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 			};
 			name = Release;
 		};
