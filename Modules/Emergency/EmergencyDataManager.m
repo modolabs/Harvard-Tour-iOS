@@ -174,7 +174,7 @@ NSString * const EmergencyContactsRetrievedNotification = @"EmergencyContactsRet
 }
 
 - (BOOL)hasSecondaryContacts {
-    return ([self contactsForSection:@"secondary"] != nil);
+    return [[self contactsForSection:@"secondary"] count] > 0;
 }
 
 - (NSArray *)allContacts {
