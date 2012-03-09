@@ -44,6 +44,9 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
     else if(self.searchResult){
         [self pager:pager showContentForPage:searchResult];
     }
+    
+    // hide separator lines below the bottom cell for plain table views
+    self.tableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
 }
 
 - (void)viewWillAppear:(BOOL)animated
