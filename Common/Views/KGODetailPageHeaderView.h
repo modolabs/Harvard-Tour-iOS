@@ -13,19 +13,8 @@
 
 @protocol KGOSearchResult;
 
-@interface KGODetailPageHeaderView : UIView {
-    
-    NSMutableArray *_actionButtons;
-    
-    UIButton *_bookmarkButton;
-    UIButton *_shareButton;
-    
-    BOOL _showsShareButton;
-    BOOL _showsBookmarkButton;
-    
-    UILabel *_titleLabel;
-    UILabel *_subtitleLabel;
-    
+@interface KGODetailPageHeaderView : UIView
+{
     id<KGOSearchResult> _detailItem;
 }
 
@@ -33,24 +22,29 @@
 
 @property(nonatomic, assign) id<KGODetailPageHeaderDelegate> delegate;
 @property(nonatomic, retain) id<KGOSearchResult> detailItem;
-@property(nonatomic) BOOL showsShareButton;
-@property(nonatomic) BOOL showsBookmarkButton;
-@property(nonatomic, readonly) UILabel *titleLabel;
-@property(nonatomic, readonly) UILabel *subtitleLabel;
 
 @property(nonatomic, assign) BOOL showsSubtitle;
+@property(nonatomic) BOOL showsShareButton;
+@property(nonatomic) BOOL showsBookmarkButton;
 
-- (void)setupBookmarkButtonImages;
-- (void)hideShareButton;
-- (void)hideBookmarkButton;
-- (void)toggleBookmark:(id)sender;
+@property(nonatomic, retain) IBOutlet UIButton *bookmarkButton;
+@property(nonatomic, retain) IBOutlet UIButton *shareButton;
+@property(nonatomic, retain) IBOutlet UILabel *titleLabel;
+@property(nonatomic, retain) IBOutlet UILabel *subtitleLabel;
+@property(nonatomic, retain) IBOutlet UIView *buttonContainer;
+
+@property(nonatomic, retain) NSString *title;
+@property(nonatomic, retain) NSString *subtitle;
+
+- (void)addButtonWithImage:(UIImage *)image
+              pressedImage:(UIImage *)pressedImage
+                    target:(id)target
+                    action:(SEL)action;
 
 - (void)layoutActionButtons;
-- (void)addShareButton;
-- (void)addBookmarkButton;
-- (void)addButton:(UIButton *)button;
+- (void)setupBookmarkButtonImages;
 
-
-- (CGFloat)headerWidthWithButtons;
+- (IBAction)toggleBookmark:(id)sender;
+- (IBAction)shareButtonPressed:(id)sender;
 
 @end

@@ -267,8 +267,8 @@ groupTitles = _groupTitles;
 
     if (events.count) {
         // TODO: make sure this set of events is what we last requested
-        KGOEventWrapper *firstEvent = [events objectAtIndex:0];
-        KGOEventWrapper *lastEvent = [events lastObject];
+        KGOEvent *firstEvent = [events objectAtIndex:0];
+        KGOEvent *lastEvent = [events lastObject];
         NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
         NSTimeInterval interval = [lastEvent.startDate timeIntervalSinceDate:firstEvent.startDate];
         if (isOverOneMonth(interval)) {
@@ -284,7 +284,7 @@ groupTitles = _groupTitles;
             [formatter setDateFormat:@"h a"]; // default to hourly format
         }
         
-        for (KGOEventWrapper *event in events) {
+        for (KGOEvent *event in events) {
             NSString *title = nil;
             if (event.allDay) {
                 title = NSLocalizedString(@"CALENDAR_ALL_DAY_SECTION_HEADER", @"All day");
@@ -475,7 +475,7 @@ groupTitles = _groupTitles;
         
     } else if (self.currentSections.count) {
         NSArray *eventsForSection = [self.currentEventsBySection objectForKey:[self.currentSections objectAtIndex:indexPath.section]];
-        KGOEventWrapper *event = [eventsForSection objectAtIndex:indexPath.row];
+        KGOEvent *event = [eventsForSection objectAtIndex:indexPath.row];
         NSString *title = title = event.title;
         NSString *subtitle = nil;
         if (event.allDay) {
@@ -532,7 +532,7 @@ groupTitles = _groupTitles;
         if (overScroll > self.tableView.rowHeight) {
             NSString *section = [self.currentSections lastObject];
             if (section) {
-                KGOEventWrapper *event = [[self.currentEventsBySection objectForKey:section] lastObject];
+                KGOEvent *event = [[self.currentEventsBySection objectForKey:section] lastObject];
                 _appending = YES;
                 [self requestEventsForCurrentCalendar:event.startDate];
             }
