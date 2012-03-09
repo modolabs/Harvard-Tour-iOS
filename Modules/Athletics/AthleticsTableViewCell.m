@@ -68,11 +68,11 @@
 }
 
 - (void)configureLabelsTheme { 
-    _titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
-    _titleLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertySportListTitle];
+    _titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
+    _titleLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyNavListSubtitle];
     
-    _dekLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListSubtitle];
-    _dekLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertySportListSubtitle];
+    _dekLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListSubtitle];
+    _dekLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyNavListSubtitle];
 }
 
 - (void)setStory:(AthleticsStory *)story

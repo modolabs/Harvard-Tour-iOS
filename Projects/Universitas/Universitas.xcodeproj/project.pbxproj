@@ -191,7 +191,6 @@
 		EB640C6B13FDFFFB00CFAC5B /* libjson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB640C6A13FDFFFB00CFAC5B /* libjson.a */; };
 		EB66FE8514A26AFA00B9A734 /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE8114A26AFA00B9A734 /* Config.plist */; };
 		EB66FE8614A26AFA00B9A734 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE8314A26AFA00B9A734 /* InfoPlist.strings */; };
-		EB66FE8D14A26B0200B9A734 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB83AE4F13C747BE006CCEDB /* Localizable.strings */; };
 		EB66FE9F14A2BAA600B9A734 /* secret in Resources */ = {isa = PBXBuildFile; fileRef = EB66FE9D14A2BAA600B9A734 /* secret */; };
 		EB6BC7F614058A0B0095744E /* MapCategoryListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6BC7F514058A0B0095744E /* MapCategoryListViewController.m */; };
 		EB6D02A911E3784100B65CE3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6D02A811E3784100B65CE3 /* MapKit.framework */; };
@@ -1514,7 +1513,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "Universitas" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1576,7 +1575,6 @@
 				EB26700C14A007F100F50997 /* PhotoDetailViewController.xib in Resources */,
 				EB66FE8514A26AFA00B9A734 /* Config.plist in Resources */,
 				EB66FE8614A26AFA00B9A734 /* InfoPlist.strings in Resources */,
-				EB66FE8D14A26B0200B9A734 /* Localizable.strings in Resources */,
 				EB66FE9F14A2BAA600B9A734 /* secret in Resources */,
 				EB587B3914A3F25100723906 /* IconGridScrollViewController.xib in Resources */,
 				EB63FA7614E0708100C33576 /* OverScrollFooterView.xib in Resources */,
@@ -1837,6 +1835,7 @@
 		EB83AE5713C75B2B006CCEDB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 			};
 			name = Debug;
 		};
@@ -1853,6 +1852,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EB83AE5C13C75C0C006CCEDB /* staging.xcconfig */;
 			buildSettings = {
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 			};
 			name = Staging;
 		};
@@ -1869,6 +1869,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7051347B8D20045CE9C /* release.xcconfig */;
 			buildSettings = {
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 			};
 			name = Release;
 		};
