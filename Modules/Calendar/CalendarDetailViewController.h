@@ -1,19 +1,18 @@
 #import <UIKit/UIKit.h>
 #import "KGODetailPager.h"
-#import <EventKitUI/EventKitUI.h>
 #import "KGOCalendar.h"
 #import <MessageUI/MFMailComposeViewController.h>
 #import "KGODetailPageHeaderView.h"
 #import "CalendarDataManager.h"
 
-@class KGOEventWrapper, CalendarDataManager, KGOShareButtonController;
+@class KGOEvent, CalendarDataManager, KGOShareButtonController;
 
 @interface CalendarDetailViewController : UIViewController <KGODetailPageHeaderDelegate,
 KGODetailPagerController, KGODetailPagerDelegate, CalendarDataManagerDelegate,
 UITableViewDataSource, UITableViewDelegate, UIWebViewDelegate,
-MFMailComposeViewControllerDelegate, EKEventEditViewDelegate>
+MFMailComposeViewControllerDelegate>
 {
-    KGOEventWrapper *_event;
+    KGOEvent *_event;
     KGOShareButtonController *_shareController;
     NSArray *_detailSections;
 
@@ -23,7 +22,7 @@ MFMailComposeViewControllerDelegate, EKEventEditViewDelegate>
     UIWebView *_descriptionView;
 }
 
-@property (nonatomic, retain) KGOEventWrapper *event;
+@property (nonatomic, retain) KGOEvent *event;
 
 // these are paging sections for KGODetailPager
 @property (nonatomic, retain) NSArray *sections;
@@ -43,7 +42,7 @@ MFMailComposeViewControllerDelegate, EKEventEditViewDelegate>
 - (NSArray *)sectionsForFields;
 
 - (UIView *)viewForTableHeader;
-- (NSString *)dateDescriptionForEvent:(KGOEventWrapper *)event;
+- (NSString *)dateDescriptionForEvent:(KGOEvent *)event;
 
 @end
 

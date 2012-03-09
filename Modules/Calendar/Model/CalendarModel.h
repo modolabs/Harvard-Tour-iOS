@@ -4,9 +4,6 @@
 #import "KGOEventContactInfo.h"
 #import "KGOEvent.h"
 #import "KGOEventParticipant.h"
-#import "KGOEventWrapper.h"
-#import "KGOAttendeeWrapper.h"
-#import "KGOEventParticipantRelation.h"
 
 extern NSString * const KGODataModelNameCalendar;
 extern NSString * const KGOEntityNameCalendarGroup;

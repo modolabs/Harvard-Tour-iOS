@@ -11,7 +11,7 @@
 - (void)eventsDidChange:(NSArray *)events
                calendar:(KGOCalendar *)calendar
        didReceiveResult:(BOOL)receivedResult; // didReceiveResult is a misnomer for "came from network"
-- (void)eventDetailsDidChange:(KGOEventWrapper *)event;
+- (void)eventDetailsDidChange:(KGOEvent *)event;
 
 @end
 
@@ -45,7 +45,7 @@
 - (BOOL)requestEventsForCalendar:(KGOCalendar *)calendar startDate:(NSDate *)startDate endDate:(NSDate *)endDate;
 - (BOOL)requestEventsForCalendar:(KGOCalendar *)calendar time:(NSDate *)time;
 - (BOOL)requestEventsForCalendar:(KGOCalendar *)calendar start:(NSDate *)start limit:(NSInteger)limit;
-- (BOOL)requestDetailsForEvent:(KGOEventWrapper *)event;
+- (BOOL)requestDetailsForEvent:(KGOEvent *)event;
 
 - (void)selectGroupAtIndex:(NSInteger)index;
 

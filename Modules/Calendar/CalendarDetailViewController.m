@@ -1,6 +1,4 @@
 #import "CalendarDetailViewController.h"
-#import "KGOEventWrapper.h"
-#import "KGOAttendeeWrapper.h"
 #import "KGOContactInfo.h"
 #import "KGORequestManager.h"
 #import "Foundation+KGOAdditions.h"
@@ -11,7 +9,7 @@
 #import "KGOModule.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "MapModule.h"
-#import "KGOLabel.h"
+#import "KGOEvent.h"
 
 #define CELL_TITLE_TAG 31415
 #define DESCRIPTION_WEBVIEW_TAG 5
@@ -62,7 +60,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
 
 #pragma mark -
 
-- (void)setEvent:(KGOEventWrapper *)event
+- (void)setEvent:(KGOEvent *)event
 {
     [_event release];
     _event = [event retain];
@@ -79,7 +77,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
     }
 }
 
-- (void)eventDetailsDidChange:(KGOEventWrapper *)event
+- (void)eventDetailsDidChange:(KGOEvent *)event
 {
     NSMutableArray *mutableSections = [NSMutableArray array];
     NSArray *basicInfo = [self sectionForBasicInfo];
@@ -162,7 +160,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
 {
     NSMutableArray *contactInfo = [NSMutableArray array];
     if (_event.organizers) {
-        for (KGOAttendeeWrapper *organizer in _event.organizers) {
+        for (KGOEventParticipant *organizer in _event.organizers) {
             for (KGOEventContactInfo *aContact in organizer.contactInfo) {
                 NSString *type;
                 NSString *accessory;
@@ -248,7 +246,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
     NSString *currentSectionName = @"";
     
     if (_event.fields) {
-        for (NSDictionary *field in _event.fields) {
+        for (NSDictionary *field in [_event fieldsArray]) {
             NSString *label = [field nonemptyStringForKey:@"title"];
             NSString *value = [field nonemptyStringForKey:@"value"];
             NSString *type = [field nonemptyStringForKey:@"type"];
@@ -306,7 +304,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
     return sections;
 }
 
-- (NSString *)dateDescriptionForEvent:(KGOEventWrapper *)event
+- (NSString *)dateDescriptionForEvent:(KGOEvent *)event
 {
     NSString *dateString = [self.dataManager mediumDateStringFromDate:_event.startDate];
     NSString *timeString = nil;
@@ -501,8 +499,8 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
 
 - (void)pager:(KGODetailPager *)pager showContentForPage:(id<KGOSearchResult>)content
 {
-    if ([content isKindOfClass:[KGOEventWrapper class]]) {
-        self.event = (KGOEventWrapper *)content;
+    if ([content isKindOfClass:[KGOEvent class]]) {
+        self.event = (KGOEvent *)content;
     }
 }
 
@@ -545,9 +543,8 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
 
 - (void)calendarButtonPressed:(id)sender
 {
-    EKEventEditViewController *eventViewController = [self.event editViewController];
-    eventViewController.editViewDelegate = self;
-    [self presentModalViewController:eventViewController animated:YES];
+    [self presentModalViewController:[self.event eventViewController]
+                            animated:YES];
 }
 
 - (void)headerViewFrameDidChange:(KGODetailPageHeaderView *)headerView
@@ -562,7 +559,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
     _shareController.shareBody = _event.summary;
     
     NSString *urlString = nil;
-    for (KGOAttendeeWrapper *organizer in _event.organizers) {
+    for (KGOEventParticipant *organizer in _event.organizers) {
         for (KGOContactInfo *contact in organizer.contactInfo) {
             if ([contact.type isEqualToString:@"url"]) {
                 urlString = contact.value;
@@ -592,13 +589,6 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
 }
 
 #pragma mark -
-
-// EKEventEditViewDelegate
-- (void)eventEditViewController:(EKEventEditViewController *)controller 
-          didCompleteWithAction:(EKEventEditViewAction)action
-{
-    [self dismissModalViewControllerAnimated:YES];
-}
 
 // MFMailComposeViewControllerDelegate
 - (void)mailComposeController:(MFMailComposeViewController*)controller
