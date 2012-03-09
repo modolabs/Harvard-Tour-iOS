@@ -281,13 +281,13 @@
     }
     AthleticsSchedule *schedule = [self.schedules objectAtIndex:indexPath.row];
     cell.textLabel.text = schedule.title;
-    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
+    cell.textLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
     double unixtime = [schedule.start doubleValue];
     NSDate *startDate = [NSDate dateWithTimeIntervalSince1970:unixtime];
     NSString *detailString = [NSString stringWithFormat:@"%@\n%@",[startDate weekDateTimeString],schedule.location];
     cell.detailTextLabel.text = detailString;
     cell.detailTextLabel.numberOfLines = 2;
-    cell.detailTextLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListSubtitle];
+    cell.detailTextLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListSubtitle];
     return cell;
 }
 
@@ -564,7 +564,7 @@
     frame.origin.y = (self.subtitleLabel == nil ? 0 : self.titleLabel.frame.size.height);
     self.titleLabel.textAlignment = UITextAlignmentCenter;
     self.titleLabel.frame = CGRectMake(10, 0, 246, 38);
-    self.titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
+    self.titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySportListTitle];
     for (UIButton *aButton in self.actionButtons) {
         if (![aButton isDescendantOfView:self]) {
             [self addSubview:aButton];
