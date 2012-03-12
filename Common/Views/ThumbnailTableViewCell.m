@@ -14,9 +14,6 @@
     self.subtitleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyMediaListSubtitle];
     self.subtitleLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyMediaListSubtitle];
 
-    self.titleLabel.backgroundColor = [UIColor greenColor];
-    self.subtitleLabel.backgroundColor = [UIColor orangeColor];
-    
     _thumbnailPadding = 0;
     _thumbnailSize = self.thumbView.frame.size;
     _customLayoutComplete = NO;
@@ -31,14 +28,12 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (void)awakeFromNib
 {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        [self configureDefaultTheme];
-    }
-    return self;
+    [super awakeFromNib];
+    [self configureDefaultTheme];
 }
+
 /*
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
