@@ -287,7 +287,7 @@ groupTitles = _groupTitles;
         
         for (KGOEvent *event in events) {
             NSString *title = nil;
-            if (event.allDay) {
+            if ([event.allDay boolValue]) {
                 title = NSLocalizedString(@"CALENDAR_ALL_DAY_SECTION_HEADER", @"All day");
             } else {
                 title = [formatter stringFromDate:event.startDate];
@@ -479,7 +479,7 @@ groupTitles = _groupTitles;
         KGOEvent *event = [eventsForSection objectAtIndex:indexPath.row];
         NSString *title = title = event.title;
         NSString *subtitle = nil;
-        if (event.allDay) {
+        if ([event.allDay boolValue]) {
             subtitle = [NSString stringWithFormat:@"%@ %@",
                         [self.dataManager shortDateStringFromDate:event.startDate],
                         NSLocalizedString(@"CALENDAR_ALL_DAY_SUBTITLE", @"All day")];

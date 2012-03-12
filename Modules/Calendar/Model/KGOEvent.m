@@ -142,7 +142,7 @@ NSString * const KGOEntityNameEvent = @"KGOEvent";
 
 - (NSString *)subtitle
 {
-    if (!self.allDay) {
+    if (![self.allDay boolValue]) {
         NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
         [dateFormatter setDateStyle:NSDateFormatterShortStyle];
         [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
@@ -203,6 +203,8 @@ NSString * const KGOEntityNameEvent = @"KGOEvent";
     } else {
         self.allDay = [NSNumber numberWithBool:(endTimestamp - startTimestamp) + 1 >= 24 * 60 * 60];
     }
+
+    DLog(@"%@ %@", self.allDay, allDay);
     
     // Additional attributes
     self.fieldsArray = [dictionary objectForKey:@"fields"]; // v2

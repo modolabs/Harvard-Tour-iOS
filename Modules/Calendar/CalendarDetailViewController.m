@@ -311,7 +311,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
 {
     NSString *dateString = [self.dataManager mediumDateStringFromDate:_event.startDate];
     NSString *timeString = nil;
-    if (_event.allDay) {
+    if ([_event.allDay boolValue]) {
         NSString *endDateString = [self.dataManager mediumDateStringFromDate:_event.endDate];
         if ([endDateString isEqualToString:dateString]) {
             timeString = [NSString stringWithFormat:@"%@\n%@", dateString, NSLocalizedString(@"CALENDAR_ALL_DAY_SUBTITLE", @"All day")];
