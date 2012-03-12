@@ -3,12 +3,11 @@
 #import "Photo.h"
 #import "PhotoAlbum.h"
 #import "UIKit+KGOAdditions.h"
+#import "KGOSearchModel.h"
 
 @implementation PhotoDetailViewController
 
-@synthesize imageView, titleView, titleLabel, subtitleLabel, pagerView,
-prevThumbView, nextThumbView, prevButton, nextButton, pagerLabel, shareButton,
-photo, photos;
+@synthesize imageView, titleView, titleLabel, subtitleLabel, shareButton, photo = _photo, photos;
 @synthesize shareController = _shareController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -30,41 +29,31 @@ photo, photos;
 
 #pragma mark - View lifecycle
 
-- (void)displayPhoto
+- (void)resizeLabels
 {
-    self.imageView.imageURL = self.photo.imageURL;
-    self.imageView.imageData = self.photo.imageData;
-    self.imageView.delegate = self.photo;
+    CGFloat width = CGRectGetWidth(self.titleView.frame);
+    CGSize subSize = [self.subtitleLabel.text sizeWithFont:self.subtitleLabel.font
+                                         constrainedToSize:CGSizeMake(width, self.subtitleLabel.font.lineHeight * 2)
+                                             lineBreakMode:UILineBreakModeWordWrap];
+    CGSize titleSize = [self.titleLabel.text sizeWithFont:self.titleLabel.font
+                                        constrainedToSize:CGSizeMake(width, CGRectGetHeight(self.titleView.frame) - subSize.height) lineBreakMode:UILineBreakModeWordWrap];
+    self.titleLabel.frame = CGRectMake(0, 0, titleSize.width, titleSize.height);
+    self.subtitleLabel.frame = CGRectMake(0, titleSize.height, subSize.width, subSize.height);
+}
+
+- (void)displayPhoto:(Photo *)photo
+{
+    self.imageView.imageURL = photo.imageURL;
+    self.imageView.imageData = photo.imageData;
+    self.imageView.delegate = photo;
     [self.imageView loadImage];
     
-    self.titleLabel.text = self.photo.title;
+    self.titleLabel.text = photo.title;
     NSString *cdot = [NSString stringWithUTF8String:"\u00B7"];
     self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@ %@",
-                               self.photo.album.type, cdot, [self.photo lastUpdateString]];
+                               photo.album.type, cdot, [photo lastUpdateString]];
 
-    NSInteger currentIndex = [self.photos indexOfObject:self.photo];
-    if (currentIndex != NSNotFound) {
-        self.pagerLabel.text = [NSString stringWithFormat:
-                                NSLocalizedString(@"PHOTOS_%1$d_OF_%2$d", @"Photo %d of %d"),
-                                (currentIndex + 1),
-                                [self.photo.album.totalItems integerValue]];
-        
-        if (currentIndex > 0) {
-            Photo *prevPhoto = [self.photos objectAtIndex:currentIndex - 1];
-            self.prevThumbView.imageURL = prevPhoto.imageURL;
-            self.prevThumbView.imageData = prevPhoto.imageData;
-            [self.prevThumbView loadImage];
-        }
-        
-        if (currentIndex < self.photos.count - 1) {
-            Photo *nextPhoto = [self.photos objectAtIndex:currentIndex + 1];
-            self.nextThumbView.imageURL = nextPhoto.imageURL;
-            self.nextThumbView.imageData = nextPhoto.imageData;
-            [self.nextThumbView loadImage];
-        }
-    } else {
-        NSLog(@"warning: did not find current photo in photos array");
-    }
+    [self resizeLabels];
 }
 
 - (void)viewDidLoad
@@ -74,7 +63,18 @@ photo, photos;
     self.title = NSLocalizedString(@"PHOTOS_DETAIL_PAGE_TITLE", @"Photo");
     [self.shareButton setBackgroundImage:[UIImage imageWithPathName:@"common/share"] forState:UIControlStateNormal];
 
-    [self displayPhoto];
+    self.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.imageView.clipsToBounds = YES;
+    
+    KGODetailPager *pager = [[[KGODetailPager alloc] initWithPagerController:self delegate:self] autorelease];
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:pager] autorelease];
+    
+    NSInteger currentIndex = [self.photos indexOfObject:self.photo];
+    if (currentIndex != NSNotFound) {
+        [pager selectPageAtSection:0 row:currentIndex];
+    } else {
+        NSLog(@"warning: did not find current photo in photos array");
+    }
 }
 
 - (void)viewDidUnload
@@ -84,11 +84,6 @@ photo, photos;
     self.titleView = nil;
     self.titleLabel = nil;
     self.subtitleLabel = nil;
-    self.prevThumbView = nil;
-    self.nextThumbView = nil;
-    self.prevButton = nil;
-    self.nextButton = nil;
-    self.pagerLabel = nil;
     self.shareButton = nil;
     self.shareController = nil;
 }
@@ -100,78 +95,60 @@ photo, photos;
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
+    CGFloat buttonWidth = CGRectGetWidth(self.shareButton.frame);
+    CGFloat buttonHeight = CGRectGetHeight(self.shareButton.frame);
     if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation)) {
         CGFloat screenHeight = CGRectGetHeight(self.view.bounds); // this returns the current height
         CGFloat screenWidth = CGRectGetWidth(self.view.bounds);
-        CGFloat width = screenHeight;
+        CGFloat width = floorf(screenWidth * 0.75);
         CGFloat vPadding = 9;
         CGFloat hPadding = 7;
         self.imageView.frame = CGRectMake(0, 0, width, screenHeight);
         self.titleView.frame = CGRectMake(width + hPadding, vPadding,
-                                          CGRectGetWidth(self.titleView.frame),
-                                          CGRectGetHeight(self.titleView.frame));
-        self.pagerView.frame = CGRectMake(width + hPadding,
-                                          vPadding + CGRectGetHeight(self.titleView.frame) + vPadding,
-                                          CGRectGetWidth(self.pagerView.frame),
-                                          CGRectGetHeight(self.pagerView.frame));
-        CGFloat buttonWidth = CGRectGetWidth(self.shareButton.frame);
-        self.shareButton.frame = CGRectMake(screenWidth - buttonWidth - hPadding, vPadding,
-                                            buttonWidth, CGRectGetHeight(self.shareButton.frame));
-        
+                                          screenWidth - width - hPadding * 2,
+                                          screenHeight - buttonHeight - vPadding * 3);
+        self.shareButton.frame = CGRectMake(screenWidth - buttonWidth - hPadding,
+                                            screenHeight - buttonHeight - vPadding,
+                                            buttonWidth, buttonHeight);
     } else {
         CGFloat screenWidth = CGRectGetWidth(self.view.frame); // this always returns the portrait width
+        CGFloat screenHeight = CGRectGetHeight(self.view.frame);
         CGFloat height = floorf(screenWidth * 0.8);
         CGFloat vPadding = 7;
         CGFloat hPadding = 9;
         self.imageView.frame = CGRectMake(0, 0, screenWidth, height);
-        self.titleView.frame = CGRectMake(hPadding, height + vPadding,
-                                          CGRectGetWidth(self.titleView.frame),
-                                          CGRectGetHeight(self.titleView.frame));
-        self.pagerView.frame = CGRectMake(hPadding,
-                                          height + vPadding + CGRectGetHeight(self.titleView.frame) + vPadding,
-                                          CGRectGetWidth(self.pagerView.frame),
-                                          CGRectGetHeight(self.pagerView.frame));
-        CGFloat buttonWidth = CGRectGetWidth(self.shareButton.frame);
         self.shareButton.frame = CGRectMake(screenWidth - buttonWidth - hPadding, height + vPadding,
-                                            buttonWidth, CGRectGetHeight(self.shareButton.frame));
+                                            buttonWidth, buttonHeight);
+        self.titleView.frame = CGRectMake(hPadding, height + vPadding,
+                                          screenWidth - buttonWidth - hPadding * 3,
+                                          screenHeight - height - hPadding * 2);
     }
+    [self resizeLabels];
 }
 
-- (IBAction)prevButtonPressed:(id)sender
+#pragma mark - KGODatePager
+
+// pager controller
+- (NSInteger)pager:(KGODetailPager *)pager numberOfPagesInSection:(NSInteger)section
 {
-    NSInteger currentIndex = [self.photos indexOfObject:self.photo];
-    if (currentIndex != NSNotFound && currentIndex > 0) {
-        currentIndex--;
-        self.photo = [self.photos objectAtIndex:currentIndex];
-        [self displayPhoto];
-    }
-
-    if (currentIndex < self.photos.count - 1) {
-        self.nextButton.enabled = YES;
-    }
-
-    if (currentIndex <= 0) {
-        self.prevButton.enabled = NO;
-    }
+    return self.photos.count;
 }
 
-- (IBAction)nextButtonPressed:(id)sender
+- (id<KGOSearchResult>)pager:(KGODetailPager *)pager contentForPageAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSInteger currentIndex = [self.photos indexOfObject:self.photo];
-    if (currentIndex != NSNotFound && currentIndex < self.photos.count - 1) {
-        currentIndex++;
-        self.photo = [self.photos objectAtIndex:currentIndex];
-        [self displayPhoto];
-    }
-    
-    if (currentIndex >= self.photos.count - 1) {
-        self.nextButton.enabled = NO;
-    }
-    
-    if (currentIndex > 0) {
-        self.prevButton.enabled = YES;
+    return [self.photos objectAtIndex:indexPath.row];
+}
+
+// pager delegate
+- (void)pager:(KGODetailPager*)pager showContentForPage:(id<KGOSearchResult>)content
+{
+    if ([content isKindOfClass:[Photo class]]) {
+        self.photo = (Photo *)content;
+        [self displayPhoto:self.photo];
     }
 }
+
+#pragma mark -
 
 - (IBAction)shareButtonPressed:(id)sender
 {
@@ -187,8 +164,16 @@ photo, photos;
     [self.shareController shareInView:self.view];
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
     self.shareController = nil;
+    self.imageView.delegate = nil;
+    self.imageView = nil;
+    self.photo = nil;
+    self.titleLabel = nil;
+    self.subtitleLabel = nil;
+    self.shareButton = nil;
     [super dealloc];
 }
+
 @end

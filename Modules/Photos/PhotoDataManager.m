@@ -32,8 +32,10 @@
     }
     
     if (album.photos.count && album.photos.count == [album.totalItems integerValue]) {
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"sortOrder" ascending:YES];
+        NSArray *descriptors = [NSArray arrayWithObject:sortDescriptor];
         if ([self.delegate respondsToSelector:@selector(photoDataManager:didReceivePhotos:)]) {
-            [self.delegate photoDataManager:self didReceivePhotos:album.photos];
+            [self.delegate photoDataManager:self didReceivePhotos:[album.photos sortedArrayUsingDescriptors:descriptors]];
         }
 
     } else {

@@ -10,7 +10,7 @@
 {
     NSMutableArray *views = [NSMutableArray array];
     for (NSInteger i = 0; i < photos.count; i++) {
-        Photo *aPhoto = [self.photos objectAtIndex:i];
+        Photo *aPhoto = [photos objectAtIndex:i];
         CGRect frame = CGRectMake(0, 0, 72, 72);
         MITThumbnailView *thumbView = [[[MITThumbnailView alloc] initWithFrame:frame] autorelease];
         thumbView.userInteractionEnabled = NO;
@@ -23,8 +23,6 @@
         [control addTarget:self action:@selector(thumbnailTapped:) forControlEvents:UIControlEventTouchUpInside];
         [views addObject:control];
     }
-    //_iconGrid.icons = views;
-    //[_iconGrid setNeedsLayout];
     [_iconGrid addIcons:views];
 }
 
@@ -79,8 +77,7 @@
 
 - (void)photoDataManager:(PhotoDataManager *)manager didReceivePhotos:(NSArray *)photos
 {
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"sortOrder" ascending:YES];
-    self.photos = [self.album.photos sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    self.photos = photos;
 
     [self layoutPhotos:photos];
     
