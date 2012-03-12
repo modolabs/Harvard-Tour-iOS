@@ -17,13 +17,14 @@
     NSDateFormatter *_dateFormatter;
     NSCalendarUnit _incrementUnit;
     
-    UIButton *nextButton;
-    UIButton *prevButton;
-    UIButton *dateButton;
-    UIButton *calendarButton;
+    IBOutlet UIButton *nextButton;
+    IBOutlet UIButton *prevButton;
+    IBOutlet UIButton *dateButton;
+    IBOutlet UIButton *calendarButton;
+    IBOutlet UIImageView *dropShadow;
 }
 
-- (void)buttonPressed:(id)sender;
+- (IBAction)buttonPressed:(id)sender;
 
 @property (nonatomic, retain) NSDate *date;
 @property (nonatomic, retain) NSDate *displayDate;

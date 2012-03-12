@@ -71,27 +71,28 @@ groupTitles = _groupTitles;
     
     _currentGroupIndex = NSNotFound;
     
-    if (self.browseMode == KGOCalendarBrowseModeLimit) {
-        [_datePager removeFromSuperview];
-        self.datePager = nil;
-        
-    } else {
+    if (self.browseMode != KGOCalendarBrowseModeLimit) {
+        [[NSBundle mainBundle] loadNibNamed:@"KGODatePager" owner:self options:nil];
         _datePager.contentsController = self;
         _datePager.delegate = self;
         [_datePager setDate:[NSDate date]];
+        [self.view addSubview:_datePager];
     }
     
     if (self.browseMode != KGOCalendarBrowseModeCategories) {
         _tabstrip.delegate = self;
         _tabstrip.showsSearchButton = YES;
         
+        if (_datePager) {
+            CGRect frame = _datePager.frame;
+            frame.origin.y = CGRectGetMaxY(_tabstrip.frame);
+            _datePager.frame = frame;
+        }
+        
         [self.dataManager requestGroups]; // response to this will populate the tabstrip
         
     } else {
         _tabstrip.hidden = YES;
-        CGRect frame = _datePager.frame;
-        frame.origin.y = _tabstrip.frame.origin.y;
-        _datePager.frame = frame;
     }
 }
 

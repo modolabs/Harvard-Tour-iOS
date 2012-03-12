@@ -206,6 +206,7 @@
 		EB83AE4C13C747AA006CCEDB /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB83AE4A13C747AA006CCEDB /* Settings.plist */; };
 		EB83AE5113C747BE006CCEDB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB83AE4F13C747BE006CCEDB /* Localizable.strings */; };
 		EB93486C139ED48500446243 /* StoryListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB934869139ED48500446243 /* StoryListViewController.xib */; };
+		EB97CBD5150E4FE400AF7C66 /* KGODatePager.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB97CBD4150E4FE400AF7C66 /* KGODatePager.xib */; };
 		EB9AF2A7130B59C3003B9769 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB9AF298130B56AD003B9769 /* MainWindow.xib */; };
 		EBAE86401215FB0D00F370BE /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAE863E1215FB0D00F370BE /* Icon.png */; };
 		EBAE86411215FB0D00F370BE /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAE863F1215FB0D00F370BE /* Icon@2x.png */; };
@@ -591,6 +592,7 @@
 		EB83AE5413C747CF006CCEDB /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EB83AE5C13C75C0C006CCEDB /* staging.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = staging.xcconfig; sourceTree = "<group>"; };
 		EB934869139ED48500446243 /* StoryListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StoryListViewController.xib; sourceTree = "<group>"; };
+		EB97CBD4150E4FE400AF7C66 /* KGODatePager.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KGODatePager.xib; sourceTree = "<group>"; };
 		EB9AF298130B56AD003B9769 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		EBAE863E1215FB0D00F370BE /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		EBAE863F1215FB0D00F370BE /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
@@ -1073,6 +1075,7 @@
 				EB03371F133C2B8C00ACF2BB /* IconGrid.m */,
 				EB033722133C2B8C00ACF2BB /* KGODetailPager.h */,
 				EB033723133C2B8C00ACF2BB /* KGODetailPager.m */,
+				EB97CBD4150E4FE400AF7C66 /* KGODatePager.xib */,
 				EB033720133C2B8C00ACF2BB /* KGODatePager.h */,
 				EB033721133C2B8C00ACF2BB /* KGODatePager.m */,
 				EB033724133C2B8C00ACF2BB /* KGOScrollingTabstrip.h */,
@@ -1568,6 +1571,7 @@
 				4ED552DC14F7895C00EF53EB /* VideoListViewController.xib in Resources */,
 				EBDF990E15052AD500CBE555 /* CalendarDetailViewController.xib in Resources */,
 				EBDF991115052C7600CBE555 /* KGODetailPageHeaderView.xib in Resources */,
+				EB97CBD5150E4FE400AF7C66 /* KGODatePager.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

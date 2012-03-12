@@ -31,81 +31,41 @@
 
 - (void)dealloc {
     [_dateFormatter release];
+    [_displayDate release];
+    [_date release];
     [super dealloc];
 }
 
-// TODO: get config values for assets
-- (void)layoutSubviews {
-
-    if (!nextButton) {
-        UIImage *dropShadowImage = [[[KGOTheme sharedTheme] backgroundImageForSearchBarDropShadow] stretchableImageWithLeftCapWidth:5
-                                                                                                                       topCapHeight:5];
-        if (dropShadowImage) {
-            UIImageView *dropShadow = [[[UIImageView alloc] initWithImage:dropShadowImage] autorelease];
-            dropShadow.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-            dropShadow.frame = CGRectMake(0, self.frame.size.height, dropShadow.frame.size.width, dropShadow.frame.size.height);
-            [self addSubview:dropShadow];
-            self.clipsToBounds = NO;
-        }
-        
-        // arrow buttons
-        nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        UIImage *buttonImage = [UIImage imageWithPathName:@"common/toolbar-button-next"];
-        
-        CGFloat halfHeight = floor(self.frame.size.height / 2);
-        CGFloat originX = self.frame.size.width - halfHeight;
-        
-        nextButton.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
-        nextButton.center = CGPointMake(originX, halfHeight);
-        [nextButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
-        [nextButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-next-pressed"] forState:UIControlStateHighlighted];
-        [nextButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:nextButton];
-        originX -= buttonImage.size.width;
-        
-        prevButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        buttonImage = [UIImage imageWithPathName:@"common/toolbar-button-previous"];
-        prevButton.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
-        prevButton.center = CGPointMake(originX, halfHeight);
-        [prevButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
-        [prevButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-previous-pressed"] forState:UIControlStateHighlighted];
-        [prevButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:prevButton];
-        
-        // calendar button
-        buttonImage = [UIImage imageWithPathName:@"common/toolbar-button"];
-        calendarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        calendarButton.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
-        calendarButton.center = CGPointMake(halfHeight, halfHeight);
-        [calendarButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
-        [calendarButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-pressed"] forState:UIControlStateHighlighted];
-        [calendarButton setImage:[UIImage imageWithPathName:@"common/subheadbar_calendar"] forState:UIControlStateNormal];
-        [calendarButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:calendarButton];
-        
-        // date label
-        dateButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        // TODO: make this configurable or use system font
-        dateButton.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18.0];
-        dateButton.titleLabel.textColor = [UIColor whiteColor];
-        dateButton.titleLabel.textAlignment = UITextAlignmentCenter;
-        dateButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-        
-        NSString *dateText = [_dateFormatter stringFromDate:_displayDate];
-        [dateButton setTitle:dateText forState:UIControlStateNormal];
-
-        // width of date label should be such that when date label is centered, it doesn't overlap the prev/next buttons
-        CGFloat dateButtonWidth = 2 * prevButton.frame.origin.x - self.frame.size.width;
-        CGFloat xOrigin = floor((self.frame.size.width - dateButtonWidth) / 2);
-        dateButton.frame = CGRectMake(xOrigin, 0.0, dateButtonWidth, self.frame.size.height);
-
-        [dateButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:dateButton];
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    UIImage *dropShadowImage = [[[KGOTheme sharedTheme] backgroundImageForSearchBarDropShadow] stretchableImageWithLeftCapWidth:5
+                                                                                                                   topCapHeight:5];
+    if (dropShadowImage) {
+        dropShadow.image = dropShadowImage;
+    } else {
+        [dropShadow removeFromSuperview];
     }
+
+    [nextButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-next"]
+                          forState:UIControlStateNormal];
+    [nextButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-next-pressed"]
+                          forState:UIControlStateHighlighted];
     
+    [prevButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-previous"]
+                          forState:UIControlStateNormal];
+    [prevButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-previous-pressed"]
+                          forState:UIControlStateHighlighted];
+    
+    [calendarButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button"]
+                              forState:UIControlStateNormal];
+    [calendarButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-pressed"]
+                              forState:UIControlStateHighlighted];
+    [calendarButton setImage:[UIImage imageWithPathName:@"common/subheadbar_calendar"]
+                    forState:UIControlStateNormal];
 }
 
-- (void)buttonPressed:(id)sender {
+- (IBAction)buttonPressed:(id)sender {
     if (sender == calendarButton || sender == dateButton) {
         DatePickerViewController *pickerVC = [[[DatePickerViewController alloc] init] autorelease];
         pickerVC.delegate = self;
@@ -165,14 +125,6 @@
     else if (_incrementUnit & NSMonthCalendarUnit) [_dateFormatter setDateFormat:@"yyyy MMM"];
     else if (_incrementUnit & NSYearCalendarUnit)  [_dateFormatter setDateFormat:@"yyyy"];
 }
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code.
-}
-*/
 
 #pragma mark DatePickerViewControllerDelegate functions
 
