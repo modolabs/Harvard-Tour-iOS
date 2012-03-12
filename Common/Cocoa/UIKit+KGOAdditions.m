@@ -114,16 +114,16 @@
             alpha = MIN(MAX(c[1], 0.0f), 1.0f);
         } else {
             red = MIN(MAX(c[0], 0.0f), 1.0f);
-            blue = MIN(MAX(c[1], 0.0f), 1.0f);
-            green = MIN(MAX(c[2], 0.0f), 1.0f);
+            green = MIN(MAX(c[1], 0.0f), 1.0f);
+            blue = MIN(MAX(c[2], 0.0f), 1.0f);
             alpha = MIN(MAX(c[3], 0.0f), 1.0f);
         }
 
         if (alpha < 1) {
-            result = [NSString stringWithFormat:@"#%2X%2X%2X%2X",
+            result = [NSString stringWithFormat:@"#%02X%02X%02X%02X",
                       (int)roundf(red * 255), (int)roundf(green * 255), (int)roundf(blue * 255), (int)roundf(alpha * 255)];
         } else {
-            result = [NSString stringWithFormat:@"#%2X%2X%2X",
+            result = [NSString stringWithFormat:@"#%02X%02X%02X",
                       (int)roundf(red * 255), (int)roundf(green * 255), (int)roundf(blue * 255)];
         }
     }

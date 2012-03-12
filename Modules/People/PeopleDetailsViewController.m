@@ -57,6 +57,7 @@
     
     UIFont *font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentTitle];
     KGOLabel *nameLabel = [KGOLabel multilineLabelWithText:self.person.name font:font width:self.tableView.frame.size.width - 20];
+    nameLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyContentTitle];
     nameLabel.frame = CGRectMake(10, 10, nameLabel.frame.size.width, nameLabel.frame.size.height);
 
     UIView *header = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, nameLabel.frame.size.height + 14)] autorelease];
