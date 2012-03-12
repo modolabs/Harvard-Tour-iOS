@@ -1,31 +1,54 @@
 #import "CalendarModule.h"
-#import "CalendarDayViewController.h"
 #import "CalendarDetailViewController.h"
 #import "CalendarDataManager.h"
 #import "CalendarModel.h"
+#import "Foundation+KGOAdditions.h"
 
 NSString * const KGODataModelNameCalendar = @"Calendar";
 
 @implementation CalendarModule
 
-@synthesize request = _request, dataManager;
+@synthesize request = _request;
+
+- (id)initWithDictionary:(NSDictionary *)moduleDict
+{
+    self = [super initWithDictionary:moduleDict];
+    if (self) {
+        NSString *browseMode = [moduleDict nonemptyStringForKey:@"DefaultBrowseMode"];
+        if ([browseMode isEqualToString:@"List"]) {
+            _defaultBrowseMode = KGOCalendarBrowseModeLimit;
+        } else {
+            _defaultBrowseMode = KGOCalendarBrowseModeDay;
+        }
+        _suppressSectionTitles = [moduleDict boolForKey:@"SuppressSectionTitles"];
+    }
+    return self;
+}
 
 - (void)dealloc {
+    [_dataManager release];
 	self.request = nil;
+
     [super dealloc];
-    
 }
 
 - (NSString *)defaultCalendar {
     return nil; // TODO
 }
 
-- (void)willLaunch
+- (void)coreDataDidDelete
 {
-    if (!self.dataManager) {
-        self.dataManager = [[[CalendarDataManager alloc] init] autorelease];
-        self.dataManager.moduleTag = self.tag;
+    [_dataManager release];
+    _dataManager = nil;
+}
+
+- (CalendarDataManager *)dataManager
+{
+    if (!_dataManager) {
+        _dataManager = [[CalendarDataManager alloc] init];
+        _dataManager.moduleTag = self.tag;
     }
+    return _dataManager;
 }
 
 #pragma mark Search
@@ -85,8 +108,8 @@ NSString * const KGODataModelNameCalendar = @"Calendar";
         if ([pageName isEqualToString:LocalPathPageNameCategoryList]) {
             calendarVC.browseMode = KGOCalendarBrowseModeCategories;
         } else {
-            calendarVC.browseMode = KGOCalendarBrowseModeDay;
-            //calendarVC.browseMode = KGOCalendarBrowseModeLimit;
+            calendarVC.browseMode = _defaultBrowseMode;
+            calendarVC.suppressSectionTitles = _suppressSectionTitles;
         }
         
         calendarVC.dataManager = self.dataManager;

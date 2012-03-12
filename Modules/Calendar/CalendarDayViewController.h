@@ -50,6 +50,7 @@ KGOScrollingTabstripSearchDelegate, CalendarDataManagerDelegate> {
 
 // the table will either be a plain, possibly sectioned list of events
 // or a grouped, unsectioned list of categories.
+@property(nonatomic) BOOL suppressSectionTitles;
 @property(nonatomic, retain) NSMutableArray *currentSections;
 @property(nonatomic, retain) NSMutableDictionary *currentEventsBySection;
 

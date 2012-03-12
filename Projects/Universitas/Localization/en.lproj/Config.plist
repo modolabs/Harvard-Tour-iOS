@@ -59,6 +59,10 @@
 			<string>calendar</string>
 			<key>title</key>
 			<string>Events</string>
+			<key>DefaultBrowseMode</key>
+			<string>Day</string>
+			<key>SuppressSectionTitles</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>id</key>

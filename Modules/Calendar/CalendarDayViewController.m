@@ -34,6 +34,7 @@ bool isOverOneHour(NSTimeInterval interval) {
 groupTitles = _groupTitles;
 @synthesize federatedSearchResults, browseMode = _browseMode;
 @synthesize datePager = _datePager, tabstrip = _tabstrip, loadingView = _loadingView, footerView = _footerView;
+@synthesize suppressSectionTitles = _suppressSectionTitles;
 
 - (void)dealloc
 {
@@ -451,7 +452,7 @@ groupTitles = _groupTitles;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (self.currentSections.count >= 1) { // only true for Day and Limit modes
+    if (!self.suppressSectionTitles && self.currentSections.count >= 1) { // only true for Day and Limit modes
         return [self.currentSections objectAtIndex:section];
     }
     
