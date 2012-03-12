@@ -117,6 +117,8 @@
     if ([self.story.hasBody boolValue]) {
         KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:@"modules/news/news_story_template.html"];
         NSMutableDictionary *values = [NSMutableDictionary dictionary];
+
+        // content variables
         
         [values setValue:(story.title          ? story.title          : @"") forKey:@"TITLE"];
         [values setValue:(story.author         ? story.author         : @"") forKey:@"AUTHOR"];
@@ -133,9 +135,29 @@
         
         NSString *isBookmarked = ([self.story.bookmarked boolValue]) ? @"on" : @"";
         [values setValue:isBookmarked forKey:@"BOOKMARKED"];
+
+        // presentation variables
         
         NSString *maxWidth = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? @"140" : @"320";
         [values setValue:maxWidth forKey:@"THUMBNAIL_MAX_WIDTH"];
+
+        UIFont *titleFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentTitle];
+        UIColor *titleColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyContentTitle];
+        [values setValue:titleFont.fontName forKey:@"TITLE_FONT"];
+        [values setValue:[NSString stringWithFormat:@"%.0f", titleFont.pointSize] forKey:@"TITLE_FONT_SIZE"];
+        [values setValue:[titleColor hexString] forKey:@"TITLE_COLOR"];
+        
+        UIFont *smallFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySmallPrint];
+        UIColor *smallColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertySmallPrint];
+        [values setValue:smallFont.fontName forKey:@"SMALLPRINT_FONT"];
+        [values setValue:[NSString stringWithFormat:@"%.0f", smallFont.pointSize] forKey:@"SMALLPRINT_FONT_SIZE"];
+        [values setValue:[smallColor hexString] forKey:@"SMALLPRINT_COLOR"];
+        
+        UIFont *bodyFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyBodyText];
+        UIColor *bodyColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyBodyText];
+        [values setValue:bodyFont.fontName forKey:@"BODY_FONT"];
+        [values setValue:[NSString stringWithFormat:@"%.0f", bodyFont.pointSize] forKey:@"BODY_FONT_SIZE"];
+        [values setValue:[bodyColor hexString] forKey:@"BODY_COLOR"];
         
         [storyView loadTemplate:template values:values];
 

@@ -14,6 +14,7 @@
 @interface UIColor (KGOAdditions)
 
 + (UIColor *)colorWithHexString:(NSString *)hexString;
+- (NSString *)hexString;
 
 @end
 

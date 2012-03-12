@@ -99,6 +99,38 @@
                            alpha:alpha];
 }
 
+// based on https://github.com/ars/uicolor-utilities/blob/master/UIColor-Expanded.m
+// note that iOS 5+ has the method [UIColor getRed:green:blue:alpha:]
+- (NSString *)hexString
+{
+    NSString *result = nil;
+    CGFloat red, blue, green, alpha;
+
+    CGColorSpaceModel csm = CGColorSpaceGetModel(CGColorGetColorSpace(self.CGColor));
+    if (csm == kCGColorSpaceModelRGB || csm == kCGColorSpaceModelMonochrome) {
+        const CGFloat *c = CGColorGetComponents(self.CGColor);
+        if (csm == kCGColorSpaceModelMonochrome) {
+            red = green = blue = MIN(MAX(c[0], 0.0f), 1.0f);
+            alpha = MIN(MAX(c[1], 0.0f), 1.0f);
+        } else {
+            red = MIN(MAX(c[0], 0.0f), 1.0f);
+            blue = MIN(MAX(c[1], 0.0f), 1.0f);
+            green = MIN(MAX(c[2], 0.0f), 1.0f);
+            alpha = MIN(MAX(c[3], 0.0f), 1.0f);
+        }
+
+        if (alpha < 1) {
+            result = [NSString stringWithFormat:@"#%2X%2X%2X%2X",
+                      (int)roundf(red * 255), (int)roundf(green * 255), (int)roundf(blue * 255), (int)roundf(alpha * 255)];
+        } else {
+            result = [NSString stringWithFormat:@"#%2X%2X%2X",
+                      (int)roundf(red * 255), (int)roundf(green * 255), (int)roundf(blue * 255)];
+        }
+    }
+
+    return result;
+}
+
 @end
 
 @implementation UIImageView (KGOAdditions)
@@ -209,6 +241,7 @@
 
 - (void)loadTemplate:(KGOHTMLTemplate *)template values:(NSDictionary *)values {
     NSString *htmlString = [template stringWithReplacements:values];
+    DLog(@"%@", htmlString);
     [self loadHTMLString:htmlString baseURL:[template baseURL]];
 }
 

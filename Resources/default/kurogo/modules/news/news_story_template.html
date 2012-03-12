@@ -2,10 +2,29 @@
     <head>
         <style type="text/css">
             html {padding: 0;}
-            #body {line-height: 20px;color: #333; margin-top: 14px;}
-            body {font-family:Helvetica;font-size: 15px;margin: 0;padding: 12px 10px;color:#333}
+            body {
+                font-family: "__BODY_FONT__";
+                font-size: __BODY_COLOR__px;
+                color: __BODY_COLOR__;
+                margin: 0;
+                padding: 12px 10px;
+            }
             a, a:visited { color: #003366; text-decoration:none; }
-            .slugline {font-family: 'Helvetica Neue', Helvetica, sans-serif; color:#171717;font-size:22px;line-height: 25px;margin: 0 0 8px 0;padding: 0;font-weight:normal}
+            .slugline {
+                font-family: "__TITLE_FONT__";
+                color: __TITLE_COLOR__;
+                font-size: __TITLE_FONT_SIZE__px;
+                line-height: 25px;
+                margin: 0 0 8px 0;
+                padding: 0;
+            }
+            .byline {
+                font-family: "__SMALLPRINT_FONT__";
+                color: __SMALLPRINT_COLOR__;
+                font-size: __SMALLPRINT_FONT_SIZE__px;
+                line-height: 16px;
+                min-height:30px;
+            }
             .dek {font-family: font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px;line-height: 20px;margin: 14px 0 18px 0;color: #171717}
             .dek:empty { margin: 0; } /* CSS 3: shrink if no content */
             .inlineControls {
@@ -46,7 +65,6 @@
             #shareButton.pressed {
                 background: url('common/share_pressed@2x.png') no-repeat;
             }
-            .byline {font-size: 12px; line-height: 16px; color: #666666;min-height:30px;}
             .inline-separator {margin: 0 3px;}
             #content {}
             .credential {font-size:8pt;}
