@@ -15,6 +15,7 @@ NSInteger const kBookmarkButtonIndex = 8765913;
 
 @interface KGOScrollingTabstrip (Private)
 
+- (void)loadSearchBar;
 - (void)showHideScrollButtons;
 - (void)sideButtonPressed:(id)sender;
 - (void)buttonPressed:(id)sender;
@@ -212,8 +213,8 @@ NSInteger const kBookmarkButtonIndex = 8765913;
     for (oldButton in oldButtons) {
         [oldButton removeFromSuperview];
     }
-    [_contentView setFrame:CGRectMake(0, 0, 320, 44)];
-    
+    [_contentView setFrame:self.bounds];
+
     for (UIButton *aButton in allButtons) {
         aButton.frame = CGRectMake(xOffset, aButton.frame.origin.y, aButton.frame.size.width, aButton.frame.size.height);
         xOffset += aButton.frame.size.width + SCROLL_TAB_HORIZONTAL_MARGIN;
@@ -255,9 +256,7 @@ NSInteger const kBookmarkButtonIndex = 8765913;
             
             [self addSubview:_rightScrollButton];
         }
-        
-        // only do this if we start the scroller in a different position
-        //[self showHideScrollButtons];
+    
     } else {
         if (_leftScrollButton) {
             _leftScrollButton.hidden = YES;
@@ -265,6 +264,11 @@ NSInteger const kBookmarkButtonIndex = 8765913;
         if (_rightScrollButton) {
             _rightScrollButton.hidden = YES;
         }
+    }
+    
+    if (_searchButton && allButtons.count == 1) {
+        [self loadSearchBar];
+        self.searchBar.alpha = 1.0;
     }
     
     if (self.searchBar) {
@@ -333,7 +337,7 @@ NSInteger const kBookmarkButtonIndex = 8765913;
     }
 }
 
-- (void)showSearchBarAnimated:(BOOL)animated
+- (void)loadSearchBar
 {
     if ([self.delegate conformsToProtocol:@protocol(KGOScrollingTabstripSearchDelegate)]) {
         id<KGOScrollingTabstripSearchDelegate> strictDelegate = (id<KGOScrollingTabstripSearchDelegate>)self.delegate;
@@ -341,7 +345,7 @@ NSInteger const kBookmarkButtonIndex = 8765913;
             if (!self.searchBar) {
                 UIViewController *vc = [strictDelegate viewControllerForTabstrip:self];
                 
-                self.searchBar = [[[KGOSearchBar alloc] initWithFrame:self.frame] autorelease];
+                self.searchBar = [[[KGOSearchBar alloc] initWithFrame:self.bounds] autorelease];
                 self.searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
                 self.searchBar.alpha = 0.0;
                 if (!self.searchController) {
@@ -355,25 +359,35 @@ NSInteger const kBookmarkButtonIndex = 8765913;
                 }
                 [self addSubview:self.searchBar];
             }
-            
-            [self bringSubviewToFront:self.searchBar];
-            
-            if (animated) {
-                __block KGOScrollingTabstrip *blockSelf = self;
-                [UIView animateWithDuration:0.4 animations:^{
-                    blockSelf.searchBar.alpha = 1.0;
-                }];
-            } else {
-                self.searchBar.alpha = 1.0;
-            }
-
-            [self.searchController setActive:YES animated:animated];
         }
+    }
+}
+
+- (void)showSearchBarAnimated:(BOOL)animated
+{
+    [self loadSearchBar];
+    if (self.searchBar) {
+        [self bringSubviewToFront:self.searchBar];
+        
+        if (animated) {
+            __block KGOScrollingTabstrip *blockSelf = self;
+            [UIView animateWithDuration:0.4 animations:^{
+                blockSelf.searchBar.alpha = 1.0;
+            }];
+        } else {
+            self.searchBar.alpha = 1.0;
+        }
+        
+        [self.searchController setActive:YES animated:animated];
     }
 }
 
 - (void)hideSearchBarAnimated:(BOOL)animated
 {
+    if (!_buttons.count && !_bookmarkButton) {
+        return;
+    }
+    
 	if (self.searchBar) {
         if (animated) {
             __block KGOScrollingTabstrip *blockSelf = self;
