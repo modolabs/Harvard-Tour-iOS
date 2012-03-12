@@ -147,26 +147,26 @@ headerView = _headerView;
     didReceiveChildren:(NSArray *)children
            forCategory:(NSString *)categoryID
 {
-    self.listItems = children;
-    id object = [self.listItems objectAtIndex:0];
-    
-    if (self.listItems.count == 1) {
-        if ([object conformsToProtocol:@protocol(KGOSearchResult)]) {
-            [self showDetailPageForItem:object];
+    if (children.count) {
+        id object = [children objectAtIndex:0];
+        if (children.count == 1) {
+            if ([object conformsToProtocol:@protocol(KGOSearchResult)]) {
+                [self showDetailPageForItem:object];
+            } else {
+                [self.dataManager requestChildrenForCategory:[object identifier]];
+            }
         } else {
-            [self.dataManager requestChildrenForCategory:[object identifier]];
+            self.listItems = children;
+            [self hideLoadingView];
+            
+            UITableViewStyle style = UITableViewStyleGrouped;
+            if ([object conformsToProtocol:@protocol(KGOSearchResult)]) {
+                style = UITableViewStylePlain;
+            }
+            
+            CGRect frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+            self.tableView = [self addTableViewWithFrame:frame style:style];
         }
-    
-    } else {
-        [self hideLoadingView];
-        
-        UITableViewStyle style = UITableViewStyleGrouped;
-        if ([object conformsToProtocol:@protocol(KGOSearchResult)]) {
-            style = UITableViewStylePlain;
-        }
-        
-        CGRect frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        self.tableView = [self addTableViewWithFrame:frame style:style];
     }
 }
 
