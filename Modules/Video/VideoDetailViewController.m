@@ -195,8 +195,7 @@ static const CGFloat extraScrollViewHeight = 100.0f;
 - (UIView *)viewForTableHeader
 {
     if (!self.headerView) {
-        CGRect frame = CGRectMake(0, 0, self.view.bounds.size.width, 30);
-        self.headerView = [[[KGODetailPageHeaderView alloc] initWithFrame:frame] autorelease];
+        [[NSBundle mainBundle] loadNibNamed:@"KGODetailPageHeaderView" owner:self options:nil];
         self.headerView.delegate = self;
         self.headerView.showsBookmarkButton = YES;
         self.headerView.showsShareButton = YES;

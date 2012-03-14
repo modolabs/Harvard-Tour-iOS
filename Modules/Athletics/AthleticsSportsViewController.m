@@ -22,7 +22,6 @@
 @synthesize activeCategoryId;
 @synthesize actieveMenuCategoryIdx;
 
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -62,7 +61,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self configureBookmark];
 }
 
 - (void)viewDidUnload
@@ -75,8 +73,6 @@
     _progressView = nil;
     [_storyTable release];
     _storyTable = nil;
-    [_bookmarkView release];
-    _bookmarkView = nil;
     [super viewDidUnload];
 }
 
@@ -92,7 +88,8 @@
     [_progressView release];
     [_storyTable release];
     [_athletcisCell release];
-    [_bookmarkView release];
+    [_titleLabel release];
+    [_bookmarkButton release];
     self.activeCategoryId = nil;
     self.categories = nil;
     self.schedules = nil;
@@ -152,28 +149,47 @@
                                    self.view.bounds.size.height - _activityView.frame.size.height - (BOOKMARK_HEIGHT + OFFSIDE));
 }
 
-- (void)configureBookmark {
-    [_bookmarkView layoutSubviews];
-    [self.view bringSubviewToFront:_bookmarkView];
-    _storyTable.frame = CGRectMake(0, (BOOKMARK_HEIGHT + OFFSIDE), self.view.bounds.size.width,
-                                   self.view.bounds.size.height - (BOOKMARK_HEIGHT + OFFSIDE));
-}
-
-- (void)headerViewFrameDidChange:(KGODetailPageHeaderView *)headerView {
-    headerView.frame = CGRectMake(0, 0, 320, 38);
-    [headerView buttonSizeFitsToMargin];
-}
-
 - (void)setupBookmarkStatus {
-    CGRect frame = CGRectMake(0, 0, self.view.bounds.size.width, BOOKMARK_HEIGHT);
-    _bookmarkView = [[KGODetailPageHeaderView alloc] initWithFrame:frame];
-    [_bookmarkView setDetailItem:[self.categories objectAtIndex:self.actieveMenuCategoryIdx]];
-    _bookmarkView.showsBookmarkButton = YES;
-    _bookmarkView.showsShareButton = NO;
-    _bookmarkView.showsSubtitle = NO;
-    _bookmarkView.delegate = self;
-    _bookmarkView.titleLabel.text = [self titleForMenuCategory];
-    [self.view addSubview:_bookmarkView];
+    _titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
+    _titleLabel.text = [self titleForMenuCategory];
+
+    id<KGOSearchResult> detailItem = [self.categories objectAtIndex:self.actieveMenuCategoryIdx];
+    UIImage *buttonImage, *pressedButtonImage;
+    if ([detailItem isBookmarked]) {
+        buttonImage = [UIImage imageWithPathName:@"common/bookmark_on.png"];
+        pressedButtonImage = [UIImage imageWithPathName:@"common/bookmark_on_pressed.png"];
+    } else {
+        buttonImage = [UIImage imageWithPathName:@"common/bookmark_off.png"];
+        pressedButtonImage = [UIImage imageWithPathName:@"common/bookmark_off_pressed.png"];
+    }
+    [_bookmarkButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [_bookmarkButton setBackgroundImage:pressedButtonImage forState:UIControlStateHighlighted];
+}
+
+- (void)setupBookmarkButtonImages
+{
+    id<KGOSearchResult> detailItem = [self.categories objectAtIndex:self.actieveMenuCategoryIdx];
+    UIImage *buttonImage, *pressedButtonImage;
+    if ([detailItem isBookmarked]) {
+        buttonImage = [UIImage imageWithPathName:@"common/bookmark_on.png"];
+        pressedButtonImage = [UIImage imageWithPathName:@"common/bookmark_on_pressed.png"];
+    } else {
+        buttonImage = [UIImage imageWithPathName:@"common/bookmark_off.png"];
+        pressedButtonImage = [UIImage imageWithPathName:@"common/bookmark_off_pressed.png"];
+    }
+    [_bookmarkButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [_bookmarkButton setBackgroundImage:pressedButtonImage forState:UIControlStateHighlighted];
+}
+
+- (IBAction)bookmarkButtonPressed:(id)sender
+{
+    id<KGOSearchResult> detailItem = [self.categories objectAtIndex:self.actieveMenuCategoryIdx];
+    if ([detailItem isBookmarked]) {
+        [detailItem removeBookmark];
+    } else {
+        [detailItem addBookmark];
+    }
+    [self setupBookmarkButtonImages];
 }
 
 #pragma mark -
@@ -552,31 +568,3 @@
 
 @end
 
-@implementation KGODetailPageHeaderView (Athletics)
-- (void)buttonSizeFitsToMargin {
-    CGRect frame = CGRectZero;
-    frame.origin.x = self.bounds.size.width;
-    
-    // if there is no subtitle, make title label narrower
-    // and align buttons at the top.
-    // if there is a subtitle, make title label the full width,
-    // subtitle label narrower, and align buttons with subtitle.
-    frame.origin.y = (self.subtitleLabel == nil ? 0 : self.titleLabel.frame.size.height);
-    self.titleLabel.textAlignment = UITextAlignmentCenter;
-    self.titleLabel.frame = CGRectMake(10, 0, 246, 38);
-    self.titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
-    for (UIButton *aButton in self.actionButtons) {
-        if (![aButton isDescendantOfView:self]) {
-            [self addSubview:aButton];
-        }
-        
-        frame.size = aButton.frame.size;
-        frame.origin.x -= frame.size.width ;
-        aButton.frame = frame;
-        
-        if (aButton == self.bookmarkButton) {
-            [self setupBookmarkButtonImages];
-        }
-    }
-}
-@end

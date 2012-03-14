@@ -20,7 +20,7 @@ KGODetailPageHeaderDelegate> {
 @property (nonatomic, retain) VideoDataManager *dataManager;
 @property (nonatomic, retain) NSString *section;
 @property (nonatomic, retain) UIScrollView *scrollView;
-@property (nonatomic, retain) KGODetailPageHeaderView *headerView;
+@property (nonatomic, retain) IBOutlet KGODetailPageHeaderView *headerView;
 
 - (id)initWithVideo:(Video *)aVideo andSection:(NSString *)videoSection;
 - (void) setDescription;

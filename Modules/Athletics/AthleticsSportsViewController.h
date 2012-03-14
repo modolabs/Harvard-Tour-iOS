@@ -5,13 +5,14 @@
 #import "AthleticsDataController.h"
 #import "KGOSearchDisplayController.h"
 #import "KGODetailPageHeaderView.h"
-@interface AthleticsSportsViewController : KGOTableViewController <KGOSearchBarDelegate,AthleticsDataDelegate,KGODetailPageHeaderDelegate> {
+@interface AthleticsSportsViewController : KGOTableViewController <KGOSearchBarDelegate,AthleticsDataDelegate> {
     IBOutlet UILabel *_loadingLabel;
     IBOutlet UILabel *_lastUpdateLabel;
     IBOutlet UIProgressView *_progressView;
     IBOutlet UITableView *_storyTable;
     IBOutlet UIView *_activityView;
-    KGODetailPageHeaderView *_bookmarkView;
+    IBOutlet UILabel *_titleLabel;
+    IBOutlet UIButton *_bookmarkButton;
     IBOutlet AthleticsTableViewCell *_athletcisCell;
     
     NSString *activeCategoryId;
@@ -29,13 +30,10 @@
 @property (nonatomic, retain) NSString *activeCategoryId;
 @property (nonatomic, assign)  NSInteger actieveMenuCategoryIdx;
 
+- (IBAction)bookmarkButtonPressed:(id)sender;
 
 - (void)setStatusText:(NSString *)text;
 - (NSString *)titleForMenuCategory;
 - (void)setupBookmarkStatus;
-- (void)configureBookmark;
-@end
 
-@interface KGODetailPageHeaderView (Athletics)
-- (void)buttonSizeFitsToMargin;
 @end
