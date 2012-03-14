@@ -8,5 +8,9 @@
 }
 
 + (KGOLabel *)multilineLabelWithText:(NSString *)text font:(UIFont *)font width:(CGFloat)width;
++ (KGOLabel *)multilineLabelWithText:(NSString *)text
+                                font:(UIFont *)font
+                               width:(CGFloat)width
+                       lineBreakMode:(UILineBreakMode)mode;
 
 @end

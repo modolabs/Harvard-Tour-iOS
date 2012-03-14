@@ -22,11 +22,12 @@ NSString * const PersonContactEntityName = @"PersonContact";
     contact.url = [aDict nonemptyStringForKey:@"url"];
     contact.title = [aDict nonemptyStringForKey:@"title"];
     contact.subtitle = [aDict nonemptyStringForKey:@"subtitle"];
+    contact.value = [aDict nonemptyStringForKey:@"value"];
     return contact;
 }
 
 - (NSDictionary *)dictionary {
-    return [self dictionaryWithValuesForKeys:[NSArray arrayWithObjects:@"subtitle", @"title", @"type", @"identifier", nil]];
+    return [self dictionaryWithValuesForKeys:[NSArray arrayWithObjects:@"subtitle", @"title", @"type", @"value", @"identifier", nil]];
 }
 
 @end

@@ -242,13 +242,16 @@
 	if (indexPath.section < [self.sectionArray count]) { 
 
 		NSDictionary *personAttribute = [[self.sectionArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-        NSString *value = [personAttribute objectForKey:@"value"];
+        NSString *value = [personAttribute stringForKey:@"value"];
+        if (!value) {
+            value = @"";
+        }
 
         UIFont *font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListValue];
         
-        // inner 20 for padding; 0.75 is approx ratio allocated to detail text label, 20 for accessory
+        // inner 20 for padding; 0.75 is approx ratio allocated to detail text label, 33 for accessory
         CGFloat width = floor((tableView.frame.size.width - 20) * 0.75) - 20;
-        CGFloat originX = self.tableView.frame.size.width - 20 - width;
+        CGFloat originX = self.tableView.frame.size.width - 33 - width;
         
         UIColor *textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyNavListValue];
 
@@ -275,7 +278,14 @@
             return [NSArray arrayWithObject:textView];
 
         } else {
-            KGOLabel *label = [KGOLabel multilineLabelWithText:value font:font width:width];
+            UILineBreakMode breakMode = UILineBreakModeWordWrap;
+            if (indexPath.section == _emailSection) {
+                breakMode = UILineBreakModeCharacterWrap;
+            }
+            KGOLabel *label = [KGOLabel multilineLabelWithText:value
+                                                          font:font
+                                                         width:width
+                                                 lineBreakMode:breakMode];
             label.frame = CGRectMake(originX, 10, width, label.frame.size.height);
             return [NSArray arrayWithObject:label];
         }
