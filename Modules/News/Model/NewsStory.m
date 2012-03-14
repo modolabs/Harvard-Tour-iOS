@@ -19,6 +19,7 @@ NSString * const NewsStoryEntityName = @"NewsStory";
 @dynamic summary;
 @dynamic searchResult;
 @dynamic bookmarked;
+@dynamic sortOrder;
 @dynamic categories;
 @dynamic thumbImage;
 @dynamic featuredImage;

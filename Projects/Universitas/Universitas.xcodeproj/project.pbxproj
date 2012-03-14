@@ -594,6 +594,7 @@
 		EB934869139ED48500446243 /* StoryListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StoryListViewController.xib; sourceTree = "<group>"; };
 		EB97CBD4150E4FE400AF7C66 /* KGODatePager.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KGODatePager.xib; sourceTree = "<group>"; };
 		EB9AF298130B56AD003B9769 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		EBA5BC1D1511435000B5D935 /* News 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "News 4.xcdatamodel"; sourceTree = "<group>"; };
 		EBAE863E1215FB0D00F370BE /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		EBAE863F1215FB0D00F370BE /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		EBAE86441215FB4900F370BE /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -1931,10 +1932,11 @@
 		EB0338671340DBE100ACF2BB /* News.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				EBA5BC1D1511435000B5D935 /* News 4.xcdatamodel */,
 				A1EAA68E145A1F440072108E /* News 3.xcdatamodel */,
 				EB0338681340DBE100ACF2BB /* News 2.xcdatamodel */,
 			);
-			currentVersion = A1EAA68E145A1F440072108E /* News 3.xcdatamodel */;
+			currentVersion = EBA5BC1D1511435000B5D935 /* News 4.xcdatamodel */;
 			path = News.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

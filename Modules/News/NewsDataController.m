@@ -175,9 +175,10 @@ currentCategories = _currentCategories, currentStories = _currentStories;
         return;
     }
     
-    NSSortDescriptor *dateSort = [[[NSSortDescriptor alloc] initWithKey:@"postDate" ascending:NO] autorelease];
-    NSSortDescriptor *idSort = [[[NSSortDescriptor alloc] initWithKey:@"identifier" ascending:NO] autorelease];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:dateSort, idSort, nil];
+    NSSortDescriptor *dateSort = [[[NSSortDescriptor alloc] initWithKey:@"sortOrder" ascending:YES] autorelease];
+    //NSSortDescriptor *idSort = [[[NSSortDescriptor alloc] initWithKey:@"identifier" ascending:NO] autorelease];
+    NSArray *sortDescriptors = [NSArray arrayWithObjects:dateSort, //idSort,
+                                nil];
     
     NSArray *results = [self.currentCategory.stories sortedArrayUsingDescriptors:sortDescriptors];
     
@@ -343,8 +344,11 @@ currentCategories = _currentCategories, currentStories = _currentStories;
         // http://stackoverflow.com/questions/1554623/illegal-attempt-to-establish-a-relationship-xyz-between-objects-in-different-co
         NewsCategory *mergedCategory = nil;
         
+        NSInteger sortOrder = start;
         for (NSDictionary *storyDict in stories) {
             NewsStory *story = [blockSelf storyWithDictionary:storyDict];
+            story.sortOrder = [NSNumber numberWithInt:sortOrder];
+            sortOrder++;
             NSMutableSet *mutableCategories = [story mutableSetValueForKey:@"categories"];
             if (!mergedCategory) {
                 mergedCategory = (NewsCategory *)[[story managedObjectContext] objectWithID:[category objectID]];

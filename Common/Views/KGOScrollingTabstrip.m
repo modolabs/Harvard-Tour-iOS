@@ -266,9 +266,11 @@ NSInteger const kBookmarkButtonIndex = 8765913;
         }
     }
     
-    if (_searchButton && allButtons.count == 1) {
+    if (_searchButton && allButtons.count <= 2) {
         [self loadSearchBar];
         self.searchBar.alpha = 1.0;
+    } else {
+        self.searchBar.alpha = 0;
     }
     
     if (self.searchBar) {

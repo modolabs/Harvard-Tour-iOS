@@ -21,6 +21,7 @@
 @property (nonatomic, retain) NSString * summary;
 @property (nonatomic, retain) NSNumber * searchResult;
 @property (nonatomic, retain) NSNumber * bookmarked;
+@property (nonatomic, retain) NSNumber * sortOrder;
 @property (nonatomic, retain) NSSet* categories;
 @property (nonatomic, retain) NewsImage * thumbImage;
 @property (nonatomic, retain) NewsImage * featuredImage;
