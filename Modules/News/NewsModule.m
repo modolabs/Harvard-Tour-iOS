@@ -88,8 +88,7 @@
             }
         }
 
-        // TODO: figure out why this (defined in detail vc class) is NewsStory
-        NewsStory *category = [params objectForKey:@"category"];
+        NewsCategory *category = [params objectForKey:@"category"];
         if (category) {
             [detailVC setCategory:category];
         }

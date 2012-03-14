@@ -5,12 +5,11 @@ NSString * const NewsCategoryEntityName = @"NewsCategory";
 
 @implementation NewsCategory
 @dynamic lastUpdated;
-@dynamic nextSeekId;
 @dynamic category_id;
 @dynamic title;
 @dynamic moduleTag;
-@dynamic isMainCategory;
 @dynamic moreStories;
+@dynamic showBodyThumbnail;
 @dynamic stories;
 @dynamic url;
 

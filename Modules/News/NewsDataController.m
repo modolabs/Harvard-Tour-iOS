@@ -80,7 +80,7 @@ currentCategories = _currentCategories, currentStories = _currentStories;
 - (NSArray *)latestCategories
 {
     if (!_currentCategories) {    
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isMainCategory = YES AND moduleTag = %@", self.moduleTag];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"moduleTag = %@", self.moduleTag];
         NSSortDescriptor *sort = [[[NSSortDescriptor alloc] initWithKey:@"sortOrder" ascending:YES] autorelease];
         NSSortDescriptor *catSort = [[[NSSortDescriptor alloc] initWithKey:@"category_id" ascending:YES] autorelease]; // compat
         NSArray *results = [[CoreDataManager sharedManager] objectsForEntity:NewsCategoryEntityName
@@ -293,16 +293,25 @@ currentCategories = _currentCategories, currentStories = _currentStories;
             category.category_id = categoryId;
         }
         category.title = [categoryDict nonemptyStringForKey:@"title"];
-        category.isMainCategory = [NSNumber numberWithBool:YES];
+        id showBodyThumbnail = [categoryDict objectForKey:@"show_body_thumbnail"];
+        if ([showBodyThumbnail isKindOfClass:[NSNumber class]]) {
+            category.showBodyThumbnail = showBodyThumbnail;
+        } else if ([showBodyThumbnail isKindOfClass:[NSString class]]) {
+            category.showBodyThumbnail = [NSNumber numberWithBool:[showBodyThumbnail boolValue]];
+        } else {
+            category.showBodyThumbnail = [NSNumber numberWithBool:YES];
+        }
         category.moreStories = [NSNumber numberWithInt:LOADMORE_LIMIT];
-        category.nextSeekId = [NSNumber numberWithInt:0];
     }
     return category;
 }
 
 - (void)requestStoriesForCategory:(NSString *)categoryId afterId:(NSString *)afterId
 {
-    // TODO: signal that loading progress is 0
+    if ([self.delegate respondsToSelector:@selector(dataController:didMakeProgress:)]) {
+        [self.delegate dataController:self didMakeProgress:0];
+    }
+    
     if (![categoryId isEqualToString:self.currentCategory.category_id]) {
         self.currentCategory = [self categoryWithId:categoryId];
     }

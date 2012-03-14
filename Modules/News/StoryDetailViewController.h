@@ -1,10 +1,9 @@
 #import <UIKit/UIKit.h>
 #import "KGODetailPager.h"
 
-@class NewsStory;
+@class NewsStory, NewsCategory;
 @class KGOShareButtonController;
 @class NewsDataController;
-//@class StoryListViewController;
 
 @protocol NewsControllerDelegate <NSObject>
 
@@ -37,7 +36,7 @@
 @property (nonatomic, retain) UIWebView *storyView;
 @property (nonatomic, retain) NSArray *stories;
 @property (nonatomic, retain) NewsStory *story; // use if you only want to present one story
-@property (nonatomic, retain) NewsStory *category; // use only if you want the news home button to back to specific category
+@property (nonatomic, retain) NewsCategory *category; // use only if you want the news home button to back to specific category
 @property BOOL multiplePages;
 
 - (void) setInitialIndexPath:(NSIndexPath *)initialIndexPath;

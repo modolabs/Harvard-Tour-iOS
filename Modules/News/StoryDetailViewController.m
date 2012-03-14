@@ -122,9 +122,14 @@
         
         [values setValue:(story.title          ? story.title          : @"") forKey:@"TITLE"];
         [values setValue:(story.author         ? story.author         : @"") forKey:@"AUTHOR"];
-        [values setValue:(story.thumbImage.url ? story.thumbImage.url : @"") forKey:@"THUMBNAIL_URL"];
         [values setValue:(story.body           ? story.body           : @"") forKey:@"BODY"];
         [values setValue:(story.summary        ? story.summary        : @"") forKey:@"DEK"];
+
+        if (!self.story.thumbImage.url || ![self.category.showBodyThumbnail boolValue]) {
+            [values setValue:@"" forKey:@"THUMBNAIL_URL"]; // javascript in the template will remove the node
+        } else {
+            [values setValue:story.thumbImage.url forKey:@"THUMBNAIL_URL"];
+        }
 
         if (story.postDate) {
             NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
