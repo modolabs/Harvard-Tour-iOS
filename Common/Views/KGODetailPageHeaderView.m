@@ -93,12 +93,12 @@ titleLabel = _titleLabel, subtitleLabel = _subtitleLabel, buttonContainer = _but
 
 - (BOOL)showsShareButton
 {
-    return !self.shareButton.hidden;
+    return self.shareButton && !self.shareButton.hidden;
 }
 
 - (BOOL)showsBookmarkButton
 {
-    return !self.bookmarkButton.hidden;
+    return self.bookmarkButton && !self.bookmarkButton.hidden;
 }
 
 - (void)setShowsShareButton:(BOOL)shows

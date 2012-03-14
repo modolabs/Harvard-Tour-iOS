@@ -12,13 +12,12 @@
 @interface KGOTabbedViewController : UIViewController <KGOTabbedControlDelegate, KGOTabbedViewDelegate, KGODetailPageHeaderDelegate> {
     
     IBOutlet KGOTabbedControl *_tabs;
-    IBOutlet KGODetailPageHeaderView *_tabViewHeader;
     IBOutlet UIView *_tabViewContainer;
     
 }
 
+@property (nonatomic, retain) IBOutlet KGODetailPageHeaderView *headerView;
 @property (nonatomic, assign) id<KGOTabbedViewDelegate> delegate;
-@property (nonatomic, retain) KGODetailPageHeaderView *tabViewHeader;
 @property (nonatomic, retain) UIView *tabViewContainer;
 @property (nonatomic, retain) KGOTabbedControl *tabs;
 

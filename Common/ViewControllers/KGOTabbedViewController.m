@@ -3,7 +3,7 @@
 
 @implementation KGOTabbedViewController
 
-@synthesize tabs = _tabs, tabViewHeader = _tabViewHeader, tabViewContainer = _tabViewContainer;
+@synthesize tabs = _tabs, headerView = _headerView, tabViewContainer = _tabViewContainer;
 @synthesize delegate;
 
 - (void)reloadTabs
@@ -97,7 +97,7 @@
 - (void)dealloc
 {
     self.tabs = nil;
-    self.tabViewHeader = nil;
+    self.headerView = nil;
     self.tabViewContainer = nil;
     [super dealloc];
 }
@@ -116,7 +116,10 @@
 {
     [super viewDidLoad];
     
-    self.tabViewHeader.delegate = self;
+    [[NSBundle mainBundle] loadNibNamed:@"KGODetailPageHeaderView" owner:self options:nil];
+    [self.view addSubview:self.headerView];
+
+    self.headerView.delegate = self;
     self.tabs.delegate = self;
     
     for (id item in [self.delegate itemsForTabbedControl:_tabs]) {
@@ -134,11 +137,9 @@
 
 - (void)viewDidUnload
 {
-    [_tabViewHeader release];
-    _tabViewHeader = nil;
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+
+    self.headerView = nil;
 }
 
 @end

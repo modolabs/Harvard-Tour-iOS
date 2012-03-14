@@ -97,7 +97,7 @@
         [self.dataManager requestDetailsForPlacemark:self.placemark];
     }
 
-    self.tabViewHeader.detailItem = self.placemark;
+    self.headerView.detailItem = self.placemark;
     
     [_tableView release];
     _tableView = nil;
@@ -214,7 +214,7 @@
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:self.pager] autorelease];
     }
 
-    self.tabViewHeader.showsBookmarkButton = YES;
+    self.headerView.showsBookmarkButton = YES;
     [self loadAnnotationContent];
 }
 
