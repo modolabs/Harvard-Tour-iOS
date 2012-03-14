@@ -42,7 +42,6 @@ MFMailComposeViewControllerDelegate>
 - (NSArray *)sectionsForFields;
 
 - (UIView *)viewForTableHeader;
-- (NSString *)dateDescriptionForEvent:(KGOEvent *)event;
 
 @end
 

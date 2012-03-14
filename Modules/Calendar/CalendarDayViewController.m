@@ -485,7 +485,7 @@ groupTitles = _groupTitles;
                         [self.dataManager shortDateStringFromDate:event.startDate],
                         NSLocalizedString(@"CALENDAR_ALL_DAY_SUBTITLE", @"All day")];
         } else {
-            subtitle = [self.dataManager shortDateTimeStringFromDate:event.startDate];
+            subtitle = [self.dataManager dateTimeStringForEvent:event multiline:NO];
         }
         cell.textLabel.text = title;
         cell.detailTextLabel.text = subtitle;

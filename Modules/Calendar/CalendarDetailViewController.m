@@ -307,33 +307,6 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
     return sections;
 }
 
-- (NSString *)dateDescriptionForEvent:(KGOEvent *)event
-{
-    NSString *dateString = [self.dataManager mediumDateStringFromDate:_event.startDate];
-    NSString *timeString = nil;
-    if ([_event.allDay boolValue]) {
-        NSString *endDateString = [self.dataManager mediumDateStringFromDate:_event.endDate];
-        if ([endDateString isEqualToString:dateString]) {
-            timeString = [NSString stringWithFormat:@"%@\n%@", dateString, NSLocalizedString(@"CALENDAR_ALL_DAY_SUBTITLE", @"All day")];
-        } else {
-            timeString = [NSString stringWithFormat:@"%@ - %@", dateString, endDateString];
-            
-        }
-    } else {
-        if (_event.endDate) {
-            timeString = [NSString stringWithFormat:@"%@\n%@-%@",
-                          dateString,
-                          [self.dataManager shortTimeStringFromDate:_event.startDate],
-                          [self.dataManager shortTimeStringFromDate:_event.endDate]];
-        } else {
-            timeString = [NSString stringWithFormat:@"%@\n%@",
-                          dateString,
-                          [self.dataManager shortTimeStringFromDate:_event.startDate]];
-        }
-    }
-    return timeString;
-}
-
 #pragma mark - UITableView
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -540,7 +513,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
                                      action:@selector(calendarButtonPressed:)];
     }
     self.headerView.detailItem = self.event;
-    self.headerView.subtitle = [self dateDescriptionForEvent:_event];
+    self.headerView.subtitle = [self.dataManager dateTimeStringForEvent:self.event multiline:YES];
     return self.headerView;
 }
 

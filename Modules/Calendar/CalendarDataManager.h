@@ -54,4 +54,6 @@
 - (NSString *)shortTimeStringFromDate:(NSDate *)date;
 - (NSString *)shortDateTimeStringFromDate:(NSDate *)date;
 
+- (NSString *)dateTimeStringForEvent:(KGOEvent *)event multiline:(BOOL)multiline;
+
 @end

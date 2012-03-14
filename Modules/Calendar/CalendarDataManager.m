@@ -64,6 +64,59 @@
     return [[_dateFormatters objectForKey:@"dateTime"] stringFromDate:date];
 }
 
+- (NSString *)dateTimeStringForEvent:(KGOEvent *)event multiline:(BOOL)multiline
+{
+    NSString *timeString = nil;
+
+    NSString *startDateString = [self mediumDateStringFromDate:event.startDate];
+
+    if ([event.allDay boolValue]) {
+        NSString *endDateString = [self mediumDateStringFromDate:event.endDate];
+        if ([endDateString isEqualToString:startDateString]) {
+            timeString = [NSString stringWithFormat:@"%@\n%@",
+                          startDateString,
+                          NSLocalizedString(@"CALENDAR_ALL_DAY_SUBTITLE", @"All day")];
+        } else {
+            timeString = [NSString stringWithFormat:@"%@ - %@", startDateString, endDateString];
+            
+        }
+
+    } else {
+        NSString *startTimeString = [self shortTimeStringFromDate:event.startDate];
+
+        if (event.endDate) {
+            NSString *endDateString = [self mediumDateStringFromDate:event.endDate];
+            NSString *endTimeString = [self shortTimeStringFromDate:event.endDate];
+            
+            if (multiline) {
+                NSString *dateString = startDateString;
+                if (![endDateString isEqualToString:dateString]) {
+                    dateString = [NSString stringWithFormat:@"%@ - %@", dateString, endDateString];
+                }
+                
+                timeString = [NSString stringWithFormat:@"%@\n%@-%@",
+                              dateString, startTimeString, endTimeString];
+            } else {
+                if ([endDateString isEqualToString:startDateString]) {
+                    timeString = [NSString stringWithFormat:@"%@ %@-%@",
+                                  startDateString, startTimeString, endTimeString];
+                } else {
+                    timeString = [NSString stringWithFormat:@"%@ %@ - %@ %@",
+                                  startDateString, startTimeString, endDateString, endTimeString];
+                }
+            }
+
+        } else {
+            if (multiline) {
+                timeString = [NSString stringWithFormat:@"%@\n%@", startDateString, startTimeString];
+            } else {
+                timeString = [NSString stringWithFormat:@"%@ %@", startDateString, startTimeString];
+            }
+        }
+    }
+    return timeString;
+}
+
 - (EKEventStore *)eventStore
 {
     if (!_eventStore) {
