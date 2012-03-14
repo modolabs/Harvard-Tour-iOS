@@ -4,7 +4,7 @@
 #import "KGOTableViewController.h"
 #import "AthleticsDataController.h"
 #import "KGOSearchDisplayController.h"
-#import "KGODetailPageHeaderView.h"
+
 @interface AthleticsSportsViewController : KGOTableViewController <KGOSearchBarDelegate,AthleticsDataDelegate> {
     IBOutlet UILabel *_loadingLabel;
     IBOutlet UILabel *_lastUpdateLabel;
