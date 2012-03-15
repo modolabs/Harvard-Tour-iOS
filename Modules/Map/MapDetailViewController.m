@@ -152,10 +152,53 @@
     return  _tableView.items;
 }
 
--(void)receivedSearchResults:(NSArray *)searchResults forSource:(NSString *)source {
-    _tableView.items = searchResults;
+// from MIT
+#define METERS_PER_FOOT 0.3048
+#define FEET_PER_MILE 5280
+- (NSString *)distanceTextForMeters:(CLLocationDistance)meters
+{
+    NSString *measureSystem = [[NSLocale currentLocale] objectForKey:NSLocaleMeasurementSystem];
+    BOOL isMetric = ![measureSystem isEqualToString:@"U.S."];
+    
+    NSString *distanceString = nil;
+    if (!isMetric) {
+        CGFloat feet = meters / METERS_PER_FOOT;
+        if (feet * 2 > FEET_PER_MILE) {
+            distanceString = [NSString stringWithFormat:
+                              NSLocalizedString(@"MAP_%.1f_MILES_AWAY", @"%.1f miles away"), (feet / FEET_PER_MILE)];
+        } else {
+            distanceString = [NSString stringWithFormat:
+                              NSLocalizedString(@"MAP_%.0f_FEET_AWAY", @"%.1f miles away"),feet];
+        }
+    } else {
+        if (meters > 1000) {
+            distanceString = [NSString stringWithFormat:
+                              NSLocalizedString(@"MAP_%.1f_KM_AWAY", @"%.1f km away"), (meters / 1000)];
+        } else {
+            distanceString = [NSString stringWithFormat:
+                              NSLocalizedString(@"MAP_%.0f_METERS_AWAY", @"%.0f meters away"), meters];
+        }
+    }
+    
+    return distanceString;
+}
+
+- (void)receivedSearchResults:(NSArray *)searchResults forSource:(NSString *)source
+{
     NSArray *filteredArray = [searchResults filteredArrayUsingPredicate:
                               [NSPredicate predicateWithFormat:@"identifier != %@", self.placemark.identifier]];
+    CLLocation *fromLocation = [[[CLLocation alloc] initWithLatitude:self.placemark.coordinate.latitude
+                                                           longitude:self.placemark.coordinate.longitude] autorelease];
+    for (id testPlacemark in filteredArray) {
+        if ([testPlacemark isKindOfClass:[KGOPlacemark class]]) {
+            KGOPlacemark *aPlacemark = (KGOPlacemark *)testPlacemark;
+            CLLocation *toLocation = [[[CLLocation alloc] initWithLatitude:aPlacemark.coordinate.latitude
+                                                                 longitude:aPlacemark.coordinate.longitude] autorelease];
+            CLLocationDistance distance = [fromLocation distanceFromLocation:toLocation];
+            aPlacemark.currentSubtitle = [self distanceTextForMeters:distance];
+        }
+    }
+
     _tableView.items = filteredArray;
     [_tableView reloadData];
 }

@@ -25,11 +25,22 @@ NSString * const KGOPlacemarkEntityName = @"KGOPlacemark";
 @dynamic photoURL;
 @dynamic userInfo;
 
-@synthesize moduleTag;
+@synthesize moduleTag, currentSubtitle;
+
+- (void)dealloc
+{
+    self.currentSubtitle = nil;
+    self.moduleTag = nil;
+    [super dealloc];
+}
 
 #pragma mark KGOSearchResult, MKAnnotation
 
-- (NSString *)subtitle {
+- (NSString *)subtitle
+{
+    if (self.currentSubtitle) {
+        return self.currentSubtitle;
+    }
     return self.street;
 }
 

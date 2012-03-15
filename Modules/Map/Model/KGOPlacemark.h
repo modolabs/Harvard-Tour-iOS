@@ -29,6 +29,7 @@
 @property (nonatomic, retain) NSSet * categories;
 
 @property (nonatomic, retain) ModuleTag *moduleTag;
+@property (nonatomic, retain) NSString *currentSubtitle;
 
 + (KGOPlacemark *)placemarkWithDictionary:(NSDictionary *)dictionary;
 - (void)updateWithDictionary:(NSDictionary *)dictionary;
