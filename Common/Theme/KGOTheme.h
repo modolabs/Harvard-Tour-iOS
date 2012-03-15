@@ -15,6 +15,7 @@ extern NSString * const KGOThemePropertySmallPrint;
 extern NSString * const KGOThemePropertyContentTitle;
 extern NSString * const KGOThemePropertyContentSubtitle;
 extern NSString * const KGOFontPageTitle;
+extern NSString * const KGOThemePropertyPageTitle;
 extern NSString * const KGOThemePropertyPageSubtitle;
 extern NSString * const KGOThemePropertyCaption;
 extern NSString * const KGOThemePropertyByline;

@@ -107,6 +107,11 @@
     self.title = NSLocalizedString(@"PHOTOS_ALBUM_VIEW_TITLE", @"Album");
     
     _titleLabel.text = self.album.title;
+    _titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyPageTitle];
+    _titleLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyPageTitle];
+    
+    _subtitleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySmallPrint];
+    _subtitleLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertySmallPrint];
     
     [self updateSubtitleLabel];
     

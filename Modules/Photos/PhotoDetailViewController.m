@@ -32,13 +32,16 @@
 - (void)resizeLabels
 {
     CGFloat width = CGRectGetWidth(self.titleView.frame);
+    CGFloat spacing = 4;
     CGSize subSize = [self.subtitleLabel.text sizeWithFont:self.subtitleLabel.font
-                                         constrainedToSize:CGSizeMake(width, self.subtitleLabel.font.lineHeight * 2)
+                                         constrainedToSize:CGSizeMake(width, self.subtitleLabel.font.lineHeight * 5)
                                              lineBreakMode:UILineBreakModeWordWrap];
+    CGFloat titleMaxHeight = CGRectGetHeight(self.titleView.frame) - subSize.height - spacing;
     CGSize titleSize = [self.titleLabel.text sizeWithFont:self.titleLabel.font
-                                        constrainedToSize:CGSizeMake(width, CGRectGetHeight(self.titleView.frame) - subSize.height) lineBreakMode:UILineBreakModeWordWrap];
+                                        constrainedToSize:CGSizeMake(width, titleMaxHeight)
+                                            lineBreakMode:UILineBreakModeWordWrap];
     self.titleLabel.frame = CGRectMake(0, 0, titleSize.width, titleSize.height);
-    self.subtitleLabel.frame = CGRectMake(0, titleSize.height, subSize.width, subSize.height);
+    self.subtitleLabel.frame = CGRectMake(0, titleSize.height + spacing, subSize.width, subSize.height);
 }
 
 - (void)displayPhoto:(Photo *)photo
@@ -49,9 +52,8 @@
     [self.imageView loadImage];
     
     self.titleLabel.text = photo.title;
-    NSString *cdot = [NSString stringWithUTF8String:"\u00B7"];
-    self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@ %@",
-                               photo.album.type, cdot, [photo lastUpdateString]];
+    self.subtitleLabel.text = [NSString stringWithFormat:@"%@ (%@)\n%@",
+                               photo.album.title, photo.album.type, [photo lastUpdateString]];
 
     [self resizeLabels];
 }
@@ -65,6 +67,12 @@
 
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
     self.imageView.clipsToBounds = YES;
+
+    self.titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyPageTitle];
+    self.titleLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyPageTitle];
+    
+    self.subtitleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySmallPrint];
+    self.subtitleLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertySmallPrint];
     
     KGODetailPager *pager = [[[KGODetailPager alloc] initWithPagerController:self delegate:self] autorelease];
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:pager] autorelease];

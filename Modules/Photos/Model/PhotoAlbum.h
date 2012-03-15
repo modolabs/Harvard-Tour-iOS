@@ -1,10 +1,11 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "MITThumbnailView.h"
+#import "KGOSearchModel.h"
 
 @class Photo;
 
-@interface PhotoAlbum : NSManagedObject <MITThumbnailDelegate>
+@interface PhotoAlbum : NSManagedObject <KGOSearchResult, MITThumbnailDelegate>
 
 @property (nonatomic, retain) NSString * identifier;
 @property (nonatomic, retain) NSDate * lastUpdate;
@@ -15,6 +16,9 @@
 @property (nonatomic, retain) NSNumber * totalItems;
 @property (nonatomic, retain) NSData * thumbData;
 @property (nonatomic, retain) NSSet *photos;
+
+@property (nonatomic, retain) ModuleTag *moduleTag;
+@property (nonatomic, retain) MITThumbnailView *thumbView;
 
 + (PhotoAlbum *)albumWithDictionary:(NSDictionary *)dictionary;
 + (PhotoAlbum *)albumWithID:(NSString *)identifier canCreate:(BOOL)canCreate;

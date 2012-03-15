@@ -114,12 +114,7 @@
     [cell.thumbView loadImage];
 
     cell.titleLabel.text = album.title;
-    NSInteger count = [album.totalItems integerValue];
-    if (count) {
-        cell.subtitleLabel.text = [NSString stringWithFormat:@"%@\n%@", album.type, [album albumSize]];
-    } else {
-        cell.subtitleLabel.text = album.type;
-    }
+    cell.subtitleLabel.text = [album subtitle];
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     

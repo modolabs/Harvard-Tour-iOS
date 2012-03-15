@@ -44,6 +44,12 @@ KGOSign KGOGetIntegerSign(NSInteger x);
 
 @end
 
+@interface NSSet (KGOAdditions)
+
+- (NSArray *)sortedArrayUsingKey:(NSString *)key ascending:(BOOL)ascending;
+
+@end
+
 
 @interface NSArray (KGOAdditions)
 

@@ -467,16 +467,6 @@ maxResultsPerSection;
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (NSArray *)tableView:(UITableView *)tableView viewsForCellAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *source = [self.searchSources objectAtIndex:indexPath.section];
-    NSArray *searchResults = [self.multiSearchResults objectForKey:source];
-    id<KGOSearchResult> result = [searchResults objectAtIndex:indexPath.row];
-    if ([result respondsToSelector:@selector(viewsForTableCell)]) {
-        return [result viewsForTableCell];
-    }
-    return nil;
-}
-
 - (CellManipulator)tableView:(UITableView *)tableView manipulatorForCellAtIndexPath:(NSIndexPath *)indexPath {
     NSString *title = nil;
     NSString *subtitle = nil;
@@ -498,8 +488,8 @@ maxResultsPerSection;
         title = [result title];
         subtitle = [result respondsToSelector:@selector(subtitle)] ? [result subtitle] : nil;
 
-        if ([result respondsToSelector:@selector(tableCellThumbImage)]) {
-            image = [result tableCellThumbImage];
+        if ([result respondsToSelector:@selector(iconImage)]) {
+            image = [result iconImage];
         }
     }
     

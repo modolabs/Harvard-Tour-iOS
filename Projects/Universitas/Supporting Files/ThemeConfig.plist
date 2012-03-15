@@ -140,9 +140,11 @@
 		<key>PageTitle</key>
 		<dict>
 			<key>color</key>
-			<string>#505050</string>
+			<string>#003366</string>
+			<key>font</key>
+			<string>Georgia</string>
 			<key>size</key>
-			<integer>-3</integer>
+			<integer>7</integer>
 		</dict>
 		<key>SectionHeader</key>
 		<dict>

@@ -179,7 +179,8 @@ KGOSign KGOGetIntegerSign(NSInteger x) {
                 static NSDateFormatter *shortFormatter = nil;
                 if (shortFormatter == nil) {
                     shortFormatter = [[NSDateFormatter alloc] init];
-                    [shortFormatter setDateStyle:NSDateFormatterShortStyle];
+                    [shortFormatter setDateStyle:NSDateFormatterMediumStyle];
+                    [shortFormatter setTimeStyle:NSDateFormatterNoStyle];
                 }
                 result = [shortFormatter stringFromDate:self];
             }
@@ -210,6 +211,25 @@ KGOSign KGOGetIntegerSign(NSInteger x) {
 }
 
 @end
+
+
+@implementation NSSet (KGOAdditions)
+
+- (NSArray *)sortedArrayUsingKey:(NSString *)key ascending:(BOOL)ascending
+{
+    NSArray *result = nil;
+    id obj = [self anyObject];
+    SEL selector = NSSelectorFromString(key);
+    if ([obj respondsToSelector:selector]) {
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:key ascending:ascending];
+        NSArray *descriptors = [NSArray arrayWithObject:sortDescriptor];
+        result = [self sortedArrayUsingDescriptors:descriptors];
+    }
+    return result;
+}
+
+@end
+
 
 
 

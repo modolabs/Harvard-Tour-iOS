@@ -90,12 +90,7 @@
     subtitleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyMediaListSubtitle];
     subtitleLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyMediaListSubtitle];
     subtitleLabel.numberOfLines = 2;
-    NSInteger count = [album.totalItems integerValue];
-    if (count) {
-        subtitleLabel.text = [NSString stringWithFormat:@"%@\n%@", [album albumSize], [album lastUpdateString]];
-    } else {
-        subtitleLabel.text = [album lastUpdateString];
-    }
+    subtitleLabel.text = [album subtitle];
     [view addSubview:subtitleLabel];
     
     return view;

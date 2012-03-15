@@ -2,7 +2,7 @@
 #import "KGOTableViewController.h"
 #import "KGOTheme.h"
 
-@protocol KGOListItem <NSObject>
+@protocol KGOListItem <NSObject> // compatible with MKAnnotation
 
 - (NSString *)identifier;
 - (NSString *)title;
@@ -25,11 +25,8 @@
 
 @optional
 
-- (NSString *)subtitle;
-- (NSArray *)viewsForTableCell;   // how to be displayed in a search results or bookmarks table view
-
-- (UIImage *)annotationImage;     // image to use in map view
-- (UIImage *)tableCellThumbImage; // image to use in table view
+- (UIView *)iconView;         // image to use in table/grid views
+- (UIImage *)annotationImage; // image to use for map pin
 - (NSString *)accessoryType;
 
 - (BOOL)didGetSelected:(id)selector;

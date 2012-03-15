@@ -2,6 +2,7 @@
 #import "Foundation+KGOAdditions.h"
 #import "CoreDataManager.h"
 #import "PhotoAlbum.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 
 NSString * const PhotoEntityName = @"Photo";
 
@@ -18,6 +19,46 @@ NSString * const PhotoEntityName = @"Photo";
 @dynamic pubDate;
 @dynamic sortOrder;
 @dynamic album;
+
+@synthesize moduleTag, thumbView;
+
+#pragma mark KGOSearchResult
+
+- (BOOL)isBookmarked
+{
+    return NO;
+}
+
+- (void)addBookmark
+{
+}
+
+- (void)removeBookmark
+{
+}
+
+- (UIView *)iconView
+{
+    if (!self.thumbView) {
+        self.thumbView = [[[MITThumbnailView alloc] initWithFrame:CGRectMake(0, 0, 72, 72)] autorelease];
+        self.thumbView.imageURL = self.thumbURL;
+        self.thumbView.imageData = self.thumbData;
+        self.thumbView.delegate = self;
+    }
+    return self.thumbView;
+}
+
+- (BOOL)didGetSelected:(id)selector
+{
+    NSArray *photos = [self.album.photos sortedArrayUsingKey:@"sortOrder" ascending:YES];
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            self, @"photo", photos, @"photos", nil];
+    return [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail
+                                  forModuleTag:self.moduleTag
+                                        params:params];
+}
+
+#pragma mark -
 
 + (Photo *)photoWithDictionary:(NSDictionary *)dictionary
 {
@@ -94,14 +135,43 @@ NSString * const PhotoEntityName = @"Photo";
             [self.pubDate agoString]];
 }
 
+#pragma mark - cleanup
+
+- (void)willTurnIntoFault
+{
+    [super willTurnIntoFault];
+    
+    self.thumbView.delegate = nil;
+    self.thumbView = nil;
+}
+
+- (void)didSave
+{
+    [super didSave];
+    
+    if ([self isDeleted]) {
+        self.thumbView.delegate = nil;
+        self.thumbView = nil;
+    }
+}
+
+- (void)dealloc
+{
+    self.thumbView.delegate = nil;
+    self.thumbView = nil;
+    self.moduleTag = nil;
+    
+    [super dealloc];
+}
+
 #pragma mark - MITThumbnailDelegate
 
 - (void)thumbnail:(MITThumbnailView *)thumbnail didLoadData:(NSData *)data
 {
-    if ([thumbnail.imageURL isEqualToString:self.imageURL]) {
+    if ([thumbnail.imageURL isEqualToString:self.imageURL]) { // this is not our thumbview
         self.imageData = data;
         [[CoreDataManager sharedManager] saveData];
-    } else if ([thumbnail.imageURL isEqualToString:self.thumbURL]) {
+    } else if ([thumbnail.imageURL isEqualToString:self.thumbURL]) { // this is our thumbview
         self.thumbData = data;
         [[CoreDataManager sharedManager] saveData];
     }

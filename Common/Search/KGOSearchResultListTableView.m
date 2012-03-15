@@ -16,15 +16,6 @@
     [self.resultsDelegate resultsHolder:self didSelectResult:theResult];
 }
 
-- (NSArray *)tableView:(UITableView *)tableView viewsForCellAtIndexPath:(NSIndexPath *)indexPath
-{
-    id<KGOSearchResult> theResult = [self.items objectAtIndex:indexPath.row];
-    if ([theResult respondsToSelector:@selector(viewsForTableCell)]) {
-        return [theResult viewsForTableCell];
-    }
-    return nil;
-}
-
 - (KGOTableCellStyle)tableView:(UITableView *)tableView styleForCellAtIndexPath:(NSIndexPath *)indexPath
 {
     return KGOTableCellStyleSubtitle;

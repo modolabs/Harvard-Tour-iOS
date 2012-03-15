@@ -1,5 +1,6 @@
 #import "PhotoDataManager.h"
 #import "CoreDataManager.h"
+#import "Foundation+KGOAdditions.h"
 
 @implementation PhotoDataManager
 
@@ -32,10 +33,12 @@
     }
     
     if (album.photos.count && album.photos.count == [album.totalItems integerValue]) {
-        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"sortOrder" ascending:YES];
-        NSArray *descriptors = [NSArray arrayWithObject:sortDescriptor];
         if ([self.delegate respondsToSelector:@selector(photoDataManager:didReceivePhotos:)]) {
-            [self.delegate photoDataManager:self didReceivePhotos:[album.photos sortedArrayUsingDescriptors:descriptors]];
+            NSArray *photos = [album.photos sortedArrayUsingKey:@"sortOrder" ascending:YES];
+            [photos enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                [(Photo *)obj setModuleTag:self.moduleTag];
+            }];
+            [self.delegate photoDataManager:self didReceivePhotos:photos];
         }
 
     } else {
@@ -72,6 +75,7 @@
         for (NSDictionary *photoDict in photoData) {
             Photo *aPhoto = [Photo photoWithDictionary:photoDict];
             if (aPhoto) {
+                aPhoto.moduleTag = self.moduleTag;
                 [photos addObject:aPhoto];
             }
         }
@@ -87,6 +91,7 @@
             PhotoAlbum *anAlbum = [PhotoAlbum albumWithDictionary:albumDict];
             if (anAlbum) {
                 anAlbum.sortOrder = [NSNumber numberWithInt:albums.count];
+                anAlbum.moduleTag = self.moduleTag;
                 [albums addObject:anAlbum];
             }
         }
