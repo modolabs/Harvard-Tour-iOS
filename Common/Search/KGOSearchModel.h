@@ -26,6 +26,7 @@
 @optional
 
 - (UIView *)iconView;         // image to use in table/grid views
+- (UIImage *)iconImage;
 - (UIImage *)annotationImage; // image to use for map pin
 - (NSString *)accessoryType;
 
