@@ -54,7 +54,7 @@ typedef void (^CellManipulator)(UITableViewCell *);
  */
 @interface KGOTableViewController : UIViewController <UITableViewDelegate, KGOTableViewDataSource> {
 	KGOTableController *_tableController;
-    UITableView *_tableView;
+    IBOutlet UITableView *_tableView;
 
 	BOOL _didInitWithStyle;
 	UITableViewStyle _initStyle;

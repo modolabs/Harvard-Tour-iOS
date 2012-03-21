@@ -38,7 +38,7 @@ typedef enum {
 	KGOTableCellStyleValue1,
 	KGOTableCellStyleValue2,
 	KGOTableCellStyleSubtitle,
-	KGOTableCellStyleBodyText,
+	KGOTableCellStyleWebView,
 	KGOTableCellStyleURL
 } KGOTableCellStyle;
 

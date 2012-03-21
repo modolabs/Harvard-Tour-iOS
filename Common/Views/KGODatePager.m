@@ -6,11 +6,13 @@
 @implementation KGODatePager
 
 @synthesize delegate, contentsController;
+@synthesize prevButton, nextButton, dateButton, calendarButton, dropShadow;
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
+        _showsDropShadow = YES;
         _dateFormatter = [[NSDateFormatter alloc] init];
         self.backgroundColor = [[KGOTheme sharedTheme] backgroundColorForDatePager];
         self.incrementUnit = NSDayCalendarUnit;
@@ -22,6 +24,7 @@
 {    
     self = [super initWithFrame:frame];
     if (self) {
+        _showsDropShadow = YES;
         _dateFormatter = [[NSDateFormatter alloc] init];
         self.backgroundColor = [[KGOTheme sharedTheme] backgroundColorForDatePager];
         self.incrementUnit = NSDayCalendarUnit;
@@ -36,16 +39,39 @@
     [super dealloc];
 }
 
-- (void)awakeFromNib
+- (void)setupDropShadow
 {
-    [super awakeFromNib];
-    UIImage *dropShadowImage = [[[KGOTheme sharedTheme] backgroundImageForSearchBarDropShadow] stretchableImageWithLeftCapWidth:5
-                                                                                                                   topCapHeight:5];
-    if (dropShadowImage) {
-        dropShadow.image = dropShadowImage;
+    if (_showsDropShadow) {
+        UIImage *dropShadowImage = [[[KGOTheme sharedTheme] backgroundImageForSearchBarDropShadow] stretchableImageWithLeftCapWidth:5
+                                                                                                                       topCapHeight:5];
+        if (dropShadowImage) {
+            dropShadow.image = dropShadowImage;
+        } else {
+            [dropShadow removeFromSuperview];
+        }
+
     } else {
         [dropShadow removeFromSuperview];
     }
+}
+
+- (BOOL)showsDropShadow
+{
+    return _showsDropShadow;
+}
+
+- (void)setShowsDropShadow:(BOOL)shows
+{
+    if (shows != _showsDropShadow) {
+        _showsDropShadow = shows;
+        [self setupDropShadow];
+    }
+}
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    [self setupDropShadow];
 
     [nextButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-next"]
                           forState:UIControlStateNormal];
