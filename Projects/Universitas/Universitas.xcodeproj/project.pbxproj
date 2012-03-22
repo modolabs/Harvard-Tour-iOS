@@ -195,7 +195,6 @@
 		EB70DCF01444958300E60476 /* PeopleDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB70DCEF1444958200E60476 /* PeopleDataManager.m */; };
 		EB7E9E9C143152D20093B0C7 /* MITBuildInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7E9E9A143152D20093B0C7 /* MITBuildInfo.m */; };
 		EB7E9EA0143152E00093B0C7 /* KGOModule+Factory.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7E9E9F143152E00093B0C7 /* KGOModule+Factory.m */; };
-		EB7E9EA2143153600093B0C7 /* kurogo in Resources */ = {isa = PBXBuildFile; fileRef = EB7E9EA1143153600093B0C7 /* kurogo */; };
 		EB7E9EA5143155BD0093B0C7 /* common in Resources */ = {isa = PBXBuildFile; fileRef = EB7E9EA3143155BD0093B0C7 /* common */; };
 		EB7E9EA6143155BD0093B0C7 /* modules in Resources */ = {isa = PBXBuildFile; fileRef = EB7E9EA4143155BD0093B0C7 /* modules */; };
 		EB7E9F2E143171780093B0C7 /* Video.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EB7E9F2C143171770093B0C7 /* Video.xcdatamodeld */; };
@@ -580,7 +579,6 @@
 		EB7E9E9A143152D20093B0C7 /* MITBuildInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MITBuildInfo.m; sourceTree = "<group>"; };
 		EB7E9E9E143152E00093B0C7 /* KGOModule+Factory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KGOModule+Factory.h"; sourceTree = "<group>"; };
 		EB7E9E9F143152E00093B0C7 /* KGOModule+Factory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "KGOModule+Factory.m"; sourceTree = "<group>"; };
-		EB7E9EA1143153600093B0C7 /* kurogo */ = {isa = PBXFileReference; lastKnownFileType = folder; name = kurogo; path = default/kurogo; sourceTree = "<group>"; };
 		EB7E9EA3143155BD0093B0C7 /* common */ = {isa = PBXFileReference; lastKnownFileType = folder; path = common; sourceTree = "<group>"; };
 		EB7E9EA4143155BD0093B0C7 /* modules */ = {isa = PBXFileReference; lastKnownFileType = folder; path = modules; sourceTree = "<group>"; };
 		EB7E9F2D143171780093B0C7 /* Video.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Video.xcdatamodel; sourceTree = "<group>"; };
@@ -707,7 +705,6 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				EB7E9EA1143153600093B0C7 /* kurogo */,
 				EB9AF298130B56AD003B9769 /* MainWindow.xib */,
 				EB46A347134EB97C005796E4 /* MainWindow-iPad.xib */,
 			);
@@ -1562,7 +1559,6 @@
 				EB83AE4C13C747AA006CCEDB /* Settings.plist in Resources */,
 				EB83AE5113C747BE006CCEDB /* Localizable.strings in Resources */,
 				EB6D576A14196B1A009EDA9D /* FBDialog.bundle in Resources */,
-				EB7E9EA2143153600093B0C7 /* kurogo in Resources */,
 				EB7E9EA5143155BD0093B0C7 /* common in Resources */,
 				EB7E9EA6143155BD0093B0C7 /* modules in Resources */,
 				EB7E9F4E14337C630093B0C7 /* ipad in Resources */,
