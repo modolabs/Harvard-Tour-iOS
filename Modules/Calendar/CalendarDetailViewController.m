@@ -555,8 +555,11 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
                                 calendar.type, @"type",
                                 startString, @"time",
                                 nil];
-        
-        urlString = [[NSURL URLWithQueryParameters:params baseURL:[[KGORequestManager sharedManager] serverURL]] absoluteString];
+
+        NSURL *baseURL = [[KGORequestManager sharedManager] serverURL];
+        baseURL = [baseURL URLByAppendingPathComponent:self.dataManager.moduleTag];
+        baseURL = [baseURL URLByAppendingPathComponent:@"detail"];
+        urlString = [[NSURL URLWithQueryParameters:params baseURL:baseURL] absoluteString];
     }
     
     _shareController.shareURL = urlString;
