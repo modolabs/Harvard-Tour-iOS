@@ -493,6 +493,7 @@ groupTitles = _groupTitles;
         
     } else if (self.eventsLoaded) {
         cell.textLabel.text = NSLocalizedString(@"CALENDAR_NO_EVENTS_FOUND", @"No events found");
+        cell.detailTextLabel.text = nil;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
