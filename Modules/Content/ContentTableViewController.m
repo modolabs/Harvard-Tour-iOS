@@ -365,6 +365,7 @@
         self.contentView = [[[UIWebView alloc] init] autorelease];
         self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         contentView.frame = self.view.bounds;
+        self.contentView.delegate = self;
         
         KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:@"common/webview.html"];
         if (template) {
@@ -417,6 +418,17 @@
             [self removeLoadingView];
         }
     }
+}
+
+#pragma mark - UIWebviewDelegate
+
+-(BOOL) webView:(UIWebView *)inWeb shouldStartLoadWithRequest:(NSURLRequest *)inRequest navigationType:(UIWebViewNavigationType)inType {
+    if ( inType == UIWebViewNavigationTypeLinkClicked ) {
+        [[UIApplication sharedApplication] openURL:[inRequest URL]];
+        return NO;
+    }
+    
+    return YES;
 }
 
 @end
