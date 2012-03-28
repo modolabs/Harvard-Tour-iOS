@@ -116,7 +116,7 @@
     cell.titleLabel.text = album.title;
     cell.subtitleLabel.text = [album subtitle];
     
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.accessoryView = [[KGOTheme sharedTheme] accessoryViewForType:KGOAccessoryTypeChevron];
     
     return cell;
 }
