@@ -10,7 +10,7 @@ typedef enum _RequestPhase {
 
 
 @interface ContentTableViewController : UIViewController <KGORequestDelegate,
-UITableViewDataSource, UITableViewDelegate> {
+UITableViewDataSource, UITableViewDelegate,UIWebViewDelegate> {
 	
     NSMutableDictionary * listOfFeeds;
     NSMutableArray * feedKeys;
