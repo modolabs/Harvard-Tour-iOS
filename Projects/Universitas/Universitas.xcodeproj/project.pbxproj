@@ -131,6 +131,7 @@
 		EB0FBBDF151BE557008C1D78 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB0FBBC8151BE544008C1D78 /* InfoPlist.strings */; };
 		EB0FBBE0151BE557008C1D78 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB0FBBCA151BE544008C1D78 /* Localizable.strings */; };
 		EB0FBBE1151BE557008C1D78 /* Settings.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB0FBBCC151BE544008C1D78 /* Settings.plist */; };
+		EB0FBCC115239A10008C1D78 /* HTMLTagCleaner.m in Sources */ = {isa = PBXBuildFile; fileRef = EB0FBCC015239A10008C1D78 /* HTMLTagCleaner.m */; };
 		EB138F0512F253A1004DBB7C /* libGoogleAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB138F0312F253A1004DBB7C /* libGoogleAnalytics.a */; };
 		EB1440D61309EEA000396753 /* CalendarDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1440C21309EEA000396753 /* CalendarDataManager.m */; };
 		EB1440D81309EEA000396753 /* CalendarDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB1440C41309EEA000396753 /* CalendarDetailViewController.m */; };
@@ -459,6 +460,8 @@
 		EB0FBBDB151BE556008C1D78 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		EB0FBBDC151BE556008C1D78 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EB0FBBDD151BE556008C1D78 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Settings.plist"; sourceTree = "<group>"; };
+		EB0FBCBF15239A10008C1D78 /* HTMLTagCleaner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMLTagCleaner.h; sourceTree = "<group>"; };
+		EB0FBCC015239A10008C1D78 /* HTMLTagCleaner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTMLTagCleaner.m; sourceTree = "<group>"; };
 		EB138F0212F253A1004DBB7C /* GANTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GANTracker.h; sourceTree = "<group>"; };
 		EB138F0312F253A1004DBB7C /* libGoogleAnalytics.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAnalytics.a; sourceTree = "<group>"; };
 		EB1440C11309EEA000396753 /* CalendarDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarDataManager.h; sourceTree = "<group>"; };
@@ -982,6 +985,8 @@
 				EB0336BB133C2B8B00ACF2BB /* MapKit+KGOAdditions.m */,
 				EB0336BC133C2B8B00ACF2BB /* UIKit+KGOAdditions.h */,
 				EB0336BD133C2B8B00ACF2BB /* UIKit+KGOAdditions.m */,
+				EB0FBCBF15239A10008C1D78 /* HTMLTagCleaner.h */,
+				EB0FBCC015239A10008C1D78 /* HTMLTagCleaner.m */,
 			);
 			path = Cocoa;
 			sourceTree = "<group>";
@@ -1778,6 +1783,7 @@
 				EB587B3814A3F25100723906 /* IconGridScrollViewController.m in Sources */,
 				EB587B3D14A40B9200723906 /* IconGridScrollView.m in Sources */,
 				EB63FA7A14E070CF00C33576 /* OverScrollFooterView.m in Sources */,
+				EB0FBCC115239A10008C1D78 /* HTMLTagCleaner.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

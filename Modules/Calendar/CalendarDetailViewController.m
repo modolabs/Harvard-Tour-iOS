@@ -2,6 +2,7 @@
 #import "KGOContactInfo.h"
 #import "KGORequestManager.h"
 #import "Foundation+KGOAdditions.h"
+#import "HTMLTagCleaner.h"
 #import "UIKit+KGOAdditions.h"
 #import "CalendarDataManager.h"
 #import "KGOShareButtonController.h"
@@ -532,7 +533,7 @@ dataManager, searchResult, event = _event, headerView = _headerView, tableView =
 {
     _shareController.actionSheetTitle = @"Share this event";
     _shareController.shareTitle = _event.title;
-    _shareController.shareBody = _event.summary;
+    _shareController.shareBody = [_event.summary stringByStrippingHTMLTags];
     
     NSString *urlString = nil;
     for (KGOEventParticipant *organizer in _event.organizers) {
