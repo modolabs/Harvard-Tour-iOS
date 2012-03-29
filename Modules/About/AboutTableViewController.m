@@ -128,7 +128,7 @@
                 
                 NSString *type = [itemDict nonemptyStringForKey:@"type"];
                 if (!type || [type isEqualToString:@"webView"]) {
-                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    cell.accessoryView = [[KGOTheme sharedTheme] accessoryViewForType:KGOAccessoryTypeChevron];
                 }
                 else if ([type isEqualToString:@"email"]) {
                     cell.accessoryView = [[KGOTheme sharedTheme] accessoryViewForType:KGOAccessoryTypeEmail];

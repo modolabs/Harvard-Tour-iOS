@@ -92,7 +92,7 @@
     
     cell.textLabel.text = aModule.longName;
     cell.imageView.image = [aModule iconImage];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.accessoryView = [[KGOTheme sharedTheme] accessoryViewForType:KGOAccessoryTypeChevron];
     
     return cell;
 }

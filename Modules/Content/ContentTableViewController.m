@@ -2,6 +2,7 @@
 #import "Foundation+KGOAdditions.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "UIKit+KGOAdditions.h"
+#import "KGOTheme.h"
 
 @implementation ContentTableViewController
 @synthesize moduleTag;
@@ -206,7 +207,7 @@
     
     cell.textLabel.text = [feedTitles stringForKey:[self keyForIndex:indexPath.row]];
     [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.accessoryView = [[KGOTheme sharedTheme] accessoryViewForType:KGOAccessoryTypeChevron];
     
     return cell;
 }

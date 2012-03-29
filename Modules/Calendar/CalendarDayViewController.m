@@ -473,7 +473,7 @@ groupTitles = _groupTitles;
         NSString *title = category.title;
         [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
         cell.textLabel.text = title;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.accessoryView = [[KGOTheme sharedTheme] accessoryViewForType:KGOAccessoryTypeChevron];
         
     } else if (self.currentSections.count) {
         NSArray *eventsForSection = [self.currentEventsBySection objectForKey:[self.currentSections objectAtIndex:indexPath.section]];
@@ -489,7 +489,7 @@ groupTitles = _groupTitles;
         }
         cell.textLabel.text = title;
         cell.detailTextLabel.text = subtitle;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.accessoryView = [[KGOTheme sharedTheme] accessoryViewForType:KGOAccessoryTypeChevron];
         
     } else if (self.eventsLoaded) {
         cell.textLabel.text = NSLocalizedString(@"CALENDAR_NO_EVENTS_FOUND", @"No events found");

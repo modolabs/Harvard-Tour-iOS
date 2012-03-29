@@ -241,7 +241,6 @@
 
 - (void)loadTemplate:(KGOHTMLTemplate *)template values:(NSDictionary *)values {
     NSString *htmlString = [template stringWithReplacements:values];
-    DLog(@"%@", htmlString);
     [self loadHTMLString:htmlString baseURL:[template baseURL]];
 }
 

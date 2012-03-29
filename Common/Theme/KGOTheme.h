@@ -1,4 +1,5 @@
 #import <UIKit/UIKit.h>
+#import "UIKit+KGOAdditions.h"
 
 extern NSString * const KGOAccessoryTypeNone;
 extern NSString * const KGOAccessoryTypeBlank;

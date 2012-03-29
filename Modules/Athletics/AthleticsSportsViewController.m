@@ -266,7 +266,7 @@
     }
     [(AthleticsTableViewCell *)cell setStory:[self.stories objectAtIndex:indexPath.row]];
     [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.accessoryView = [[KGOTheme sharedTheme] accessoryViewForType:KGOAccessoryTypeChevron];
     return cell;
 }
 
