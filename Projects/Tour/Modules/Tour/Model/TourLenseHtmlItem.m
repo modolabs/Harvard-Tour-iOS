@@ -19,7 +19,7 @@
 + (TourLenseHtmlItem *)itemWithDictionary:(NSDictionary *)itemDict {
     TourLenseHtmlItem *item = [[CoreDataManager sharedManager] 
                                insertNewObjectForEntityForName:TourLenseHtmlItemEntityName];
-    item.html = [itemDict stringForKey:@"html" nilIfEmpty:NO];
+    item.html = [itemDict stringForKey:@"html"];
     return item;
 }
 

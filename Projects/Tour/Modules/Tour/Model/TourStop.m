@@ -69,7 +69,7 @@
 }
 
 + (TourStop *)stopWithDictionary:(NSDictionary *)stopDict order:(NSInteger)order {
-    TourStop *stop = [[CoreDataManager sharedManager] getObjectForEntity:TourStopEntityName attribute:@"id" value:[stopDict objectForKey:@"id"]];
+    TourStop *stop = [[CoreDataManager sharedManager] uniqueObjectForEntity:TourStopEntityName attribute:@"id" value:[stopDict objectForKey:@"id"]];
     
     if (!stop) {
         stop = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:TourStopEntityName];
@@ -79,10 +79,10 @@
     stop.order = [NSNumber numberWithInt:order];
     stop.latitude = [stopDict numberForKey:@"lat"];
     stop.longitude = [stopDict numberForKey:@"lon"];
-    stop.subtitle = [stopDict stringForKey:@"subtitle" nilIfEmpty:NO];
-    stop.title = [stopDict stringForKey:@"title" nilIfEmpty:NO];
-    stop.photo = [TourMediaItem mediaItemForURL:[stopDict stringForKey:@"photo" nilIfEmpty:NO]];
-    stop.thumbnail = [TourMediaItem mediaItemForURL:[stopDict stringForKey:@"thumbnail" nilIfEmpty:NO]];
+    stop.subtitle = [stopDict stringForKey:@"subtitle"];
+    stop.title = [stopDict stringForKey:@"title"];
+    stop.photo = [TourMediaItem mediaItemForURL:[stopDict stringForKey:@"photo"]];
+    stop.thumbnail = [TourMediaItem mediaItemForURL:[stopDict stringForKey:@"thumbnail"]];
     return stop;
                     
 }

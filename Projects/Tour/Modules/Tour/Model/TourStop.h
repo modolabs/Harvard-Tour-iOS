@@ -14,10 +14,10 @@
 @interface TourStop : NSManagedObject <MKAnnotation> {
 @private
 }
-@property (nonatomic, retain) NSString * subtitle;
+@property (nonatomic, copy) NSString * subtitle;
 @property (nonatomic, retain) NSString * id;
 @property (nonatomic, retain) NSNumber * longitude;
-@property (nonatomic, retain) NSString * title;
+@property (nonatomic, copy) NSString * title;
 @property (nonatomic, retain) NSNumber * visited;
 @property (nonatomic, retain) NSNumber * order;
 @property (nonatomic, retain) NSNumber * latitude;

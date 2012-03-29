@@ -20,8 +20,8 @@
 + (TourLensePhotoItem *)itemWithDictionary:(NSDictionary *)itemDict {
     TourLensePhotoItem *item = [[CoreDataManager sharedManager] 
                                 insertNewObjectForEntityForName:TourLensePhotoItemEntityName];
-    item.title = [itemDict stringForKey:@"title" nilIfEmpty:NO];
-    item.photo = [TourMediaItem mediaItemForURL:[itemDict stringForKey:@"url" nilIfEmpty:NO]];
+    item.title = [itemDict stringForKey:@"title"];
+    item.photo = [TourMediaItem mediaItemForURL:[itemDict stringForKey:@"url"]];
     return item;
 }
 

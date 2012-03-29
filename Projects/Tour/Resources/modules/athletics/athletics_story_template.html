@@ -1,0 +1,166 @@
+<html>
+    <head>
+        <style type="text/css">
+            html {padding: 0;}
+            #body {line-height: 20px;color: #333; margin-top: 14px;}
+            body {font-family:Helvetica;font-size: 15px;margin: 0;padding: 12px 10px;color:#333}
+            a, a:visited { color: #003366; text-decoration:none; }
+            .slugline {font-family: 'Helvetica Neue', Helvetica, sans-serif; color:#171717;font-size:22px;line-height: 25px;margin: 0 0 8px 0;padding: 0;font-weight:normal}
+            .dek {font-family: font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size: 16px;line-height: 20px;margin: 14px 0 18px 0;color: #171717}
+            .dek:empty { margin: 0; } /* CSS 3: shrink if no content */
+            .inlineControls {
+                float: right;
+                -webkit-user-select: none;
+                position: relative;
+                top: 1px;
+            }
+            .inlineControls a {
+                -webkit-tap-highlight-color: rgba(0,0,0,0);
+            }
+            .inlineControls span {
+                display: inline-block;
+                width: 44px;
+                height: 38px;
+				margin-left: 4px;
+                -webkit-user-select: none;
+            }
+            #bookmarkButton {
+                background: url('common/bookmark_off@2x.png') no-repeat;
+				-webkit-background-size: 44px;
+				background-size: 44px;
+            }
+            #bookmarkButton.pressed {
+                background: url('common/bookmark_off_pressed@2x.png') no-repeat;
+            }
+            #bookmarkButton.on {
+                background: url('common/bookmark_on@2x.png') no-repeat;
+            }
+            #bookmarkButton.pressed.on {
+                background: url('common/bookmark_on_pressed@2x.png') no-repeat;
+            }
+            #shareButton {
+                background: url('common/share@2x.png') no-repeat;
+ 				-webkit-background-size: 44px;
+				background-size: 44px;
+           }
+            #shareButton.pressed {
+                background: url('common/share_pressed@2x.png') no-repeat;
+            }
+            .byline {font-size: 12px; line-height: 16px; color: #666666;min-height:30px;}
+            .inline-separator {margin: 0 3px;}
+            #content {}
+            .credential {font-size:8pt;}
+            .wp-caption {max-width:300px;font-size:8pt;color:#808080;}
+            #image {float:right;margin: 3px 0 -1px 9px;}
+            #image img.thumbnail {float:right; margin-bottom: 6px; border: 1px solid #999; /* scale to width respecting aspect */}
+            #image img.enlarge { float:right; margin-left: 4px; }
+            #image div { float:right; margin-top: 2px; margin-right:-2px; }
+            #image a { text-align:right; font-size:11px; line-height: 30px; text-decoration:none; color:#777;}
+            #image a div { margin-top: -4px; }
+            #image a+a div { margin-top: 2px; }
+            img {max-width: 100%; height:auto};
+        </style>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+        <title>__TITLE__</title>
+    </head>
+    <body bgcolor="#FFFFFF">
+        <h1 class="slugline">__TITLE__</h1>
+        <span class="inlineControls">
+            <a href="bookmark"><span width="44" height="38" alt="Bookmark" id="bookmarkButton" class="__BOOKMARKED__"></span></a>
+            <a href="share"><span width="44" height="38" alt="Share" id="shareButton" class=""></span></a>
+        </span>
+        <p class="byline">
+            <span class="credit"><span class="author">__AUTHOR__</span><br /></span>
+            <span class="postdate">__DATE__</span>
+        </p>    
+        <div id="content">
+            <div id="image"><a id="thumbnailLink" href="image"><img class="thumbnail" src="__THUMBNAIL_URL__" onload="imageLoaded(this)" onerror="imageFailed(this)">
+                <br /></a>
+            </div>
+            <!--<p class="dek">__DEK__</p>--><div id="body">__BODY__</div>
+        </div>
+    </body>
+    <!-- JS at the bottom instead of onload in order to do work before UIWebView slides into view -->
+    <script type="text/javascript" charset="utf-8">
+        // hide author if not set
+        var authorIsEmpty = (document.getElementsByClassName("author")[0].childNodes.length == 0);
+        if (authorIsEmpty) {
+            var creditNode = document.getElementsByClassName("credit")[0];
+            creditNode.parentElement.removeChild(creditNode);
+        }
+        // remove img.thumbnail if thumbnail is not set (empty src attributes == the base URL)
+        if (document.getElementsByClassName("thumbnail").length > 0 && document.getElementsByClassName("thumbnail")[0].src.indexOf("file:") == 0) {
+            var imageNode = document.getElementById("thumbnailLink");
+            imageNode.parentElement.removeChild(imageNode);
+        }
+        
+        function hasClass(ele,cls) {
+            return ele.className.match(new RegExp('(\\s|^)'+cls+'(\\s|$)'));
+        }
+        
+        function addClass(ele,cls) {
+            if (!this.hasClass(ele,cls)) ele.className += " "+cls;
+        }
+
+        function removeClass(ele,cls) {
+            if (hasClass(ele,cls)) {
+                var reg = new RegExp('(\\s|^)'+cls+'(\\s|$)');
+                ele.className=ele.className.replace(reg,' ');
+            }
+        }
+        
+        function toggleClass (ele, cls) {
+            if (hasClass(ele, cls)) {
+                removeClass(ele, cls);
+            } else {
+                addClass(ele, cls);
+            }
+        }
+        
+        var bookmarkButton = document.getElementById("bookmarkButton");
+        bookmarkButton.addEventListener("touchstart", function() {
+            addClass(bookmarkButton, "pressed");
+        });
+        bookmarkButton.addEventListener("touchend", function() {
+            removeClass(bookmarkButton, "pressed");
+            toggleClass(bookmarkButton, "on");
+        });
+        var shareButton = document.getElementById("shareButton");
+        shareButton.addEventListener("touchstart", function() {
+            addClass(shareButton, "pressed");
+        });        
+        shareButton.addEventListener("touchend", function() {
+            removeClass(shareButton, "pressed");
+        });
+        
+        function imageLoaded(imageNode) {
+            var maxWidth = __THUMBNAIL_MAX_WIDTH__;
+            var maxHeight = __THUMBNAIL_MAX_WIDTH__;
+            
+            var newWidth = imageNode.width;
+            var newHeight = imageNode.height;
+            
+            if(imageNode.width == 1 && imageNode.height == 1) {
+                // dont show tiny images
+                imageNode.style.display = "none";
+            }
+            
+            if(newWidth > maxWidth) {
+                newHeight = Math.round(newHeight * maxWidth / newWidth);
+                newWidth = maxWidth;
+            }
+            
+            if(newHeight > maxHeight) {
+                newWidth = Math.round(newWidth * maxHeight / newHeight);
+                newHeight = maxHeight;
+            }
+            
+            imageNode.width = newWidth;
+            imageNode.height = newHeight;
+        }
+        
+        function imageFailed(imageNode) {
+            imageNode.style.display = "none";
+        }
+    </script>
+</html>

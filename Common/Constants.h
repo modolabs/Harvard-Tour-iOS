@@ -18,7 +18,8 @@ typedef enum {
     KGONavigationStylePortlet,
     // the following are not enabled for iPhone
     KGONavigationStyleTabletSidebar,
-    KGONavigationStyleTabletSplitView
+    KGONavigationStyleTabletSplitView,
+    KGONavigationStyleTour
 } KGONavigationStyle;
 
 #pragma mark Valid names for handleLocalPath

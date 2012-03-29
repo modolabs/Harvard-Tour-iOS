@@ -140,7 +140,8 @@
     [self.tabControl sendSubviewToBack:background];
     [background release];    
     
-    self.tabControl.tabSpacing = 0.0;
+    self.tabControl.tabSpacing = 0;
+    self.tabControl.tabPadding = 6;
     NSInteger totalTabs = 5;
     CGFloat mininumTabWidth = self.tabControl.frame.size.width / totalTabs;
     NSArray *orderedLenses = [self.tourStop orderedLenses];

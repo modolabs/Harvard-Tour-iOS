@@ -4,6 +4,8 @@
 <dict>
 	<key>Colors</key>
 	<dict>
+		<key>NavListSelectionColor</key>
+		<string>#0050A3</string>
 		<key>AppBackground</key>
 		<string>common/body-background.png</string>
 		<key>NavBarTintColor</key>
@@ -64,6 +66,38 @@
 		<string>Helvetica</string>
 		<key>DefaultFontSize</key>
 		<integer>15</integer>
+		<key>MediaListTitle</key>
+		<dict>
+			<key>bold</key>
+			<true/>
+			<key>color</key>
+			<string>#171717</string>
+			<key>size</key>
+			<integer>0</integer>
+		</dict>
+		<key>MediaListSubtitle</key>
+		<dict>
+			<key>color</key>
+			<string>#505050</string>
+			<key>size</key>
+			<integer>-2</integer>
+		</dict>
+		<key>SportListTitle</key>
+		<dict>
+			<key>bold</key>
+			<true/>
+			<key>color</key>
+			<string>#060606</string>
+			<key>size</key>
+			<integer>-2</integer>
+		</dict>
+		<key>SportListSubtitle</key>
+		<dict>
+			<key>color</key>
+			<string>#060606</string>
+			<key>size</key>
+			<integer>-2</integer>
+		</dict>
 		<key>NavListLabel</key>
 		<dict>
 			<key>bold</key>
@@ -171,6 +205,15 @@
 			<key>size</key>
 			<integer>-2</integer>
 		</dict>
+		<key>TabActive</key>
+		<dict>
+			<key>bold</key>
+			<true/>
+			<key>color</key>
+			<string>#505050</string>
+			<key>size</key>
+			<integer>-2</integer>
+		</dict>
 	</dict>
 	<key>HomeScreen</key>
 	<dict>
@@ -192,7 +235,7 @@
 		<key>ModuleListSpacing</key>
 		<string>9 32</string>
 		<key>NavigationStyle</key>
-		<string>Custom</string>
+		<string>Tour</string>
 		<key>SecondaryModuleIconSize</key>
 		<string>52 52</string>
 		<key>SecondaryModuleLabelFont</key>
@@ -219,6 +262,8 @@
 		<string>common/searchbar-background.png</string>
 		<key>SearchBarDropShadow</key>
 		<string>common/bar-drop-shadow.png</string>
+		<key>ToolbarBackground</key>
+		<string>common/toolbar-background</string>
 	</dict>
 </dict>
 </plist>

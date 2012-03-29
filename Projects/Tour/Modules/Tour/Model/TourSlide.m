@@ -20,8 +20,8 @@
 + (TourSlide *)slideWithDictionary:(NSDictionary *)slideDict {
     TourSlide *slide = [[CoreDataManager sharedManager] 
                                 insertNewObjectForEntityForName:TourSlideEntityName];
-    slide.title = [slideDict stringForKey:@"title" nilIfEmpty:NO];
-    slide.photo = [TourMediaItem mediaItemForURL:[slideDict stringForKey:@"url" nilIfEmpty:NO]];
+    slide.title = [slideDict stringForKey:@"title"];
+    slide.photo = [TourMediaItem mediaItemForURL:[slideDict stringForKey:@"url"]];
     return slide;
 }
 

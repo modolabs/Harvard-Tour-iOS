@@ -15,7 +15,7 @@
 @dynamic URL;
 
 + (TourMediaItem *)mediaItemForURL:(NSString *)url {
-    TourMediaItem *mediaItem = [[CoreDataManager sharedManager] getObjectForEntity:TourMediaItemEntityName attribute:@"URL" value:url];
+    TourMediaItem *mediaItem = [[CoreDataManager sharedManager] uniqueObjectForEntity:TourMediaItemEntityName attribute:@"URL" value:url];
     
     if (!mediaItem) {
         mediaItem = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:TourMediaItemEntityName];

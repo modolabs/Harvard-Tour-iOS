@@ -57,7 +57,7 @@
     for (NSInteger index=0; index < lenseItems.count; index++) {
         NSDictionary *lenseItemDict = [lenseItems objectAtIndex:index];
         
-        NSString *lenseItemType = [lenseItemDict stringForKey:@"type" nilIfEmpty:NO];
+        NSString *lenseItemType = [lenseItemDict stringForKey:@"type"];
         
         TourLenseItem *lenseItem;
         if ([lenseItemType isEqualToString:@"html"]) {

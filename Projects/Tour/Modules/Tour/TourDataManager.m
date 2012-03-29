@@ -163,7 +163,7 @@
 }
 
 - (TourStop *)getStopByID:(NSString *)id {
-    return [[CoreDataManager sharedManager] getObjectForEntity:TourStopEntityName attribute:@"id" value:id];
+    return [[CoreDataManager sharedManager] uniqueObjectForEntity:TourStopEntityName attribute:@"id" value:id];
 }
 
 - (TourStop *)getCurrentStop {
