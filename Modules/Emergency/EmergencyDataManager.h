@@ -1,11 +1,9 @@
 #import <Foundation/Foundation.h>
 #import "KGORequestManager.h"
-#import "EmergencyNotice.h"
-#import "EmergencyContactsSection.h"
-#import "EmergencyContact.h"
-
+#import "EmergencyModel.h"
 
 enum EmergencyNoticeStatus {
+    EmergencyNoticeDisabled,         // feed does not exist
     NoCurrentEmergencyNotice,        // feed exists, but currently empty (no emergency is going on)
     EmergencyNoticeActive,           // feed exists and emergency notice found
 };
@@ -20,7 +18,6 @@ extern NSString * const EmergencyContactsRetrievedNotification;
 - (void)fetchLatestEmergencyNotice;
 - (EmergencyNotice *)latestEmergency;
 
-- (BOOL)contactsFresh;
 - (BOOL)hasSecondaryContacts;
 - (void)fetchContacts;
 - (NSArray *)primaryContacts;

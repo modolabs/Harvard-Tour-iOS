@@ -6,42 +6,33 @@
 
 @implementation KGOModule
 
-@synthesize tag = _tag, shortName = _shortName, longName = _longName;
-@synthesize enabled, hidden, badgeValue, tabBarImage, iconImage, listViewImage, secondary, apiMaxVersion, apiMinVersion, hasAccess;
+@synthesize tag = _tag, shortName = _shortName, longName = _longName, homeName = _homeName;
+@synthesize enabled, hidden, badgeValue, secondary, apiMaxVersion, apiMinVersion, hasAccess;
+@synthesize tabBarImage, iconImage, listViewImage;
 @synthesize searchDelegate;
 @synthesize userSettings;
 
 - (id)initWithDictionary:(NSDictionary *)moduleDict {
-    NSLog(@"%@", moduleDict);
-    
-    
     self = [super init];
     if (self) {
-        
+
+        // locally configured values. they will be false by default
         self.hidden = [moduleDict boolForKey:@"hidden"];
-        self.secondary = [[moduleDict objectForKey:@"secondary"] boolValue];
-        NSString *tag = [moduleDict objectForKey:@"tag"];
+        self.secondary = [moduleDict boolForKey:@"secondary"];
+
+        NSString *tag = [moduleDict stringForKey:@"tag"];
         if (tag) {
             self.tag = tag;
         }
 
-        //NSString *imageName = [moduleDict objectForKey:@"tabBarImage"];
         NSString *imageName = nil;
-        //if (!imageName) {
-            imageName = [NSString stringWithFormat:@"modules/home/tab-%@", self.tag];
-        //}
+        imageName = [NSString stringWithFormat:@"modules/home/tab-%@", self.tag];
         self.tabBarImage = [UIImage imageWithPathName:imageName];
         
-        //imageName = [moduleDict objectForKey:@"iconImage"];
-        //if (!imageName) {
-            imageName = [NSString stringWithFormat:@"modules/home/%@", self.tag];
-        //}
+        imageName = [NSString stringWithFormat:@"modules/home/%@", self.tag];
         self.iconImage = [UIImage imageWithPathName:imageName];
         
-        //imageName = [moduleDict objectForKey:@"listViewImage"];
-        //if (!imageName) {
-            imageName = [NSString stringWithFormat:@"modules/home/%@-tiny", self.tag];
-        //}
+        imageName = [NSString stringWithFormat:@"modules/home/%@-tiny", self.tag];
         self.listViewImage = [UIImage imageWithPathName:imageName];
         
         [self updateWithDictionary:moduleDict];
@@ -53,11 +44,24 @@
 - (void)updateWithDictionary:(NSDictionary *)moduleDict
 {
     // server syntax
-    NSString *title = [moduleDict stringForKey:@"title" nilIfEmpty:YES];
+    NSString *title = [moduleDict nonemptyStringForKey:@"title"];
     if (title) {
         self.shortName = title;
         self.longName = title;
+        self.homeName = title;
     }
+    
+    id homeConfig = [moduleDict objectForKey:@"home"];
+    if ([homeConfig isKindOfClass:[NSNumber class]] && ![homeConfig boolValue]) {
+        self.hidden = YES;
+    } else if ([homeConfig isKindOfClass:[NSDictionary class]]) {
+        self.secondary = [[homeConfig stringForKey:@"type"] isEqualToString:@"secondary"];
+        NSString *title = [homeConfig nonemptyStringForKey:@"title"];
+        if (title) {
+            self.homeName = title;
+        }
+    }
+    // everything above is server syntax
     
     self.hasAccess = [moduleDict boolForKey:@"access"];
 
@@ -68,17 +72,16 @@
     if (!self.apiMaxVersion) self.apiMaxVersion = 1;
     if (!self.apiMinVersion) self.apiMinVersion = 1;
     
-    self.enabled = [[KGORequestManager sharedManager] isReachable] || ![self requiresKurogoServer];
-    
     NSDictionary *payload = [moduleDict dictionaryForKey:@"payload"];
     if (payload) {
-        [self handleInitialPayload:payload];
+        [self evaluateInitialiationPayload:payload];
     }
 }
 
 - (BOOL)requiresKurogoServer
 {
-    return YES;
+    // only set this to YES if a connection is absolutely required (no cache)
+    return NO;
 }
 
 #pragma Appearance
@@ -320,7 +323,7 @@
     return nil;
 }
 
-- (void)handleInitialPayload:(NSDictionary *)payload
+- (void)evaluateInitialiationPayload:(NSDictionary *)payload
 {
 }
 

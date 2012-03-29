@@ -1,7 +1,7 @@
 #import "KGOShareButtonController.h"
-#import "KGOAppDelegate.h"
-#import "TwitterViewController.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 #import "MITMailComposeController.h"
+#import "Foundation+KGOAdditions.h"
 
 @implementation KGOShareButtonController
 
@@ -55,11 +55,11 @@
         _shareMethods = [methods copy];
     }
 
-    if (_shareMethods.count > 1) {
+    if (_shareMethods.count > 0) {
         
         NSString *cancelTitle = nil;
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            cancelTitle = NSLocalizedString(@"Cancel", @"share action sheet");
+            cancelTitle = NSLocalizedString(@"COMMON_CANCEL", @"Cancel");
         }
         UIActionSheet *shareSheet = [[UIActionSheet alloc] initWithTitle:self.actionSheetTitle
                                                                 delegate:self
@@ -76,7 +76,11 @@
     }
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex < 0) {
+        return;
+    }
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         if (buttonIndex == [actionSheet cancelButtonIndex]) {
@@ -90,34 +94,49 @@
     NSString *method = [_shareMethods objectAtIndex:buttonIndex];
 
 	if ([method isEqualToString:KGOSocialMediaTypeEmail]) {
+        
         // TODO: make this string configurable
         NSString *emailBody = [NSString stringWithFormat:
-                               @"I thought you might be interested in this...\n\n%@\n\n%@", self.shareBody, self.shareURL];
+                               @"I thought you might be interested in this...\n\n"];//, self.shareBody, self.shareURL];
+        
+        if (nil != self.shareBody)
+            emailBody = [emailBody stringByAppendingFormat:@"%@\n\n", self.shareBody];
+        
+        if (nil != self.shareURL)
+            emailBody = [emailBody stringByAppendingFormat:@"%@\n\n", self.shareURL];
+                        
         [self.contentsController presentMailControllerWithEmail:nil
                                                         subject:self.shareTitle
                                                            body:emailBody 
                                                        delegate:self];
 
 	} else if ([method isEqualToString:KGOSocialMediaTypeFacebook]) {
-        NSString *attachment = [NSString stringWithFormat:
-                                @"{\"name\":\"%@\","
-                                "\"href\":\"%@\","
-                                "\"description\":\"%@\"}",
-                                self.shareTitle, self.shareURL, self.shareBody];
-        
-        [[KGOSocialMediaController facebookService] shareOnFacebook:attachment prompt:nil];
+        [[KGOSocialMediaController facebookService] shareOnFacebookWithTitle:self.shareTitle
+                                                                         url:self.shareURL 
+                                                                        body:self.shareBody];
 
 	} else if ([method isEqualToString:KGOSocialMediaTypeTwitter]) {
-		TwitterViewController *twitterVC = [[[TwitterViewController alloc] initWithNibName:@"TwitterViewController"
-                                                                                    bundle:nil] autorelease];
-        twitterVC.preCannedMessage = self.shareTitle;
-        twitterVC.longURL = self.shareURL;
-        twitterVC.delegate = self;
-        
-        UINavigationController *navC = [[[UINavigationController alloc] initWithRootViewController:twitterVC] autorelease];
-        navC.modalPresentationStyle = UIModalPresentationFormSheet;
-        
-		[self.contentsController presentModalViewController:navC animated:YES];
+        // check to see if built in twitter support available
+        Class TwitterComposeViewController = NSClassFromString (@"TWTweetComposeViewController");
+        if (TwitterComposeViewController) {
+            id tweetViewController = [[[TwitterComposeViewController alloc] init] autorelease];
+            [tweetViewController performSelector:@selector(setInitialText:) withObject:self.shareTitle];
+            [tweetViewController performSelector:@selector(addURL:) withObject:[NSURL URLWithString:self.shareURL]];
+            [tweetViewController performSelector:@selector(setCompletionHandler:) withObject:^(int result) {
+                [self.contentsController dismissModalViewControllerAnimated:YES];
+            }];
+            
+            [self.contentsController presentModalViewController:tweetViewController animated:YES];
+            
+        } else { // otherwise just open a webpage
+            
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            [params setObject:self.shareURL forKey:@"url"];
+            [params setObject:self.shareTitle forKey:@"text"];
+            NSString *twitterShareURLParams = [NSURL queryStringWithParameters:params];
+            NSString *twitterURLString = [NSString stringWithFormat:@"https://twitter.com/share?%@", twitterShareURLParams];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:twitterURLString]];
+        }
 	}
 }
 
@@ -129,22 +148,6 @@
 }
 
 
-#pragma mark TwitterViewControllerDelegate
-
-- (BOOL)controllerShouldContinueToMessageScreen:(TwitterViewController *)controller
-{
-    return YES;
-}
-
-- (void)controllerDidPostTweet:(TwitterViewController *)controller
-{
-    [self.contentsController dismissModalViewControllerAnimated:YES];
-}
-
-- (void)controllerFailedToTweet:(TwitterViewController *)controller
-{
-    [self.contentsController dismissModalViewControllerAnimated:YES];
-}
 
 #pragma mark -
 

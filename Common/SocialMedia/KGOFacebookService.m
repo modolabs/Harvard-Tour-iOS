@@ -71,7 +71,7 @@ NSString * const FacebookUsernameKey = @"FBUsername";
 {
     if (_facebook && (!_facebook.accessToken || !_facebook.expirationDate)) {
         NSDate *validDate = [[NSUserDefaults standardUserDefaults] objectForKey:FacebookTokenExpirationSetting];
-        if ([validDate timeIntervalSinceNow] < 0) {
+        if (!validDate || [validDate timeIntervalSinceNow] < 0) {
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:FacebookTokenKey];
         } else {
             NSArray *storedPermissions = [[NSUserDefaults standardUserDefaults] objectForKey:FacebookTokenPermissions];
@@ -94,14 +94,14 @@ NSString * const FacebookUsernameKey = @"FBUsername";
 {
     self = [super init];
     if (self) {
-        _appID = [[config stringForKey:@"AppID" nilIfEmpty:YES] retain];
+        _appID = [[config nonemptyStringForKey:@"AppID"] retain];
     }
     return self;
 }
 
 - (NSString *)serviceDisplayName
 {
-    return NSLocalizedString(@"Facebook", @"display name for facebook third party service");
+    return NSLocalizedString(@"CORE_FACEBOOK", @"Facebook");
 }
 
 - (NSString *)userDisplayName
@@ -125,7 +125,7 @@ NSString * const FacebookUsernameKey = @"FBUsername";
     
     if (!_facebook) {
         NSLog(@"starting up facebook");
-        _facebook = [[Facebook alloc] initWithAppId:_appID];
+        _facebook = [[Facebook alloc] initWithAppId:_appID andDelegate:self];
         
         [self refreshPermissionList];
         
@@ -181,7 +181,7 @@ NSString * const FacebookUsernameKey = @"FBUsername";
 	} else {
         NSArray *permissions = [_apiSettings objectForKey:@"permissions"];
         DLog(@"asking for permission: %@", [permissions description]);
-		[_facebook authorize:permissions delegate:self];
+		[_facebook authorize:permissions];
 	}
 }
 
@@ -258,13 +258,11 @@ NSString * const FacebookUsernameKey = @"FBUsername";
 
 #pragma mark Dialog
 
-- (void)shareOnFacebook:(NSString *)attachment prompt:(NSString *)prompt {
+- (void)shareOnFacebookWithTitle:(NSString *)title url:(NSString *)url body:(NSString *)body  {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [params setObject:attachment forKey:@"attachment"];
-    
-	if (prompt) {
-		[params setObject:prompt forKey:@"user_message_prompt"];
-	}
+    [params setObject:title forKey:@"title"];
+    [params setObject:url forKey:@"link"];
+    [params setObject:body forKey:@"description"];
     
     [self startup];
     [_facebook dialog:@"feed" andParams:params andDelegate:self];

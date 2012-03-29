@@ -1,6 +1,6 @@
 #import "KGOSearchDisplayController.h"
 #import "KGOTheme.h"
-#import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 #import "KGOModule.h"
 #import "KGOTableViewController.h"
 #import "KGOSearchModel.h"
@@ -8,11 +8,16 @@
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "RecentSearch.h"
 #import <MapKit/MKAnnotation.h>
+#import "Foundation+KGOAdditions.h"
+#import "UIKit+KGOAdditions.h"
+#import "AnalyticsWrapper.h"
 
 #define MAX_SEARCH_RESULTS 25
 
 
 static NSString * RecentSearchesEntityName = @"RecentSearch";
+static NSString * NotAModuleTag = @"none";
+static NSString * RecentSearchesTag = @"recent";
 
 
 @interface KGOSearchDisplayController (Private)
@@ -29,8 +34,12 @@ static NSString * RecentSearchesEntityName = @"RecentSearch";
 @synthesize searchBar = _searchBar, active = _active, delegate = _delegate,
 searchContentsController = _searchContentsController,
 searchTableController = _searchTableController,
-searchResults = _searchResults,
-showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
+isFederatedSearch = _isFederatedSearch,
+//searchResults = _searchResults,
+searchSources = _searchSources,
+multiSearchResults = _multiSearchResults,
+showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay,
+maxResultsPerSection;
 
 
 - (id)initWithSearchBar:(KGOSearchBar *)searchBar
@@ -40,6 +49,7 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
     self = [super init];
     if (self) {
         self.showsSearchOverlay = YES;
+        self.isFederatedSearch = NO;
         
         _searchBar = [searchBar retain];
         _searchBar.delegate = self;
@@ -47,7 +57,7 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
         _delegate = delegate;
         
         _searchContentsController = viewController;
-
+        
         // UI Automation testing
 		_searchBar.isAccessibilityElement = YES; // Make search bar available to automation and accessibility features.
 		_searchBar.accessibilityLabel = [NSString stringWithFormat:@"%@ %@", viewController.title, @"Search Bar"];
@@ -73,11 +83,20 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
 
 - (void)executeSearch:(NSString *)text params:(NSDictionary *)params {
 	_searchBar.text = text;
+
+    self.multiSearchResults = nil;
+    self.searchSources = nil;
+    
     NSArray *moduleTags = [self.delegate searchControllerValidModules:self];
     for (NSString *moduleTag in moduleTags) {
         KGOModule *module = [KGO_SHARED_APP_DELEGATE() moduleForTag:moduleTag];
         if ([module supportsFederatedSearch]) { // TODO: use a less strict check
+            [module launch];
             [module performSearchWithText:text params:params delegate:self];
+        }
+        NSString *searchModule = [self.delegate searchControllerModuleTag:self];
+        if (searchModule) {
+            [[AnalyticsWrapper sharedWrapper] trackEvent:@"search" action:searchModule label:text];
         }
     }
 }
@@ -85,6 +104,7 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
 #pragma mark Search UI
 
 - (void)showSearchResultsTableView {
+    
     if (!_searchTableController) {
         _searchTableController = [[KGOTableController alloc] initWithSearchController:self];
     }
@@ -124,12 +144,10 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
 }
 
 - (void)focusSearchBarAnimated:(BOOL)animated {
-    [_searchBar setShowsCancelButton:YES animated:animated];
     [_searchBar becomeFirstResponder];
 }
 
 - (void)unfocusSearchBarAnimated:(BOOL)animated {
-    [_searchBar setShowsCancelButton:NO animated:animated];
     [_searchBar resignFirstResponder];
 }
 
@@ -142,21 +160,20 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
         CGFloat yOrigin = _searchBar.frame.origin.y + _searchBar.frame.size.height;
         CGSize containerSize = _searchContentsController.view.frame.size;
         CGRect frame = CGRectMake(0.0, yOrigin, containerSize.width, containerSize.height - yOrigin);
-
+        
         _searchOverlay = [[UIControl alloc] initWithFrame:frame];
         _searchOverlay.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.8];
         _searchOverlay.alpha = 0.0;
-
+        
         [_searchOverlay addTarget:self action:@selector(searchOverlayTapped) forControlEvents:UIControlEventTouchDown];
     }
-
+    
     [_searchContentsController.view addSubview:_searchOverlay];
     
     if (animated) {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:0.4];
-        _searchOverlay.alpha = 1.0;
-        [UIView commitAnimations];
+        [UIView animateWithDuration:0.4 animations:^{
+            _searchOverlay.alpha = 1.0;
+        }];
     } else {
         _searchOverlay.alpha = 1.0;
     }
@@ -186,7 +203,11 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
 }
 
 - (void)searchOverlayTapped {
-    [self setActive:NO animated:YES];
+    if (self.searchBar.text.length) {
+        [self setActive:NO animated:YES];
+    } else {
+        [self searchBarCancelButtonClicked:self.searchBar];
+    }
 }
 
 - (void)setActive:(BOOL)visible animated:(BOOL)animated {
@@ -199,11 +220,16 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
         [self unfocusSearchBarAnimated:animated];
         [self hideSearchOverlayAnimated:animated];
     }
+    
+    if ([self.delegate respondsToSelector:@selector(searchController:didBecomeActive:)]) {
+        [self.delegate searchController:self didBecomeActive:_active];
+    }
 }
 
-
+// always return NO until we have cross-module linkage working
 - (BOOL)canShowMapView {
-    if (self.searchResults.count) {
+    /*
+    if (self.searchSources.count == 1 && self.searchResults.count) {
         for (id<KGOSearchResult> aResult in self.searchResults) {
             if ([aResult conformsToProtocol:@protocol(MKAnnotation)]) {
                 id<MKAnnotation>annotation = (id<MKAnnotation>)aResult;
@@ -213,16 +239,30 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
             }
         }
     }
+     */
     return NO;
+}
+
+- (NSArray *)searchResults
+{
+    if (self.searchSources.count) {
+        return [self.multiSearchResults objectForKey:[self.searchSources objectAtIndex:0]];
+    }
+    return nil;
+}
+
+- (void)setSearchResults:(NSArray *)searchResults forModuleTag:(NSString *)tag
+{
+    self.searchSources = nil;
+    self.multiSearchResults = nil;
+
+    [self receivedSearchResults:searchResults forSource:tag];
 }
 
 #pragma mark KGOSearchBarDelegate
 
+// TODO: redo this when we have a system for cross-module linkage
 - (void)toolbarItemTapped:(UIBarButtonItem *)item {
-    if ([item.title isEqualToString:NSLocalizedString(@"Map", nil)]) {
-        NSDictionary *params = [NSDictionary dictionaryWithObject:self.searchResults forKey:@"searchResults"];
-        [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameSearch forModuleTag:MapTag params:params];
-    }
 }
 
 #pragma mark KGOSearchBarDelegate
@@ -235,9 +275,9 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
     [self unfocusSearchBarAnimated:YES];
     [self executeSearch:searchBar.text params:nil];
     
-    self.searchResults = [NSArray array];
+    //self.searchResults = [NSArray array];
     [self reloadSearchResultsTableView];
-
+    
     // save search term to recent searches
     NSString *moduleTag = [self.delegate searchControllerModuleTag:self];
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"text = %@ AND module = %@", searchBar.text, moduleTag];
@@ -256,16 +296,22 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
 	_showingOnlySearchResults = NO;
     [self hideSearchResultsTableView];
     [self setActive:NO animated:YES];
+    [_searchBar setShowsCancelButton:NO animated:YES];
     _searchBar.text = nil;
+    self.multiSearchResults = nil;
+    self.searchSources = nil;
 }
 
 - (void)searchBarBookmarkButtonClicked:(KGOSearchBar *)searchBar {
-
+    
 }
 
 - (void)searchBar:(KGOSearchBar *)searchBar textDidChange:(NSString *)searchText {
     if (!_showingOnlySearchResults && [self.delegate searchControllerShouldShowSuggestions:self]) {
-		if ([searchText length]) {
+
+        BOOL shouldHideSuggestions = YES;
+
+        if ([searchText length]) {
 			NSMutableArray *searchResults = [NSMutableArray array];
 			
 			// fetch recent searches
@@ -285,7 +331,10 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
 				
 				KGOModule *module = [KGO_SHARED_APP_DELEGATE() moduleForTag:moduleTag];
 				if ([module supportsFederatedSearch]) { // TODO: use a less strict check
-					[searchResults addObjectsFromArray:[module cachedResultsForSearchText:searchText params:nil]];
+                    NSArray *cachedResults = [module cachedResultsForSearchText:searchText params:nil];
+                    if (cachedResults) {
+                        [searchResults addObjectsFromArray:cachedResults];
+                    }
 				}
 			}
 			
@@ -297,13 +346,23 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
 			DLog(@"%@", [pred description]);
 			
 			NSArray *recents = [[CoreDataManager sharedManager] objectsForEntity:RecentSearchesEntityName matchingPredicate:pred];
-			self.searchResults = [recents arrayByAddingObjectsFromArray:searchResults];
-			
-		} else {
-			self.searchResults = nil;
+            if (recents.count) {
+                [searchResults addObjectsFromArray:recents];
+            }
+
+            if (searchResults.count) {
+                shouldHideSuggestions = NO;
+                [self receivedSearchResults:searchResults forSource:RecentSearchesTag];
+            }
 		}
         
-        if (self.searchResults.count) {
+        if (shouldHideSuggestions) {
+            self.multiSearchResults = nil;
+            self.searchSources = nil;
+            _showingOnlySearchResults = NO;
+		}
+        
+        if (self.multiSearchResults.count) {
             [self showSearchResultsTableView];
             [self reloadSearchResultsTableView];
         } else {
@@ -313,26 +372,67 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
 }
 
 - (void)searchBar:(KGOSearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
-
+    
 }
 
 #pragma mark KGOSearchResultsHolder
 
-- (void)searcher:(id)searcher didReceiveResults:(NSArray *)results {
-    if (!_showingOnlySearchResults) {
-        _showingOnlySearchResults = YES;
-        self.searchResults = results;
-    } else {
-        self.searchResults = [self.searchResults arrayByAddingObjectsFromArray:results];
+- (NSArray *)results
+{
+    NSMutableArray *results = [NSMutableArray array];
+    for (NSString *source in self.searchSources) {
+        [results addObjectsFromArray:[self.multiSearchResults objectForKey:source]];
     }
+    return results;
+}
+
+- (void)receivedSearchResults:(NSArray *)results forSource:(NSString *)source
+{
+    if (!source) {
+        source = NotAModuleTag;
+    }
+    
+    if (!self.multiSearchResults) {
+        self.multiSearchResults = [NSMutableDictionary dictionary];
+    }
+    
+    if (!self.searchSources) {
+        self.searchSources = [NSMutableArray array];
+    }
+
+    if ([self.multiSearchResults objectForKey:RecentSearchesTag]) {
+        // always remove cached suggestions so they don't accumulate or show up next to real results
+        [self.multiSearchResults removeObjectForKey:RecentSearchesTag];
+        [self.searchSources removeObject:RecentSearchesTag];
+    }
+    
+    if (![source isEqualToString:RecentSearchesTag]) {
+        _showingOnlySearchResults = YES;
+    }
+
+    NSMutableArray *oldResults = [self.multiSearchResults objectForKey:source];
+    if (!oldResults) {
+        oldResults = [NSMutableArray array];
+        [self.multiSearchResults setObject:oldResults forKey:source];
+        [self.searchSources addObject:source];
+    }
+    [oldResults addObjectsFromArray:results];
+
+    // remove search suggestions if there are results
+    if (self.searchSources.count > 1 && [self.multiSearchResults objectForKey:RecentSearchesTag]) {
+        [self.multiSearchResults removeObjectForKey:RecentSearchesTag];
+        [self.searchSources removeObject:RecentSearchesTag];
+    }
+
     [self showSearchResultsTableView];
     [self reloadSearchResultsTableView];
+
     if ((![self.delegate respondsToSelector:@selector(searchControllerShouldLinkToMap:)] // turn on map by default if available
 		 || [self.delegate searchControllerShouldLinkToMap:self])
 		&& [self canShowMapView])
 	{
         if (!_searchBar.toolbarItems.count) {
-            [_searchBar addToolbarButtonWithTitle:NSLocalizedString(@"Map", nil)];
+            [_searchBar addToolbarButtonWithTitle:NSLocalizedString(@"CORE_ACTION_MAP", @"Map")];
         }
         [_searchBar showToolbarAnimated:YES];
     }
@@ -340,66 +440,126 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
 
 #pragma mark KGOTableDataSource
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    id<KGOSearchResult> result = [self.searchResults objectAtIndex:indexPath.row];
-    if ([result isKindOfClass:[RecentSearch class]]) {
-        RecentSearch *recentSearch = (RecentSearch *)result;
-        [self unfocusSearchBarAnimated:YES];
-        [self executeSearch:recentSearch.text params:nil];
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *source = [self.searchSources objectAtIndex:indexPath.section];
+    NSArray *searchResults = [self.multiSearchResults objectForKey:source];
+
+    if (self.maxResultsPerSection && indexPath.row == self.maxResultsPerSection) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                       searchResults, @"searchResults",
+                                       nil];
+        if (self.searchBar.text.length) {
+            [params setObject:self.searchBar.text forKey:@"q"];
+        }
+        [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameSearch forModuleTag:source params:params];
+        
     } else {
-        [self.delegate resultsHolder:self didSelectResult:result];
+        id<KGOSearchResult> result = [searchResults objectAtIndex:indexPath.row];
+        if ([result isKindOfClass:[RecentSearch class]]) {
+            RecentSearch *recentSearch = (RecentSearch *)result;
+            [self unfocusSearchBarAnimated:YES];
+            [self executeSearch:recentSearch.text params:nil];
+        } else {
+            [self.delegate resultsHolder:self didSelectResult:result];
+        }
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (NSArray *)tableView:(UITableView *)tableView viewsForCellAtIndexPath:(NSIndexPath *)indexPath {
-    id<KGOSearchResult> result = [self.searchResults objectAtIndex:indexPath.row];
-    if ([result respondsToSelector:@selector(viewsForTableCell)]) {
-        return [result viewsForTableCell];
-    }
-    return nil;
-}
-
 - (CellManipulator)tableView:(UITableView *)tableView manipulatorForCellAtIndexPath:(NSIndexPath *)indexPath {
-    id<KGOSearchResult> result = [self.searchResults objectAtIndex:indexPath.row];
-    if (![result respondsToSelector:@selector(viewsForTableCell)] || ![result viewsForTableCell]) {
-        NSString *title = [result title];
-        NSString *subtitle = [result respondsToSelector:@selector(subtitle)] ? [result subtitle] : nil;
+    NSString *title = nil;
+    NSString *subtitle = nil;
+    NSString *source = [self.searchSources objectAtIndex:indexPath.section];
+    UIImage *image = nil;
+    NSString *accessoryType = KGOAccessoryTypeChevron;
+
+    if (self.maxResultsPerSection && indexPath.row == self.maxResultsPerSection) {
+        title = NSLocalizedString(@"CORE_MORE_RESULTS_LINK", @"More results");
+
+    } else {
+        NSArray *searchResults = [self.multiSearchResults objectForKey:source];
+        id<KGOSearchResult> result = [searchResults objectAtIndex:indexPath.row];
         
-        // TODO: have the objects decide this
-        NSString *accessoryType = [result isKindOfClass:[RecentSearch class]] ? nil : KGOAccessoryTypeChevron;
-        
-        return [[^(UITableViewCell *cell) {
-            cell.selectionStyle = UITableViewCellSelectionStyleGray;
-            cell.textLabel.text = title;
-            cell.detailTextLabel.text = subtitle;
-            cell.accessoryView = [[KGOTheme sharedTheme] accessoryViewForType:accessoryType];
-        } copy] autorelease];
+        if ([result respondsToSelector:@selector(accessoryType)]) {
+            accessoryType = [result accessoryType];
+        }
+    
+        title = [result title];
+        subtitle = [result respondsToSelector:@selector(subtitle)] ? [result subtitle] : nil;
+
+        if ([result respondsToSelector:@selector(iconImage)]) {
+            image = [result iconImage];
+        }
     }
     
-    return nil;
+    return [[^(UITableViewCell *cell) {
+        cell.textLabel.text = title;
+        cell.detailTextLabel.text = subtitle;
+        cell.accessoryView = [[KGOTheme sharedTheme] accessoryViewForType:accessoryType];
+        
+        if (image) {
+            CGRect imageBounds = CGRectMake(0, 0, tableView.rowHeight, tableView.rowHeight);
+            [cell.imageView setBounds:imageBounds];
+            [cell.imageView setClipsToBounds:NO];
+            [cell.imageView setFrame:imageBounds];
+            [cell.imageView setContentMode:UIViewContentModeScaleAspectFill];
+            cell.imageView.image = image;
+        }
+        
+    } copy] autorelease];
 }
+
+
 
 - (KGOTableCellStyle)tableView:(UITableView *)tableView styleForCellAtIndexPath:(NSIndexPath *)indexPath {
     return KGOTableCellStyleSubtitle;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (_showingOnlySearchResults) {
-        return [NSString stringWithFormat:@"%d results", self.searchResults.count];
+    NSString *source = [self.searchSources objectAtIndex:section];
+    NSArray *searchResults = [self.multiSearchResults objectForKey:source];
+    KGOModule *module = [KGO_SHARED_APP_DELEGATE() moduleForTag:source];
+    
+    if (self.isFederatedSearch && module) {
+        if (searchResults.count == 1) {
+            return [NSString stringWithFormat:
+                    NSLocalizedString(@"CORE_1_RESULT_FROM_MODULE", @"1 result from %@"),
+                    module.shortName];
+        } else {
+            return [NSString stringWithFormat:
+                    NSLocalizedString(@"CORE_%d_RESULTS_FROM_MODULE", @"%d results from %@"),
+                    searchResults.count,
+                    module.shortName];
+        }
+    } else {
+        if (searchResults.count == 1) {
+            return [NSString stringWithFormat:
+                    NSLocalizedString(@"CORE_1_MATCH", @"%d match found"), 
+                    searchResults.count];
+
+        } else {
+            return [NSString stringWithFormat:
+                    NSLocalizedString(@"CORE_%d_MATCHES", @"%d matches found"),
+                    searchResults.count];
+        }
     }
-    return nil;
 }
 
-// TODO: uncomment and edit if we have search results that need multiple sections
-/*
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return self.multiSearchResults.count;
 }
-*/
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return self.searchResults.count;
+    NSString *source = [self.searchSources objectAtIndex:section];
+    NSArray *searchResults = [self.multiSearchResults objectForKey:source];
+    
+    NSInteger count = searchResults.count;
+    if (self.maxResultsPerSection && count > self.maxResultsPerSection) {
+        count = self.maxResultsPerSection + 1;
+    }
+    
+	return count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -409,15 +569,19 @@ showingOnlySearchResults = _showingOnlySearchResults, showsSearchOverlay;
 #pragma mark KGODetailPagerController
 
 - (NSInteger)numberOfSections:(KGODetailPager *)pager {
-    return 1;
+    return self.multiSearchResults.count;
 }
 
 - (NSInteger)pager:(KGODetailPager *)pager numberOfPagesInSection:(NSInteger)section {
-    return self.searchResults.count;
+    NSString *source = [self.searchSources objectAtIndex:section];
+    NSArray *searchResults = [self.multiSearchResults objectForKey:source];
+    return searchResults.count;
 }
 
 - (id<KGOSearchResult>)pager:(KGODetailPager *)pager contentForPageAtIndexPath:(NSIndexPath *)indexPath {
-    return [self.searchResults objectAtIndex:indexPath.row];
+    NSString *source = [self.searchSources objectAtIndex:indexPath.section];
+    NSArray *searchResults = [self.multiSearchResults objectForKey:source];
+    return [searchResults objectAtIndex:indexPath.row];
 }
 
 @end

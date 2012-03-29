@@ -51,11 +51,11 @@ NSString * const KGOEntityNameCalendarGroup = @"KGOCalendarGroup";
 + (KGOCalendarGroup *)groupWithDictionary:(NSDictionary *)aDict
 {
     KGOCalendarGroup *group = nil;
-    NSString *identifier = [aDict stringForKey:@"id" nilIfEmpty:YES];
+    NSString *identifier = [aDict nonemptyStringForKey:@"id"];
     if (identifier) {
         group = [KGOCalendarGroup groupWithID:identifier];
         
-        NSString *title = [aDict stringForKey:@"title" nilIfEmpty:YES];
+        NSString *title = [aDict nonemptyStringForKey:@"title"];
         if (![group.title isEqualToString:title]) {
             group.title = title;
         }
@@ -70,30 +70,36 @@ NSString * const KGOEntityNameCalendarGroup = @"KGOCalendarGroup";
             }
             
         } else if (calendars.count) {
-            for (NSDictionary *calendarData in calendars) {
+            for (NSInteger i = 0; i < calendars.count; i++) {
+                NSDictionary *calendarData = [calendars dictionaryAtIndex:i];
                 KGOCalendar *aCalendar = [KGOCalendar calendarWithDictionary:calendarData];
-                if (![group.calendars containsObject:aCalendar]) {
+                if (aCalendar && ![group.calendars containsObject:aCalendar]) {
                     [group addCalendarsObject:aCalendar];
                 }
+                aCalendar.sortOrder = [NSNumber numberWithInt:i];
             }
         }
     }
-    NSLog(@"%@", [group.calendars description]);
     
     return group;
 }
 
 + (KGOCalendarGroup *)groupWithID:(NSString *)identifier
 {
-    NSPredicate *pred = [NSPredicate predicateWithFormat:@"identifier like %@", identifier];
-    KGOCalendarGroup *group = [[[CoreDataManager sharedManager] objectsForEntity:KGOEntityNameCalendarGroup
-                                                               matchingPredicate:pred] lastObject];
+    KGOCalendarGroup *group = [KGOCalendarGroup findGroupWithID:identifier];
     if (!group) {
         group = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:KGOEntityNameCalendarGroup];
         group.identifier = identifier;
     }
     
     return group;
+}
+
++ (KGOCalendarGroup *)findGroupWithID:(NSString *)identifier
+{
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"identifier like %@", identifier];
+    return [[[CoreDataManager sharedManager] objectsForEntity:KGOEntityNameCalendarGroup
+                                            matchingPredicate:pred] lastObject];
 }
 
 @end

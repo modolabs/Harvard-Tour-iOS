@@ -1,7 +1,7 @@
 #import "SettingsModule.h"
 #import "SettingsTableViewController.h"
 #import "KGOModule.h"
-#import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 
 @implementation SettingsModule
 
@@ -33,11 +33,6 @@
 - (NSArray *)userDefaults
 {
     return [NSArray arrayWithObjects:KGOUserPreferencesKey, nil];
-}
-
-- (BOOL)requiresKurogoServer
-{
-    return NO;
 }
 
 @end

@@ -8,9 +8,9 @@
 
 - (void)loadView {
     [super loadView];
-	self.title = NSLocalizedString(@"Jump to a Date", nil);
+	self.title = NSLocalizedString(@"CALENDAR_JUMP_TO_DATE", @"Jump to a Date");
 	
-    self.view.backgroundColor = [UIColor clearColor];
+    //self.view.backgroundColor = [UIColor clearColor];
     if (!self.date) {
         self.date = [NSDate date];
     }
@@ -22,11 +22,11 @@
     [self.view addSubview:scrim];
     [scrim release];
     
-    doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Go", @"DatePickerViewController nav bar")
+    doneButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"CALENDAR_DATE_PICKER_DONE_BUTTON", @"Go")
                                                   style:UIBarButtonItemStylePlain
                                                  target:self
                                                  action:@selector(navBarButtonPressed:)];
-    cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Cancel", @"DatePickerViewController nav bar")
+    cancelButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"COMMON_CANCEL", @"Cancel")
                                                     style:UIBarButtonItemStylePlain
                                                    target:self
                                                    action:@selector(navBarButtonPressed:)];
@@ -50,10 +50,11 @@
     datePicker.frame = CGRectMake(0.0, self.view.frame.size.height - datePicker.frame.size.height, datePicker.frame.size.width, datePicker.frame.size.height);
     datePicker.datePickerMode = UIDatePickerModeDate;
     datePicker.date = self.date;
-	datePicker.maximumDate = [NSDate dateWithTimeIntervalSinceNow:2 * 366 * 24 * 3600];
+	datePicker.maximumDate = [NSDate dateWithTimeIntervalSinceNow:1 * 366 * 24 * 3600];
 	datePicker.minimumDate = [NSDate dateWithTimeIntervalSinceNow:-10 * 366 * 24 * 3600];
     [datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:datePicker];
+     
 }
 
 - (void)navBarButtonPressed:(id)sender

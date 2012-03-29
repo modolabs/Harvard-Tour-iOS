@@ -1,16 +1,33 @@
 #import "NewsModule.h"
 #import "StoryListViewController.h"
-#import "NewsStory.h"
-#import "CoreDataManager.h"
+#import "StoryDetailViewController.h"
 
 @implementation NewsModule
+@synthesize dataManager;
 
 - (void)willLaunch
 {
+    [self dataManager];
+}
+
+- (void)willTerminate
+{
+    [_dataManager release];
+    _dataManager = nil;
+}
+
+- (BOOL)requiresKurogoServer
+{
+    return YES;
+}
+
+- (NewsDataController *)dataManager
+{
     if (!_dataManager) {
-        _dataManager = [[NewsDataManager alloc] init];
+        _dataManager = [[NewsDataController alloc] init];
         _dataManager.moduleTag = self.tag;
     }
+    return _dataManager;
 }
 
 #pragma mark Navigation
@@ -22,45 +39,61 @@
 - (UIViewController *)modulePage:(NSString *)pageName params:(NSDictionary *)params {
     UIViewController *vc = nil;
     if ([pageName isEqualToString:LocalPathPageNameHome]) {
-        StoryListViewController *storyVC = [[[StoryListViewController alloc] init] autorelease];
-        storyVC.dataManager = _dataManager;
-        _dataManager.delegate = storyVC;
+        StoryListViewController *storyVC = [[[StoryListViewController alloc] initWithNibName:@"StoryListViewController"
+                                                                                      bundle:nil] autorelease];
+        storyVC.dataManager = self.dataManager;
+        self.dataManager.delegate = storyVC;
         vc = storyVC;
         
         if ([params objectForKey:@"category"]) {
             NewsCategory *category = [params objectForKey:@"category"];
             [(StoryListViewController *)vc setActiveCategoryId:category.category_id];
         }
+
+    } else if ([pageName isEqualToString:LocalPathPageNameSearch]) {
+        StoryListViewController *storyVC = [[[StoryListViewController alloc] initWithNibName:@"StoryListViewController"
+                                                                                      bundle:nil] autorelease];
+        storyVC.dataManager = self.dataManager;
+        self.dataManager.delegate = storyVC;
+        vc = storyVC;
         
-    } else if([pageName isEqualToString:LocalPathPageNameDetail]) {
+        NSString *searchText = [params objectForKey:@"q"];
+        if (searchText) {
+            storyVC.federatedSearchTerms = searchText;
+        }
+        
+        NSArray *searchResults = [params objectForKey:@"searchResults"];
+        if (searchResults) {
+            storyVC.federatedSearchResults = searchResults;
+        }
+        
+    } else if ([pageName isEqualToString:LocalPathPageNameDetail]) {
         StoryDetailViewController *detailVC = [[[StoryDetailViewController alloc] init] autorelease];
-        detailVC.dataManager = _dataManager;
+        detailVC.dataManager = self.dataManager;
         vc = detailVC;
         
-        if ([params objectForKey:@"story"]) { // show only one story
-            NewsStory *story = [params objectForKey:@"story"];
+        NewsStory *story = [params objectForKey:@"story"];
+        if (story) { // show only one story
             [detailVC setStory:story];
             [detailVC setMultiplePages:NO];
             
-        } else if([params objectForKey:@"stories"]) {
+        } else {
             NSArray *stories = [params objectForKey:@"stories"];
-            [detailVC setStories:stories]; 
-        
-            NSIndexPath *indexPath = [params objectForKey:@"indexPath"];
-            [detailVC setInitialIndexPath:indexPath];
-            [detailVC setMultiplePages:YES];
+            if (stories) {
+                [detailVC setStories:stories]; 
+                
+                NSIndexPath *indexPath = [params objectForKey:@"indexPath"];
+                [detailVC setInitialIndexPath:indexPath];
+                [detailVC setMultiplePages:YES];
+            }
         }
-        
-        if ([params objectForKey:@"category"]) {
-            [detailVC setCategory:[params objectForKey:@"category"]];
+
+        NewsCategory *category = [params objectForKey:@"category"];
+        if (category) {
+            [detailVC setCategory:category];
         }
     }
     return vc;
-}
-
-// TODO: check if this is being used
-- (NewsDataManager *)dataManager {
-    return _dataManager;
 }
 
 - (NSArray *)objectModelNames {
@@ -73,23 +106,46 @@
     return YES;
 }
 
-- (void)performSearchWithText:(NSString *)searchText params:(NSDictionary *)params delegate:(id<KGOSearchResultsHolder>)delegate {
-    
+- (void)performSearchWithText:(NSString *)searchText
+                       params:(NSDictionary *)params
+                     delegate:(id<KGOSearchResultsHolder>)delegate
+{
     self.searchDelegate = delegate;
-    
-    [self.dataManager search:searchText];
+
+    [_searchText release];
+    _searchText = [searchText retain];
+
+    self.dataManager.delegate = self;
+    [self.dataManager fetchCategories];
 }
 
-- (void)didReceiveSearchResults:(NSArray *)results forSearchTerms:(NSString *)searchTerms {
- 
-    [self.searchDelegate searcher:self didReceiveResults:results];
+- (void)didReceiveSearchResults:(NSArray *)results forSearchTerms:(NSString *)searchTerms
+{
+    [self.searchDelegate receivedSearchResults:results forSource:self.tag];
+    self.searchDelegate = nil;
 }
 
 - (void)dealloc {
     [_dataManager release];
     _dataManager = nil;
+
+    [_searchText release];
+    _searchText = nil;
     
     [super dealloc];
+}
+
+#pragma mark NewsDataDelegate (to retrieve Categories)
+
+- (void)dataController:(NewsDataController *)controller didRetrieveCategories:(NSArray *)categories
+{
+    if (self.searchDelegate) {
+        self.dataManager.searchDelegate = self.searchDelegate;
+        self.searchDelegate = nil;
+        [self.dataManager searchStories:_searchText];
+        [_searchText release];
+        _searchText = nil;
+    }
 }
 
 @end

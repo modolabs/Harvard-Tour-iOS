@@ -16,14 +16,17 @@
     NSDate *_displayDate;
     NSDateFormatter *_dateFormatter;
     NSCalendarUnit _incrementUnit;
-    
-    UIButton *nextButton;
-    UIButton *prevButton;
-    UIButton *dateButton;
-    UIButton *calendarButton;
+    BOOL _showsDropShadow;
 }
 
-- (void)buttonPressed:(id)sender;
+- (IBAction)buttonPressed:(id)sender;
+
+@property (nonatomic, retain) IBOutlet UIButton *nextButton;
+@property (nonatomic, retain) IBOutlet UIButton *prevButton;
+@property (nonatomic, retain) IBOutlet UIButton *dateButton;
+@property (nonatomic, retain) IBOutlet UIButton *calendarButton;
+@property (nonatomic, retain) IBOutlet UIImageView *dropShadow;
+
 
 @property (nonatomic, retain) NSDate *date;
 @property (nonatomic, retain) NSDate *displayDate;
@@ -31,5 +34,7 @@
 @property (nonatomic) NSCalendarUnit incrementUnit;
 @property (nonatomic, assign) id<KGODatePagerDelegate> delegate;
 @property (nonatomic, assign) UIViewController *contentsController;
+
+@property (nonatomic) BOOL showsDropShadow;
 
 @end

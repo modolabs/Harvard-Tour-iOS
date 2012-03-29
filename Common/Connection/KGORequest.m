@@ -1,24 +1,63 @@
+#import <sys/utsname.h>
+#import <CoreTelephony/CTCarrier.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import "KGORequest.h"
 #import "JSON.h"
 #import "KGORequestManager.h"
 #import "Foundation+KGOAdditions.h"
-#import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 
 NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
+
+NSString * const KGORequestDurationPrefKey = @"KGORequestDuration";
+NSString * const KGORequestLastRequestTime = @"last";
 
 @interface KGORequest (Private)
 
 - (void)terminateWithErrorCode:(KGORequestErrorCode)errCode userInfo:(NSDictionary *)userInfo;
 
 - (void)runHandlerOnResult:(id)result;
+- (BOOL)isUnderMinimumDuration;
 
 @end
 
 
 @implementation KGORequest
 
-@synthesize url, module, path, getParams, postParams, format, delegate, cachePolicy, timeout;
+@synthesize url, module, path, getParams, postParams, cachePolicy, ifModifiedSince;
+@synthesize format, delegate, timeout, minimumDuration, apiMaxVersion, apiMinVersion;
 @synthesize expectedResponseType, handler, result = _result;
+
++ (NSString *)userAgentString
+{
+    static NSString *userAgent = nil;
+    if (userAgent == nil) {
+        // app info
+        NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
+        
+        // hardware info
+        struct utsname systemInfo;
+        uname(&systemInfo);
+        
+        // carrier info
+        CTTelephonyNetworkInfo *networkInfo = [[[CTTelephonyNetworkInfo alloc] init] autorelease];
+        CTCarrier *carrier = [networkInfo subscriberCellularProvider];
+        NSString *carrierName = [carrier carrierName];
+        if (!carrierName) {
+            carrierName = @"";
+        }
+        
+        userAgent = [[NSString alloc] initWithFormat:@"%@/%@ (%@; %@) %@/%@ %@",
+                     [infoDict objectForKey:@"CFBundleName"],
+                     [infoDict objectForKey:@"CFBundleVersion"],
+                     [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding],
+                     [[UIDevice currentDevice] systemVersion],
+                     KUROGO_FRAMEWORK_NAME,
+                     KUROGO_FRAMEWORK_VERSION,
+                     carrierName];
+    }
+    return userAgent;
+}
 
 + (KGORequestErrorCode)internalCodeForNSError:(NSError *)error
 {
@@ -59,11 +98,24 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
 - (id)init {
     self = [super init];
     if (self) {
-		self.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+		self.cachePolicy = NSURLRequestUseProtocolCachePolicy;
 		self.timeout = 30;
 		self.expectedResponseType = [NSDictionary class];
 	}
 	return self;
+}
+
+- (BOOL)connectWithResponseType:(Class)responseType callback:(JSONObjectHandler)callback
+{
+    self.handler = [[callback copy] autorelease];
+    self.expectedResponseType = responseType;
+    return [self connect];
+}
+
+- (BOOL)connectWithCallback:(JSONObjectHandler)callback
+{
+    self.handler = [[callback copy] autorelease];
+    return [self connect];
 }
 
 - (BOOL)connect {
@@ -71,23 +123,31 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
     NSDictionary *userInfo = nil;
     BOOL success = NO;
     
-	if (_connection) {
+    if (self.minimumDuration && [self isUnderMinimumDuration]) {
+        // don't want to show an error just because the data is fresh
+		[self.delegate requestWillTerminate:self];
+        [self cancel];
+        return NO;
+        
+    } else if (_connection) {
         userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"could not connect because the connection is already in use", @"message", nil];
         error = [NSError errorWithDomain:KGORequestErrorDomain code:KGORequestErrorBadRequest userInfo:userInfo];
+
 	} else {
         DLog(@"requesting %@", [self.url absoluteString]);
         
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url cachePolicy:self.cachePolicy timeoutInterval:self.timeout];
-        static NSString *userAgent = nil;
-        if (userAgent == nil) {
-            NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-            userAgent = [[NSString alloc] initWithFormat:@"%@/%@ (%@ %@)",
-                         [infoDict objectForKey:@"CFBundleName"],
-                         [infoDict objectForKey:@"CFBundleVersion"],
-                         (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) ? @"iPad" : @"iPhone",
-                         [[UIDevice currentDevice] systemVersion]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:self.url
+                                                               cachePolicy:self.cachePolicy
+                                                           timeoutInterval:self.timeout];
+        [request setValue:[KGORequest userAgentString] forHTTPHeaderField:@"User-Agent"];
+
+        if (self.ifModifiedSince) {
+            NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+            [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"GMT"]];
+            [formatter setDateFormat:@"EEE', 'dd' 'MM' 'yyyy' 'HH':'mm':'ss' GMT'"];
+            NSString *dateString = [formatter stringFromDate:self.ifModifiedSince];
+            [request setValue:dateString forHTTPHeaderField:@"If-Modified-Since"];
         }
-        [request setValue:userAgent forHTTPHeaderField:@"User-Agent"];
 
         if (![NSURLConnection canHandleRequest:request]) {
             userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"cannot handle request: %@", [self.url absoluteString]], @"message", nil];
@@ -116,6 +176,39 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
     }
     
 	return success;
+}
+
+- (void)removeFromCache
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSDictionary *preferences = [userDefaults dictionaryForKey:KGORequestDurationPrefKey];
+    if (!preferences) {
+        return;
+    }
+    NSMutableDictionary *mutablePrefs = [[preferences mutableCopy] autorelease];
+    NSString *requestID = [self.url absoluteString];
+    if ([mutablePrefs objectForKey:requestID]) {
+        [mutablePrefs removeObjectForKey:requestID];
+        [userDefaults setObject:mutablePrefs forKey:KGORequestDurationPrefKey];
+        [userDefaults synchronize];
+    }
+}
+
+- (BOOL)isUnderMinimumDuration
+{
+    NSDictionary *preferences = [[NSUserDefaults standardUserDefaults] dictionaryForKey:KGORequestDurationPrefKey];
+    if (preferences) {    
+        NSString *requestID = [self.url absoluteString];
+        NSDate *lastRequestTime = [preferences dateForKey:requestID];
+        DLog(@"the request for %@ was last requested %@", self.url, lastRequestTime);
+        if (lastRequestTime && [lastRequestTime timeIntervalSinceNow] + self.minimumDuration >= 0) {
+            // lastRequestTime is more recent than (now - duration)
+            DLog(@"aborting because the request was made within the specified time");
+            return YES;
+        }
+    }
+
+    return NO;
 }
 
 - (void)cancel {
@@ -158,7 +251,17 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     _contentLength = [response expectedContentLength];
-	// could receive multiple responses (e.g. from redirect), so reset tempData with every request (last request received will deliver payload)
+    if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+        NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
+        // TODO: decide how we want to handle this more generically
+        // currently anyone who doesn't implement the callback will show the user a needless error
+        if (statusCode == 304 && [self.delegate respondsToSelector:@selector(requestResponseUnchanged:)]) {
+            [self.delegate requestResponseUnchanged:self];
+        }
+    }
+    
+	// could receive multiple responses (e.g. from redirect), so reset tempData with every request 
+    // (last request received will deliver payload)
 	// TODO: we may want to do something about redirects
 	[_data setLength:0];
     if ([self.delegate respondsToSelector:@selector(requestDidReceiveResponse:)]) {
@@ -180,7 +283,7 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
 	[_connection release];
 	_connection = nil;
-    
+
     [KGO_SHARED_APP_DELEGATE() hideNetworkActivityIndicator];
 	
 	if (!self.format || [self.format isEqualToString:@"json"]) {
@@ -232,14 +335,29 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
 	}
 	
 	BOOL canProceed = [self.result isKindOfClass:self.expectedResponseType];
-	if (!canProceed) {
+	if (!canProceed) { 
 		NSDictionary *errorInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"result type does not match expected response type", @"message", nil];
-		[self terminateWithErrorCode:KGORequestErrorBadResponse userInfo:errorInfo];
+		[self terminateWithErrorCode:KGORequestErrorResponseTypeMismatch userInfo:errorInfo];
 		return;
 	}
     
+    // at this point we consider the request successful
+    if (self.minimumDuration) {
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        NSDictionary *preferences = [userDefaults dictionaryForKey:KGORequestDurationPrefKey];
+        if (!preferences) {
+            preferences = [NSDictionary dictionary];
+        }
+        NSMutableDictionary *mutablePrefs = [[preferences mutableCopy] autorelease];
+
+        NSString *requestID = [self.url absoluteString];
+        [mutablePrefs setObject:[NSDate date] forKey:requestID];
+        
+        [userDefaults setObject:mutablePrefs forKey:KGORequestDurationPrefKey];
+        [userDefaults synchronize];
+    }
+    
 	if (self.handler != nil) {
-        NSLog(@"%@", self.delegate);
         _thread = [[NSThread alloc] initWithTarget:self selector:@selector(runHandlerOnResult:) object:self.result];
 		[self performSelector:@selector(setHandler:) onThread:_thread withObject:self.handler waitUntilDone:NO];
 		[_thread start];
@@ -259,6 +377,8 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
 	_connection = nil;
 	[_data release];
 	_data = nil;
+
+    DLog(@"connection failed with error %d: %@", [error code], [error description]);
     
     [KGO_SHARED_APP_DELEGATE() hideNetworkActivityIndicator];
     KGORequestErrorCode errCode = [KGORequest internalCodeForNSError:error];
@@ -266,7 +386,7 @@ NSString * const KGORequestErrorDomain = @"com.modolabs.KGORequest.ErrorDomain";
 	[self terminateWithErrorCode:errCode userInfo:[error userInfo]];
 }
 
-#ifdef USE_MOBILE_DEV
+#ifdef ALLOW_SELF_SIGNED_CERTIFICATE
 
 // the implementations of the following two delegate methods allow NSURLConnection to proceed with self-signed certs
 //http://stackoverflow.com/questions/933331/how-to-use-nsurlconnection-to-connect-with-ssl-for-an-untrusted-cert

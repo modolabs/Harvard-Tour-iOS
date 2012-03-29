@@ -5,10 +5,11 @@
 #import "Reachability.h"
 #import "KGOModule.h"
 
-NSString * const HelloRequestDidCompleteNotification = @"HelloDidComplete";
-NSString * const HelloRequestDidFailNotification = @"HelloDidFail";
-NSString * const KGODidLoginNotification = @"LoginComplete";
-NSString * const KGODidLogoutNotification = @"LogoutComplete";
+#ifdef DEBUG
+#import "KGOUserSettingsManager.h"
+#endif
+
+NSString * const CurrentKurogoServerSettingKey = @"CURRENT_KUROGO_SERVER";
 
 @implementation KGORequestManager
 
@@ -27,13 +28,13 @@ NSString * const KGODidLogoutNotification = @"LogoutComplete";
     return [_reachability currentReachabilityStatus] != NotReachable;
 }
 
-- (BOOL)isModuleAvailable:(NSString *)moduleTag
+- (BOOL)isModuleAvailable:(ModuleTag *)moduleTag
 {
     // TODO: add this to hello API
     return YES;
 }
 
-- (BOOL)isModuleAuthorized:(NSString *)moduleTag
+- (BOOL)isModuleAuthorized:(ModuleTag *)moduleTag
 {
     KGOModule *module = [KGO_SHARED_APP_DELEGATE() moduleForTag:moduleTag];
     return module.hasAccess;
@@ -47,9 +48,12 @@ NSString * const KGODidLogoutNotification = @"LogoutComplete";
     return [NSURL URLWithString:[NSString stringWithFormat:@"%@://%@", _uriScheme, _host]];
 }
 
+#pragma mark -
+
 - (KGORequest *)requestWithDelegate:(id<KGORequestDelegate>)delegate
-                             module:(NSString *)module // TODO: now that we have hello, we should check parameter validity
+                             module:(ModuleTag *)module // TODO: now that we have hello, we should check parameter validity
                                path:(NSString *)path
+                            version:(NSUInteger)version
                              params:(NSDictionary *)params
 {
 	BOOL authorized = YES; // TODO: determine this value
@@ -60,16 +64,30 @@ NSString * const KGODidLogoutNotification = @"LogoutComplete";
 	if (authorized) {
 		request = [[[KGORequest alloc] init] autorelease];
 		request.delegate = delegate;
+        request.apiMaxVersion = version;
+        request.apiMinVersion = version;
         NSURL *requestBaseURL;
         if (module) {
             requestBaseURL = [[_baseURL URLByAppendingPathComponent:module] URLByAppendingPathComponent:path];
         } else {
             requestBaseURL = [_baseURL URLByAppendingPathComponent:path];
         }
+
 		NSMutableDictionary *mutableParams = [[params mutableCopy] autorelease];
+        if (mutableParams == nil) {
+            // make sure this is not nil in case we want to auto-append parameters
+            mutableParams = [NSMutableDictionary dictionary];
+        }
+        
+        [mutableParams setObject:[NSString stringWithFormat:@"%d", version] forKey:@"v"];
+
 		if (_accessToken) {
 			[mutableParams setObject:_accessToken forKey:@"token"];
 		}
+
+#ifdef DEBUG
+        [mutableParams setObject:@"1" forKey:@"debug"];
+#endif
 
 		request.url = [NSURL URLWithQueryParameters:mutableParams baseURL:requestBaseURL];
 		request.module = module;
@@ -83,6 +101,8 @@ NSString * const KGODidLogoutNotification = @"LogoutComplete";
 	return request;
 }
 
+#pragma mark Errors
+
 - (void)showAlertForError:(NSError *)error request:(KGORequest *)request
 {
     [self showAlertForError:error request:request delegate:self];
@@ -90,7 +110,7 @@ NSString * const KGODidLogoutNotification = @"LogoutComplete";
 
 - (void)showAlertForError:(NSError *)error request:(KGORequest *)request delegate:(id<UIAlertViewDelegate>)delegate
 {
-    DLog(@"%@", [error userInfo]);
+    DLog(@"%d %@", [error code], [error userInfo]);
     
 	NSString *title = nil;
 	NSString *message = nil;
@@ -98,39 +118,39 @@ NSString * const KGODidLogoutNotification = @"LogoutComplete";
 	
 	switch ([error code]) {
 		case KGORequestErrorBadRequest: case KGORequestErrorUnreachable:
-			title = NSLocalizedString(@"Connection Failed", nil);
-			message = NSLocalizedString(@"Could not connect to server. Please try again later.", nil);
+			title = NSLocalizedString(@"CORE_CONNECTION_FAILED_TITLE", @"Connection Failed");
+			message = NSLocalizedString(@"CORE_CONNECTION_FAILED_MESSAGE", @"Could not connect to server. Please try again later.");
             canRetry = YES;
 			break;
 		case KGORequestErrorDeviceOffline:
-			title = NSLocalizedString(@"Connection Failed", nil);
-			message = NSLocalizedString(@"Please check your Internet connection and try again.", nil);
+			title = NSLocalizedString(@"CORE_DEVICE_OFFLINE_TITLE", @"Connection Failed");
+			message = NSLocalizedString(@"CORE_DEVICE_OFFLINE_MESSAGE", @"Please check your Internet connection and try again.");
             canRetry = YES;
 			break;
 		case KGORequestErrorTimeout:
-			title = NSLocalizedString(@"Connection Timed Out", nil);
-			message = NSLocalizedString(@"Server is taking too long to respond. Please try again later.", nil);
+			title = NSLocalizedString(@"CORE_CONNECTION_TIMED_OUT_TITLE", @"Connection Timed Out");
+			message = NSLocalizedString(@"CORE_CONNECTION_TIMED_OUT_MESSAGE", @"Server is taking too long to respond. Please try again later.");
             canRetry = YES;
 			break;
 		case KGORequestErrorForbidden:
-			title = NSLocalizedString(@"Unauthorized Request", nil);
-			message = NSLocalizedString(@"Unable to perform this request. Please check your login credentials.", nil);
+			title = NSLocalizedString(@"CORE_UNAUTHORIZED_REQUEST_TITLE", @"Unauthorized Request");
+			message = NSLocalizedString(@"CORE_UNAUTHORIZED_REQUEST_MESSAGE", @"Unable to perform this request. Please check your login credentials.");
 			break;
 		case KGORequestErrorVersionMismatch:
-			title = NSLocalizedString(@"Unsupported Request", nil);
+			title = NSLocalizedString(@"CORE_UNSUPPORTED_REQUEST_TITLE", @"Unsupported Request");
 			NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
-			message = [NSString stringWithFormat:@"%@ %@",
-					   NSLocalizedString(@"Request is not supported in this version of", nil),
+			message = [NSString stringWithFormat:
+                       NSLocalizedString(@"CORE_UNSUPPORTED_REQUEST_MESSAGE", @"Request is not supported in this version of %@"),
 					   [infoDict objectForKey:@"CFBundleName"]];
 			break;
-		case KGORequestErrorBadResponse: case KGORequestErrorOther:
-			title = NSLocalizedString(@"Connection Failed", nil);
-			message = NSLocalizedString(@"Problem connecting to server. Please try again later.", nil);
+		case KGORequestErrorBadResponse: case KGORequestErrorOther: case KGORequestErrorResponseTypeMismatch:
+			title = NSLocalizedString(@"CORE_CONNECTION_FAILED_TITLE", @"Connection Failed");
+			message = NSLocalizedString(@"CORE_CONNECTION_FAILED_MESSAGE", @"Could not connect to server. Please try again later.");
             canRetry = YES;
 			break;
 		case KGORequestErrorServerMessage:
-			title = [[error userInfo] objectForKey:@"title"];
-			message = [[error userInfo] objectForKey:@"message"];
+			title = [[error userInfo] nonemptyStringForKey:@"title"];
+			message = [[error userInfo] nonemptyStringForKey:@"message"];
 			break;
 		case KGORequestErrorInterrupted: // don't show alert
 		default:
@@ -145,13 +165,14 @@ NSString * const KGODidLogoutNotification = @"LogoutComplete";
         
         NSString *retryOption = nil;
         if (canRetry) {
-            retryOption = NSLocalizedString(@"Retry", nil);
+            retryOption = NSLocalizedString(@"CORE_RETRY_REQUEST_BUTTON", @"Retry");
         }
+        
         
 		UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:title
                                                              message:message
                                                             delegate:delegate
-                                                   cancelButtonTitle:NSLocalizedString(@"Cancel", nil)
+                                                   cancelButtonTitle:NSLocalizedString(@"COMMON_CANCEL", @"Cancel")
                                                    otherButtonTitles:retryOption, nil] autorelease];
 		[alertView show];
 	}
@@ -208,6 +229,7 @@ NSString * const KGODeviceTokenKey = @"KGODeviceToken";
         _deviceRegistrationRequest = [self requestWithDelegate:self
                                                         module:@"push"
                                                           path:@"updatetoken"
+                                                       version:1
                                                         params:params];
         
     } else {
@@ -220,6 +242,7 @@ NSString * const KGODeviceTokenKey = @"KGODeviceToken";
         _deviceRegistrationRequest = [self requestWithDelegate:self
                                                         module:@"push"
                                                           path:@"register"
+                                                       version:1
                                                         params:params];
     }
     
@@ -257,42 +280,92 @@ NSString * const KGODeviceTokenKey = @"KGODeviceToken";
 
 #pragma mark initialization
 
+NSString * const kHTTPURIScheme = @"http";
+NSString * const kHTTPSURIScheme = @"https";
+
+- (void)selectServerConfig:(NSString *)config
+{
+    NSDictionary *configDict = [KGO_SHARED_APP_DELEGATE() appConfig];
+    NSDictionary *servers = [configDict objectForKey:KGOAppConfigKeyServers];
+    
+    NSDictionary *serverConfig = [servers dictionaryForKey:config];
+    if (serverConfig) {
+        BOOL useHTTPS = [serverConfig boolForKey:@"UseHTTPS"];
+        NSString *apiPath = [serverConfig objectForKey:@"APIPath"];
+        NSString *pathExtension = [serverConfig nonemptyStringForKey:@"PathExtension"];
+
+        @synchronized(self) {
+            _uriScheme = useHTTPS ? kHTTPSURIScheme : kHTTPURIScheme;
+            
+            [_host release];
+            
+            _host = [[serverConfig objectForKey:@"Host"] retain];
+            
+            [_extendedHost release];
+            if (pathExtension) {
+                _extendedHost = [[NSString alloc] initWithFormat:@"%@/%@", _host, pathExtension];
+            } else {
+                _extendedHost = [_host copy];
+            }
+            
+            [_baseURL release];
+            _baseURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@://%@/%@", _uriScheme, _extendedHost, apiPath]];
+            
+            [_reachability release];
+
+            _reachability = [[Reachability reachabilityWithHostName:[NSString stringByTrimmingURLPortNumber:_host]] retain];
+        }
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *oldServer = [defaults stringForKey:CurrentKurogoServerSettingKey];
+        NSString *newServer = [_baseURL absoluteString];
+        if (!oldServer) {
+            [defaults setObject:newServer forKey:CurrentKurogoServerSettingKey];
+        } else if (![oldServer isEqualToString:newServer]) {
+            // TODO: handle this in a more customizable way.
+            AlertLog(@"deleting core data store due to server change");
+            
+            [[CoreDataManager sharedManager] deleteStore];
+            [defaults setObject:newServer forKey:CurrentKurogoServerSettingKey];
+            [defaults synchronize];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:KGOServerDidChangeNotification
+                                                                object:self];
+        }
+        
+    }
+}
+
+#ifdef DEBUG
+- (void)selectServerConfigFromPreferences
+{
+    NSString *serverSetting = [[KGOUserSettingsManager sharedManager] selectedValueForSetting:KGOUserSettingKeyServer];
+    if (serverSetting) {
+        [self selectServerConfig:serverSetting];
+    } else {
+        [self selectServerConfig:@"Production"];
+    }
+}
+#endif
+
 - (id)init {
     self = [super init];
     if (self) {
-        NSDictionary *configDict = [KGO_SHARED_APP_DELEGATE() appConfig];
-        NSDictionary *servers = [configDict objectForKey:@"Servers"];
-        
-#ifdef USE_MOBILE_DEV
-        NSDictionary *serverConfig = [servers objectForKey:@"Development"];
+#ifdef DEBUG
+        [self selectServerConfigFromPreferences];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(selectServerConfigFromPreferences)
+                                                     name:KGOUserPreferencesDidChangeNotification
+                                                   object:nil];
 #else
-    #ifdef USE_MOBILE_TEST
-        NSDictionary *serverConfig = [servers objectForKey:@"Testing"];
+    #ifdef STAGING
+        [self selectServerConfig:@"Staging"];
     #else
-        #ifdef USE_MOBILE_STAGE
-        NSDictionary *serverConfig = [servers objectForKey:@"Staging"];
-        #else
-        NSDictionary *serverConfig = [servers objectForKey:@"Production"];
-        #endif
+        [self selectServerConfig:@"Production"];
     #endif
 #endif
 
-        BOOL useHTTPS = [serverConfig boolForKey:@"UseHTTPS"];
-        
-        _uriScheme = useHTTPS ? @"https" : @"http";
-        _host = [[serverConfig objectForKey:@"Host"] retain];
-        
-        NSString *apiPath = [serverConfig objectForKey:@"APIPath"];
-        NSString *pathExtension = [serverConfig stringForKey:@"PathExtension" nilIfEmpty:YES];
-        if (pathExtension) {
-            _extendedHost = [[NSString alloc] initWithFormat:@"%@/%@", _host, pathExtension];
-        } else {
-            _extendedHost = [_host copy];
-        }
-        _baseURL = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@://%@/%@", _uriScheme, _extendedHost, apiPath]];
-        
-        _reachability = [[Reachability reachabilityWithHostName:_host] retain];
-        
         self.devicePushToken = [[NSUserDefaults standardUserDefaults] objectForKey:KGODeviceTokenKey];
 	}
 	return self;
@@ -323,7 +396,11 @@ NSString * const KGODeviceTokenKey = @"KGODeviceToken";
 
 - (void)requestServerHello
 {
-    _helloRequest = [self requestWithDelegate:self module:nil path:@"hello" params:nil];
+    _helloRequest = [self requestWithDelegate:self
+                                       module:nil
+                                         path:@"hello"
+                                      version:1
+                                       params:nil];
     _helloRequest.expectedResponseType = [NSDictionary class];
     [_helloRequest connect];
 }
@@ -356,13 +433,17 @@ NSString * const KGODeviceTokenKey = @"KGODeviceToken";
     [params setObject:@"1" forKey:@"hard"];
     NSDictionary *userInfo = [_sessionInfo dictionaryForKey:@"user"];
     if (userInfo) {
-        NSString *authority = [userInfo stringForKey:@"authority" nilIfEmpty:YES];
+        NSString *authority = [userInfo nonemptyStringForKey:@"authority"];
         if (authority) {
             [params setObject:authority forKey:@"authority"];
         }
     }
 
-    _logoutRequest = [self requestWithDelegate:self module:self.loginPath path:@"logout" params:params];
+    _logoutRequest = [self requestWithDelegate:self
+                                        module:self.loginPath
+                                          path:@"logout"
+                                       version:1
+                                        params:params];
     [_logoutRequest connect];
 }
 
@@ -370,7 +451,7 @@ NSString * const KGODeviceTokenKey = @"KGODeviceToken";
 {
     NSDictionary *userInfo = [_sessionInfo dictionaryForKey:@"user"];
     if (userInfo) {
-        NSString *authority = [userInfo stringForKey:@"authority" nilIfEmpty:YES];
+        NSString *authority = [userInfo nonemptyStringForKey:@"authority"];
         if (authority) {
             return YES;
         }
@@ -393,7 +474,11 @@ NSString * const KGODeviceTokenKey = @"KGODeviceToken";
             }
         }
         
-        _sessionRequest = [self requestWithDelegate:self module:@"login" path:@"session" params:nil];
+        _sessionRequest = [self requestWithDelegate:self
+                                             module:self.loginPath
+                                               path:@"session"
+                                            version:1
+                                             params:nil];
         _sessionRequest.expectedResponseType = [NSDictionary class];
         [_sessionRequest connect];
     }
@@ -421,15 +506,14 @@ NSString * const KGODeviceTokenKey = @"KGODeviceToken";
     }
 }
 
-- (void)request:(KGORequest *)request didFailWithError:(NSError *)error {
-    NSLog(@"%@", [error description]);
-    
+- (void)request:(KGORequest *)request didFailWithError:(NSError *)error
+{
     if (request == _deviceRegistrationRequest) {
         NSDictionary *userInfo = [error userInfo];
         // TODO: coordinate with kurogo server on error codes.
         // Unauthorized appears to be 4 right now, but 401 or 403 might
         // make more sense.
-        NSString *title = [userInfo stringForKey:@"title" nilIfEmpty:YES];
+        NSString *title = [userInfo nonemptyStringForKey:@"title"];
         if ([title isEqualToString:@"Unauthorized"] && ![self isUserLoggedIn]) {
             [[NSNotificationCenter defaultCenter] removeObserver:self name:KGODidLoginNotification object:nil];
             [[NSNotificationCenter defaultCenter] addObserver:self
@@ -448,6 +532,15 @@ NSString * const KGODeviceTokenKey = @"KGODeviceToken";
         NSArray *modules = [result arrayForKey:@"modules"];
         DLog(@"received modules from hello: %@", modules);
         [KGO_SHARED_APP_DELEGATE() loadModulesFromArray:modules local:NO];
+        
+        // get server time zone
+        NSString *tzString = (NSString *)[result objectForKey:@"timezone"];
+        if (tzString != nil) {
+            NSTimeZone *tz = [NSTimeZone timeZoneWithName:tzString];
+            [KGO_SHARED_APP_DELEGATE() setTimeZone:tz];
+            DLog(@"Setting timezone to %@", tz);
+        }
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:HelloRequestDidCompleteNotification object:self];
 
     } else if (request == _sessionRequest) {
@@ -461,7 +554,7 @@ NSString * const KGODeviceTokenKey = @"KGODeviceToken";
         
     } else if (request == _deviceRegistrationRequest) {
         DLog(@"registered new device for push notifications: %@", result);
-        NSString *deviceID = [result stringForKey:@"device_id" nilIfEmpty:YES];
+        NSString *deviceID = [result nonemptyStringForKey:@"device_id"];
         NSString *passKey = [result objectForKey:@"pass_key"];
         if ([passKey isKindOfClass:[NSNumber class]]) {
             passKey = [passKey description];
@@ -485,16 +578,15 @@ NSString * const KGODeviceTokenKey = @"KGODeviceToken";
         
         [_sessionInfo release];
         _sessionInfo = nil;
+
+        /*
+        // TODO: decide how to handle data deletion.
+        // e.g. keep track of data on a per-user basis?
         
         if ([[CoreDataManager sharedManager] deleteStore]) {
             DLog(@"deleted store");
         }
-        
-        for (KGOModule *aModule in [KGO_SHARED_APP_DELEGATE() modules]) {
-            for (NSString *aDefault in [aModule userDefaults]) {
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:aDefault];
-            }
-        }
+        */
         
         [[NSNotificationCenter defaultCenter] postNotificationName:KGODidLogoutNotification object:self];
     }

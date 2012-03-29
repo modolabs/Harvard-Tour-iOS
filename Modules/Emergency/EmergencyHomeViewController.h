@@ -1,13 +1,12 @@
 #import <UIKit/UIKit.h>
 #import "KGOTableViewController.h"
-#import "EmergencyNotice.h"
+#import "EmergencyModel.h"
 #import "EmergencyModule.h"
 
-
 enum EmergencyLoadingStatus {
-    Loading,
-    Loaded,
-    Failed,
+    EmergencyStatusLoading,
+    EmergencyStatusLoaded,
+    EmergencyStatusFailed,
 };
 
 @interface EmergencyHomeViewController : KGOTableViewController <UIWebViewDelegate> {

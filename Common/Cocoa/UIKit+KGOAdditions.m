@@ -1,5 +1,6 @@
 #import "UIKit+KGOAdditions.h"
-
+#import "KGOTheme.h"
+#import "KGOGradientView.h"
 
 @implementation UIImage (KGOAdditions)
 
@@ -33,6 +34,14 @@
     return image;
 }
 
+- (UIImage *)imageAtRect:(CGRect)rect
+{
+    CGImageRef imageRef = CGImageCreateWithImageInRect([self CGImage], rect);
+    UIImage *subImage = [UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+    return subImage;
+}
+
 @end
 
 @implementation UIColor (KGOAdditions)
@@ -45,7 +54,7 @@
  * @"0099FF" @"#0099FF" @"0x0099FF" @"AA0099FF" @"#AA0099FF" @"0xAA0099FF"
  */
 + (UIColor *)colorWithHexString:(NSString *)hexString  
-{  
+{
     NSString *cString = [[hexString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
     
     // String should be 6 - 8 characters
@@ -90,6 +99,38 @@
                            alpha:alpha];
 }
 
+// based on https://github.com/ars/uicolor-utilities/blob/master/UIColor-Expanded.m
+// note that iOS 5+ has the method [UIColor getRed:green:blue:alpha:]
+- (NSString *)hexString
+{
+    NSString *result = nil;
+    CGFloat red, blue, green, alpha;
+
+    CGColorSpaceModel csm = CGColorSpaceGetModel(CGColorGetColorSpace(self.CGColor));
+    if (csm == kCGColorSpaceModelRGB || csm == kCGColorSpaceModelMonochrome) {
+        const CGFloat *c = CGColorGetComponents(self.CGColor);
+        if (csm == kCGColorSpaceModelMonochrome) {
+            red = green = blue = MIN(MAX(c[0], 0.0f), 1.0f);
+            alpha = MIN(MAX(c[1], 0.0f), 1.0f);
+        } else {
+            red = MIN(MAX(c[0], 0.0f), 1.0f);
+            green = MIN(MAX(c[1], 0.0f), 1.0f);
+            blue = MIN(MAX(c[2], 0.0f), 1.0f);
+            alpha = MIN(MAX(c[3], 0.0f), 1.0f);
+        }
+
+        if (alpha < 1) {
+            result = [NSString stringWithFormat:@"#%02X%02X%02X%02X",
+                      (int)roundf(red * 255), (int)roundf(green * 255), (int)roundf(blue * 255), (int)roundf(alpha * 255)];
+        } else {
+            result = [NSString stringWithFormat:@"#%02X%02X%02X",
+                      (int)roundf(red * 255), (int)roundf(green * 255), (int)roundf(blue * 255)];
+        }
+    }
+
+    return result;
+}
+
 @end
 
 @implementation UIImageView (KGOAdditions)
@@ -131,8 +172,8 @@
     [button setTitle:title forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateHighlighted];
     
-    UIImage *background = [UIImage imageWithPathName:@"common/generic-button-background"];
-    UIImage *pressedBackground = [UIImage imageWithPathName:@"common/generic-button-background-pressed"];
+    UIImage *background = [UIImage imageWithPathName:@"common/toolbar-button"];
+    UIImage *pressedBackground = [UIImage imageWithPathName:@"common/toolbar-button"];
     
     [button setBackgroundImage:[background stretchableImageWithLeftCapWidth:8 topCapHeight:8]
                       forState:UIControlStateNormal];
@@ -156,8 +197,8 @@
     [button setImage:image forState:UIControlStateNormal];
     [button setImage:image forState:UIControlStateHighlighted];
     
-    UIImage *background = [UIImage imageWithPathName:@"common/generic-button-background"];
-    UIImage *pressedBackground = [UIImage imageWithPathName:@"common/generic-button-background-pressed"];
+    UIImage *background = [UIImage imageWithPathName:@"common/toolbar-button"];
+    UIImage *pressedBackground = [UIImage imageWithPathName:@"common/toolbar-button"];
     
     [button setBackgroundImage:[background stretchableImageWithLeftCapWidth:8 topCapHeight:8]
                       forState:UIControlStateNormal];
@@ -172,6 +213,30 @@
 @end
 
 
+@implementation UITableViewCell (KGOAdditions)
+
+- (void)applyBackgroundThemeColorForIndexPath:(NSIndexPath *)indexPath tableView:(UITableView *)tableView
+{
+    UIColor *color = [[KGOTheme sharedTheme] tintColorForSelectedCell];
+    if (color) {
+        KGOGradientView *view = [[[KGOGradientView alloc] initWithFrame:self.bounds] autorelease];
+        view.tintColor = color;
+        if (tableView.style == UITableViewStyleGrouped) {
+            if (indexPath.row == 0) {
+                view.topRightCornerRadius = 10;
+                view.topLeftCornerRadius = 10;
+            }
+            if (indexPath.row == [tableView numberOfRowsInSection:indexPath.section] - 1) {
+                view.bottomLeftCornerRadius = 10;
+                view.bottomRightCornerRadius = 10;
+            }
+        }
+        self.selectedBackgroundView = view;
+    }
+}
+
+@end
+
 @implementation UIWebView (KGOAdditions)
 
 - (void)loadTemplate:(KGOHTMLTemplate *)template values:(NSDictionary *)values {
@@ -181,4 +246,30 @@
 
 @end
 
+@implementation UITableView (KGOAdditions)
+
+// based on matthew thomas' answer in
+// http://stackoverflow.com/questions/4708085/how-to-determine-margin-of-a-grouped-uitableview-or-better-how-to-set-it
+- (CGFloat)marginWidth
+{
+    CGFloat selfWidth = self.bounds.size.width;
+    CGFloat marginWidth;
+    
+    if (selfWidth > 750) {
+        marginWidth = 45;
+        
+    } else if (selfWidth > 400) {
+        marginWidth = floor(0.06 * selfWidth);
+        
+    } else if (selfWidth > 20) {
+        marginWidth = 10;
+        
+    } else {
+        marginWidth = selfWidth - 10;
+    }
+    
+    return marginWidth;
+}
+
+@end
 

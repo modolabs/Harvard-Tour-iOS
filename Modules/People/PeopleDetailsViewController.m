@@ -1,5 +1,5 @@
 #import "PeopleDetailsViewController.h"
-#import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 #import "UIKit+KGOAdditions.h"
 #import "Foundation+KGOAdditions.h"
 #import "HarvardNavigationController.h"
@@ -27,7 +27,7 @@
     //self.person.viewed = [NSNumber numberWithBool:YES];
     [[CoreDataManager sharedManager] saveData];
     
-	self.title = @"Info";
+	self.title = NSLocalizedString(@"PEOPLE_DETAIL_VIEW_TITLE", @"Info");
     
     [self displayPerson];
 }
@@ -48,11 +48,16 @@
 
 - (void)displayPerson {
     [self.person markAsRecentlyViewed];
+
+    _addressSection = NSNotFound;
+    _phoneSection = NSNotFound;
+    _emailSection = NSNotFound;
     
     // information in header: photo, name
     
     UIFont *font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentTitle];
     KGOLabel *nameLabel = [KGOLabel multilineLabelWithText:self.person.name font:font width:self.tableView.frame.size.width - 20];
+    nameLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyContentTitle];
     nameLabel.frame = CGRectMake(10, 10, nameLabel.frame.size.width, nameLabel.frame.size.height);
 
     UIView *header = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, nameLabel.frame.size.height + 14)] autorelease];
@@ -72,7 +77,7 @@
         NSDictionary *orgDict = [aDict dictionaryForKey:@"value"];
         if (orgDict) {
             for (NSString *label in [NSArray arrayWithObjects:@"jobTitle", @"organization", @"department", nil]) {
-                NSString *value = [orgDict stringForKey:label nilIfEmpty:YES];
+                NSString *value = [orgDict nonemptyStringForKey:label];
                 if (value) {
                     [currentSection addObject:[NSDictionary dictionaryWithObjectsAndKeys:label, @"label", value, @"value", nil]];
                 }
@@ -109,9 +114,13 @@
         
         currentSection = [NSMutableArray array];
         for (NSDictionary *aDict in self.person.addresses) {
-            NSString *label = [aDict stringForKey:@"label" nilIfEmpty:NO];
-            if (!label)
+            NSString *label = [aDict stringForKey:@"label"];
+            if (!label) {
+                label = [aDict stringForKey:@"title"];
+            }
+            if (!label) {
                 label = [NSString string];
+            }
             
             NSString *displayAddress = [NSString string];
             NSDictionary *valueDict = [aDict objectForKey:@"value"];
@@ -161,9 +170,9 @@
     static NSDictionary *displayLabels = nil;
     if (displayLabels == nil) {    
         displayLabels = [[NSDictionary alloc] initWithObjectsAndKeys:
-                         NSLocalizedString(@"Home", nil), @"home",
-                         NSLocalizedString(@"Work", nil), @"work",
-                         NSLocalizedString(@"Other", nil), @"other",
+                         NSLocalizedString(@"PEOPLE_CONTACT_LABEL_HOME", @"Home"), @"home",
+                         NSLocalizedString(@"PEOPLE_CONTACT_LABEL_WORK", @"Work"), @"work",
+                         NSLocalizedString(@"PEOPLE_CONTACT_LABEL_OTHER", @"Other"), @"other",
                          nil];
     }
     NSString *title = [displayLabels objectForKey:label];
@@ -191,21 +200,23 @@
 - (CellManipulator)tableView:(UITableView *)tableView manipulatorForCellAtIndexPath:(NSIndexPath *)indexPath {
     NSString *title;
     NSString *accessoryTag = nil;
-    UITableViewCellSelectionStyle selectionStyle = UITableViewCellSelectionStyleGray;
     BOOL centerText = NO;
     
     if (indexPath.section == [self.sectionArray count]) {
         
         centerText = YES;
         if (indexPath.row == 0) {
-            title = NSLocalizedString(@"Create New Contact", nil);
+            title = NSLocalizedString(@"PEOPLE_CREATE_NEW_CONTACT", @"Create New Contact");
         } else {
-            title = NSLocalizedString(@"Add to Existing Contact", nil);
+            title = NSLocalizedString(@"PEOPLE_ADD_TO_EXISTING_CONTACT", @"Add to Existing Contact");
         }
 
     } else {
 		NSDictionary *personAttribute = [[self.sectionArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
         NSString *label = [personAttribute objectForKey:@"label"];
+        if (!label) {
+            label = [personAttribute stringForKey:@"title"];
+        }
         title = [self displayTitleForSection:indexPath.section label:label];
 
         if (indexPath.section == _addressSection) {
@@ -220,7 +231,6 @@
     }
     
     return [[^(UITableViewCell *cell) {
-        cell.selectionStyle = selectionStyle;
         cell.textLabel.text = title;
         cell.accessoryView = [[KGOTheme sharedTheme] accessoryViewForType:accessoryTag];
         if (centerText) cell.textLabel.textAlignment = UITextAlignmentCenter;
@@ -232,13 +242,16 @@
 	if (indexPath.section < [self.sectionArray count]) { 
 
 		NSDictionary *personAttribute = [[self.sectionArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-        NSString *value = [personAttribute objectForKey:@"value"];
+        NSString *value = [personAttribute stringForKey:@"value"];
+        if (!value) {
+            value = @"";
+        }
 
         UIFont *font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListValue];
         
-        // inner 20 for padding; 0.75 is approx ratio allocated to detail text label, 20 for accessory
+        // inner 20 for padding; 0.75 is approx ratio allocated to detail text label, 33 for accessory
         CGFloat width = floor((tableView.frame.size.width - 20) * 0.75) - 20;
-        CGFloat originX = self.tableView.frame.size.width - 20 - width;
+        CGFloat originX = self.tableView.frame.size.width - 33 - width;
         
         UIColor *textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyNavListValue];
 
@@ -265,7 +278,14 @@
             return [NSArray arrayWithObject:textView];
 
         } else {
-            KGOLabel *label = [KGOLabel multilineLabelWithText:value font:font width:width];
+            UILineBreakMode breakMode = UILineBreakModeWordWrap;
+            if (indexPath.section == _emailSection) {
+                breakMode = UILineBreakModeCharacterWrap;
+            }
+            KGOLabel *label = [KGOLabel multilineLabelWithText:value
+                                                          font:font
+                                                         width:width
+                                                 lineBreakMode:breakMode];
             label.frame = CGRectMake(originX, 10, width, label.frame.size.height);
             return [NSArray arrayWithObject:label];
         }
@@ -283,7 +303,11 @@
 			creator.displayedPerson = [self.person convertToABPerson];
 			[creator setNewPersonViewDelegate:self];
             
-            [self presentModalViewController:creator animated:YES];
+            UINavigationController *addContactNavController = [[UINavigationController alloc] initWithRootViewController:creator];
+            addContactNavController.navigationBar.barStyle = [[KGOTheme sharedTheme] defaultNavBarStyle];
+            [self presentModalViewController:addContactNavController animated:YES];
+            [addContactNavController release];
+            
 			
 		} else {
 			ABPeoplePickerNavigationController *picker = [[[ABPeoplePickerNavigationController alloc] init] autorelease];
@@ -296,15 +320,15 @@
 		// React if the cell tapped has text that that matches the display name of mail, telephonenumber, or postaladdress.
 		if (indexPath.section == _emailSection) {
             NSDictionary *personAttribute = [[self.sectionArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-            [self emailIconTapped:[personAttribute stringForKey:@"value" nilIfEmpty:YES]];
+            [self emailIconTapped:[personAttribute nonemptyStringForKey:@"value"]];
         }
 		else if (indexPath.section == _phoneSection) {
             NSDictionary *personAttribute = [[self.sectionArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-            [self phoneIconTapped:[personAttribute stringForKey:@"value" nilIfEmpty:YES]];
+            [self phoneIconTapped:[personAttribute nonemptyStringForKey:@"value"]];
         }
 		else if (indexPath.section == _addressSection) {
             NSDictionary *personAttribute = [[self.sectionArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-            [self mapIconTapped:[personAttribute stringForKey:@"value" nilIfEmpty:YES]];
+            [self mapIconTapped:[personAttribute nonemptyStringForKey:@"value"]];
         }
 	}
 	
@@ -364,13 +388,7 @@
 
 - (void)mapIconTapped:(NSString *)address
 {
-    /*
-    NSURL *internalURL = [NSURL internalURLWithModuleTag:MapTag
-                                                    path:LocalPathMapsSelectedAnnotation
-                                                   query:addressSearchAnnotation.uniqueID];
-
-    [[UIApplication sharedApplication] openURL:internalURL];
-    */
+    // TODO
 }
 
 - (void)phoneIconTapped:(NSString *)phone

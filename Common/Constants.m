@@ -1,5 +1,8 @@
 #import "Constants.h"
 
+NSString * const KUROGO_FRAMEWORK_NAME = @"Kurogo iOS";
+NSString * const KUROGO_FRAMEWORK_VERSION = @"1.0";
+
 // local path names for handleLocalPath
 NSString * const LocalPathPageNameHome = @"index";
 NSString * const LocalPathPageNameDetail = @"detail";
@@ -10,65 +13,34 @@ NSString * const LocalPathPageNameMapList = @"map";
 NSString * const LocalPathPageNameBookmarks = @"bookmarks";
 NSString * const LocalPathPageNameWebViewDetail = @"webView";
 
-// keys for NSUserDefaults dictionary go here (app preferences)
+#pragma mark Config keys
+
+NSString * const KGOAppConfigKeyModules = @"Modules";
+NSString * const KGOAppConfigKeyServers = @"Servers";
+NSString * const KGOAppConfigKeySocialMedia = @"SocialMedia";
+
+#pragma mark Global NSUserDefaults keys
+
 NSString * const UnreadNotificationsKey = @"UnreadNotifications";
 
+#pragma mark App-wide notification names
 
-// module tags
-// TODO: get rid of all uses of these tags and use the tag given by the server
-NSString * const HomeTag       = @"home";
-NSString * const MapTag        = @"map";
-NSString * const NewsTag       = @"news";
-NSString * const PeopleTag     = @"people";
-NSString * const PhotosTag     = @"photos";
-NSString * const VideoModuleTag     = @"video";
+NSString * const ModuleListDidChangeNotification = @"ModuleListChanged";
 
+NSString * const KGOUserPreferencesKey = @"KGOUserPrefs";
+NSString * const KGOUserPreferencesDidChangeNotification = @"KGOUserPrefsChanged";
 
+NSString * const HelloRequestDidCompleteNotification = @"HelloDidComplete";
+NSString * const HelloRequestDidFailNotification = @"HelloDidFail";
 
-// preferences
+NSString * const KGODidLoginNotification = @"LoginComplete";
+NSString * const KGODidLogoutNotification = @"LogoutComplete";
 
-// TODO: clean up settings module and make all these go away
-NSString * const FacebookGroupKey = @"FBGroup";
-NSString * const FacebookGroupTitleKey = @"FBGroupTitle";
-NSString * const TwitterHashTagKey = @"TwitterHashTag";
+NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
+NSString * const KGOAppDidResetNotification = @"ApplicationDidReset";
+NSString * const KGOServerDidChangeNotification = @"ServerDidChange";
 
-NSString * const MITNewsTwoFirstRunKey = @"MITNews2ClearedCachedArticles";
-
-// notification names
-
-NSString * const ModuleListDidChangeNotification = @"ModuleList";
-NSString * const UserSettingsDidChangeNotification = @"UserSettingsChanged";
-
-// core data entity names
-NSString * const KGOPersonEntityName = @"KGOPerson";
-NSString * const PersonContactEntityName = @"PersonContact";
-NSString * const PersonOrganizationEntityName = @"PersonOrganization";
-NSString * const PersonAddressEntityName = @"PersonAddress";
-
-NSString * const KGOPlacemarkEntityName = @"KGOPlacemark";
-NSString * const MapCategoryEntityName = @"KGOMapCategory";
-
-NSString * const NewsStoryEntityName = @"NewsStory";
-NSString * const NewsCategoryEntityName = @"NewsCategory";
-NSString * const NewsImageEntityName = @"NewsImage";
-NSString * const NewsImageRepEntityName = @"NewsImageRep";
-
-NSString * const EmergencyNoticeEntityName = @"EmergencyNotice";
-NSString * const EmergencyContactsSectionEntityName = @"EmergencyContactsSection";
-NSString * const EmergencyContactEntityName = @"EmergencyContact";
+#pragma mark Error domains
 
 
-// local paths for handleLocalPath
-NSString * const LocalPathMapsSelectedAnnotation = @"annotation";
-
-
-// resource names
-
-NSString * const MITImageNameUpArrow = @"global/arrow-white-up.png";
-NSString * const MITImageNameDownArrow = @"global/arrow-white-down.png";
-
-// errors
-NSString * const MapsErrorDomain = @"com.modolabs.Maps.ErrorDomain";
-NSString * const ShuttlesErrorDomain = @"com.modolabs.Shuttles.ErrorDomain";
-NSString * const JSONErrorDomain = @"com.modolabs.JSON.ErrorDomain";
 

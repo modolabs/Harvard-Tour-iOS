@@ -3,12 +3,16 @@
 #import "KGODetailPager.h"
 #import "KGOSearchModel.h"
 #import "KGORequest.h"
+#import "MapDataManager.h"
+#import "KGOSearchDisplayController.h"
 
-@class KGOPlacemark, KGOSearchResultListTableView;
+@class KGOPlacemark, KGOSearchResultListTableView, MapModule;
 
-@interface MapDetailViewController : KGOTabbedViewController <KGODetailPagerDelegate, UIWebViewDelegate, KGORequestDelegate> {
+
+@interface MapDetailViewController : KGOTabbedViewController <KGOSearchResultsDelegate, KGOSearchResultsHolder, KGODetailPagerDelegate,
+MapDataManagerDelegate, UIWebViewDelegate> {
     
-    KGORequest *_request;
+    UIWebView *_webView;
     KGOSearchResultListTableView *_tableView;
     
     NSInteger _photoTabIndex;
@@ -17,7 +21,9 @@
     
 }
 
+@property (nonatomic, retain) MapDataManager *dataManager;
 @property (nonatomic, retain) KGOPlacemark *placemark;
 @property (nonatomic, retain) KGODetailPager *pager;
+@property (nonatomic, retain) MapModule *mapModule;
 
 @end

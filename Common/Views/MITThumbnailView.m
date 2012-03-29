@@ -1,17 +1,17 @@
 #import "MITThumbnailView.h"
-#import "CoreDataManager.h"
-#import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 #import "UIKit+KGOAdditions.h"
-
+#import <CoreData/CoreData.h>
 @implementation MITThumbnailView
 
-@synthesize imageURL, connection, loadingView, imageView, delegate;
+@synthesize connection, loadingView, imageView, delegate;
+@dynamic imageURL;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self != nil) {
         connection = nil;
-        imageURL = nil;
+        _imageURL = nil;
         _imageData = nil;
         loadingView = nil;
         imageView = nil;
@@ -35,6 +35,23 @@
         _imageData = [imageData retain];
         _didDisplayImage = NO;
     }
+}
+
+- (void)setImageURL:(NSString *)aImageURL {
+    if (![aImageURL isEqualToString:_imageURL]) {
+        if([self.connection isConnected]) {
+            [self.connection cancel];
+            self.connection.delegate = nil;
+            self.connection = nil;
+            [KGO_SHARED_APP_DELEGATE() hideNetworkActivityIndicator];
+        }
+        [_imageURL release];
+        _imageURL = [aImageURL retain];
+    }
+}
+
+- (NSString *)imageURL {
+    return _imageURL;
 }
 
 - (void)loadImage {
@@ -67,8 +84,8 @@
             imageView.contentMode = self.contentMode;
             imageView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
         }
-        
-        imageView.image = image;
+        CGRect rectByImage = CGRectMake(0, 0, image.size.width, image.size.width);
+        imageView.image = [image imageAtRect:rectByImage];
         imageView.hidden = NO;
         _didDisplayImage = YES;
         [imageView setNeedsLayout];
@@ -112,6 +129,7 @@
 // ConnectionWrapper delegate
 - (void)connection:(ConnectionWrapper *)wrapper handleData:(NSData *)data {
     // TODO: If memory usage becomes a concern, convert images to PNG using UIImagePNGRepresentation(). PNGs use considerably less RAM.
+
     self.imageData = data;
     BOOL validImage = [self displayImage];
     if (validImage) {
@@ -138,7 +156,7 @@
     self.imageData = nil;
     [loadingView release];
     [imageView release];
-    [imageURL release];
+    [_imageURL release];
     self.delegate = nil;
     [super dealloc];
 }

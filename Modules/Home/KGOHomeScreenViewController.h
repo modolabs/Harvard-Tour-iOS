@@ -2,10 +2,12 @@
 #import "KGOSearchDisplayController.h"
 #import "IconGrid.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
+#import "KGORequestManager.h"
 
-@class KGOSearchBar;
+@class KGOSearchBar, KGOHomeScreenWidget;
 
-@interface KGOHomeScreenViewController : UIViewController <KGOSearchDisplayDelegate, UIAlertViewDelegate> {
+@interface KGOHomeScreenViewController : UIViewController <KGOSearchDisplayDelegate,
+UIAlertViewDelegate, KGORequestDelegate> { // TODO: separate this class from the network stuff
     
     NSDictionary *_preferences;
     
@@ -14,6 +16,8 @@
     
     NSArray *_primaryModules;
     NSArray *_secondaryModules;
+    
+    KGORequest *_bannerRequest;
 }
 
 @property (nonatomic, retain) KGOModule *homeModule;
@@ -22,6 +26,13 @@
 @property (nonatomic, readonly) NSArray *secondaryModules;
 @property (nonatomic, readonly) CGRect springboardFrame;
 @property (nonatomic, retain) UIView *loadingView;
+
+@property (nonatomic, retain) KGOHomeScreenWidget *banner;
+
+- (void)checkAnnouncementBanner;
+- (void)showAnnouncementBanner;
+- (void)hideAnnouncementBanner;
+- (CGFloat)minimumAvailableY;
 
 // login states
 - (void)standbyForServerHello;

@@ -5,6 +5,8 @@
 #import "PersonOrganization.h"
 #import "CoreDataManager.h"
 
+NSString * const KGOPersonEntityName = @"KGOPerson";
+
 @implementation KGOPerson 
 
 @dynamic photoURL;
@@ -20,8 +22,13 @@
 @dynamic contacts;
 
 + (KGOPerson *)personWithIdentifier:(NSString *)anIdentifier {
-    KGOPerson *person = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:KGOPersonEntityName];
-    person.identifier = anIdentifier;
+    KGOPerson *person = [[CoreDataManager sharedManager] uniqueObjectForEntity:KGOPersonEntityName
+                                                                     attribute:@"identifier"
+                                                                         value:anIdentifier];
+    if (!person) {
+        person = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:KGOPersonEntityName];
+        person.identifier = anIdentifier;
+    }
     return person;
 }
 

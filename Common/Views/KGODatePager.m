@@ -1,18 +1,20 @@
 #import "KGODatePager.h"
 #import "KGOTheme.h"
-#import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 #import "UIKit+KGOAdditions.h"
 
 @implementation KGODatePager
 
 @synthesize delegate, contentsController;
+@synthesize prevButton, nextButton, dateButton, calendarButton, dropShadow;
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
+        _showsDropShadow = YES;
         _dateFormatter = [[NSDateFormatter alloc] init];
-        self.backgroundColor = [UIColor grayColor];
+        self.backgroundColor = [[KGOTheme sharedTheme] backgroundColorForDatePager];
         self.incrementUnit = NSDayCalendarUnit;
     }
     return self;
@@ -22,8 +24,9 @@
 {    
     self = [super initWithFrame:frame];
     if (self) {
+        _showsDropShadow = YES;
         _dateFormatter = [[NSDateFormatter alloc] init];
-        self.backgroundColor = [UIColor grayColor];
+        self.backgroundColor = [[KGOTheme sharedTheme] backgroundColorForDatePager];
         self.incrementUnit = NSDayCalendarUnit;
     }
     return self;
@@ -31,78 +34,64 @@
 
 - (void)dealloc {
     [_dateFormatter release];
+    [_displayDate release];
+    [_date release];
     [super dealloc];
 }
 
-// TODO: get config values for assets
-- (void)layoutSubviews {
-
-    if (!nextButton) {
-        UIImage *dropShadowImage = [[KGOTheme sharedTheme] backgroundImageForSearchBarDropShadow];
+- (void)setupDropShadow
+{
+    if (_showsDropShadow) {
+        UIImage *dropShadowImage = [[[KGOTheme sharedTheme] backgroundImageForSearchBarDropShadow] stretchableImageWithLeftCapWidth:5
+                                                                                                                       topCapHeight:5];
         if (dropShadowImage) {
-            UIImageView *dropShadow = [[UIImageView alloc] initWithImage:dropShadowImage];
-            dropShadow.frame = CGRectMake(0, self.frame.size.height, dropShadow.frame.size.width, dropShadow.frame.size.height);
-            [self addSubview:dropShadow];
-            self.clipsToBounds = NO;
+            dropShadow.image = dropShadowImage;
+        } else {
+            [dropShadow removeFromSuperview];
         }
-        
-        // arrow buttons
-        nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        UIImage *buttonImage = [UIImage imageWithPathName:@"common/subheadbar_button_next"];
-        
-        CGFloat halfHeight = floor(self.frame.size.height / 2);
-        CGFloat originX = self.frame.size.width - halfHeight;
-        
-        nextButton.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
-        nextButton.center = CGPointMake(originX, halfHeight);
-        [nextButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
-        [nextButton setBackgroundImage:[UIImage imageWithPathName:@"common/subheadbar_button_next_pressed"] forState:UIControlStateHighlighted];
-        [nextButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:nextButton];
-        originX -= buttonImage.size.width;
-        
-        prevButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        buttonImage = [UIImage imageWithPathName:@"common/subheadbar_button_previous"];
-        prevButton.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
-        prevButton.center = CGPointMake(originX, halfHeight);
-        [prevButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
-        [prevButton setBackgroundImage:[UIImage imageWithPathName:@"common/subheadbar_button_previous_pressed"] forState:UIControlStateHighlighted];
-        [prevButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:prevButton];
-        
-        // calendar button
-        buttonImage = [UIImage imageWithPathName:@"common/subheadbar_button"];
-        calendarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        calendarButton.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
-        calendarButton.center = CGPointMake(halfHeight, halfHeight);
-        [calendarButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
-        [calendarButton setBackgroundImage:[UIImage imageWithPathName:@"common/subheadbar_button_pressed"] forState:UIControlEventTouchUpInside];
-        [calendarButton setImage:[UIImage imageWithPathName:@"common/subheadbar_calendar"] forState:UIControlStateNormal];
-        [calendarButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:calendarButton];
-        
-        // date label
-        dateButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        dateButton.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:18.0];
-        dateButton.titleLabel.textColor = [UIColor whiteColor];
-        dateButton.titleLabel.textAlignment = UITextAlignmentCenter;
-        dateButton.titleLabel.adjustsFontSizeToFitWidth = YES;
-        
-        NSString *dateText = [_dateFormatter stringFromDate:_displayDate];
-        [dateButton setTitle:dateText forState:UIControlStateNormal];
 
-        // width of date label should be such that when date label is centered, it doesn't overlap the prev/next buttons
-        CGFloat dateButtonWidth = 2 * prevButton.frame.origin.x - self.frame.size.width;
-        CGFloat xOrigin = floor((self.frame.size.width - dateButtonWidth) / 2);
-        dateButton.frame = CGRectMake(xOrigin, 0.0, dateButtonWidth, self.frame.size.height);
-
-        [dateButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:dateButton];
+    } else {
+        [dropShadow removeFromSuperview];
     }
-    
 }
 
-- (void)buttonPressed:(id)sender {
+- (BOOL)showsDropShadow
+{
+    return _showsDropShadow;
+}
+
+- (void)setShowsDropShadow:(BOOL)shows
+{
+    if (shows != _showsDropShadow) {
+        _showsDropShadow = shows;
+        [self setupDropShadow];
+    }
+}
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    [self setupDropShadow];
+
+    [nextButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-next"]
+                          forState:UIControlStateNormal];
+    [nextButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-next-pressed"]
+                          forState:UIControlStateHighlighted];
+    
+    [prevButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-previous"]
+                          forState:UIControlStateNormal];
+    [prevButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-previous-pressed"]
+                          forState:UIControlStateHighlighted];
+    
+    [calendarButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button"]
+                              forState:UIControlStateNormal];
+    [calendarButton setBackgroundImage:[UIImage imageWithPathName:@"common/toolbar-button-pressed"]
+                              forState:UIControlStateHighlighted];
+    [calendarButton setImage:[UIImage imageWithPathName:@"common/subheadbar_calendar"]
+                    forState:UIControlStateNormal];
+}
+
+- (IBAction)buttonPressed:(id)sender {
     if (sender == calendarButton || sender == dateButton) {
         DatePickerViewController *pickerVC = [[[DatePickerViewController alloc] init] autorelease];
         pickerVC.delegate = self;
@@ -162,14 +151,6 @@
     else if (_incrementUnit & NSMonthCalendarUnit) [_dateFormatter setDateFormat:@"yyyy MMM"];
     else if (_incrementUnit & NSYearCalendarUnit)  [_dateFormatter setDateFormat:@"yyyy"];
 }
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code.
-}
-*/
 
 #pragma mark DatePickerViewControllerDelegate functions
 

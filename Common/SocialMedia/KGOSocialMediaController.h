@@ -49,6 +49,7 @@ ConnectionWrapperDelegate> {
 
 // should only be called by the id<KGOSocialMediaService> object.
 - (void)removeServiceWithType:(NSString *)type;
+- (void)logoutAllServices;
 
 - (void)addOptions:(NSArray *)options forSetting:(NSString *)setting forMediaType:(NSString *)mediaType;
 

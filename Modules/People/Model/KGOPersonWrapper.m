@@ -1,10 +1,8 @@
 #import "KGOPersonWrapper.h"
 #import "Foundation+KGOAdditions.h"
-#import "KGOPerson.h"
+#import "PeopleModel.h"
 #import "CoreDataManager.h"
-#import "PersonContact.h"
-#import "PersonOrganization.h"
-#import "PersonAddress.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 
 NSString * const KGOPersonContactTypeEmail = @"email";
 NSString * const KGOPersonContactTypePhone = @"phone";
@@ -33,6 +31,7 @@ NSString * const KGOPersonContactTypeAddress = @"address";
 
 @implementation KGOPersonWrapper
 
+@synthesize moduleTag;
 @synthesize identifier = _identifier,
 name = _name,
 firstName = _firstName,
@@ -88,9 +87,9 @@ webpages = _webpages;
         NSDictionary *labelValue = [self.organizations objectAtIndex:0];
         NSDictionary *orgDict = [labelValue dictionaryForKey:@"value"];
         if (orgDict) {
-            subtitle = [orgDict stringForKey:@"jobTitle" nilIfEmpty:YES];
+            subtitle = [orgDict nonemptyStringForKey:@"jobTitle"];
             if (!subtitle)
-                subtitle = [orgDict stringForKey:@"organization" nilIfEmpty:YES];
+                subtitle = [orgDict nonemptyStringForKey:@"organization"];
         }
     }
     return subtitle;
@@ -108,6 +107,14 @@ webpages = _webpages;
     // do nothing
 }
 
+- (BOOL)didGetSelected:(id)selector
+{
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:self, @"person", nil];
+    return [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail
+                                  forModuleTag:[self moduleTag]
+                                        params:params];
+}
+
 #pragma mark -
 #pragma mark Dictionary representation
 
@@ -119,11 +126,11 @@ webpages = _webpages;
     
     self = [super init];
     if (self) {
-        self.name = [dictionary stringForKey:@"name" nilIfEmpty:YES];
-        self.firstName = [dictionary stringForKey:@"firstName" nilIfEmpty:YES];
-        self.lastName = [dictionary stringForKey:@"lastName" nilIfEmpty:YES];
+        self.name = [dictionary nonemptyStringForKey:@"name"];
+        self.firstName = [dictionary nonemptyStringForKey:@"firstName"];
+        self.lastName = [dictionary nonemptyStringForKey:@"lastName"];
         self.birthday = [dictionary dateForKey:@"birthday" format:@"yyyyMMdd"];
-        self.photoURL = [dictionary stringForKey:@"photoURL" nilIfEmpty:YES];
+        self.photoURL = [dictionary nonemptyStringForKey:@"photoURL"];
 
         NSMutableArray *array = [NSMutableArray array];
         for (id aDict in [dictionary arrayForKey:@"organizations"]) {
@@ -142,7 +149,7 @@ webpages = _webpages;
         
         for (NSDictionary *aDict in [dictionary arrayForKey:@"contacts"]) {
             if ([KGOPersonWrapper isValidContactDict:aDict]) {
-                NSString *type = [aDict stringForKey:@"type" nilIfEmpty:YES];
+                NSString *type = [aDict stringForKey:@"type"];
                 if ([type isEqualToString:KGOPersonContactTypePhone]) {
                     [_phones addObject:aDict];
                 } else if ([type isEqualToString:KGOPersonContactTypeEmail]) {
@@ -161,13 +168,13 @@ webpages = _webpages;
 }
 
 + (NSString *)displayAddressForDict:(NSDictionary *)addressDict {
-    NSString *address = [addressDict stringForKey:@"display" nilIfEmpty:YES];
+    NSString *address = [addressDict nonemptyStringForKey:@"display"];
     if (!address) {
         NSMutableArray *addressArray = [NSMutableArray array];
         
         NSMutableArray *lineArray = [NSMutableArray array];
         for (NSString *key in [NSArray arrayWithObjects:@"street", @"street2", nil]) {
-            NSString *tempVal = [addressDict stringForKey:key nilIfEmpty:YES];
+            NSString *tempVal = [addressDict nonemptyStringForKey:key];
             if (tempVal)
                 [lineArray addObject:tempVal];
         }
@@ -176,14 +183,14 @@ webpages = _webpages;
         
         lineArray = [NSMutableArray array];
         for (NSString *key in [NSArray arrayWithObjects:@"city", @"state", @"country", nil]) {
-            NSString *tempVal = [addressDict stringForKey:key nilIfEmpty:YES];
+            NSString *tempVal = [addressDict nonemptyStringForKey:key];
             if (tempVal)
                 [lineArray addObject:tempVal];
         }
         if (lineArray.count)
             [addressArray addObject:[lineArray componentsJoinedByString:@", "]];
         
-        NSString *zip = [addressDict stringForKey:@"zip" nilIfEmpty:YES];
+        NSString *zip = [addressDict nonemptyStringForKey:@"zip"];
         if (zip)
             [addressArray addObject:zip];
         
@@ -195,19 +202,21 @@ webpages = _webpages;
 
 + (BOOL)isValidAddressDict:(id)aDict {
     return [aDict isKindOfClass:[NSDictionary class]]
-        && ([aDict stringForKey:@"display" nilIfEmpty:NO] || [aDict stringForKey:@"street" nilIfEmpty:NO]
-            || [aDict stringForKey:@"city" nilIfEmpty:NO] || [aDict stringForKey:@"state" nilIfEmpty:NO]
-            || [aDict stringForKey:@"zip" nilIfEmpty:NO] || [aDict stringForKey:@"country" nilIfEmpty:NO]);
+        && ([aDict stringForKey:@"display"] || [aDict stringForKey:@"street"]
+            || [aDict stringForKey:@"city"] || [aDict stringForKey:@"state"]
+            || [aDict stringForKey:@"zip"] || [aDict stringForKey:@"country"]);
 }
 
 + (BOOL)isValidOrganizationDict:(id)aDict {
     return [aDict isKindOfClass:[NSDictionary class]]
-        && ([aDict stringForKey:@"department" nilIfEmpty:NO] || [aDict stringForKey:@"organization" nilIfEmpty:NO]
-            || [aDict stringForKey:@"jobTitle" nilIfEmpty:NO]);
+        && ([aDict stringForKey:@"department"] || [aDict stringForKey:@"organization"]
+            || [aDict stringForKey:@"jobTitle"]);
 }
 
 + (BOOL)isValidContactDict:(id)aDict {
-    return [aDict isKindOfClass:[NSDictionary class]] && [aDict stringForKey:@"label" nilIfEmpty:NO] && [aDict objectForKey:@"value"];
+    return [aDict isKindOfClass:[NSDictionary class]]
+        && ([aDict stringForKey:@"label"] || [aDict stringForKey:@"title"])
+        && [aDict objectForKey:@"value"];
 }
 
 #pragma mark -
@@ -288,35 +297,50 @@ webpages = _webpages;
     _kgoPerson.birthday = self.birthday;
     _kgoPerson.photo = self.photo;
     
+    for (PersonOrganization *anOrg in _kgoPerson.organizations) {
+        [[CoreDataManager sharedManager] deleteObject:anOrg];
+    }
     _kgoPerson.organizations = nil;
+    
     for (NSDictionary *aDict in _organizations) {
-        //NSString *label = [aDict stringForKey:@"label" nilIfEmpty:YES]; // we are currently ignoring this in core data
+        //NSString *label = [aDict stringForKey:@"label"]; // we are currently ignoring this in core data
         NSDictionary *orgDict = [aDict dictionaryForKey:@"value"];
         if ([KGOPersonWrapper isValidOrganizationDict:orgDict]) {
             PersonOrganization *anOrganization = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:PersonOrganizationEntityName];
             anOrganization.person = _kgoPerson;
-            anOrganization.organization = [orgDict stringForKey:@"organization" nilIfEmpty:YES];
-            anOrganization.jobTitle = [orgDict stringForKey:@"jobTitle" nilIfEmpty:YES];
-            anOrganization.department = [orgDict stringForKey:@"department" nilIfEmpty:YES];
+            anOrganization.organization = [orgDict nonemptyStringForKey:@"organization"];
+            anOrganization.jobTitle = [orgDict nonemptyStringForKey:@"jobTitle"];
+            anOrganization.department = [orgDict nonemptyStringForKey:@"department"];
         }
     }
 
+    for (PersonOrganization *anAddress in _kgoPerson.addresses) {
+        [[CoreDataManager sharedManager] deleteObject:anAddress];
+    }
     _kgoPerson.addresses = nil;
+    
     for (NSDictionary *aDict in _addresses) {
-        NSString *label = [aDict stringForKey:@"label" nilIfEmpty:YES];
+        NSString *label = [aDict stringForKey:@"label"];
+        if (!label) {
+            label = [aDict stringForKey:@"title"];
+        }
         NSDictionary *addressDict = [aDict dictionaryForKey:@"value"];
         if ([KGOPersonWrapper isValidAddressDict:addressDict]) {
             PersonAddress *anAddress = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:PersonAddressEntityName];
             anAddress.person = _kgoPerson;
             anAddress.label = label;
-            anAddress.city = [addressDict stringForKey:@"city" nilIfEmpty:YES];
-            anAddress.country = [addressDict stringForKey:@"country" nilIfEmpty:YES];
-            anAddress.display = [addressDict stringForKey:@"display" nilIfEmpty:YES];
-            anAddress.state = [addressDict stringForKey:@"state" nilIfEmpty:YES];
-            anAddress.street = [addressDict stringForKey:@"street" nilIfEmpty:YES];
-            anAddress.street2 = [addressDict stringForKey:@"street2" nilIfEmpty:YES];
-            anAddress.zip = [addressDict stringForKey:@"zip" nilIfEmpty:YES];
+            anAddress.city = [addressDict nonemptyStringForKey:@"city"];
+            anAddress.country = [addressDict nonemptyStringForKey:@"country"];
+            anAddress.display = [addressDict nonemptyStringForKey:@"display"];
+            anAddress.state = [addressDict nonemptyStringForKey:@"state"];
+            anAddress.street = [addressDict nonemptyStringForKey:@"street"];
+            anAddress.street2 = [addressDict nonemptyStringForKey:@"street2"];
+            anAddress.zip = [addressDict nonemptyStringForKey:@"zip"];
         }
+    }
+    
+    for (PersonContact *aContact in _kgoPerson.contacts) {
+        [[CoreDataManager sharedManager] deleteObject:aContact];
     }
     
     NSMutableSet *allContacts = [NSMutableSet set];
@@ -343,8 +367,8 @@ webpages = _webpages;
 
 + (KGOPersonWrapper *)personWithUID:(NSString *)uid
 {
-	KGOPersonWrapper *person = [[CoreDataManager sharedManager] getObjectForEntity:KGOPersonEntityName attribute:@"uid" value:uid];
-	return person;
+    KGOPerson *person = [KGOPerson personWithIdentifier:uid];
+    return [[[KGOPersonWrapper alloc] initWithKGOPerson:person] autorelease];
 }
 
 + (NSDate *)recentlyViewedThreshold {
@@ -451,20 +475,21 @@ webpages = _webpages;
         }
     }
 
-
     if (self.organizations.count) {
+        // this assumes the address book only takes one job per person
+        // while our data model takes multiple
         NSDictionary *labelValue = [self.organizations objectAtIndex:0];
         NSDictionary *orgDict = [labelValue objectForKey:@"value"];
         if (orgDict) {
-            NSString *jobTitle = [orgDict stringForKey:@"jobTitle" nilIfEmpty:YES];
+            NSString *jobTitle = [orgDict nonemptyStringForKey:@"jobTitle"];
             if (jobTitle) {
                 [self setRecordValue:jobTitle forProperty:kABPersonJobTitleProperty expectedClass:[NSString class]];
             }
-            NSString *organization = [orgDict stringForKey:@"organization" nilIfEmpty:YES];
+            NSString *organization = [orgDict nonemptyStringForKey:@"organization"];
             if (organization) {
                 [self setRecordValue:organization forProperty:kABPersonOrganizationProperty expectedClass:[NSString class]];
             }
-            NSString *department = [orgDict stringForKey:@"department" nilIfEmpty:YES];
+            NSString *department = [orgDict nonemptyStringForKey:@"department"];
             if (department) {
                 [self setRecordValue:department forProperty:kABPersonDepartmentProperty expectedClass:[NSString class]];
             }
@@ -496,6 +521,9 @@ webpages = _webpages;
         return;
 
     NSString *label = [valueDict objectForKey:@"label"];
+    if (!label) {
+        label = [valueDict stringForKey:@"title"];
+    }
     NSString *value = [valueDict objectForKey:@"value"];
     
     // check value against user declared class
@@ -551,12 +579,15 @@ webpages = _webpages;
     }
     
     for (NSDictionary *aDict in addresses) {
-        NSString *label = [aDict stringForKey:@"label" nilIfEmpty:YES];
+        NSString *label = [aDict nonemptyStringForKey:@"label"];
+        if (!label) {
+            label = [aDict stringForKey:@"title"];
+        }
         NSDictionary *addressDict = [aDict dictionaryForKey:@"value"];
         if (addressDict) {
             NSMutableDictionary *convertedAddressDict = [NSMutableDictionary dictionary];
             for (NSString *aLabel in [valueMap allKeys]) {
-                NSString *value = [addressDict stringForKey:aLabel nilIfEmpty:YES];
+                NSString *value = [addressDict nonemptyStringForKey:aLabel];
                 if (value) {
                     [convertedAddressDict setObject:value forKey:[valueMap objectForKey:aLabel]];
                 }

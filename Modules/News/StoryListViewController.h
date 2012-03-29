@@ -1,54 +1,53 @@
 #import <UIKit/UIKit.h>
-#import "NewsDataManager.h"
+#import "KGOTableViewController.h"
+#import "NewsDataController.h"
 #import "KGOScrollingTabstrip.h"
 #import "KGOSearchBar.h"
-#import "KGOSearchDisplayController.h"
-#import "StoryDetailViewController.h"
-#import "KGOTableViewController.h"
-#import "MITThumbnailView.h"
 
 @class KGOSearchDisplayController;
+@class ThumbnailTableViewCell;
 @class NewsStory;
 
-@interface StoryListViewController : KGOTableViewController <KGOSearchBarDelegate, NewsDataDelegate, KGOScrollingTabstripDelegate, KGOSearchDisplayDelegate, MITThumbnailDelegate> {
-	UITableView *storyTable;
-    NewsStory *featuredStory;
-    NSArray *stories;
-    NSArray *categories;
-    NSString *activeCategoryId;
-    BOOL activeCategoryHasMoreStories;
+@interface StoryListViewController : KGOTableViewController <KGOSearchBarDelegate,
+NewsDataDelegate, 
+KGOScrollingTabstripSearchDelegate> {
     
-    NSArray *navButtons;
+	IBOutlet UITableView *_storyTable;
+    ThumbnailTableViewCell *_storyCell;
     
 	// Nav Scroll View
-	KGOScrollingTabstrip *navScrollView;
-	UIButton *leftScrollButton;
-	UIButton *rightScrollButton;  
-
+	IBOutlet KGOScrollingTabstrip *_navScrollView;
+	
+    // progress bar
+    IBOutlet UIView *_activityView;
+    IBOutlet UILabel *_loadingLabel;
+    IBOutlet UILabel *_lastUpdateLabel;
+    IBOutlet UIProgressView *_progressView;
+    
+    NewsStory *featuredStory;
+    NSString *activeCategoryId;
+    
 	// Search bits
 	NSInteger totalAvailableResults;
 	KGOSearchBar *theSearchBar;
-    KGOSearchDisplayController *searchController;
+    //KGOSearchDisplayController *searchController;
     NSInteger searchIndex;
 	
 	BOOL showingBookmarks;
-	
-    UIView *activityView;
-    
-    NSIndexPath *tempTableSelection;
-    BOOL lastRequestSucceeded;
 }
 
-@property (nonatomic, assign) NSInteger totalAvailableResults;
+@property (nonatomic, retain) IBOutlet ThumbnailTableViewCell *cell;
+
 @property (nonatomic, retain) NewsStory *featuredStory;
 @property (nonatomic, retain) NSArray *stories;
 @property (nonatomic, retain) NSArray *categories;
 @property (nonatomic, retain) NSString *activeCategoryId;
-@property (nonatomic, retain) NewsDataManager *dataManager;
+@property (nonatomic, retain) NewsDataController *dataManager;
 
-- (void)showSearchBar;
+@property (nonatomic, retain) NSArray *federatedSearchResults;
+@property (nonatomic, retain) NSString *federatedSearchTerms;
 
-- (void)pruneStories;
+//- (void)showSearchBar;
 - (void)switchToCategory:(NSString *)category;
 - (void)switchToBookmarks;
 

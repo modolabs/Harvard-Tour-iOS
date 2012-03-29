@@ -1,33 +1,25 @@
-//
-//  VideoDetailViewController.m
-//  Universitas
-//
-//  Created by Jim Kang on 4/5/11.
-//  Copyright 2011 Modo Labs. All rights reserved.
-//
-
 #import "VideoDetailViewController.h"
 #import "VideoWebViewController.h"
 #import "UIKit+KGOAdditions.h"
+#import "KGOLabel.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 
 typedef enum {
-    kVideoDetailScrollViewTag = 0x1890,
-    kVideoDetailTitleLabelTag,
+    kVideoDetailTitleLabelTag = 0x1890,
     kVideoDetailPlayerTag,
     kVideoDetailImageViewTag,
-    kVideoDetailDescriptionTag
+    kVideoDetailDescriptionTag,
+    kVideoDetailImageOverlayTag
 }
 VideoDetailSubviewTags;
 
 static const CGFloat kVideoDetailMargin = 10.0f;
 static const CGFloat kVideoTitleLabelHeight = 80.0f;
-static const CGFloat kVideoDescriptionLabelHeight = 192.0f;
+static const CGFloat extraScrollViewHeight = 100.0f;
 
 #pragma mark Private methods
 
 @interface VideoDetailViewController (Private)
-
-- (void)launchWebViewWithVideo;
 
 #pragma mark Tap actions
 - (void)videoImageTapped:(UIGestureRecognizer *)recognizer;
@@ -35,64 +27,59 @@ static const CGFloat kVideoDescriptionLabelHeight = 192.0f;
 #pragma mark Subview setup
 - (void)makeAndAddVideoImageViewToView:(UIView *)parentView;
 
+
 @end
 
 @implementation VideoDetailViewController (Private)
 
-- (void)launchWebViewWithVideo {
-    VideoWebViewController *webViewController = 
-    [[VideoWebViewController alloc] initWithURL:[NSURL URLWithString:self.video.url]];
-    [self.navigationController pushViewController:webViewController animated:YES];
-    [webViewController release];
-}
-
 #pragma mark Tap actions
-- (void)videoImageTapped:(UIGestureRecognizer *)recognizer {
-    [self launchWebViewWithVideo];
+- (void)videoImageTapped:(UIGestureRecognizer *)recognizer
+{
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:self.video, @"video", nil];
+    [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameWebViewDetail forModuleTag:self.video.moduleTag params:params];
 }
 
 #pragma mark Subview setup
+// TODO: this function is only used once with parentView being self.scrollView
+// don't code this to look like it's causing side effects somewhere else.
 - (void)makeAndAddVideoImageViewToView:(UIView *)parentView
 {
-    UIImage *image = 
-    [UIImage imageWithData:
-     [NSData dataWithContentsOfURL:[NSURL URLWithString:
-                                    self.video.stillFrameImageURLString]]];
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    imageView.tag = kVideoDetailImageViewTag;
-    CGRect imageViewFrame = imageView.frame;
-    imageViewFrame.origin.x = kVideoDetailMargin;
-    imageViewFrame.origin.y = kVideoDetailMargin * 2 + kVideoTitleLabelHeight;
     // Scale frame to fit in view.
     CGFloat idealFrameWidth = parentView.frame.size.width - 2 * kVideoDetailMargin;
-    if (imageViewFrame.size.width > idealFrameWidth) {
-        CGFloat idealToActualWidthProportion = idealFrameWidth / imageViewFrame.size.width;
-        imageViewFrame.size.width = idealFrameWidth;
-        imageViewFrame.size.height *= idealToActualWidthProportion;
-    }
-    imageView.frame = imageViewFrame;
+
+    // we will adjust the height after the image comes in
+    CGFloat probableHeight = floor(idealFrameWidth * 0.75);
+    CGFloat y = [self viewForTableHeader].frame.size.height + kVideoDetailMargin * 2;
+    CGRect imageFrame = CGRectMake(kVideoDetailMargin,
+                                   y,
+                                   //kVideoDetailMargin * 2 + kVideoTitleLabelHeight + bookmarkSharingView.frame.size.height, 
+                                   idealFrameWidth,
+                                   probableHeight);
+    MITThumbnailView *imageView = [[[MITThumbnailView alloc] initWithFrame:imageFrame] autorelease];
+    imageView.delegate = self;
+    imageView.tag = kVideoDetailImageViewTag;
+    imageView.imageURL = self.video.stillFrameImageURLString;
+    
     imageView.userInteractionEnabled = YES;
-    UITapGestureRecognizer *recognizer = 
-    [[UITapGestureRecognizer alloc] initWithTarget:self 
-                                         action:@selector(videoImageTapped:)];
+    UITapGestureRecognizer *recognizer = nil;
+    
+    recognizer = [[[UITapGestureRecognizer alloc] initWithTarget:self
+                                                          action:@selector(videoImageTapped:)] autorelease];
     recognizer.numberOfTapsRequired = 1;
     [imageView addGestureRecognizer:recognizer];
-    [recognizer release];
+    [imageView loadImage];
     
     UIImage *overlayImage = [UIImage imageWithPathName:@"modules/video/playoverlay"];
-    UIImageView *overlayView = [[UIImageView alloc] initWithImage:overlayImage];
-    CGRect overlayFrame = overlayView.frame;
-    overlayFrame.origin.x = 
-    parentView.frame.size.width / 2 - overlayFrame.size.width / 2;
-    overlayFrame.origin.y = 
-    imageViewFrame.size.height / 2 - overlayFrame.size.height / 2;
-    overlayView.frame = overlayFrame;
+    UIImageView *overlayView = [[[UIImageView alloc] initWithImage:overlayImage] autorelease];
+    overlayView.tag = kVideoDetailImageOverlayTag;
+    overlayView.center = CGPointMake(floor(imageView.bounds.size.width / 2),
+                                     floor(imageView.bounds.size.height / 2));
+
     [imageView addSubview:overlayView];
     
     [parentView addSubview:imageView];
-    [imageView release];
-    [overlayView release];
 }
+
 @end
 
 
@@ -101,71 +88,152 @@ static const CGFloat kVideoDescriptionLabelHeight = 192.0f;
 
 @synthesize video;
 @synthesize player;
+@synthesize dataManager;
+@synthesize section;
+@synthesize scrollView;
+@synthesize headerView = _headerView;
 
-// The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
-- (id)initWithVideo:(Video *)aVideo {
+- (void)thumbnail:(MITThumbnailView *)thumbnail didLoadData:(NSData *)data
+{
+    CGRect frame = thumbnail.frame;
+    CGSize imageSize = thumbnail.imageView.image.size;
+    frame.size.height = floor(thumbnail.frame.size.width * imageSize.height / imageSize.width);
+    thumbnail.frame = frame;
+    UIView *overlayView = [thumbnail viewWithTag:kVideoDetailImageOverlayTag];
+    overlayView.center = CGPointMake(floor(thumbnail.bounds.size.width / 2),
+                                     floor(thumbnail.bounds.size.height / 2));
+    [thumbnail bringSubviewToFront:overlayView];
+    [self setDescription];
+}
+
+- (id)initWithVideo:(Video *)aVideo andSection:(NSString *)videoSection
+{
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        // Custom initialization.
         self.video = aVideo;
+        self.section = videoSection;
     }
     return self;
 }
 
 - (void)loadView {
     [super loadView];
-    
-    NSAutoreleasePool *loadViewPool = [[NSAutoreleasePool alloc] init];
-    
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
-    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 640);
-    scrollView.tag = kVideoDetailScrollViewTag;
-    scrollView.scrollEnabled = YES;
-    [self.view addSubview:scrollView];
-    
-    UILabel *titleLabel = 
-    [[UILabel alloc] initWithFrame:
-     CGRectMake(kVideoDetailMargin, 
-                0, 
-                self.view.frame.size.width - 2 * kVideoDetailMargin, 
-                kVideoTitleLabelHeight)];
-    titleLabel.tag = kVideoDetailTitleLabelTag;
-    titleLabel.numberOfLines = 0;
-    titleLabel.font = [UIFont fontWithName:@"Georgia" size:22.0f];
-    titleLabel.text = video.title;
-    titleLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:titleLabel];
 
+    self.dataManager.delegate = self;
+    
+    _shareController = [[KGOShareButtonController alloc] initWithContentsController:self];
+    _shareController.shareTypes = KGOShareControllerShareTypeEmail | KGOShareControllerShareTypeFacebook | KGOShareControllerShareTypeTwitter;
+    
+    self.scrollView = [[[UIScrollView alloc] initWithFrame:self.view.bounds] autorelease];
+    self.scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+    UIView *headerView = [self viewForTableHeader];
+    headerView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
+    [scrollView addSubview:headerView];
+    
     // TODO: When non-YouTube feeds are worked in, if they have streams
     // playable in MPMoviePlayerController, put an embedded player here conditionally.
     [self makeAndAddVideoImageViewToView:scrollView];
     
-    UIView *videoImageView = [scrollView viewWithTag:kVideoDetailImageViewTag];
-        
-    UILabel *descriptionLabel = 
-    [[UILabel alloc] initWithFrame:
-     CGRectMake(kVideoDetailMargin, 
-                kVideoDetailMargin * 3 + kVideoTitleLabelHeight 
-                + videoImageView.frame.size.height,
-                self.view.frame.size.width - 2 * kVideoDetailMargin, 
-                kVideoDescriptionLabelHeight)];
-    descriptionLabel.tag = kVideoDetailDescriptionTag;
-    descriptionLabel.numberOfLines = 0;
-    descriptionLabel.font = [UIFont systemFontOfSize:15.0f];
-    descriptionLabel.text = video.videoDescription;
-    descriptionLabel.backgroundColor = [UIColor clearColor];
-    [scrollView addSubview:descriptionLabel];
+    [self setDescription];
 
-    [titleLabel release];
-    [descriptionLabel release];
-    [scrollView release];
+    // when coming from federated search we don't know which section we're in
+    if (self.section) {
+        // TODO: don't request this every time we're loaded
+        [self.dataManager requestVideoForSection:self.section videoID:self.video.videoID];
+    }
     
-    [loadViewPool release];
+    [self.view addSubview:scrollView];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.dataManager.delegate = self;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    self.dataManager.delegate = nil;
+}
+
+#pragma mark VideoDataDelegate
+
+- (void)dataManager:(VideoDataManager *)manager didReceiveVideo:(Video *)video
+{
+    [self setDescription];
+}
+
+- (void)setDescription
+{
+    UIView *videoImageView = [scrollView viewWithTag:kVideoDetailImageViewTag];
+    CGFloat width = self.view.bounds.size.width - 2 * kVideoDetailMargin;
+    CGFloat y = kVideoDetailMargin + videoImageView.frame.origin.y + videoImageView.frame.size.height;
+
+    UILabel *descriptionLabel = (UILabel *)[scrollView viewWithTag:kVideoDetailDescriptionTag];
+    UIFont *font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyBodyText];
+    if (!descriptionLabel) {
+        descriptionLabel = [KGOLabel multilineLabelWithText:video.videoDescription
+                                                       font:font
+                                                      width:width];
+        descriptionLabel.tag = kVideoDetailDescriptionTag;
+        [scrollView addSubview:descriptionLabel];
+
+    } else {
+        descriptionLabel.text = video.videoDescription;
+        CGRect rect = descriptionLabel.frame;
+        rect.size.height = [descriptionLabel.text sizeWithFont:font
+                                             constrainedToSize:CGSizeMake(rect.size.width, 10000)
+                                                 lineBreakMode:UILineBreakModeWordWrap].height;
+        descriptionLabel.frame = rect;
+    }
+    descriptionLabel.frame = CGRectMake(kVideoDetailMargin, y, width, descriptionLabel.frame.size.height);
+    
+    scrollView.contentSize = CGSizeMake(self.view.bounds.size.width,
+                                        y + kVideoDetailMargin + descriptionLabel.frame.size.height);
+    scrollView.scrollEnabled = YES;
+}
+
+- (UIView *)viewForTableHeader
+{
+    if (!self.headerView) {
+        [[NSBundle mainBundle] loadNibNamed:@"KGODetailPageHeaderView" owner:self options:nil];
+        self.headerView.delegate = self;
+        self.headerView.showsBookmarkButton = YES;
+        self.headerView.showsShareButton = YES;
+        self.headerView.showsSubtitle = NO;
+        // TODO: this will be broken if we add pageup/pagedown to this view
+        self.headerView.detailItem = self.video; 
+    }
+    
+    return self.headerView;
+}
+
+- (void)headerView:(KGODetailPageHeaderView *)headerView shareButtonPressed:(id)sender
+{
+    _shareController.actionSheetTitle = NSLocalizedString(@"VIDEO_SHARE_THIS_VIDEO", @"Share Video");
+    _shareController.shareTitle = video.title;
+    //_shareController.shareBody = video.videoDescription;
+    _shareController.shareURL = video.url;
+    
+    [_shareController shareInView:self.view];
+}
+
+- (void)headerViewFrameDidChange:(KGODetailPageHeaderView *)headerView
+{
+    CGFloat y = [self viewForTableHeader].frame.size.height + kVideoDetailMargin * 2;
+    UIView *videoImageView = [scrollView viewWithTag:kVideoDetailImageViewTag];
+    CGRect frame = videoImageView.frame;
+    frame.origin.y = y;
+    videoImageView.frame = frame;
+    [self setDescription];
+}
+
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
+- (void)viewDidLoad {  
     [super viewDidLoad];
+
+    self.navigationItem.title = NSLocalizedString(@"VIDEO_VIEW_THIS_VIDEO", @"View Video");
+    
     [self.player play];
 }
 
@@ -192,8 +260,10 @@ static const CGFloat kVideoDescriptionLabelHeight = 192.0f;
 
 
 - (void)dealloc {
+    [dataManager release];
     [player release];
     [video release];
+    self.scrollView = nil;
     [super dealloc];
 }
 

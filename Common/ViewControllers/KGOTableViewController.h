@@ -28,6 +28,10 @@ typedef void (^CellManipulator)(UITableViewCell *);
  * which isn't any different in practice.
  */
 - (CellManipulator)tableView:(UITableView *)tableView manipulatorForCellAtIndexPath:(NSIndexPath *)indexPath;
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath;
+
+// forwarded UIScrollView methods
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
 
 @end
 
@@ -50,7 +54,7 @@ typedef void (^CellManipulator)(UITableViewCell *);
  */
 @interface KGOTableViewController : UIViewController <UITableViewDelegate, KGOTableViewDataSource> {
 	KGOTableController *_tableController;
-    UITableView *_tableView;
+    IBOutlet UITableView *_tableView;
 
 	BOOL _didInitWithStyle;
 	UITableViewStyle _initStyle;

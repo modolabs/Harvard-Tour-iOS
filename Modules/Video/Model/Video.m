@@ -1,9 +1,7 @@
-// 
-//  Video.m
-//  Universitas
-//
-
 #import "Video.h"
+#import "Foundation+KGOAdditions.h"
+#import "CoreDataManager.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 
 #pragma mark Private methods
 
@@ -11,7 +9,6 @@
 
 + (NSDate *)dateFromPublishedDictionary:(NSDictionary *)dictionary;
 + (NSSet *)tagsFromTagsDictionary:(NSDictionary *)dictionary;
-- (void)setUpTranslationDictionary;
 
 @end
 
@@ -30,16 +27,6 @@
     // TODO.
     return nil;
 }
-
-- (void)setUpTranslationDictionary {
-    self.objectKeyCounterpartsForAPIKeys = 
-    [NSDictionary dictionaryWithObjectsAndKeys:
-     @"videoID", @"id",
-     @"videoDescription", @"description",
-     @"thumbnailURLString", @"image",
-     @"stillFrameImageURLString", @"stillFrameImage",
-     nil];
-}    
 
 @end
 
@@ -62,57 +49,83 @@
 @dynamic stillFrameImageData;
 @dynamic thumbnailImageData;
 @dynamic source;
+@dynamic streamingURL;
+@dynamic publishedTimeStamp;
+@dynamic date;
+@dynamic sortOrder;
+@dynamic bookmarked;
+@dynamic downloaded;
 
-@synthesize objectKeyCounterpartsForAPIKeys;
+@synthesize moduleTag;
+@synthesize thumbView;
 
-- (id)initWithEntity:(NSEntityDescription *)entity insertIntoManagedObjectContext:(NSManagedObjectContext *)context {
-    self = [super initWithEntity:entity insertIntoManagedObjectContext:context];
-    if (self) {
-        [self setUpTranslationDictionary];
-    }
-    return self;
-}
+- (void)dealloc
+{
+    self.moduleTag = nil;
+    self.thumbView.delegate = nil;
+    self.thumbView = nil;
 
-- (void)dealloc {
-    [objectKeyCounterpartsForAPIKeys release];
     [super dealloc];
 }
 
-- (void)setUpWithDictionary:(NSDictionary *)dictionaryFromAPI {
-    
-    for (NSString *APIKey in dictionaryFromAPI) {
-        NSString *keyToSet = [self.objectKeyCounterpartsForAPIKeys objectForKey:APIKey];
-        if (!keyToSet) {
-            keyToSet = APIKey;
-        }
-        if ([keyToSet isEqualToString:@"published"]) {
-            self.published = [[self class] dateFromPublishedDictionary:
-                              [dictionaryFromAPI objectForKey:APIKey]];
-        }
-        else if ([keyToSet isEqualToString:@"tags"]) {
-            self.tags = [[self class] tagsFromTagsDictionary:
-                         [dictionaryFromAPI objectForKey:APIKey]];
-        }
-        else if ([keyToSet isEqualToString:@"videoID"]) {
-            id value = [dictionaryFromAPI valueForKey:APIKey];
-            if ([value isKindOfClass:[NSString class]]) {
-                self.videoID = value;
-            }
-            else if ([value isKindOfClass:[NSNumber class]]) {
-                self.videoID = [value stringValue];
-            }
-            else {
-                NSAssert(NO, @"Trying to set videoID to a value with an invalid type.");
-            }
-        }
-        else {
-            id value = [dictionaryFromAPI valueForKey:APIKey];
-            if ((value) && (![value isKindOfClass:[NSNull class]])) {
-                [self setValue:[dictionaryFromAPI valueForKey:APIKey] 
-                        forKey:keyToSet];
-            }
-        }
-    }        
++ (Video *)videoWithID:(NSString *)identifier
+{
+    Video *video = [[CoreDataManager sharedManager] uniqueObjectForEntity:@"Video"
+                                                                attribute:@"videoID"
+                                                                    value:identifier];
+    if (!video) {
+        video = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:@"Video"];
+        video.videoID = identifier;
+    }
+    return video;
+}
+
++ (Video *)videoWithDictionary:(NSDictionary *)dictionary
+{
+    Video *result = nil;
+    NSString *videoID = [dictionary nonemptyForcedStringForKey:@"id"];
+    if (videoID) {
+        result = [Video videoWithID:videoID];
+        [result updateWithDictionary:dictionary];
+    }
+    return result;
+}
+
+- (void)updateWithDictionary:(NSDictionary *)dictionary
+{
+    self.title = [dictionary stringForKey:@"title"];
+    self.author = [dictionary stringForKey:@"author"];
+    self.stillFrameImageURLString = [dictionary nonemptyStringForKey:@"stillFrameImage"];
+    self.thumbnailURLString = [dictionary nonemptyStringForKey:@"image"];
+    self.duration = [dictionary numberForKey:@"duration"];
+    self.videoDescription = [dictionary nonemptyStringForKey:@"description"];
+    self.url = [dictionary nonemptyStringForKey:@"url"];
+    self.mobileURL = [dictionary stringForKey:@"mobileURL"];
+    NSDictionary *dateDict = [dictionary dictionaryForKey:@"published"];
+    if (dateDict) {
+        self.published = [Video dateFromPublishedDictionary:dateDict];
+    }
+    NSDictionary *tagsDict = [dictionary dictionaryForKey:@"tags"];
+    if (tagsDict) {
+        self.tags = [Video tagsFromTagsDictionary:tagsDict];
+    }
+}
+
+- (void)thumbnail:(MITThumbnailView *)thumbnail didLoadData:(NSData *)data
+{
+    self.thumbnailImageData = data;
+}
+
+#pragma mark - KGOSearchResult
+
+- (NSString *)identifier
+{
+    return self.videoID;
+}
+
+- (NSString *)subtitle
+{
+    return [NSString stringWithFormat:@"(%@) %@", [self durationString], self.videoDescription];
 }
 
 - (NSString *)durationString {
@@ -128,6 +141,41 @@
                           displayHours, durationString];
     }
     return durationString;
+}
+
+- (BOOL)isBookmarked {
+    return [self.bookmarked boolValue];
+}
+
+- (void)addBookmark {
+    if (![self isBookmarked]) {
+        self.bookmarked = [NSNumber numberWithBool:YES];
+    }
+}
+
+- (void)removeBookmark {
+    if ([self isBookmarked]) {
+        self.bookmarked = [NSNumber numberWithBool:NO];
+    }
+}
+
+- (BOOL)didGetSelected:(id)selector
+{
+    NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                            self, @"video",
+                            self.source, @"section",
+                            nil];
+    return [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail
+                                  forModuleTag:self.moduleTag
+                                        params:params];
+}
+
+- (void)willSave
+{
+    if ([self isDeleted]) {
+        DLog(@"video \"%@\" is deleted", self.title);
+        self.thumbView.delegate = nil;
+    }
 }
 
 @end

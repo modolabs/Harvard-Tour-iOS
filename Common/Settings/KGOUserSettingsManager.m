@@ -1,7 +1,24 @@
+#import "KGOAppDelegate+ModuleAdditions.h"
 #import "KGOUserSettingsManager.h"
 #import "KGOUserSetting.h"
+#import "Foundation+KGOAdditions.h"
+#import "KGOModule.h"
 
-NSString * const KGOUserSettingPreferenceKey = @"ModuleSettings";
+// NSUserDefaults
+NSString * const KGOUserSettingPreferenceKey = @"KGOSettings";
+
+// these strings appear as keys in Settings.plist
+NSString * const KGOUserSettingKeyFont = @"Font";
+NSString * const KGOUserSettingKeyFontSize = @"FontSize";
+NSString * const KGOUserSettingKeyPrimaryModules = @"PrimaryModules";
+NSString * const KGOUserSettingKeySecondaryModules = @"SecondaryModules";
+NSString * const KGOUserSettingKeyResetApp = @"ResetApp";
+// this string is independent from Settings.plist
+NSString * const KGOUserSettingKeyLogin = @"Login";
+
+#ifdef DEBUG
+NSString * const KGOUserSettingKeyServer = @"ServerSelection";
+#endif
 
 @interface KGOUserSetting (Setters)
 
@@ -54,6 +71,8 @@ NSString * const KGOUserSettingPreferenceKey = @"ModuleSettings";
 
 
 @implementation KGOUserSettingsManager
+
+@synthesize moduleSortOrder, settings = _settings;
 
 + (KGOUserSettingsManager *)sharedManager {
 	static KGOUserSettingsManager *s_sharedManager = nil;
@@ -135,6 +154,148 @@ NSString * const KGOUserSettingPreferenceKey = @"ModuleSettings";
     
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:KGOUserSettingPreferenceKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:KGOUserPreferencesDidChangeNotification
+                                                        object:self];
+}
+
+- (void)setModuleOrder:(NSArray *)order primary:(BOOL)primary
+{
+    // remove all modules in incoming array and move to the end
+    // since primary and secondary are processed separately
+    NSMutableArray *oldOrder = [[self.moduleSortOrder mutableCopy] autorelease];
+    for (NSDictionary *moduleData in order) {
+        ModuleTag *moduleTag = [moduleData objectForKey:@"tag"];
+        [oldOrder removeObject:moduleTag];
+        [oldOrder addObject:moduleTag];
+    }
+    self.moduleSortOrder = oldOrder;
+    DLog(@"%@", self.moduleSortOrder);
+    
+    NSString *settingKey = primary ? KGOUserSettingKeyPrimaryModules : KGOUserSettingKeySecondaryModules;
+    KGOUserSetting *setting = [self settingForKey:settingKey];
+    [setting _setOptions:order];
+    setting.selectedValue = order;
+}
+
+- (BOOL)isModuleHidden:(ModuleTag *)tag primary:(BOOL)primary
+{
+    NSString *settingKey = primary ? KGOUserSettingKeyPrimaryModules : KGOUserSettingKeySecondaryModules;
+
+    KGOUserSetting *setting = [self settingForKey:settingKey];
+    for (NSDictionary *moduleDict in setting.options) {
+        if ([tag isEqualToString:[moduleDict stringForKey:@"tag"]]) {
+            return [moduleDict boolForKey:@"hidden"];
+        }
+    }
+    return NO;
+}
+
+- (void)toggleModuleHidden:(ModuleTag *)tag primary:(BOOL)primary
+{
+    NSString *settingKey = primary ? KGOUserSettingKeyPrimaryModules : KGOUserSettingKeySecondaryModules;
+    
+    KGOUserSetting *setting = [self settingForKey:settingKey];
+    NSInteger numOptions = setting.options.count;
+    for (NSInteger i = 0; i < numOptions; i++) {
+        NSDictionary *moduleDict = [setting.options dictionaryAtIndex:i];
+        if ([tag isEqualToString:[moduleDict stringForKey:@"tag"]]) {
+            BOOL hiddenNow = ![moduleDict boolForKey:@"hidden"];
+
+            KGOModule *module = [KGO_SHARED_APP_DELEGATE() moduleForTag:tag];
+            module.hidden = hiddenNow;
+            
+            NSMutableDictionary *mutableDict = [[moduleDict mutableCopy] autorelease];
+            [mutableDict setObject:[NSNumber numberWithBool:hiddenNow] forKey:@"hidden"];
+            NSMutableArray *mutableOptions = [[setting.options mutableCopy] autorelease];
+            [mutableOptions removeObjectAtIndex:i];
+            [mutableOptions insertObject:mutableDict atIndex:i];
+            [setting _setOptions:mutableOptions];
+            setting.selectedValue = mutableOptions;
+            return;
+        }
+    }
+}
+
+- (void)updateModuleSettingsFromConfig:(NSArray *)moduleConfig
+{
+    NSString *filename = [[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"plist"];
+
+    __block NSDictionary *availableSettings = [NSDictionary dictionaryWithContentsOfFile:filename];
+    __block NSDictionary *savedSettings = [[NSUserDefaults standardUserDefaults] objectForKey:KGOUserSettingPreferenceKey];
+    __block NSMutableArray *moduleOrder = [NSMutableArray array];
+    
+    KGOUserSetting* (^prepareModules)(NSString *, BOOL) = ^(NSString *settingKey, BOOL isSecondary) {
+        KGOUserSetting *aSetting = [self settingForKey:settingKey];
+        NSDictionary *defaultData = [availableSettings dictionaryForKey:settingKey];
+        // whether this is present in Settings.plist determines whether or not
+        // we want to show this in the settings module
+        if (defaultData) {
+            if (!aSetting) {
+                aSetting = [[[KGOUserSetting alloc] init] autorelease];
+                [aSetting _setKey:settingKey];
+                [aSetting _setTitle:[defaultData objectForKey:@"title"]];
+            }
+            
+            NSArray *moduleSettings = [savedSettings arrayForKey:settingKey];
+            
+            if (!moduleSettings) {
+                NSMutableArray *tempSettings = [NSMutableArray array];
+                
+                for (NSDictionary *moduleData in moduleConfig) {
+                    NSString *moduleId = [moduleData nonemptyStringForKey:@"id"];
+                    if ([moduleId isEqualToString:@"home"]) {
+                        continue;
+                    }
+
+                    ModuleTag *tag = [moduleData nonemptyStringForKey:@"tag"];
+                    if (moduleId && tag) {
+                        BOOL secondary = NO;
+
+                        id homeConfig = [moduleData objectForKey:@"home"];
+                        if (homeConfig) {
+                            if ([homeConfig isKindOfClass:[NSNumber class]] && ![homeConfig boolValue]) {
+                                continue;
+                            }
+                            secondary = [homeConfig isKindOfClass:[NSDictionary class]] 
+                                && [[homeConfig stringForKey:@"type"] isEqualToString:@"secondary"];
+                            
+                        } else {
+                            secondary = [moduleData boolForKey:@"secondary"];
+                        }
+                        
+                        if (isSecondary == secondary) {
+                            [tempSettings addObject:moduleData];
+                            [moduleOrder addObject:tag];
+                        }
+                    }
+                }
+                
+                moduleSettings = tempSettings;
+                
+            } else {
+                for (NSDictionary *moduleData in moduleSettings) {
+                    ModuleTag *tag = [moduleData nonemptyStringForKey:@"tag"];
+                    [moduleOrder addObject:tag];
+                }
+            }
+            
+            [aSetting _setOptions:moduleSettings];
+        }
+        return aSetting;
+    };
+    
+    KGOUserSetting *setting = prepareModules(KGOUserSettingKeyPrimaryModules, NO);
+    if (setting) {
+        [self.settings setObject:setting forKey:KGOUserSettingKeyPrimaryModules];
+    }
+    
+    setting = prepareModules(KGOUserSettingKeySecondaryModules, YES);
+    if (setting) {
+        [self.settings setObject:setting forKey:KGOUserSettingKeySecondaryModules];
+    }
+    
+    self.moduleSortOrder = [NSArray arrayWithArray:moduleOrder];
 }
 
 - (id)init
@@ -146,35 +307,79 @@ NSString * const KGOUserSettingPreferenceKey = @"ModuleSettings";
         NSDictionary *availableSettings = [NSDictionary dictionaryWithContentsOfFile:filename];
         NSDictionary *savedSettings = [[NSUserDefaults standardUserDefaults] objectForKey:KGOUserSettingPreferenceKey];
 
-        __block NSMutableDictionary *theSettings = _settings;
-        [availableSettings enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            KGOUserSetting *aSetting = [[[KGOUserSetting alloc] init] autorelease];
-            [aSetting _setKey:key];
-            [aSetting _setTitle:[obj objectForKey:@"title"]];
+        DLog(@"available settings %@", availableSettings);
+        DLog(@"saved user settings %@", savedSettings);
 
-            NSArray *options = [obj objectForKey:@"options"];
-            [aSetting _setOptions:options];
-            
-            NSNumber *unrestricted = [obj objectForKey:@"unrestricted"];
-            if (unrestricted) {
-                [aSetting _setUnrestricted:[unrestricted boolValue]];
-            }
-
-            for (NSDictionary *optionData in options) {
-                NSNumber *isDefault = [optionData objectForKey:@"default"];
-                if (isDefault && [isDefault boolValue]) {
-                    [aSetting _setDefaultValue:optionData];
-                    break;
+        NSArray *stringSettings = [NSArray arrayWithObjects:
+                                   KGOUserSettingKeyFont,
+                                   KGOUserSettingKeyFontSize,
+                                   KGOUserSettingKeyResetApp, nil];
+        for (NSString *key in stringSettings) {
+            NSDictionary *settingData = [availableSettings dictionaryForKey:key];
+            if (settingData) {
+                KGOUserSetting *aSetting = [[[KGOUserSetting alloc] init] autorelease];
+                [aSetting _setKey:key];
+                [aSetting _setTitle:[settingData objectForKey:@"title"]];
+                [aSetting _setOptions:[settingData objectForKey:@"options"]];
+                for (NSDictionary *optionData in aSetting.options) {
+                    NSNumber *isDefault = [optionData objectForKey:@"default"];
+                    if (isDefault && [isDefault boolValue]) {
+                        [aSetting _setDefaultValue:optionData];
+                        break;
+                    }
                 }
+                
+                id savedSetting = [savedSettings objectForKey:key];
+                if (savedSetting) {
+                    aSetting.selectedValue = savedSetting;
+                } else {
+                    aSetting.selectedValue = aSetting.defaultValue;
+                }
+                
+                [_settings setObject:aSetting forKey:key];
             }
-            
-            id savedSetting = [savedSettings objectForKey:key];
-            if (savedSetting) {
-                aSetting.selectedValue = savedSetting;
-            }
+        }
 
-            [theSettings setObject:aSetting forKey:key];
-        }];
+#ifdef DEBUG
+        KGOUserSetting *serverSetting = [[[KGOUserSetting alloc] init] autorelease];
+        [serverSetting _setKey:KGOUserSettingKeyServer];
+        [serverSetting _setTitle:NSLocalizedString(@"CORE_SETTINGS_SERVER_TITLE", @"Server")];
+        [serverSetting _setUnrestricted:NO];
+        
+        NSArray *configTitles = [NSArray arrayWithObjects:
+                                 @"Development", @"Testing", @"Staging", @"Production", nil];
+        NSDictionary *configDict = [KGO_SHARED_APP_DELEGATE() appConfig];
+        NSDictionary *servers = [configDict dictionaryForKey:KGOAppConfigKeyServers];
+        
+        NSMutableArray *options = [NSMutableArray array];
+        
+        for (NSString *configTitle in configTitles) {
+            NSDictionary *serverConfig = [servers dictionaryForKey:configTitle];
+            NSString *host = [serverConfig nonemptyStringForKey:@"Host"];
+            if (host) {
+                NSString *pathExtension = [serverConfig nonemptyStringForKey:@"PathExtension"];
+                if (pathExtension) {
+                    host = [NSString stringWithFormat:@"%@/%@", host, pathExtension];
+                }
+                [options addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                                    configTitle, @"id",
+                                    configTitle, @"title",
+                                    host, @"subtitle", nil]];
+            }
+        }
+
+        [serverSetting _setOptions:options];
+
+        // default to prod server (most likely to be up on first build?)
+        [serverSetting _setDefaultValue:[options objectAtIndex:0]];
+        
+        id savedSetting = [savedSettings objectForKey:KGOUserSettingKeyServer];
+        if (savedSetting) {
+            serverSetting.selectedValue = savedSetting;
+        }
+        
+        [_settings setObject:serverSetting forKey:KGOUserSettingKeyServer];
+#endif
     }
     return self;
 }

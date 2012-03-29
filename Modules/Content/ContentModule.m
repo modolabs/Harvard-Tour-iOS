@@ -1,6 +1,5 @@
 #import "ContentModule.h"
 #import "ContentTableViewController.h"
-#import "ContentWebViewController.h"
 #import "Foundation+KGOAdditions.h"
 
 @implementation ContentModule
@@ -8,18 +7,24 @@
 - (UIViewController *)modulePage:(NSString *)pageName params:(NSDictionary *)params {
     UIViewController *vc = nil;
     if ([pageName isEqualToString:LocalPathPageNameHome]) {
-        vc = [[[ContentTableViewController alloc] initWithStyle:UITableViewStyleGrouped moduleTag:self.tag] autorelease];
+        ContentTableViewController *cvc = [[[ContentTableViewController alloc] init] autorelease];
+        cvc.moduleTag = self.tag;
+        cvc.title = self.shortName;
+        cvc.currentPhase = RequestPhasePages;
+        vc = cvc;
         
     } else if ([pageName isEqualToString:LocalPathPageNameDetail]) {
-        ContentWebViewController * webViewController = [[[ContentWebViewController alloc] init] autorelease];
-        KGORequest *feedRequest = [[KGORequestManager sharedManager] requestWithDelegate:webViewController                          
-                                                                                  module:self.tag                            
-                                                                                    path:@"getFeed"                           
-                                                                                  params:params];
-        
-        [feedRequest connect];
-        
-        vc = webViewController;
+        NSString *key = [params nonemptyStringForKey:@"key"];
+        NSString *group = [params nonemptyStringForKey:@"group"];
+        if (key || group) {
+            ContentTableViewController *cvc = [[[ContentTableViewController alloc] init] autorelease];
+            cvc.moduleTag = self.tag;
+            cvc.feedKey = key;
+            cvc.feedGroup = group;
+            cvc.title = [params stringForKey:@"title"];
+            cvc.currentPhase = [params numberForKey:@"phase"].intValue;
+            vc = cvc;
+        }
     }
     return vc;
 }

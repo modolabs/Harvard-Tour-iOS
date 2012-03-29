@@ -1,17 +1,16 @@
 #import "MapHomeViewController.h"
-#import "KGOCategoryListViewController.h"
+#import "MapCategoryListViewController.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "MapModule.h"
+#import "MapModel.h"
 #import "MapSettingsViewController.h"
 #import "KGOBookmarksViewController.h"
 #import "KGOTheme.h"
 #import "Foundation+KGOAdditions.h"
-#import "KGOMapCategory.h"
 #import "CoreDataManager.h"
 #import "MapKit+KGOAdditions.h"
 #import "UIKit+KGOAdditions.h"
 #import "KGOToolbar.h"
-#import "KGOPlacemark.h"
 #import "KGOSidebarFrameViewController.h"
 #import "KGOSegmentedControl.h"
 #import <QuartzCore/QuartzCore.h>
@@ -19,9 +18,10 @@
 @implementation MapHomeViewController
 
 @synthesize searchTerms, searchOnLoad, searchParams, mapModule, selectedPopover;
+@synthesize mapView;
 
 - (void)mapTypeDidChange:(NSNotification *)aNotification {
-    _mapView.mapType = [[aNotification object] integerValue];
+    self.mapView.mapType = [[aNotification object] integerValue];
 }
 
 - (void)setupToolbarButtons {
@@ -40,8 +40,8 @@
     _settingsButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [_settingsButton setImage:[UIImage imageWithPathName:@"modules/map/map-button-settings"] forState:UIControlStateNormal];
         
-    UIImage *normalImage = [UIImage imageWithPathName:@"common/secondary-toolbar-button"];
-    UIImage *pressedImage = [UIImage imageWithPathName:@"common/secondary-toolbar-button-pressed"];
+    UIImage *normalImage = [UIImage imageWithPathName:@"common/toolbar-button"];
+    UIImage *pressedImage = [UIImage imageWithPathName:@"common/toolbar-button-pressed"];
     CGRect frame = CGRectZero;
     if (normalImage) {
         frame.size = normalImage.size;
@@ -105,14 +105,14 @@
     
     self.title = self.mapModule.shortName;
 
-    _mapView.mapType = [[NSUserDefaults standardUserDefaults] integerForKey:MapTypePreference];
-    [_mapView centerAndZoomToDefaultRegion];
+    self.mapView.mapType = [[NSUserDefaults standardUserDefaults] integerForKey:MapTypePreference];
+    [self.mapView centerAndZoomToDefaultRegion];
     if (self.annotations.count) { // these would have been set before _mapView was set up
-        [_mapView addAnnotations:self.annotations];
+        [self.mapView addAnnotations:self.annotations];
         // TODO: rewrite regionForAnnotations: to return a success value
         MKCoordinateRegion region = [MapHomeViewController regionForAnnotations:self.annotations restrictedToClass:NULL];
         if (region.center.latitude && region.center.longitude) {
-            _mapView.region = region;
+            self.mapView.region = region;
         }
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mapTypeDidChange:) name:MapTypePreferenceChanged object:nil];
@@ -126,13 +126,14 @@
     }
 
     // set up search bar
-    _searchBar.placeholder = NSLocalizedString(@"Map Search Placeholder", nil);
+    _searchBar.placeholder = NSLocalizedString(@"MAP_SEARCH_PLACEHOLDER", @"Map Search Placeholder");
 	_searchController = [[KGOSearchDisplayController alloc] initWithSearchBar:_searchBar delegate:self contentsController:self];
     if (self.searchTerms) {
         _searchBar.text = self.searchTerms;
     }
     if (self.searchOnLoad) {
         [_searchController executeSearch:self.searchTerms params:self.searchParams];
+        [_searchController reloadSearchResultsTableView];
     }
 }
 
@@ -168,7 +169,8 @@
     }
     
     [_pendingPlacemark release];
-    _mapView.delegate = nil;
+    self.mapView.delegate = nil;
+    self.mapView = nil;
     [_annotations release];
 	[_searchController release];
     [_toolbarDropShadow release];
@@ -182,31 +184,11 @@
 - (void)setAnnotations:(NSArray *)annotations {
     [_annotations release];
     _annotations = [annotations retain];
-    
-    if (_annotations.count == 1) {
-        id<MKAnnotation> annotation = [_annotations lastObject];
-        if ([annotation isKindOfClass:[KGOPlacemark class]] && !annotation.coordinate.latitude && !annotation.coordinate.longitude) {
-            [_pendingPlacemark release];
-            _pendingPlacemark = [annotation retain];
-            
-            // TODO: server needs a detail API
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    [_pendingPlacemark identifier], @"id",
-                                    _pendingPlacemark.category.identifier, @"category",
-                                    nil];
-            _placemarkInfoRequest = [[KGORequestManager sharedManager] requestWithDelegate:self
-                                                                                    module:self.mapModule.tag
-                                                                                      path:@"detail"
-                                                                                    params:params];
-            [_placemarkInfoRequest connect];
-            return;
-        }
-    }
 
-    if (_mapView) {
-        [_mapView removeAnnotations:_mapView.annotations];
+    if (self.mapView) {
+        [self.mapView removeAnnotations:self.mapView.annotations];
         if (_annotations) {
-            [_mapView addAnnotations:_annotations];
+            [self.mapView addAnnotations:_annotations];
         }
     }
 }
@@ -221,12 +203,12 @@
 - (void)request:(KGORequest *)request didReceiveResult:(id)result
 {
     if (_pendingPlacemark) {
-        NSString *incomingID = [result stringForKey:@"id" nilIfEmpty:YES];
+        NSString *incomingID = [result nonemptyStringForKey:@"id"];
         if ([incomingID isEqualToString:_pendingPlacemark.identifier]) {
             [_pendingPlacemark updateWithDictionary:result];
             DLog(@"%@", _pendingPlacemark);
-            [_mapView removeAnnotations:[_mapView annotations]];
-            [_mapView addAnnotation:_pendingPlacemark];
+            [self.mapView removeAnnotations:[self.mapView annotations]];
+            [self.mapView addAnnotation:_pendingPlacemark];
         }
         [_pendingPlacemark release];
         _pendingPlacemark = nil;
@@ -255,15 +237,13 @@
 }
 
 - (IBAction)browseButtonPressed {
-	KGOCategoryListViewController *categoryVC = [[[KGOCategoryListViewController alloc] init] autorelease];
-    categoryVC.categoryEntityName = MapCategoryEntityName;
-    NSPredicate *pred = [NSPredicate predicateWithFormat:@"parentCategory = nil AND browsable = YES"];
+	MapCategoryListViewController *categoryVC = [[[MapCategoryListViewController alloc] init] autorelease];
+    categoryVC.dataManager = self.mapModule.dataManager;
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"topLevel = YES"];
     NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sortOrder" ascending:YES]];
-    categoryVC.categories = [[CoreDataManager sharedManager] objectsForEntity:MapCategoryEntityName
-                                                            matchingPredicate:pred
-                                                              sortDescriptors:sortDescriptors];
-    categoryVC.categoriesRequest = [self.mapModule subcategoriesRequestForCategory:nil
-                                                                          delegate:categoryVC];
+    categoryVC.listItems = [[CoreDataManager sharedManager] objectsForEntity:MapCategoryEntityName
+                                                           matchingPredicate:pred
+                                                             sortDescriptors:sortDescriptors];
     
     UINavigationController *navC = [[[UINavigationController alloc] initWithRootViewController:categoryVC] autorelease];
     navC.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -317,7 +297,7 @@
 
 - (IBAction)settingsButtonPressed {
 	MapSettingsViewController *vc = [[[MapSettingsViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
-    vc.title = NSLocalizedString(@"Map Settings", nil);
+    vc.title = NSLocalizedString(@"MAP_SETTINGS_TITLE", @"Map Settings");
     vc.view.backgroundColor = [[KGOTheme sharedTheme] backgroundColorForApplication];
     
     UINavigationController *navC = [[[UINavigationController alloc] initWithRootViewController:vc] autorelease];
@@ -352,6 +332,7 @@
             _locationManager.distanceFilter = kCLDistanceFilterNone;
             _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
             _locationManager.delegate = self;
+       
         }
         _userLocation = [[_locationManager location] retain];
     }
@@ -363,6 +344,7 @@
         [_locationManager startUpdatingLocation];
     }
 }
+
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
@@ -394,7 +376,7 @@
         locationPreferences = [[appDelegate appConfig] dictionaryForKey:@"Location"];
     }
     
-    NSString *latLonString = [locationPreferences stringForKey:@"DefaultCenter" nilIfEmpty:YES];
+    NSString *latLonString = [locationPreferences nonemptyStringForKey:@"DefaultCenter"];
     if (latLonString) {
         NSArray *parts = [latLonString componentsSeparatedByString:@","];
         if (parts.count == 2) {
@@ -403,15 +385,15 @@
             location = [[[CLLocation alloc] initWithLatitude:[lat floatValue] longitude:[lon floatValue]] autorelease];
         }
     }
-
+    
     DLog(@"%@ %@", location, _userLocation);
     // TODO: make maximum distance a config parameter
     if ([_userLocation distanceFromLocation:location] <= 40000) {
-        if (!_mapView.showsUserLocation) {
-            _mapView.showsUserLocation = YES;
+        if (!self.mapView.showsUserLocation) {
+            self.mapView.showsUserLocation = YES;
         } else {
             if (!_didCenter) {
-                _mapView.centerCoordinate = _userLocation.coordinate;
+                self.mapView.centerCoordinate = _userLocation.coordinate;
                 _didCenter = YES;
             }
         }
@@ -419,7 +401,7 @@
     } else {
         DLog(@"distance %.1f is out of bounds", [_userLocation distanceFromLocation:location]);
         
-        NSString *message = NSLocalizedString(@"Cannot show your location because you are too far away", @"map home screen geo button");
+        NSString *message = NSLocalizedString(@"MAP_TOO_FAR_ALERT_MESSAGE", @"Cannot show your location because you are too far away");
         UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:nil
                                                              message:message
                                                             delegate:nil
@@ -427,7 +409,7 @@
                                                    otherButtonTitles:nil] autorelease];
         [alertView show];
         
-        _mapView.showsUserLocation = NO;
+        self.mapView.showsUserLocation = NO;
         _locateUserButton.enabled = NO;
     }
 }
@@ -439,7 +421,7 @@
         [_locationManager release];
         _locationManager = nil;
 
-        _mapView.showsUserLocation = NO;
+        self.mapView.showsUserLocation = NO;
     } else {
         _locateUserButton.enabled = YES;
     }
@@ -454,7 +436,7 @@
         _locationManager = nil;
 
         _locateUserButton.enabled = NO;
-        _mapView.showsUserLocation = NO;
+        self.mapView.showsUserLocation = NO;
     }    
 }
 
@@ -479,13 +461,13 @@
 
 	if (!_mapListToggle) {
 		_mapListToggle = [[KGOSegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:mapButton, listButton, nil]];
-        _mapListToggle.frame = CGRectMake(0, 0, width, 31);
+        _mapListToggle.frame = CGRectMake(0, 0, width, 40);
         _mapListToggle.tabFont = [UIFont boldSystemFontOfSize:[UIFont smallSystemFontSize]];
         _mapListToggle.selectedSegmentIndex = 0;
 		[_mapListToggle addTarget:self action:@selector(mapListSelectionChanged:) forControlEvents:UIControlEventValueChanged];
 	}
 	
-	if (!_searchBar.toolbarItems.count) {
+	if (!_searchBar.toolbarItems.count && ![_searchBar showsCancelButton]) {
 		UIBarButtonItem *item = [[[UIBarButtonItem alloc] initWithCustomView:_mapListToggle] autorelease];
 		item.width = width;
 		[_searchBar addToolbarButton:item animated:NO];
@@ -494,7 +476,7 @@
 
 - (void)hideMapListToggle {
 	if (_searchBar.toolbarItems.count) {
-		[_searchBar setToolbarItems:nil];
+		[_searchBar setToolbarItems:nil animated:YES];
 	}
 	
 	[_mapListToggle release];
@@ -517,7 +499,7 @@
 }
 
 - (void)switchToMapView {
-	[self.view bringSubviewToFront:_mapView];
+	[self.view bringSubviewToFront:self.mapView];
 	[self.view bringSubviewToFront:_bottomBar];
 	
     // TODO: fine-tune when to enable this, e.g under proximity and gps enabled conditions
@@ -541,19 +523,25 @@
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
 {
     if (!_didCenter) {
-        _mapView.centerCoordinate = userLocation.coordinate;
+        self.mapView.centerCoordinate = userLocation.coordinate;
         _didCenter = YES;
     }
 }
 
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+- (MKAnnotationView *)mapView:(MKMapView *)aMapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     MKAnnotationView *view = nil;
     if ([annotation isKindOfClass:[KGOPlacemark class]]) {
         static NSString *AnnotationIdentifier = @"adfgweg";
-        view = [mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationIdentifier];
+        view = [aMapView dequeueReusableAnnotationViewWithIdentifier:AnnotationIdentifier];
         if (!view) {
-            view = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationIdentifier] autorelease];
+            UIImage *pinImage = [UIImage imageWithPathName:@"modules/map/map_pin"];
+            if (pinImage) {
+                view = [[[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationIdentifier] autorelease];
+                view.image = pinImage;
+            } else {
+                view = [[[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationIdentifier] autorelease];
+            }
             view.canShowCallout = YES;
             
             KGONavigationStyle navStyle = [KGO_SHARED_APP_DELEGATE() navigationStyle];
@@ -592,7 +580,7 @@
     }
 }
 
-- (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views
+- (void)mapView:(MKMapView *)aMapView didAddAnnotationViews:(NSArray *)views
 {
     NSInteger calloutCount = 0;
     id<MKAnnotation> selectedAnnotation = nil;
@@ -606,7 +594,7 @@
     }
     
     if (calloutCount == 1) {
-        [mapView selectAnnotation:selectedAnnotation animated:YES];
+        [aMapView selectAnnotation:selectedAnnotation animated:YES];
     }
 }
 
@@ -625,10 +613,10 @@
     }
 }
 
-- (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view
+- (void)mapView:(MKMapView *)aMapView didDeselectAnnotationView:(MKAnnotationView *)view
 {
-    NSInteger searchResultAnnotationCount = mapView.selectedAnnotations.count;
-    for (id<MKAnnotation> anAnnotation in mapView.selectedAnnotations) {
+    NSInteger searchResultAnnotationCount = aMapView.selectedAnnotations.count;
+    for (id<MKAnnotation> anAnnotation in aMapView.selectedAnnotations) {
         if (view.annotation == anAnnotation // this is what was deselected
             || ![anAnnotation conformsToProtocol:@protocol(KGOSearchResult)] // we don't count annotations not provided by us
         ) {
@@ -651,7 +639,7 @@
 - (id<KGOSearchResult>)pager:(KGODetailPager *)pager contentForPageAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableArray *displayables = [NSMutableArray array];
-    for (id<MKAnnotation> anAnnotation in _mapView.annotations) {
+    for (id<MKAnnotation> anAnnotation in self.mapView.annotations) {
         if ([anAnnotation conformsToProtocol:@protocol(KGOSearchResult)]) {
             [displayables addObject:anAnnotation];
         }
@@ -662,7 +650,7 @@
 - (NSInteger)pager:(KGODetailPager *)pager numberOfPagesInSection:(NSInteger)section
 {
     NSInteger count = 0;
-    for (id<MKAnnotation> anAnnotation in _mapView.annotations) {
+    for (id<MKAnnotation> anAnnotation in self.mapView.annotations) {
         if ([anAnnotation conformsToProtocol:@protocol(KGOSearchResult)]) {
             count++;
         }
@@ -677,29 +665,34 @@
 }
 
 - (NSArray *)searchControllerValidModules:(KGOSearchDisplayController *)controller {
-	return [NSArray arrayWithObject:MapTag];
+	return [NSArray arrayWithObject:self.mapModule.tag];
 }
 
 - (NSString *)searchControllerModuleTag:(KGOSearchDisplayController *)controller {
-	return MapTag;
+	return self.mapModule.tag;
 }
 
 - (void)resultsHolder:(id<KGOSearchResultsHolder>)resultsHolder didSelectResult:(id<KGOSearchResult>)aResult {
     if ([resultsHolder isKindOfClass:[KGOSearchDisplayController class]]) {
         NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:aResult, @"place", resultsHolder, @"pagerController", nil];
         KGOAppDelegate *appDelegate = KGO_SHARED_APP_DELEGATE();
-        [appDelegate showPage:LocalPathPageNameDetail forModuleTag:MapTag params:params];
+        [appDelegate showPage:LocalPathPageNameDetail forModuleTag:self.mapModule.tag params:params];
 
     } else if ([aResult conformsToProtocol:@protocol(MKAnnotation)]) { // TODO: check if search is bookmarks, not by the result selected
-        [_mapView removeAnnotations:[_mapView annotations]];
+        [self.mapView removeAnnotations:[self.mapView annotations]];
         id<MKAnnotation> annotation = (id<MKAnnotation>)aResult;
-        [_mapView addAnnotation:annotation];
+        [self.mapView addAnnotation:annotation];
         [self dismissPopoverAnimated:YES];
     }
 }
 
 - (BOOL)searchControllerShouldLinkToMap:(KGOSearchDisplayController *)controller {
-	[self showMapListToggle]; // override default behavior
+    // override default behavior
+	if (controller.showingOnlySearchResults) {
+        [_searchBar setShowsCancelButton:NO animated:YES];
+        [self showMapListToggle];
+		[self switchToMapView]; // show our map view above the list view
+	}
 	return NO; // notify the controller that it's been overridden
 }
 
@@ -714,7 +707,7 @@
 		[self switchToMapView];
 	}
 	
-    [_mapView removeAnnotations:[_mapView annotations]];
+    [self.mapView removeAnnotations:[self.mapView annotations]];
     
     NSMutableArray *addedAnnotations = [NSMutableArray array];
 	for (id<KGOSearchResult> aResult in controller.searchResults) {
@@ -723,13 +716,13 @@
 		}
 	}
     
-    [_mapView addAnnotations:addedAnnotations];
+    [self.mapView addAnnotations:addedAnnotations];
     
     if (addedAnnotations.count) {
         // TODO: rewrite regionForAnnotations: to return a success value
         MKCoordinateRegion region = [MapHomeViewController regionForAnnotations:addedAnnotations restrictedToClass:NULL];
         if (region.center.latitude && region.center.longitude) {
-            _mapView.region = region;
+            self.mapView.region = region;
         }
     }
 	
@@ -741,15 +734,18 @@
 	for (id<KGOSearchResult> aResult in controller.searchResults) {
 		if ([aResult conformsToProtocol:@protocol(MKAnnotation)]) {
 			id<MKAnnotation> annotation = (id<MKAnnotation>)aResult;
-			[_mapView removeAnnotation:annotation];
+			[self.mapView removeAnnotation:annotation];
 		}
-	}
-	
-	if (!_mapView.annotations.count) {
-		[self hideMapListToggle];
 	}
 
 	_searchResultsTableView = nil;
+}
+
+- (void)searchController:(KGOSearchDisplayController *)controller didBecomeActive:(BOOL)active
+{
+	if (!self.mapView.annotations.count && !active) {
+		[self hideMapListToggle];
+	}
 }
 
 // this is about 1km at the equator
@@ -765,10 +761,13 @@
     for (id<MKAnnotation> annotation in annotations) {
         if (!restriction || [annotation isKindOfClass:restriction]) {
             CLLocationCoordinate2D coord = annotation.coordinate;
-            if (coord.latitude > maxLat)  maxLat = coord.latitude;
-            if (coord.longitude > maxLon) maxLon = coord.longitude;
-            if (coord.latitude < minLat)  minLat = coord.latitude;
-            if (coord.longitude < minLon) minLon = coord.longitude;
+            //Check to make sure the lat and long are in a valid range. 
+            if(coord.latitude < 90 && coord.latitude > -90 && coord.longitude < 180 && coord.longitude > -180){
+                if (coord.latitude > maxLat)  maxLat = coord.latitude;
+                if (coord.longitude > maxLon) maxLon = coord.longitude;
+                if (coord.latitude < minLat)  minLat = coord.latitude;
+                if (coord.longitude < minLon) minLon = coord.longitude;
+            }
         }
     }
     
@@ -785,5 +784,34 @@
     
     return MKCoordinateRegionMake(center, span);
 }
-
+/*
+- (void)recenterMapForAnnotations: (NSArray *)annotations {
+    //NSArray *coordinates = [self.mapView valueForKeyPath:@"annotations.coordinate" ];
+    CLLocationCoordinate2D maxCoord = {-90.0f, -180.0f};
+    CLLocationCoordinate2D minCoord = {90.0f, 180.0f};
+    for(NSValue *value in coordinates) {
+        CLLocationCoordinate2D coord = {0.0f, 0.0f};
+        [value getValue:&coord];
+        if(coord.longitude > maxCoord.longitude) {
+            maxCoord.longitude = coord.longitude;
+        }
+        if(coord.latitude > maxCoord.latitude) {
+            maxCoord.latitude = coord.latitude;
+        }
+        if(coord.longitude < minCoord.longitude) {
+            minCoord.longitude = coord.longitude;
+        }
+        CLICK HERE to purchase this book now.MAP ANNOTATIONS 475
+        if(coord.latitude < minCoord.latitude) {
+            minCoord.latitude = coord.latitude;
+        }
+    }
+    MKCoordinateRegion region = {{0.0f, 0.0f}, {0.0f, 0.0f}};
+    region.center.longitude = (minCoord.longitude + maxCoord.longitude) / 2.0;
+    region.center.latitude = (minCoord.latitude + maxCoord.latitude) / 2.0;
+    region.span.longitudeDelta = maxCoord.longitude - minCoord.longitude;
+    region.span.latitudeDelta = maxCoord.latitude - minCoord.latitude;
+   
+}
+*/
 @end

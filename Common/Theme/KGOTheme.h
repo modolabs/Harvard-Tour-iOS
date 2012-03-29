@@ -1,7 +1,5 @@
 #import <UIKit/UIKit.h>
-
-extern NSString * const KGOUserPreferencesKey;
-extern NSString * const KGOUserPreferencesDidChangeNotification;
+#import "UIKit+KGOAdditions.h"
 
 extern NSString * const KGOAccessoryTypeNone;
 extern NSString * const KGOAccessoryTypeBlank;
@@ -18,9 +16,12 @@ extern NSString * const KGOThemePropertySmallPrint;
 extern NSString * const KGOThemePropertyContentTitle;
 extern NSString * const KGOThemePropertyContentSubtitle;
 extern NSString * const KGOFontPageTitle;
+extern NSString * const KGOThemePropertyPageTitle;
 extern NSString * const KGOThemePropertyPageSubtitle;
 extern NSString * const KGOThemePropertyCaption;
 extern NSString * const KGOThemePropertyByline;
+extern NSString * const KGOThemePropertyMediaListTitle;
+extern NSString * const KGOThemePropertyMediaListSubtitle;
 extern NSString * const KGOThemePropertyNavListTitle;
 extern NSString * const KGOThemePropertyNavListSubtitle;
 extern NSString * const KGOThemePropertyNavListLabel;
@@ -30,14 +31,15 @@ extern NSString * const KGOThemePropertyScrollTabSelected;
 extern NSString * const KGOThemePropertySectionHeader;
 extern NSString * const KGOThemePropertySectionHeaderGrouped;
 extern NSString * const KGOThemePropertyTab;
-extern NSString * const KGOThemePropertyTabSelected;
+extern NSString * const KGOThemePropertyTabSelected; // pressed state
+extern NSString * const KGOThemePropertyTabActive;
 
 typedef enum {
 	KGOTableCellStyleDefault,
 	KGOTableCellStyleValue1,
 	KGOTableCellStyleValue2,
 	KGOTableCellStyleSubtitle,
-	KGOTableCellStyleBodyText,
+	KGOTableCellStyleWebView,
 	KGOTableCellStyleURL
 } KGOTableCellStyle;
 
@@ -50,7 +52,7 @@ typedef enum {
 
 + (KGOTheme *)sharedTheme;
 
-#pragma mark generic
+#pragma mark Fonts and text attributes
 
 - (UIFont *)defaultFont;
 - (UIFont *)defaultBoldFont;
@@ -59,33 +61,44 @@ typedef enum {
 - (UIFont *)fontForThemedProperty:(NSString *)themeProperty;
 - (UIColor *)textColorForThemedProperty:(NSString *)themeProperty;
 
+#pragma mark - Universal colors
+
 - (UIColor *)backgroundColorForApplication;
 - (UIColor *)linkColor;
+
+#pragma mark View colors
+
 - (UIColor *)tintColorForToolbar;
 - (UIColor *)tintColorForSearchBar;
 - (UIColor *)tintColorForNavBar;
-- (UIImage *)titleImageForNavBar;
+- (UIColor *)backgroundColorForDatePager;
 
-// reasonable overrides
+#pragma mark Table view colors
+
+- (UIColor *)tintColorForSelectedCell;
+- (UIColor *)tableSeparatorColor;
+- (UIColor *)backgroundColorForPlainSectionHeader;
+
+#pragma mark - Background images
 
 - (UIImage *)backgroundImageForToolbar;
 - (UIImage *)backgroundImageForSearchBar;
 - (UIImage *)backgroundImageForSearchBarDropShadow;
-
-// ridiculous overrides
-
 - (UIImage *)backgroundImageForNavBar;
+
+#pragma mark Foreground images
+
+- (UIImage *)titleImageForNavBar;
+
+#pragma mark - Enumerated styles
+
 - (UIBarStyle)defaultNavBarStyle;
 
-#pragma mark homescreen
+#pragma mark - Homescreen
 
 - (NSDictionary *)homescreenConfig;
 
-#pragma mark tableview
-
-- (UIColor *)backgroundColorForPlainSectionHeader;
-
-#pragma mark tableviewcell
+#pragma mark - Table view cell
 
 - (UIImageView *)accessoryViewForType:(NSString *)accessoryType;
 - (UIColor *)backgroundColorForSecondaryCell;

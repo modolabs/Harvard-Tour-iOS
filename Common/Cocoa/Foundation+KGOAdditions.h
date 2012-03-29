@@ -8,17 +8,21 @@ typedef enum {
 
 KGOSign KGOGetIntegerSign(NSInteger x);
 
+@interface NSString (KGOAdditions)
++ (NSString *)stringByTrimmingURLPortNumber:(NSString *)baseString;
+@end
+
 
 @interface NSURL (MITAdditions)
 
-//+ (NSURL *)internalURLWithModuleTag:(NSString *)tag path:(NSString *)path;
-+ (NSURL *)internalURLWithModuleTag:(NSString *)tag path:(NSString *)path query:(NSString *)query;
++ (NSURL *)internalURLWithModuleTag:(ModuleTag *)tag path:(NSString *)path query:(NSString *)query;
 
 @end
 
 
 @interface NSURL (KGOAdditions)
 
++ (NSString *)urlEscapeWithPercents:(NSString *)string;
 + (NSString *)queryStringWithParameters:(NSDictionary *)parameters;
 + (NSURL *)URLWithQueryParameters:(NSDictionary *)parameters baseURL:(NSURL *)baseURL;
 + (NSDictionary *)parametersFromQueryString:(NSString *)queryString;
@@ -31,6 +35,25 @@ KGOSign KGOGetIntegerSign(NSInteger x);
 @interface NSDate (KGOAdditions)
 
 - (NSString *)agoString;
+
+- (NSString *)weekDateTimeString;
+
+- (NSString *)dayTimeString;
+
+- (NSString *)weekDateString;
+
+@end
+
+@interface NSSet (KGOAdditions)
+
+- (NSArray *)sortedArrayUsingKey:(NSString *)key ascending:(BOOL)ascending;
+
+@end
+
+
+@interface NSArray (KGOAdditions)
+
+- (NSArray *)mappedArrayUsingBlock:(id(^)(id element))block;
 
 @end
 
@@ -63,7 +86,13 @@ KGOSign KGOGetIntegerSign(NSInteger x);
 @interface NSDictionary (JSONParser)
 
 // returns nil on type failure
-- (NSString *)stringForKey:(NSString *)key nilIfEmpty:(BOOL)nilIfEmpty;
+- (NSString *)stringForKey:(NSString *)key;
+- (NSString *)forcedStringForKey:(NSString *)key;
+
+// casts numbers to strings
+- (NSString *)nonemptyStringForKey:(NSString *)key;
+- (NSString *)nonemptyForcedStringForKey:(NSString *)key;
+
 - (NSNumber *)numberForKey:(NSString *)key;
 - (NSArray *)arrayForKey:(NSString *)key;
 - (NSDate *)dateForKey:(NSString *)key;

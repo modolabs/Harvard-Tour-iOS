@@ -3,8 +3,42 @@
 
 @implementation KGOTabbedViewController
 
-@synthesize tabs = _tabs, tabViewHeader = _tabViewHeader, tabViewContainer = _tabViewContainer;
+@synthesize tabs = _tabs, headerView = _headerView, tabViewContainer = _tabViewContainer;
 @synthesize delegate;
+
+- (void)reloadTabs
+{
+    NSInteger currentSelection = self.tabs.selectedTabIndex;
+    NSString *selectedTitle = nil;
+    UIImage *selectedImage = nil;
+    if (currentSelection != NSNotFound) {
+        selectedTitle = [self.tabs titleForTabAtIndex:currentSelection];
+        selectedImage = [self.tabs imageForTabAtIndex:currentSelection];
+    }
+    currentSelection = NSNotFound;
+
+    [self.tabs removeAllTabs];
+
+    for (id item in [self.delegate itemsForTabbedControl:self.tabs]) {
+        if ([item isKindOfClass:[NSString class]]) {
+            if ([selectedTitle isEqualToString:item]) {
+                currentSelection = self.tabs.numberOfTabs;
+            }
+            [self.tabs insertTabWithTitle:item atIndex:_tabs.numberOfTabs animated:NO];
+        } else {
+            if ([selectedImage isEqual:item]) {
+                currentSelection = self.tabs.numberOfTabs;
+            }
+            [self.tabs insertTabWithImage:item atIndex:_tabs.numberOfTabs animated:NO];
+        }
+    }
+    
+    if (currentSelection != NSNotFound) {
+        [self.tabs setSelectedTabIndex:currentSelection];
+    }
+    
+    [self.tabs setNeedsLayout];
+}
 
 - (void)reloadTabContent {
     [self tabbedControl:_tabs didSwitchToTabAtIndex:[_tabs selectedTabIndex]];
@@ -63,7 +97,7 @@
 - (void)dealloc
 {
     self.tabs = nil;
-    self.tabViewHeader = nil;
+    self.headerView = nil;
     self.tabViewContainer = nil;
     [super dealloc];
 }
@@ -82,7 +116,10 @@
 {
     [super viewDidLoad];
     
-    self.tabViewHeader.delegate = self;
+    [[NSBundle mainBundle] loadNibNamed:@"KGODetailPageHeaderView" owner:self options:nil];
+    [self.view addSubview:self.headerView];
+
+    self.headerView.delegate = self;
     self.tabs.delegate = self;
     
     for (id item in [self.delegate itemsForTabbedControl:_tabs]) {
@@ -100,11 +137,9 @@
 
 - (void)viewDidUnload
 {
-    [_tabViewHeader release];
-    _tabViewHeader = nil;
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+
+    self.headerView = nil;
 }
 
 @end

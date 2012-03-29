@@ -1,16 +1,12 @@
 #import "StoryDetailViewController.h"
-#import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 #import "UIKit+KGOAdditions.h"
 #import <QuartzCore/QuartzCore.h>
-#import "NewsStory.h"
+#import "NewsModel.h"
 #import "CoreDataManager.h"
 #import "Foundation+KGOAdditions.h"
 #import "KGOHTMLTemplate.h"
 #import "StoryListViewController.h"
-#import "StoryGalleryViewController.h"
-#import "NewsImage.h"
-#import "KGOAppDelegate.h"
-#import "KGOAppDelegate+ModuleAdditions.h"
 #import "KGOShareButtonController.h"
 #import "KGOToolbar.h"
 
@@ -34,6 +30,8 @@
 }
 
 - (void)viewDidLoad {
+    self.navigationItem.title = @"Story";
+    
     [super viewDidLoad];
 	
     self.view.opaque = YES;
@@ -66,7 +64,7 @@
 	[self.view addSubview: storyView];
 	storyView.delegate = self;
     
-    if(multiplePages) {
+    if (multiplePages) {
         storyPager = [[KGODetailPager alloc] initWithPagerController:self delegate:self];
         
         UIBarButtonItem * segmentBarItem = [[UIBarButtonItem alloc] initWithCustomView: storyPager];
@@ -82,7 +80,9 @@
     } else {
         [self displayCurrentStory];
     }
+    
 }
+
 
 - (void) setInitialIndexPath:(NSIndexPath *)theInitialIndexPath  {
     initialIndexPath = [theInitialIndexPath retain];
@@ -113,43 +113,70 @@
 }
 
 - (void)displayCurrentStory {
+    
+    if ([self.story.hasBody boolValue]) {
+        KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:@"modules/news/news_story_template.html"];
+        NSMutableDictionary *values = [NSMutableDictionary dictionary];
 
-    KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:@"modules/news/news_story_template.html"];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"MMM d, y"];
-    NSString *postDate = [dateFormatter stringFromDate:story.postDate];
-	[dateFormatter release];
-    
-    NSString *thumbnailURL = story.thumbImage.url;
-    
-    if (!thumbnailURL) {
-        thumbnailURL = @"";
-    }
-    
-	NSString *isBookmarked = ([self.story.bookmarked boolValue]) ? @"on" : @"";
-	
-    NSMutableDictionary *values = [NSMutableDictionary dictionary];
-    NSString *maxWidth;
-    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        maxWidth = @"140";
+        // content variables
+        
+        [values setValue:(story.title          ? story.title          : @"") forKey:@"TITLE"];
+        [values setValue:(story.author         ? story.author         : @"") forKey:@"AUTHOR"];
+        [values setValue:(story.body           ? story.body           : @"") forKey:@"BODY"];
+        [values setValue:(story.summary        ? story.summary        : @"") forKey:@"DEK"];
+
+        if (!self.story.thumbImage.url || ![self.category.showBodyThumbnail boolValue]) {
+            [values setValue:@"" forKey:@"THUMBNAIL_URL"]; // javascript in the template will remove the node
+        } else {
+            [values setValue:story.thumbImage.url forKey:@"THUMBNAIL_URL"];
+        }
+
+        if (story.postDate) {
+            NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+            [dateFormatter setDateFormat:@"MMM d, y"];
+            NSString *postDate = [dateFormatter stringFromDate:story.postDate];
+            [values setValue:postDate forKey:@"DATE"];
+        }
+        
+        NSString *isBookmarked = ([self.story.bookmarked boolValue]) ? @"on" : @"";
+        [values setValue:isBookmarked forKey:@"BOOKMARKED"];
+
+        // presentation variables
+        
+        NSString *maxWidth = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? @"140" : @"320";
+        [values setValue:maxWidth forKey:@"THUMBNAIL_MAX_WIDTH"];
+
+        UIFont *titleFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentTitle];
+        UIColor *titleColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyContentTitle];
+        [values setValue:titleFont.fontName forKey:@"TITLE_FONT"];
+        [values setValue:[NSString stringWithFormat:@"%.0f", titleFont.pointSize] forKey:@"TITLE_FONT_SIZE"];
+        [values setValue:[titleColor hexString] forKey:@"TITLE_COLOR"];
+        
+        UIFont *smallFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySmallPrint];
+        UIColor *smallColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertySmallPrint];
+        [values setValue:smallFont.fontName forKey:@"SMALLPRINT_FONT"];
+        [values setValue:[NSString stringWithFormat:@"%.0f", smallFont.pointSize] forKey:@"SMALLPRINT_FONT_SIZE"];
+        [values setValue:[smallColor hexString] forKey:@"SMALLPRINT_COLOR"];
+        
+        UIFont *bodyFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyBodyText];
+        UIColor *bodyColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyBodyText];
+        [values setValue:bodyFont.fontName forKey:@"BODY_FONT"];
+        [values setValue:[NSString stringWithFormat:@"%.0f", bodyFont.pointSize] forKey:@"BODY_FONT_SIZE"];
+        [values setValue:[bodyColor hexString] forKey:@"BODY_COLOR"];
+        
+        [storyView loadTemplate:template values:values];
+
     } else {
-        maxWidth = @"320";
+        NSURL *url = [NSURL URLWithString:story.link];
+        if (url) {
+            NSURLRequest *request = [NSURLRequest requestWithURL:url];
+            [storyView loadRequest:request];
+        }
     }
-    
-    [values setValue:story.title forKey:@"TITLE"];
-    [values setValue:story.author forKey:@"AUTHOR"];
-    [values setValue:isBookmarked forKey:@"BOOKMARKED"];
-    [values setValue:postDate forKey:@"DATE"];
-    [values setValue:thumbnailURL forKey:@"THUMBNAIL_URL"];
-    [values setValue:maxWidth forKey:@"THUMBNAIL_MAX_WIDTH"];
-    [values setValue:story.body forKey:@"BODY"];
-    [values setValue:story.summary forKey:@"DEK"];
     
     // mark story as read
     self.story.read = [NSNumber numberWithBool:YES];
-	[[CoreDataManager sharedManager] saveDataWithTemporaryMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
-    [storyView loadTemplate:template values:values];
+    [[CoreDataManager sharedManager] saveDataWithTemporaryMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
 }
 
 - (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -164,9 +191,12 @@
             result = NO;
         } else {
             if ([[url path] rangeOfString:@"bookmark" options:NSBackwardsSearch].location != NSNotFound) {
-				// toggle bookmarked state
-                BOOL newBookmarkState = [self.story.bookmarked boolValue] ? NO : YES;
-                [self.dataManager story:self.story bookmarked:newBookmarkState];
+                if ([self.story isBookmarked]) {
+                    [self.story removeBookmark];
+                } else {
+                    [self.story addBookmark];
+                }
+                
 			} else if ([[url path] rangeOfString:@"share" options:NSBackwardsSearch].location != NSNotFound) {
                 shareController.actionSheetTitle = @"Share article with a friend";
                 shareController.shareTitle = story.title;
@@ -189,7 +219,7 @@
 }
      
 - (UIButton *)toolbarCloseButton {
-    NSString *title = NSLocalizedString(@"News", @"News Module Home");
+    NSString *title = NSLocalizedString(@"NEWS_MODULE_HOME_BUTTON", @"News");
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button addTarget:self action:@selector(goHome:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -203,8 +233,8 @@
     button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 1.0, 0); // needed to center text vertically within button
     CGSize size = [button.titleLabel.text sizeWithFont:button.titleLabel.font];
     
-    UIImage *stretchableButtonImage = [[UIImage imageWithPathName:@"common/secondary-toolbar-button.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:0];
-    UIImage *stretchableButtonImagePressed = [[UIImage imageWithPathName:@"common/secondary-toolbar-button-pressed.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:0];
+    UIImage *stretchableButtonImage = [[UIImage imageWithPathName:@"common/toolbar-button.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:0];
+    UIImage *stretchableButtonImagePressed = [[UIImage imageWithPathName:@"common/toolbar-button-pressed.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:0];
     
     [button setBackgroundImage:stretchableButtonImage forState:UIControlStateNormal];
     [button setBackgroundImage:stretchableButtonImagePressed forState:UIControlStateHighlighted];

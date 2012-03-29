@@ -29,6 +29,8 @@ typedef NSInteger (^JSONObjectHandler)(id);
 - (void)request:(KGORequest *)request didMakeProgress:(CGFloat)progress;
 - (void)requestDidReceiveResponse:(KGORequest *)request;
 
+- (void)requestResponseUnchanged:(KGORequest *)request;
+
 @end
 
 
@@ -43,6 +45,7 @@ typedef enum {
 	KGORequestErrorDeviceOffline,
 	KGORequestErrorTimeout,
 	KGORequestErrorBadResponse,
+    KGORequestErrorResponseTypeMismatch,
 	KGORequestErrorVersionMismatch,
 	KGORequestErrorInterrupted,
 	KGORequestErrorServerMessage,
@@ -62,6 +65,15 @@ typedef enum {
 @property(nonatomic, retain) NSString *path;
 @property(nonatomic, retain) NSDictionary *getParams;
 @property(nonatomic, retain) NSDictionary *postParams;
+@property(nonatomic, retain) NSDate *ifModifiedSince; // If-Modified-Since header
+
+// maximum and minimum supported API versions. if either of them is
+// different from the preferred version, set them manually after
+// the request object is created.
+@property(nonatomic) NSInteger apiMaxVersion;
+@property(nonatomic) NSInteger apiMinVersion;
+
+@property(nonatomic) NSTimeInterval minimumDuration;
 
 @property(nonatomic, retain) NSString *format; // default is json
 @property(nonatomic) NSURLRequestCachePolicy cachePolicy; // default is NSURLRequestReloadIgnoringLocalAndRemoteCacheData
@@ -73,15 +85,20 @@ typedef enum {
 @property(nonatomic, retain) id result;
 
 // urls are of the form
-// https://<kurogo-server>/<module>/<path>?<key>=<value>
-// https://kurogo.hq.modolabs.com/people/search?q=Some+Guy
-// https://kurogo.hq.modolabs.com/hello? (special case)
+// https://<kurogo-server>/<apipath>/<module>/<path>?<key>=<value>
+// https://kurogo.hq.modolabs.com/rest/people/search?q=Some+Guy
+// https://kurogo.hq.modolabs.com/rest/hello? (special case)
 @property(nonatomic, retain) NSURL *url;
 @property(nonatomic, assign) id<KGORequestDelegate> delegate;
 
 - (BOOL)connect;
+- (BOOL)connectWithResponseType:(Class)responseType callback:(JSONObjectHandler)callback;
+- (BOOL)connectWithCallback:(JSONObjectHandler)callback;
 - (void)cancel;  // call to stop receiving messages
 
+- (void)removeFromCache; // for requests that have minumumDuration set and failed after passing all sanity checks
+
 + (KGORequestErrorCode)internalCodeForNSError:(NSError *)error;
++ (NSString *)userAgentString;
 
 @end

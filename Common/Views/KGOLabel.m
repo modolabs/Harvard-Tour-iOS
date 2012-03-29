@@ -3,15 +3,24 @@
 
 @implementation KGOLabel
 
-+ (KGOLabel *)multilineLabelWithText:(NSString *)text font:(UIFont *)font width:(CGFloat)width {
++ (KGOLabel *)multilineLabelWithText:(NSString *)text font:(UIFont *)font width:(CGFloat)width
+{
+    return [KGOLabel multilineLabelWithText:text font:font width:width lineBreakMode:UILineBreakModeWordWrap];
+}
+
++ (KGOLabel *)multilineLabelWithText:(NSString *)text
+                                font:(UIFont *)font
+                               width:(CGFloat)width
+                       lineBreakMode:(UILineBreakMode)mode
+{
 	CGSize labelSize = [text sizeWithFont:font
                         constrainedToSize:CGSizeMake(width, 1000)
-                            lineBreakMode:UILineBreakModeWordWrap];
+                            lineBreakMode:mode];
     KGOLabel *label = [[[KGOLabel alloc] initWithFrame:CGRectMake(0, 0, width, labelSize.height)] autorelease];
     label.text = text;
     label.font = font;
     label.numberOfLines = 0;
-    label.lineBreakMode = UILineBreakModeWordWrap;
+    label.lineBreakMode = mode;
     label.backgroundColor = [UIColor clearColor];
     
     return label;

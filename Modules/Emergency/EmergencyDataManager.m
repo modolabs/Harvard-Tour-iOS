@@ -1,8 +1,9 @@
 #import "EmergencyDataManager.h"
 #import "Foundation+KGOAdditions.h"
 #import "CoreDataManager.h"
+#import "EmergencyModel.h"
 
-#define CONTACTS_EXPIRE 60 * 60 * 24 * 30
+#define CONTACTS_EXPIRE 60 * 60 * 24
 
 NSString * const EmergencyNoticeRetrievedNotification = @"EmergencyNoticeRetrieved";
 NSString * const EmergencyContactsRetrievedNotification = @"EmergencyContactsRetrieved";
@@ -49,34 +50,40 @@ NSString * const EmergencyContactsRetrievedNotification = @"EmergencyContactsRet
                            requestWithDelegate:self
                            module:tag
                            path:@"notice"
+                           version:1
                            params:nil];
     
-    request.expectedResponseType = [NSDictionary class];
-    request.handler = [[^(id result) {
-        int retval;
+    // create these on the main thread since CoreDataManager
+    // only deletes things on the main thread
+    NSArray *cachedNotices = [self cachedNotices]; 
+    
+    [request connectWithResponseType:[NSDictionary class]
+                            callback:^(id result) {
+        NSInteger retval;
         NSDictionary *emergencyNoticeResult = (NSDictionary *)result;
         
-        NSArray *cachedNotices = [self cachedNotices];
         [[CoreDataManager sharedManager] deleteObjects:cachedNotices];
-            
-        id notice = [emergencyNoticeResult objectForKey:@"notice"];
-        if(notice != [NSNull null]) {
-            NSDictionary *noticeDict = (NSDictionary *)notice;
-            EmergencyNotice *noticeObject = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:EmergencyNoticeEntityName];
-            noticeObject.title = [noticeDict stringForKey:@"title" nilIfEmpty:YES];
-            noticeObject.pubDate = [NSDate dateWithTimeIntervalSince1970:[[notice numberForKey:@"unixtime"] longValue]];
-            noticeObject.html = [noticeDict stringForKey:@"text" nilIfEmpty:YES];
-            noticeObject.moduleTag = tag;
-            retval = EmergencyNoticeActive;
-        } else {
-            retval = NoCurrentEmergencyNotice;
-        }
         
-        [[CoreDataManager sharedManager] saveData];
+        if ([emergencyNoticeResult boolForKey:@"noticeEnabled"]) {
+
+            id notice = [emergencyNoticeResult objectForKey:@"notice"];
+            if ([notice isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *noticeDict = (NSDictionary *)notice;
+                EmergencyNotice *noticeObject = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:EmergencyNoticeEntityName];
+                noticeObject.title = [noticeDict nonemptyStringForKey:@"title"];
+                noticeObject.pubDate = [NSDate dateWithTimeIntervalSince1970:[[notice objectForKey:@"unixtime"] doubleValue]];
+                noticeObject.html = [noticeDict nonemptyStringForKey:@"text"];
+                noticeObject.moduleTag = tag;
+                retval = EmergencyNoticeActive;
+            } else {
+                retval = NoCurrentEmergencyNotice;
+            }
+            [[CoreDataManager sharedManager] saveData];
+        } else {
+            retval = EmergencyNoticeDisabled;
+        }
         return retval;
-    } copy] autorelease];
-    
-    [request connect];
+    }];
 }
 
 - (NSArray *)cachedNotices {
@@ -91,28 +98,26 @@ NSString * const EmergencyContactsRetrievedNotification = @"EmergencyContactsRet
     return [[self cachedNotices] lastObject];
 }
 
-- (BOOL)contactsFresh {
-    EmergencyContactsSection *primary = [self contactsSection:@"primary"];
-    if (primary) {
-        return (-[primary.lastUpdate timeIntervalSinceNow] < CONTACTS_EXPIRE);
-    } else {
-        return NO;
-    }
-}
 - (void)fetchContacts {
     KGORequest *request = [[KGORequestManager sharedManager] 
                            requestWithDelegate:self
                            module:tag
                            path:@"contacts"
+                           version:1
                            params:nil];
     
-    request.expectedResponseType = [NSDictionary class];
-    request.handler = [[^(id result) {
+    EmergencyContactsSection *primary = [self contactsSection:@"primary"];
+    EmergencyContactsSection *secondary = [self contactsSection:@"secondary"];
+    
+    if (primary.contacts.count || secondary.contacts.count) {
+        request.minimumDuration = CONTACTS_EXPIRE;
+    }
+    
+    [request connectWithResponseType:[NSDictionary class]
+                            callback:^(id result) {
         NSDictionary *emergencyContactsResult = (NSDictionary *)result;
         
         // delete old contacts
-        EmergencyContactsSection *primary = [self contactsSection:@"primary"];
-        EmergencyContactsSection *secondary = [self contactsSection:@"secondary"];
         if (primary) {
             [[CoreDataManager sharedManager] deleteObject:primary];
         }
@@ -132,22 +137,18 @@ NSString * const EmergencyContactsRetrievedNotification = @"EmergencyContactsRet
             for (int i=0; i < contacts.count; i++) {
                 NSDictionary *contactDict = [contacts objectAtIndex:i];
                 EmergencyContact *contact = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:EmergencyContactEntityName];
-                contact.title = [contactDict stringForKey:@"title" nilIfEmpty:NO];
-                contact.subtitle = [contactDict stringForKey:@"subtitle" nilIfEmpty:YES];
-                contact.formattedPhone = [contactDict stringForKey:@"formattedPhone" nilIfEmpty:NO];
-                contact.dialablePhone = [contactDict stringForKey:@"dialablePhone" nilIfEmpty:NO];
+                contact.title = [contactDict stringForKey:@"title"];
+                contact.subtitle = [contactDict nonemptyStringForKey:@"subtitle"];
+                contact.url = [contactDict stringForKey:@"url"];
                 contact.order = [NSNumber numberWithInt:i];
                 contact.section = section;
             }
         }
-        
         [[CoreDataManager sharedManager] saveData];
         
         // return the number of sections created
-        return [[emergencyContactsResult allKeys] count];
-    } copy] autorelease];
-    
-    [request connect];    
+        return (NSInteger)[[emergencyContactsResult allKeys] count];
+    }];
 }
 
 - (EmergencyContactsSection *)contactsSection:(NSString *)section {
@@ -173,7 +174,7 @@ NSString * const EmergencyContactsRetrievedNotification = @"EmergencyContactsRet
 }
 
 - (BOOL)hasSecondaryContacts {
-    return ([self contactsForSection:@"secondary"] != nil);
+    return [[self contactsForSection:@"secondary"] count] > 0;
 }
 
 - (NSArray *)allContacts {
@@ -184,7 +185,7 @@ NSString * const EmergencyContactsRetrievedNotification = @"EmergencyContactsRet
 #pragma KGORequestDelegate Methods
 
 - (void)request:(KGORequest *)request didHandleResult:(NSInteger)returnValue { 
-    if([request.path isEqualToString:@"notice"]) {
+    if ([request.path isEqualToString:@"notice"]) {
         NSMutableDictionary *userInfo = [NSMutableDictionary 
                                          dictionaryWithObject:[NSNumber numberWithInt:returnValue] 
                                          forKey:@"EmergencyStatus"];
@@ -193,7 +194,7 @@ NSString * const EmergencyContactsRetrievedNotification = @"EmergencyContactsRet
                                                             object:self 
                                                           userInfo:userInfo];
         
-    } else if([request.path isEqualToString:@"contacts"]) {
+    } else if ([request.path isEqualToString:@"contacts"]) {
         // we have the number of sections created we could possibly pass it on
         [[NSNotificationCenter defaultCenter] postNotificationName:EmergencyContactsRetrievedNotification 
                                                             object:self];

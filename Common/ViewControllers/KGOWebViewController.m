@@ -1,6 +1,6 @@
 #import "KGOWebViewController.h"
 #import "KGORequestManager.h"
-#import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 #import "KGOHTMLTemplate.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIKit+KGOAdditions.h"
@@ -20,7 +20,7 @@ enum {
 @implementation KGOWebViewController
 
 @synthesize loadsLinksInternally, webView = _webView, delegate;
-@synthesize HTMLString;
+@synthesize HTMLString = _HTMLString;
 
 - (void)dealloc
 {
@@ -55,8 +55,7 @@ enum {
     if (self.requestURL) {
         [_webView loadRequest:[NSURLRequest requestWithURL:self.requestURL]];
     }
-    
-    if (self.HTMLString != nil) {
+    else if (self.HTMLString) {
         [_webView loadHTMLString:self.HTMLString baseURL:nil];
     }
 }
@@ -74,13 +73,13 @@ enum {
         
         _dismissView = [[UIView alloc] initWithFrame:CGRectMake(0, viewHeight - 44, viewWidth, 44)];
         UIImageView *backgroundImageView = [[[UIImageView alloc] initWithFrame:_dismissView.frame] autorelease];
-        [backgroundImageView setImage:[UIImage imageNamed:@"common/linkback-bar"]];
+        [backgroundImageView setImage:[UIImage imageWithPathName:@"common/linkback-bar"]];
         _dismissView = backgroundImageView;
         _dismissView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
         
-        UIImage *buttonImage = [[UIImage imageNamed:@"common/toolbar-button"] 
+        UIImage *buttonImage = [[UIImage imageWithPathName:@"common/toolbar-button"] 
                                  stretchableImageWithLeftCapWidth:10 topCapHeight:10];
-        UIImage *buttomImagePressed = [[UIImage imageNamed:@"common/toolbar-button-pressed"] 
+        UIImage *buttomImagePressed = [[UIImage imageWithPathName:@"common/toolbar-button-pressed"] 
                                         stretchableImageWithLeftCapWidth:10 topCapHeight:10];
         
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -92,7 +91,7 @@ enum {
         [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
         [button setBackgroundImage:buttomImagePressed forState:UIControlStateHighlighted];
         
-        [button setTitle:NSLocalizedString(@"Exit this screen", nil) forState:UIControlStateNormal];
+        [button setTitle:NSLocalizedString(@"CORE_EXIT_WEBVIEW_BUTTON", @"Exit this screen") forState:UIControlStateNormal];
         [button addTarget:self.parentViewController
                    action:@selector(dismissModalViewControllerAnimated:)
          forControlEvents:UIControlEventTouchUpInside];
@@ -111,6 +110,29 @@ enum {
         } else {
             _dismissView.alpha = 1;
         }
+    }
+}
+
+- (NSString *)HTMLString
+{
+    return _HTMLString;
+}
+
+- (void)setHTMLString:(NSString *)HTMLString
+{
+    [_HTMLString release];
+    _HTMLString = [HTMLString retain];
+    
+    if (_webView) {
+        NSString *expandedString = self.HTMLString;
+        for (NSString *filename in _templateStack) {
+            KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:filename];
+            if (template) {
+                expandedString = [template stringWithReplacements:
+                                  [NSDictionary dictionaryWithObjectsAndKeys:expandedString, @"BODY", nil]];
+            }
+        }
+        [_webView loadHTMLString:expandedString baseURL:nil];
     }
 }
 
@@ -144,26 +166,8 @@ enum {
     } else {
         [_templateStack addObject:filename];
     }
-    
-    KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:filename];
-    NSString *wrappedString = [template stringWithReplacements:[NSDictionary dictionaryWithObjectsAndKeys:HTMLString, @"BODY", nil]];
-    NSURL *url = [NSURL URLWithString:[[NSBundle mainBundle] resourcePath]];
-    if (_webView) {
-        [_webView loadHTMLString:wrappedString baseURL:url];
-    } else {
-        HTMLString = [wrappedString retain];
-    }
 }
 
-- (void) showHTMLString: (NSString *) HTMLStringText
-{
-    [HTMLString release];
-    self.HTMLString = HTMLStringText;
-    
-    if (_webView){
-        [_webView loadHTMLString:self.HTMLString baseURL:nil];
-    }
-}
 
 /*
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
@@ -212,9 +216,26 @@ enum {
         return !shouldOpenBrowser;
     }
     
-    if ([scheme isEqualToString:[KGO_SHARED_APP_DELEGATE() defaultURLScheme]]) {
-        [[UIApplication sharedApplication] openURL:request.URL];
+    if ([scheme isEqualToString:@"mailto"]) {
+        // NSURL doesn't parse mailto urls such that the string after ? is the query
+        NSString *emailString = [url absoluteString];
+        if (emailString.length > scheme.length + 1) {
+            emailString = [emailString substringFromIndex:scheme.length + 1];
+        }
+        NSRange queryRange = [emailString rangeOfString:@"?"];
+        if (queryRange.location != NSNotFound) {
+            emailString = [emailString substringToIndex:queryRange.location];
+        }
+        [self presentMailControllerWithEmail:emailString subject:nil body:nil delegate:self];
         return NO;
+    }
+    
+    static NSArray *allowableExternalURLSchemes = nil;
+    if (allowableExternalURLSchemes == nil) {
+        allowableExternalURLSchemes = [[NSArray alloc] initWithObjects:
+                                       @"http", @"https", @"tel",
+                                       [KGO_SHARED_APP_DELEGATE() defaultURLScheme],
+                                       nil];
     }
     
     if (navigationType == UIWebViewNavigationTypeLinkClicked
@@ -271,6 +292,13 @@ enum {
     if (buttonIndex != [alertView cancelButtonIndex]) {
         [_webView loadRequest:_webView.request];
     }
+}
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller
+          didFinishWithResult:(MFMailComposeResult)result
+                        error:(NSError *)error
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 @end

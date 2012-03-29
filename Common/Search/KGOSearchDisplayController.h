@@ -23,6 +23,7 @@
 
 @optional
 
+- (void)searchController:(KGOSearchDisplayController *)controller didBecomeActive:(BOOL)active;
 - (void)searchController:(KGOSearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView;
 - (void)searchController:(KGOSearchDisplayController *)controller willReloadSearchResultsTableView:(UITableView *)tableView;
 - (void)searchController:(KGOSearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView;
@@ -36,8 +37,9 @@
 @interface KGOSearchDisplayController : NSObject <KGOSearchBarDelegate, KGOTableViewDataSource, KGOSearchResultsHolder, KGODetailPagerController> {
     
     id<KGOSearchDisplayDelegate> _delegate;
-    NSArray *_searchResults;
+    //NSArray *_searchResults;
     BOOL _showingOnlySearchResults;
+    BOOL _isFederatedSearch;
 
     KGOSearchBar *_searchBar;
     BOOL _active;
@@ -48,15 +50,25 @@
 }
 
 @property (nonatomic) BOOL showsSearchOverlay;
+@property (nonatomic) BOOL isFederatedSearch;
 
 @property (nonatomic, readonly) BOOL showingOnlySearchResults; // NO if tableview includes search suggestions
 @property (nonatomic, readonly) id<KGOSearchDisplayDelegate> delegate;
-@property (nonatomic, retain) NSArray *searchResults;
+
+@property (nonatomic, readonly) NSArray *searchResults;
+
+// doing this clears out any previou search results
+- (void)setSearchResults:(NSArray *)searchResults forModuleTag:(ModuleTag *)tag;
+
+@property (nonatomic, retain) NSMutableDictionary *multiSearchResults;
+@property (nonatomic, retain) NSMutableArray *searchSources;
 
 @property (nonatomic, readonly) KGOSearchBar *searchBar;
 @property (nonatomic, getter=isActive) BOOL active;
 @property (nonatomic, readonly) UIViewController *searchContentsController;
 @property (nonatomic, readonly) KGOTableController *searchTableController;
+
+@property (nonatomic) NSUInteger maxResultsPerSection;
 
 - (id)initWithSearchBar:(KGOSearchBar *)searchBar
                delegate:(id<KGOSearchDisplayDelegate>)delegate
@@ -77,5 +89,6 @@
 - (void)reloadSearchResultsTableView;
 
 - (BOOL)canShowMapView; // whether there are mappable results to link to map module
+//- (NewsStory *)storyWithDictionary:(NSDictionary *)storyDict;
 
 @end

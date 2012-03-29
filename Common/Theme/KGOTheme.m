@@ -3,9 +3,6 @@
 #import "Foundation+KGOAdditions.h"
 #import "KGOUserSettingsManager.h"
 
-NSString * const KGOUserPreferencesKey = @"KGOUserPrefs";
-NSString * const KGOUserPreferencesDidChangeNotification = @"KGOUserPrefsChanged";
-
 NSString * const KGOAccessoryTypeNone = @"None";
 NSString * const KGOAccessoryTypeBlank = @"Blank";
 NSString * const KGOAccessoryTypeChevron = @"Chevron";
@@ -25,6 +22,8 @@ NSString * const KGOThemePropertyPageTitle = @"PageTitle";
 NSString * const KGOThemePropertyPageSubtitle = @"PageSubtitle";
 NSString * const KGOThemePropertyCaption = @"Caption";
 NSString * const KGOThemePropertyByline = @"Byline";
+NSString * const KGOThemePropertyMediaListTitle = @"MediaListTitle";
+NSString * const KGOThemePropertyMediaListSubtitle = @"MediaListSubtitle";
 NSString * const KGOThemePropertyNavListTitle = @"NavListTitle";
 NSString * const KGOThemePropertyNavListSubtitle = @"NavListSubtitle";
 NSString * const KGOThemePropertyNavListLabel = @"NavListLabel";
@@ -35,6 +34,7 @@ NSString * const KGOThemePropertySectionHeader = @"SectionHeader";
 NSString * const KGOThemePropertySectionHeaderGrouped = @"SectionHeaderGrouped";
 NSString * const KGOThemePropertyTab = @"Tab";
 NSString * const KGOThemePropertyTabSelected = @"TabSelected";
+NSString * const KGOThemePropertyTabActive = @"TabActive";
 
 @interface KGOTheme (Private)
 
@@ -55,6 +55,8 @@ static KGOTheme *s_sharedTheme = nil;
     return s_sharedTheme;
 }
 
+#pragma mark Fonts
+
 - (UIFont *)defaultFont
 {
     return [UIFont fontWithName:[self defaultFontName] size:[self defaultFontSize]];
@@ -74,7 +76,7 @@ static KGOTheme *s_sharedTheme = nil;
 
 - (NSString *)defaultFontName
 {
-    NSString *fontName = [fontDict stringForKey:@"DefaultFont" nilIfEmpty:YES];
+    NSString *fontName = [fontDict nonemptyStringForKey:@"DefaultFont"];
     if (!fontName) {
         fontName = [[UIFont systemFontOfSize:[UIFont systemFontSize]] fontName];
     }
@@ -99,7 +101,7 @@ static KGOTheme *s_sharedTheme = nil;
     
     NSDictionary *fontInfo = [fontDict objectForKey:themeProperty];
     if (fontInfo) {
-        fontName = [fontInfo stringForKey:@"font" nilIfEmpty:YES];
+        fontName = [fontInfo nonemptyStringForKey:@"font"];
         if (!fontName) {
             fontName = [self defaultFontName];
         }
@@ -141,14 +143,7 @@ static KGOTheme *s_sharedTheme = nil;
     return color;
 }
 
-#pragma mark Homescreen
-
-- (NSDictionary *)homescreenConfig
-{
-    return [themeDict dictionaryForKey:@"HomeScreen"];
-}
-
-#pragma mark Colors
+#pragma mark - Universal colors
 
 - (UIColor *)matchBackgroundColorWithLabel:(NSString *)label {
     UIColor *color = nil;
@@ -180,6 +175,8 @@ static KGOTheme *s_sharedTheme = nil;
     return color;
 }
 
+#pragma mark View colors
+
 // this one can be nil
 // TODO: make nil/non-nil distinction more transparent
 - (UIColor *)tintColorForToolbar {
@@ -196,6 +193,39 @@ static KGOTheme *s_sharedTheme = nil;
     UIColor *color = [self matchBackgroundColorWithLabel:@"NavBarTintColor"];
     return color;
 }
+
+- (UIColor *)backgroundColorForDatePager {
+    UIColor *color = [self matchBackgroundColorWithLabel:@"DatePagerBackground"];
+    if (!color) {
+        color = [UIColor grayColor];
+    }
+    return color;
+}
+
+#pragma mark Table view colors
+
+- (UIColor *)tintColorForSelectedCell {
+    UIColor *color = [self matchBackgroundColorWithLabel:@"NavListSelectionColor"];
+    return color;
+}
+
+- (UIColor *)backgroundColorForPlainSectionHeader {
+    UIColor *color = [self matchBackgroundColorWithLabel:@"PlainSectionHeaderBackground"];
+    if (!color)
+        color = [UIColor blackColor];
+    return color;
+}
+
+- (UIColor *)tableSeparatorColor {
+    NSString *tableSeperatorColorString = [[themeDict objectForKey:@"Colors"] objectForKey:@"TableSeparator"];
+    if (tableSeperatorColorString) {
+        return [UIColor colorWithHexString:tableSeperatorColorString];
+    } else {
+        return [UIColor colorWithWhite:0.5 alpha:1.0];
+    }
+}
+
+#pragma mark - Background Images
 
 - (UIImage *)titleImageForNavBar {
     NSString *imageName = [[themeDict objectForKey:@"Images"] objectForKey:@"NavBarTitle"];
@@ -232,19 +262,7 @@ static KGOTheme *s_sharedTheme = nil;
     return nil;
 }
 
-- (UIColor *)backgroundColorForPlainSectionHeader {
-    UIColor *color = [self matchBackgroundColorWithLabel:@"PlainSectionHeaderBackground"];
-    if (!color)
-        color = [UIColor blackColor];
-    return color;
-}
-
-- (UIColor *)backgroundColorForSecondaryCell {
-    UIColor *color = [self matchBackgroundColorWithLabel:@"SecondaryCellBackground"];
-    if (!color)
-        color = [UIColor whiteColor];
-    return color;
-}
+#pragma mark - Enumerated styles
 
 - (UIBarStyle)defaultNavBarStyle
 {
@@ -252,7 +270,21 @@ static KGOTheme *s_sharedTheme = nil;
     return UIBarStyleBlack;
 }
 
-#pragma mark UITableViewCell
+#pragma mark - Homescreen
+
+- (NSDictionary *)homescreenConfig
+{
+    return [themeDict dictionaryForKey:@"HomeScreen"];
+}
+
+#pragma mark - UITableViewCell
+
+- (UIColor *)backgroundColorForSecondaryCell {
+    UIColor *color = [self matchBackgroundColorWithLabel:@"SecondaryCellBackground"];
+    if (!color)
+        color = [UIColor whiteColor];
+    return color;
+}
 
 // provide None, Blank, and Chevron by default.
 // other styles can be defined in theme plist
@@ -275,19 +307,19 @@ static KGOTheme *s_sharedTheme = nil;
     }
     if (CellAccessoryImagesHighlighted == nil) {
         CellAccessoryImagesHighlighted = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                          @"common/action-checkmark-highlighted", KGOAccessoryTypeCheckmark,
-                                          @"common/action-arrow-highlighted", KGOAccessoryTypeChevron,
-                                          @"common/action-phone-highlighted", KGOAccessoryTypePhone,
-                                          @"common/action-people-highlighted", KGOAccessoryTypePeople,
-                                          @"common/action-map-highlighted", KGOAccessoryTypeMap,
-                                          @"common/action-email-highlighted", KGOAccessoryTypeEmail,
-                                          @"common/action-external-highlighted", KGOAccessoryTypeExternal,
+                                          @"common/action-checkmark-highlight", KGOAccessoryTypeCheckmark,
+                                          @"common/action-arrow-highlight", KGOAccessoryTypeChevron,
+                                          @"common/action-phone-highlight", KGOAccessoryTypePhone,
+                                          @"common/action-people-highlight", KGOAccessoryTypePeople,
+                                          @"common/action-map-highlight", KGOAccessoryTypeMap,
+                                          @"common/action-email-highlight", KGOAccessoryTypeEmail,
+                                          @"common/action-external-highlight", KGOAccessoryTypeExternal,
                                           nil];
     }
     
     if (accessoryType && ![accessoryType isEqualToString:KGOAccessoryTypeNone]) {
         UIImage *image = [UIImage imageWithPathName:[CellAccessoryImages objectForKey:accessoryType]];
-        UIImage *highlightedImage = [UIImage imageWithPathName:[CellAccessoryImages objectForKey:accessoryType]];
+        UIImage *highlightedImage = [UIImage imageWithPathName:[CellAccessoryImagesHighlighted objectForKey:accessoryType]];
         if (image) {
             if (highlightedImage) {
                 return [[[UIImageView alloc] initWithImage:image highlightedImage:highlightedImage] autorelease];
@@ -331,7 +363,8 @@ static KGOTheme *s_sharedTheme = nil;
             [mutableFontDict setObject:fontPref forKey:@"DefaultFont"];
         }
     }
-        
+
+    [fontDict release];
     fontDict = [mutableFontDict copy];
 }
 

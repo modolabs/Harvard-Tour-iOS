@@ -1,5 +1,5 @@
 #import "TwitterViewController.h"
-#import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 #import "KGOTheme.h"
 #import "UIKit+KGOAdditions.h"
 #import <QuartzCore/QuartzCore.h>
@@ -25,7 +25,7 @@
                                                                                    action:@selector(dismissModalViewControllerAnimated:)] autorelease];
 
     if ([[KGOSocialMediaController twitterService] isSignedIn]) {
-        NSString *title = NSLocalizedString(@"Tweet", nil);
+        NSString *title = NSLocalizedString(@"CORE_SEND_TWEET_BUTTON", @"Tweet");
         self.title = title;
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:title
                                                                                    style:UIBarButtonItemStyleDone
@@ -33,7 +33,7 @@
                                                                                   action:@selector(tweetButtonPressed:)] autorelease];
         self.navigationItem.leftBarButtonItem = cancelButton;
     } else {
-        self.title = NSLocalizedString(@"Sign in to Twitter", nil);
+        self.title = NSLocalizedString(@"CORE_SIGN_INTO_TWITTER", @"Sign in to Twitter");
         self.navigationItem.rightBarButtonItem = cancelButton;
     }
 }
@@ -44,10 +44,10 @@
     
     [self refreshNavBarItems];
     
-    _loginHintLabel.text = NSLocalizedString(@"Sign into your Twitter account.", nil);
+    _loginHintLabel.text = NSLocalizedString(@"CORE_SIGN_INTO_TWITTER_MESSAGE", @"Sign into your Twitter account.");
     
-    UIImage *backgroundImage = [[UIImage imageWithPathName:@"common/generic-button-background.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
-    UIImage *backgroundImagePressed = [[UIImage imageWithPathName:@"common/generic-button-background-pressed.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
+    UIImage *backgroundImage = [[UIImage imageWithPathName:@"common/toolbar-button.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
+    UIImage *backgroundImagePressed = [[UIImage imageWithPathName:@"common/toolbar-button-pressed.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
 
     [_signInButton setBackgroundImage:backgroundImage forState:UIControlStateNormal];
     [_signInButton setBackgroundImage:backgroundImagePressed forState:UIControlStateHighlighted];
@@ -151,7 +151,7 @@
 - (void)twitterDidLogout:(NSNotification *)aNotification
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TwitterDidLogoutNotification object:nil];
-    [_signInButton setTitle:NSLocalizedString(@"Sign in", nil) forState:UIControlStateNormal];
+    [_signInButton setTitle:NSLocalizedString(@"CORE_SIGN_IN", @"Sign in") forState:UIControlStateNormal];
     _signInButton.hidden = NO;
     [self refreshNavBarItems];
     

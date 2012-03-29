@@ -7,5 +7,8 @@
 @dynamic label;
 @dynamic value;
 @dynamic type;
+@dynamic title;
+@dynamic subtitle;
+@dynamic url;
 
 @end

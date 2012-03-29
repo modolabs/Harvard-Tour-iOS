@@ -32,7 +32,7 @@
 // tag should not be changed once it is set -- probably want to make readonly.
 - (void)updateWithDictionary:(NSDictionary *)moduleDict;
 
-@property (nonatomic, copy) NSString *tag;       // unique
+@property (nonatomic, copy) ModuleTag *tag;       // unique
 
 @property (nonatomic) NSInteger apiMinVersion;
 @property (nonatomic) NSInteger apiMaxVersion;
@@ -43,8 +43,9 @@
 
 - (NSArray *)widgetViews; // array of KGOHomeScreenWidget objects, ordered by z-index
 
-@property (nonatomic, copy) NSString *shortName; // what label shows up on home screen
+@property (nonatomic, copy) NSString *shortName; 
 @property (nonatomic, copy) NSString *longName;
+@property (nonatomic, copy) NSString *homeName; // what label shows up on home screen
 
 @property (nonatomic, retain) UIImage *tabBarImage;
 @property (nonatomic, retain) UIImage *listViewImage;
@@ -137,7 +138,7 @@
 - (NSSet *)notificationTagNames;
 
 // if the server hello returns a payload for this module, evaluate it
-- (void)handleInitialPayload:(NSDictionary *)payload;
+- (void)evaluateInitialiationPayload:(NSDictionary *)payload;
 
 #pragma mark Settings
 

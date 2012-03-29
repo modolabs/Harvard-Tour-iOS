@@ -3,6 +3,8 @@
 #import "Foundation+KGOAdditions.h"
 #import "CoreDataManager.h"
 
+NSString * const MapCategoryEntityName = @"KGOMapCategory";
+
 @implementation KGOMapCategory
 
 @dynamic title;
@@ -11,15 +13,12 @@
 @dynamic places;
 @dynamic subcategories;
 @dynamic parentCategory;
-@dynamic hasSubcategories;
-@dynamic browsable;
+@dynamic latitude;
+@dynamic longitude;
+@dynamic subtitle;
+@dynamic topLevel;
 
-- (NSString *)moduleTag
-{
-    // TODO: find a better way to set this.
-    // would anyone have an app with multiple map modules with browse categories?
-    return MapTag;
-}
+@synthesize moduleTag;
 
 - (NSArray *)items {
 	return [self.places allObjects];
@@ -31,6 +30,53 @@
 
 - (NSArray *)children {
 	return [self.subcategories allObjects];
+}
+
++ (KGOMapCategory *)categoryWithIdentifier:(NSString *)categoryID
+{
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"identifier like %@", categoryID];
+    NSArray *results = [[CoreDataManager sharedManager] objectsForEntity:MapCategoryEntityName matchingPredicate:pred];
+    if (results.count > 1) {
+        DLog(@"Warning: multiple category objects found for id %@", categoryID);
+    }
+    KGOMapCategory *category = [results lastObject];
+    if (!category) {
+        category = [[CoreDataManager sharedManager] insertNewObjectForEntityForName:MapCategoryEntityName];
+        category.identifier = categoryID;
+        DLog(@"created new category with id %@", category.identifier);
+    }
+    return category;
+}
+
++ (KGOMapCategory *)categoryWithDictionary:(NSDictionary *)dictionary
+{
+    KGOMapCategory *category = nil;
+    
+    NSString *identifier = [dictionary nonemptyStringForKey:@"id"];
+    if (identifier) {
+        category = [KGOMapCategory categoryWithIdentifier:identifier];
+        NSString *title = [dictionary nonemptyStringForKey:@"title"];
+        if (title) {
+            category.title = title;
+        }
+        NSString *subtitle = [dictionary nonemptyStringForKey:@"subtitle"];
+        if (subtitle) {
+            category.subtitle = subtitle;
+        }
+        CGFloat lat = [dictionary floatForKey:@"lat"];
+        if (lat) {
+            category.latitude = [NSNumber numberWithFloat:lat];
+        }
+        CGFloat lon = [dictionary floatForKey:@"lon"];
+        if (lat) {
+            category.longitude = [NSNumber numberWithFloat:lon];
+        }
+        NSString *group = [dictionary nonemptyStringForKey:@"group"];
+        if (group) {
+            category.parentCategory = [KGOMapCategory categoryWithIdentifier:group];
+        }
+    }
+    return category;
 }
 
 + (KGOMapCategory *)categoryWithPath:(NSArray *)categoryPath {

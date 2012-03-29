@@ -1,16 +1,15 @@
 #import <Foundation/Foundation.h>
 #import "KGOModule.h"
-#import "StoryDetailViewController.h"
-#import "NewsDataManager.h"
-
-@class NewsDataManager;
+#import "NewsDataController.h"
 
 @interface NewsModule : KGOModule <NewsDataDelegate> {
     NSInteger totalResults;
     //id<KGOSearchResultsHolder> *searchDelegate;
-    NewsDataManager *_dataManager;
+    NewsDataController *_dataManager;
+    NSDictionary *_payload;
+    NSString *_searchText;
 }
 
-- (NewsDataManager *)dataManager;
+@property (readonly) NewsDataController *dataManager;
 
 @end

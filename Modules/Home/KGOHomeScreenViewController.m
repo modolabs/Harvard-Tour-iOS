@@ -5,12 +5,14 @@
 #import "ExternalURLModule.h"
 #import "UIKit+KGOAdditions.h"
 #import "SpringboardIcon.h"
-#import "KGOPersonWrapper.h"
 #import "KGOHomeScreenWidget.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import "KGORequestManager.h"
 #import "Foundation+KGOAdditions.h"
 #import "KGOUserSettingsManager.h"
+#import "KGOLabel.h"
+
+#define MAX_FEDERATED_SEARCH_RESULTS_PER_SECTION 2
 
 @interface KGOHomeScreenViewController (Private)
 
@@ -26,7 +28,8 @@
 
 @implementation KGOHomeScreenViewController
 
-@synthesize primaryModules = _primaryModules, secondaryModules = _secondaryModules, homeModule, loadingView;
+@synthesize primaryModules = _primaryModules, secondaryModules = _secondaryModules, homeModule,
+loadingView, banner = _banner;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -46,16 +49,28 @@
     return self;
 }
 
+- (void)contactServer
+{
+    [self standbyForServerHello];
+    [self checkAnnouncementBanner];
+}
+
 - (void)subscribeToModuleChangeNotifications
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(moduleListDidChange:)
-                                                 name:ModuleListDidChangeNotification
-                                               object:nil];
+    for (NSString *aNotification in [NSArray arrayWithObjects:
+                                     ModuleListDidChangeNotification,
+                                     KGOUserPreferencesDidChangeNotification,
+                                     nil])
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(moduleListDidChange:)
+                                                     name:aNotification
+                                                   object:nil];
+    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(moduleListDidChange:)
-                                                 name:KGOUserPreferencesDidChangeNotification
+                                             selector:@selector(contactServer)
+                                                 name:KGOServerDidChangeNotification
                                                object:nil];
 }
 
@@ -65,12 +80,12 @@
     
     [self loadModules];
     
-    if ([self showsSearchBar]) {
+    if ([self showsSearchBar] && !_searchBar) {
         _searchBar = [[KGOSearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
         _searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         NSDictionary *infoDict = [[NSBundle mainBundle] infoDictionary];
         _searchBar.placeholder = [NSString stringWithFormat:@"%@ %@",
-                                  NSLocalizedString(@"Search", nil),
+                                  NSLocalizedString(@"CORE_SEARCH_BAR_PLACEHOLDER", @"Search"),
                                   [infoDict objectForKey:@"CFBundleName"]];
         [self.view addSubview:_searchBar];
     }
@@ -83,7 +98,10 @@
     }
     
     // left nav bar button
-	UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle:@"Home" style:UIBarButtonItemStyleBordered target:nil action:nil];	
+	UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"HOME_BACK_BUTTON_TITLE", @"Home")
+                                                                      style:UIBarButtonItemStyleBordered
+                                                                     target:nil
+                                                                     action:nil];	
 	[[self navigationItem] setBackBarButtonItem: newBackButton];
 	[newBackButton release];
     
@@ -98,9 +116,11 @@
     
     if (_searchBar && !_searchController) {
         _searchController = [[KGOSearchDisplayController alloc] initWithSearchBar:_searchBar delegate:self contentsController:self];
+        _searchController.maxResultsPerSection = MAX_FEDERATED_SEARCH_RESULTS_PER_SECTION;
+        _searchController.isFederatedSearch = YES;
     }
     
-    [self standbyForServerHello];
+    [self contactServer];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -126,6 +146,10 @@
     [_preferences release];
     [_searchBar release];
     [_searchController release];
+    
+    _bannerRequest.delegate = nil;
+    _bannerRequest = nil;
+
     [super dealloc];
 }
 
@@ -135,6 +159,133 @@
         return YES;
     }
     return toInterfaceOrientation == UIInterfaceOrientationPortrait;
+}
+
+#pragma mark home screen announcement
+// TODO: separate network stuff into a different class
+
+- (void)checkAnnouncementBanner
+{
+    if (!_bannerRequest) {
+        _bannerRequest = [[KGORequestManager sharedManager] requestWithDelegate:self
+                                                                         module:self.homeModule.tag
+                                                                           path:@"notice"
+                                                                        version:1
+                                                                         params:nil];
+        [_bannerRequest connect];
+    }
+}
+
+- (void)showAnnouncementBanner
+{
+    if (_banner) {
+        if (self.loadingView) {
+            [self.view bringSubviewToFront:self.loadingView];
+        }
+
+        [self refreshModules];
+    }
+}
+
+- (void)hideAnnouncementBanner
+{
+    if (_banner) {
+        if ([_banner superview]) {
+            [_banner removeFromSuperview];
+        }
+        
+        self.banner = nil;
+
+        [self refreshModules];
+    }
+}
+
+- (CGFloat)minimumAvailableY
+{
+    if (_banner) {
+        return CGRectGetMaxY(_banner.frame);
+    }
+    if (_searchBar) {
+        return CGRectGetMaxY(_searchBar.frame);
+    }
+    return 0;
+}
+
+- (void)request:(KGORequest *)request didFailWithError:(NSError *)error
+{
+    // if there is no announcement, the response will be null
+    if ([error code] == KGORequestErrorResponseTypeMismatch) {
+        [self hideAnnouncementBanner];
+    }
+}
+
+- (void)request:(KGORequest *)request didReceiveResult:(id)result
+{
+    if (_banner) {
+        [_banner removeFromSuperview];
+    }
+
+    NSDictionary *notice = [result dictionaryForKey:@"notice"];
+    
+    if (notice) {
+        CGFloat width = CGRectGetWidth(self.view.bounds);
+        CGFloat x = 0;
+        CGFloat height = 44;
+        CGRect frame = CGRectMake(0, 0, width, height);
+        
+        self.banner = [[[KGOHomeScreenWidget alloc] initWithFrame:frame] autorelease];
+        _banner.backgroundColor = [[KGOTheme sharedTheme] backgroundColorForPlainSectionHeader];
+        
+        NSString *displayString = [notice nonemptyStringForKey:@"title"];
+        if (displayString) {
+            
+            UIImage *carat = [UIImage imageWithPathName:@"common/action-arrow"];
+            if (carat) {
+                UIImageView *imageView = [[[UIImageView alloc] initWithImage:carat] autorelease];
+                imageView.frame = CGRectMake(width - carat.size.width - 7,
+                                             floorf((height - carat.size.height) / 2),
+                                             carat.size.width, carat.size.height);
+                [_banner addSubview:imageView];
+                width -= carat.size.width + 7;
+            }
+            
+            UIImage *alertImage = [UIImage imageWithPathName:@"common/alert"];
+            if (alertImage) {
+                UIImageView *imageView = [[[UIImageView alloc] initWithImage:alertImage] autorelease];
+                imageView.frame = CGRectMake(7, floorf((height - alertImage.size.height) / 2),
+                                             alertImage.size.width, alertImage.size.height);
+                [_banner addSubview:imageView];
+                width -= alertImage.size.width + 7;
+                x += alertImage.size.width + 7;
+            }
+            
+            x += 7; // left padding
+            width -= 14; // padding on either side
+            
+            UIFont *font = [UIFont fontWithName:[[KGOTheme sharedTheme] defaultFontName] size:14];
+            UILabel *label = [[[UILabel alloc] initWithFrame:CGRectMake(x, 0, width, height)] autorelease];
+            label.text = displayString;
+            label.font = font;
+            label.numberOfLines = 2;
+            label.backgroundColor = [UIColor clearColor];
+            label.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertySectionHeader];
+            [_banner addSubview:label];
+        }
+        
+        NSInteger shouldLink = [[result nonemptyForcedStringForKey:@"link"] integerValue];
+        if (shouldLink) {
+            NSString *moduleTag = [result nonemptyStringForKey:@"moduleID"];
+            _banner.module = [KGO_SHARED_APP_DELEGATE() moduleForTag:moduleTag];
+        }
+
+        [self showAnnouncementBanner];
+
+    }
+}
+
+- (void)requestWillTerminate:(KGORequest *)request
+{
+    _bannerRequest = nil;
 }
 
 #pragma mark - Login states
@@ -187,7 +338,7 @@
     
     for (KGOModule *aModule in [KGO_SHARED_APP_DELEGATE() modules]) {
         if (!aModule.hasAccess && ![[KGORequestManager sharedManager] isUserLoggedIn]) {
-            DLog(@"%@ %@", aModule.tag, aModule);
+            DLog(@"%@ module requires login: %@", aModule.tag, aModule);
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(loginDidComplete:)
                                                          name:KGODidLoginNotification
@@ -202,19 +353,26 @@
 
 // in response to HelloRequestDidFailNotification
 - (void)helloRequestDidFail:(NSNotification *)aNotification {
-    NSString *message = NSLocalizedString(@"Could not connect to server.  Please try again later.",
-                                          @"error message for hello request failure");
-    NSString *retry = NSLocalizedString(@"Retry", @"retry button for hello request failure");
+    NSString *message = NSLocalizedString(@"CORE_HELLO_REQUEST_FAILED_ERROR_MESSAGE",
+                                          @"Could not connect to server.  Please try again later.");
+    NSString *retry = NSLocalizedString(@"CORE_RETRY_REQUEST_BUTTON", @"Retry");
     UIAlertView *alertView = [[[UIAlertView alloc] initWithTitle:nil
                                                          message:message
                                                         delegate:self 
-                                               cancelButtonTitle:nil 
+                                               cancelButtonTitle:NSLocalizedString(@"COMMON_CANCEL", @"Cancel")
                                                otherButtonTitles:retry, nil] autorelease];
     [alertView show];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    [[KGORequestManager sharedManager] requestServerHello];
+    if (buttonIndex == alertView.cancelButtonIndex) {
+        [self loadModules];
+        [self refreshModules];
+        [self hideLoadingView];
+
+    } else {
+        [[KGORequestManager sharedManager] requestServerHello];
+    }
 }
 
 - (void)showLoadingView
@@ -230,7 +388,7 @@
         [spinny startAnimating];
         spinny.autoresizingMask = allMargins;
         
-        NSString *loadingText = NSLocalizedString(@"Loading...", nil);
+        NSString *loadingText = NSLocalizedString(@"COMMON_INDETERMINATE_LOADING", @"Loading...");
         UIFont *font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyBodyText];
         CGSize size = [loadingText sizeWithFont:font];
         UILabel *loadingLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)] autorelease];
@@ -275,10 +433,7 @@
 }
 
 - (NSArray *)allWidgets:(CGFloat *)topFreePixel :(CGFloat *)bottomFreePixel {
-    CGFloat yOrigin = 0;
-    if (_searchBar) {
-        yOrigin = _searchBar.frame.size.height;
-    }
+    CGFloat yOrigin = [self minimumAvailableY];
     
     CGSize *occupiedAreas = malloc(sizeof(CGSize) * 4);
     
@@ -415,7 +570,9 @@
         anIcon.isAccessibilityElement = YES;
         anIcon.accessibilityLabel = aModule.longName;
         
-        DLog(@"created home screen icon for %@: %@", aModule.tag, [anIcon description]);
+        anIcon.enabled = aModule.enabled;
+        
+        DLog(@"%@ icon: %.0f x %.0f", aModule.tag, anIcon.frame.size.width, anIcon.frame.size.height);
     }
     
     return icons;
@@ -439,7 +596,7 @@
 }
 
 - (NSArray *)searchControllerValidModules:(KGOSearchDisplayController *)controller {
-    NSMutableArray *searchableModules = [NSMutableArray arrayWithCapacity:4];
+    NSMutableArray *searchableModules = [NSMutableArray arrayWithCapacity:5];
     NSArray *modules = [KGO_SHARED_APP_DELEGATE() modules];
     for (KGOModule *aModule in modules) {
         if (aModule.supportsFederatedSearch) {
@@ -454,13 +611,12 @@
 }
 
 - (void)resultsHolder:(id<KGOSearchResultsHolder>)searcher didSelectResult:(id<KGOSearchResult>)aResult {
-    // TODO: come up with a better way to figure out which module the search result belongs to
+    // FIXME: come up with a better way to figure out which module the search result belongs to
     BOOL didShow = NO;
-    if ([aResult isKindOfClass:[KGOPersonWrapper class]]) {
-        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:aResult, @"personDetails", nil];
-        didShow = [KGO_SHARED_APP_DELEGATE() showPage:LocalPathPageNameDetail forModuleTag:PeopleTag params:params];
+    if ([aResult respondsToSelector:@selector(didGetSelected:)]) {
+        didShow = [aResult didGetSelected:self];
     }
-    
+
     if (!didShow) {
         NSLog(@"home screen search controller failed to respond to search result %@", [aResult description]);
     }
@@ -608,6 +764,8 @@
     NSMutableArray *primary = [NSMutableArray array];
     NSMutableArray *secondary = [NSMutableArray array];
     
+    BOOL networkIsReachable = [[KGORequestManager sharedManager] isReachable];
+    
     for (KGOModule *aModule in modules) {
         // special case for home module
         if ([aModule isKindOfClass:[HomeModule class]]) {
@@ -616,6 +774,11 @@
 
         if (aModule.hidden || !aModule.hasAccess) {
             DLog(@"skipping module %@", aModule);
+            continue;
+        }
+        
+        if ([[KGOUserSettingsManager sharedManager] isModuleHidden:aModule.tag primary:!aModule.secondary]) {
+            DLog(@"module %@ hidden by user", aModule);
             continue;
         }
 
@@ -629,32 +792,27 @@
         } else {
             [primary addObject:aModule];
         }
+        
+        aModule.enabled = networkIsReachable || ![aModule requiresKurogoServer];
     }
 
-    [_secondaryModules release];
-    
-    NSDictionary *modulePreference = [[KGOUserSettingsManager sharedManager] selectedValueDictForSetting:@"Modules"];
-    NSArray *moduleOrder = [modulePreference objectForKey:@"items"];
-    
-    _secondaryModules = [[secondary sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+    __block NSArray *moduleOrder = [[KGOUserSettingsManager sharedManager] moduleSortOrder];
+    DLog(@"%@", moduleOrder);
+
+    NSComparisonResult (^moduleSort)(id, id) = ^(id obj1, id obj2) {
         NSInteger order1 = [moduleOrder indexOfObject:[(KGOModule *)obj1 tag]];
         NSInteger order2 = [moduleOrder indexOfObject:[(KGOModule *)obj2 tag]];
         if (order1 > order2)
             return NSOrderedDescending;
         else
             return (order1 < order2) ? NSOrderedAscending : NSOrderedSame;
-    }] retain];
+    };
+    
+    [_secondaryModules release];
+    _secondaryModules = [[secondary sortedArrayUsingComparator:moduleSort] retain];
     
     [_primaryModules release];
-
-    _primaryModules = [[primary sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        NSInteger order1 = [moduleOrder indexOfObject:[(KGOModule *)obj1 tag]];
-        NSInteger order2 = [moduleOrder indexOfObject:[(KGOModule *)obj2 tag]];
-        if (order1 > order2)
-            return NSOrderedDescending;
-        else
-            return (order1 < order2) ? NSOrderedAscending : NSOrderedSame;
-    }] retain];
+    _primaryModules = [[primary sortedArrayUsingComparator:moduleSort] retain];
 }
 
 + (GridPadding)paddingWithArgs:(NSArray *)args {

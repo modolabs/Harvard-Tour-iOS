@@ -1,20 +1,14 @@
 #import "CoreDataManager.h"
 #import "MITBuildInfo.h"
-#import "KGOAppDelegate.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
 #import <objc/runtime.h>
 
-NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
-
-
-// not sure what to call this, just a placeholder for now, still hard coding file name below
-#define SQLLITE_PREFIX @"CoreDataXML."
-
+NSString * const CoreDataFilenamePrefix = @"CoreData";
+NSString * const CoreDataFilenameSuffix = @"sqlite";
 
 @implementation CoreDataManager
 
-@synthesize managedObjectModel;
-@synthesize persistentStoreCoordinator;
+@synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 #pragma mark -
 #pragma mark Class methods
@@ -65,12 +59,20 @@ NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
 
 - (void)deleteObjects:(NSArray *)objects {
     for (NSManagedObject *object in objects) {
-        [self.managedObjectContext deleteObject:object];
+        [self deleteObject:object];
     }
 }
 
-- (void)deleteObject:(NSManagedObject *)object {
-	[self.managedObjectContext deleteObject:object];
+- (void)deleteObject:(NSManagedObject *)object
+{
+    DLog(@"deleting object %@ in context %@", [object objectID], [object managedObjectContext]);
+    if ([[NSThread currentThread] isMainThread]) {
+        DLog(@"context %@ is deleting an object", self.managedObjectContext);
+        [self.managedObjectContext deleteObject:object];
+    } else {
+        DLog(@"passing object to main thread");
+        [self performSelectorOnMainThread:@selector(deleteObject:) withObject:object waitUntilDone:YES];
+    }
 }
 
 // TODO: consider using initWithEntity:insertIntoManagedObjectContext instead
@@ -81,9 +83,13 @@ NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
 - (id)insertNewObjectForEntityForName:(NSString *)entityName context:(NSManagedObjectContext *)aManagedObjectContext {
     DLog(@"inserting new %@ object", entityName);
     if (self.managedObjectContext) {
-        NSEntityDescription *entityDescription = [[managedObjectModel entitiesByName] objectForKey:entityName];
-        return [[[NSManagedObject alloc] initWithEntity:entityDescription
-                         insertIntoManagedObjectContext:aManagedObjectContext] autorelease];
+        NSManagedObjectModel *model = [_persistentStoreCoordinator managedObjectModel];
+        NSEntityDescription *entityDescription = [[model entitiesByName] objectForKey:entityName];
+        if (entityDescription) {
+            return [[[NSManagedObject alloc] initWithEntity:entityDescription
+                             insertIntoManagedObjectContext:aManagedObjectContext] autorelease];
+        }
+        NSLog(@"Core data failed to find an entity description for %@", entityName);
     }
     return nil;
 }
@@ -114,15 +120,22 @@ NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
     return [self objectsForEntity:entityName matchingPredicate:predicate sortDescriptors:nil];
 }
 
-- (id)getObjectForEntity:(NSString *)entityName attribute:(NSString *)attributeName value:(id)value {	
-	NSString *predicateFormat = [attributeName stringByAppendingString:@" like %@"];
-	NSPredicate *predicate = [NSPredicate predicateWithFormat:predicateFormat, value];
+- (id)uniqueObjectForEntity:(NSString *)entityName attribute:(NSString *)attributeName value:(id)value {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K = %@", attributeName, value];
     NSArray *objects = [self objectsForEntity:entityName matchingPredicate:predicate];
-    return ([objects count] > 0) ? [objects lastObject] : nil;
+    if (objects.count == 1) {
+        return [objects lastObject];
+    } else if (objects.count == 0) {
+        return nil;
+    } else {
+        NSLog(@"Warning: more than one %@ object where %@ = %@", entityName, attributeName, value);
+        return [objects objectAtIndex:0];
+    }
 }
 
 - (void)saveData {
-    NSLog(@"saving: %@", self.managedObjectContext);
+    DLog(@"saving: %@", self.managedObjectContext);
+    DLog(@"deleted %d objects", [[self.managedObjectContext deletedObjects] count]);
 	NSError *error;
 	if (![self.managedObjectContext save:&error]) {
         DLog(@"Failed to save to data store: %@", [error localizedDescription]);
@@ -156,7 +169,8 @@ NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
     NSMutableDictionary *threadDict = [[NSThread currentThread] threadDictionary];
     NSManagedObjectContext *localContext = [threadDict objectForKey:@"MITCoreDataManagedObjectContext"];
     if (localContext) {
-        if ([localContext persistentStoreCoordinator] != coordinator) {
+        NSPersistentStoreCoordinator *localCoordinator = [localContext persistentStoreCoordinator];
+        if (localCoordinator != coordinator) {
             [threadDict removeObjectForKey:@"MITCoreDataManagedObjectContext"];
             localContext = nil;
         }
@@ -169,7 +183,7 @@ NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
         
         DLog(@"current thread: %@", [NSThread currentThread]);
         
-        if ([NSThread currentThread] != [NSThread mainThread]) {
+        if (![[NSThread currentThread] isMainThread]) {
             [self performSelectorOnMainThread:@selector(observeSaveForContext:) withObject:localContext waitUntilDone:NO];
         }
     }
@@ -187,59 +201,53 @@ NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
 
 - (void)mergeChanges:(NSNotification *)aNotification
 {
-    DLog(@"local context did save %@", aNotification);
+    DLog(@"local context did save %@ %@", [aNotification name], [aNotification object]);
     
-    if ([NSThread currentThread] == [NSThread mainThread]) {
+    if ([[NSThread currentThread] isMainThread]) {
         DLog(@"saving changes on main thread %@, context %@", [NSThread currentThread], self.managedObjectContext);
-        DLog(@"managed object context has persistent store coordinator %@", [self.managedObjectContext persistentStoreCoordinator]);
+        DLog(@"persistent store coordinator %@", [self.managedObjectContext persistentStoreCoordinator]);
         [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:aNotification];
         
     } else {
         DLog(@"saving changes on remote thread %@, context %@", [NSThread currentThread], self.managedObjectContext);
-        DLog(@"managed object context has persistent store coordinator %@", [self.managedObjectContext persistentStoreCoordinator]);
+        DLog(@"persistent store coordinator %@", [self.managedObjectContext persistentStoreCoordinator]);
         [self performSelectorOnMainThread:@selector(mergeChanges:) withObject:aNotification waitUntilDone:YES];
     }
 }
 
-# pragma mark Everything below here is auto-generated
-
 - (NSManagedObjectModel *)managedObjectModel {
-	if (!managedObjectModel) {
-        // override the autogenerated method -- see http://iphonedevelopment.blogspot.com/2009/09/core-data-migration-problems.html
-        NSArray *modelNames = [KGO_SHARED_APP_DELEGATE() coreDataModelNames];
-        NSMutableArray *models = [NSMutableArray arrayWithCapacity:modelNames.count];
-        for (NSString *modelName in modelNames) {
-            NSString *path = [[NSBundle mainBundle] pathForResource:modelName ofType:@"momd"];
-            NSManagedObjectModel *aModel = [[[NSManagedObjectModel alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path]] autorelease];
-            [models addObject:aModel];
-        }
-        
-        managedObjectModel = [NSManagedObjectModel modelByMergingModels:models];
+    // override the autogenerated method -- see http://iphonedevelopment.blogspot.com/2009/09/core-data-migration-problems.html
+    NSArray *modelNames = [KGO_SHARED_APP_DELEGATE() coreDataModelNames];
+    NSMutableArray *models = [NSMutableArray arrayWithCapacity:modelNames.count];
+    for (NSString *modelName in modelNames) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:modelName ofType:@"momd"];
+        NSManagedObjectModel *aModel = [[[NSManagedObjectModel alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path]] autorelease];
+        [models addObject:aModel];
     }
     
-    return managedObjectModel;
+    return [NSManagedObjectModel modelByMergingModels:models];
 }
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
 	
-    if (persistentStoreCoordinator != nil) {
-        return persistentStoreCoordinator;
+    if (_persistentStoreCoordinator != nil) {
+        return _persistentStoreCoordinator;
     }
     
 	NSURL *storeURL = [NSURL fileURLWithPath:[self storeFileName]];
 	
 	NSError *error;
-    persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
-	
+    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+    
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
                              [NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption,
                              [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
 
-    NSPersistentStore *store = [persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
-                                                                        configuration:nil
-                                                                                  URL:storeURL
-                                                                              options:options
-                                                                                error:&error];
+    NSPersistentStore *store = [_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                                         configuration:nil
+                                                                                   URL:storeURL
+                                                                               options:options
+                                                                                 error:&error];
     if (!store) {
         BOOL tryAgain = [self migrateData];
         
@@ -279,42 +287,47 @@ NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
         
         if (tryAgain) {
             DLog(@"Attempting to recreate the persistent store");
-            store = [persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType 
-                                                             configuration:nil
-                                                                       URL:storeURL
-                                                                   options:options
-                                                                     error:&error];
+            store = [_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                              configuration:nil
+                                                                        URL:storeURL
+                                                                    options:options
+                                                                      error:&error];
             if (!store) {
                 NSLog(@"Still failed to create the persistent store: %@", [error description]);
             }
         }
     }
 	
-    return persistentStoreCoordinator;
+    return _persistentStoreCoordinator;
 }
 
 - (BOOL)deleteStore
 {
     BOOL success = NO;
     NSError *error = nil;
+    
+    NSPersistentStore *store = [[_persistentStoreCoordinator persistentStores] lastObject];
+    if ([_persistentStoreCoordinator removePersistentStore:store error:&error]) {
+        DLog(@"Persistent store deleted");
+    } else {
+        NSLog(@"Core Data failed to remove persistent store, %@", [error description]);
+        return NO;
+    }
+    
+    NSLog(@"deleting persistent store coordinator %@", _persistentStoreCoordinator);
 
     @synchronized(self) {
-        [persistentStoreCoordinator release];
-        persistentStoreCoordinator = nil;
+        [_persistentStoreCoordinator release];
+        _persistentStoreCoordinator = nil;
     }
     
-    if ([[NSFileManager defaultManager] removeItemAtPath:[self storeFileName] error:&error]) {
-        NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-        DLog(@"%@", coordinator);
-        
-        success = coordinator != nil;
-        
-    } else {
-        NSLog(@"could not delete store, %@", [error description]);
-    }
+    success = [[NSFileManager defaultManager] removeItemAtPath:[self storeFileName] error:&error];
     
     if (success) {
+        DLog(@"Core Data file deleted from disk");
         [[NSNotificationCenter defaultCenter] postNotificationName:CoreDataDidDeleteStoreNotification object:self];
+    } else {
+        NSLog(@"could not delete core data from disk, %@", [error description]);
     }
     
     return success;
@@ -326,27 +339,34 @@ NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
 /**
  Returns the path to the application's documents directory.
  */
-- (NSString *)applicationDocumentsDirectory {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+- (NSString *)applicationCachesDirectory {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
     return basePath;
 }
 
+/**
+ * since the only conceivable reason there would be a change in core data structure
+ * is that someone changed the xcdatamodel, the most probable indicator is a change
+ * in build version. when a new file is needed, we cache it with the version number
+ * and pick the last modified file if we somehow failed to remove older versions.
+ */
 - (NSString *)storeFileName {
 	NSString *currentFileName = [self currentStoreFileName];
 	
 	if (![[NSFileManager defaultManager] fileExistsAtPath:currentFileName]) {
-		NSInteger maxVersion = 0;
-		NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self applicationDocumentsDirectory] error:NULL];
-		// find all files like CoreDataXML.* and pick the latest one
+		NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self applicationCachesDirectory] error:NULL];
+		// find all files like CoreData.*.sqlite and pick the latest one
+        NSDate *latestDate = [NSDate distantPast];
+        NSError *error = nil;
 		for (NSString *file in files) {
-			if ([file hasPrefix:@"CoreDataXML."] && [file hasSuffix:@"sqlite"]) {
-				// if version is something like 3:4M, this takes 3 to be the pre-existing version
-				NSInteger version = [[[file componentsSeparatedByString:@"."] objectAtIndex:1] intValue];
-				if (version >= maxVersion) {
-					maxVersion = version;
-					currentFileName = [[self applicationDocumentsDirectory] stringByAppendingPathComponent:file];
-				}
+			if ([file hasPrefix:CoreDataFilenamePrefix] && [file hasSuffix:CoreDataFilenameSuffix]) {
+                NSString *path = [[self applicationCachesDirectory] stringByAppendingPathComponent:file];
+                NSDictionary *attribs = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error];
+                NSDate *modDate = [attribs objectForKey:NSFileModificationDate];
+                if ([modDate compare:latestDate] == NSOrderedDescending) {
+                    currentFileName = path;
+                }
 			}
 		}
 	}
@@ -355,7 +375,10 @@ NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
 }
 
 - (NSString *)currentStoreFileName {
-	return [[self applicationDocumentsDirectory] stringByAppendingPathComponent:[NSString stringWithFormat:@"CoreDataXML.%@.sqlite", MITBuildNumber]];
+    NSString *filename = [NSString stringWithFormat:
+                          @"%@.%@.%@",
+                          CoreDataFilenamePrefix, MITBuildNumber, CoreDataFilenameSuffix];
+	return [[self applicationCachesDirectory] stringByAppendingPathComponent:filename];
 }
 
 #pragma mark -
@@ -451,8 +474,7 @@ NSString * const CoreDataDidDeleteStoreNotification = @"CoreDataDidDelete";
 #pragma mark -
 
 -(void)dealloc {
-	[managedObjectModel release];
-	[persistentStoreCoordinator release];
+	[_persistentStoreCoordinator release];
 
 	[super dealloc];
 }

@@ -4,144 +4,170 @@
 #import "UIKit+KGOAdditions.h"
 
 #define LABEL_PADDING 10
-#define MAX_TITLE_LINES 3
+#define MAX_TITLE_LINES 4
 #define MAX_SUBTITLE_LINES 5
+
+@interface KGODetailPageHeaderView (Private)
+
+// triggered when title or subtitle changes so the height needs to be recalculated
+- (void)contentDidChange;
+
+@end
 
 @implementation KGODetailPageHeaderView
 
 @synthesize showsShareButton, showsBookmarkButton, delegate;
-/*
+
+@synthesize showsSubtitle;
+@synthesize actionButtons = _actionButtons;
+@synthesize bookmarkButton = _bookmarkButton, shareButton = _shareButton,
+titleLabel = _titleLabel, subtitleLabel = _subtitleLabel, buttonContainer = _buttonContainer;
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        self.actionButtons = [NSMutableArray array];
+        self.showsSubtitle = YES;
+    }
+    return self;
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        // Initialization code
+        self.actionButtons = [NSMutableArray array];
+        self.showsSubtitle = YES;
     }
     return self;
 }
-*/
+
 - (void)dealloc
 {
+    [_detailItem release];
+    self.actionButtons = nil;
     self.delegate = nil;
-    self.detailItem = nil;
-    [self hideShareButton];
-    [self hideBookmarkButton];
-    [_titleLabel release];
-    [_subtitleLabel release];
+    self.titleLabel = nil;
+    self.subtitleLabel = nil;
+    self.shareButton = nil;
+    self.bookmarkButton = nil;
     [super dealloc];
 }
 
-- (void)layoutSubviews
+- (void)awakeFromNib
 {
-    CGRect oldFrame = self.frame;
-    CGFloat titleHeight = 0;
-    CGFloat subtitleHeight = 0;
-    CGFloat buttonHeight = 0;
-    
-    if (_showsShareButton) {
-        [self layoutShareButton];
-        buttonHeight = _shareButton.frame.size.height + LABEL_PADDING;
-    }
-    
-    if (_showsBookmarkButton) {
-        [self layoutBookmarkButton];
-        buttonHeight = _bookmarkButton.frame.size.height + LABEL_PADDING;
-    }
-    
-    if (_titleLabel) {
-        CGFloat maxWidth;
-        if (_subtitleLabel) {
-            maxWidth = self.bounds.size.width - 2 * LABEL_PADDING;
-        } else {
-            maxWidth = [self headerWidthWithButtons] - 2 * LABEL_PADDING;
-        }
-        CGSize constraintSize = CGSizeMake(maxWidth, _titleLabel.font.lineHeight * MAX_TITLE_LINES);
-        CGSize textSize = [_titleLabel.text sizeWithFont:_titleLabel.font constrainedToSize:constraintSize];
-        _titleLabel.frame = CGRectMake(LABEL_PADDING, LABEL_PADDING, maxWidth, textSize.height);
-        titleHeight = _titleLabel.frame.size.height + LABEL_PADDING;
-    }
-    
-    if (_subtitleLabel) {
-        CGFloat maxWidth = [self headerWidthWithButtons] - 2 * LABEL_PADDING;
-        CGSize constraintSize = CGSizeMake(maxWidth, _subtitleLabel.font.lineHeight * MAX_SUBTITLE_LINES);
-        CGSize textSize = [_subtitleLabel.text sizeWithFont:_subtitleLabel.font constrainedToSize:constraintSize];
-        CGFloat y = LABEL_PADDING;
-        if (_titleLabel) {
-            y += _titleLabel.frame.size.height + LABEL_PADDING;
-            
-            CGRect buttonFrame = _bookmarkButton.frame;
-            buttonFrame.origin.y = y;
-            _bookmarkButton.frame = buttonFrame;
-            
-            buttonFrame = _shareButton.frame;
-            buttonFrame.origin.y = y;
-            _shareButton.frame = buttonFrame;
-        }
-        _subtitleLabel.frame = CGRectMake(LABEL_PADDING, y, maxWidth, textSize.height);
-        subtitleHeight = _subtitleLabel.frame.size.height + LABEL_PADDING;
-    }
-    
-    CGRect frame = self.frame;
-    frame.size.height = titleHeight + fmaxf(subtitleHeight, buttonHeight) + LABEL_PADDING;
-    self.frame = frame;
+    [super awakeFromNib];
 
-    if ((self.frame.size.width != oldFrame.size.width || self.frame.size.height != oldFrame.size.height)
-        && [self.delegate respondsToSelector:@selector(headerViewFrameDidChange:)]
-    ) {
-        [self.delegate headerViewFrameDidChange:self];
+    if (self.showsShareButton) {
+        UIImage *buttonImage = [UIImage imageWithPathName:@"common/share"];
+        UIImage *pressedButtonImage = [UIImage imageWithPathName:@"common/share_pressed"];
+        [self.shareButton setTitle:nil forState:UIControlStateNormal];
+        [self.shareButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+        [self.shareButton setBackgroundImage:pressedButtonImage forState:UIControlStateHighlighted];
+        [self.actionButtons addObject:self.shareButton];
     }
+    
+    if (self.showsBookmarkButton) {
+        [self.bookmarkButton setTitle:nil forState:UIControlStateNormal];
+        [self setupBookmarkButtonImages];
+        [self.actionButtons addObject:self.bookmarkButton];
+    }
+    
+    self.titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentTitle];
+    self.subtitleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentSubtitle];
 }
 
-- (UILabel *)titleLabel
+// triggered when title or subtitle changes so the height needs to be recalculated
+- (void)contentDidChange
 {
-    if (!_titleLabel) {
-        _titleLabel = [[UILabel alloc] init];
-        _titleLabel.backgroundColor = [UIColor clearColor];
-        _titleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentTitle];
-        _titleLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyContentTitle];
-        _titleLabel.numberOfLines = MAX_TITLE_LINES;
+    CGFloat y = fmaxf(CGRectGetMaxY(self.buttonContainer.frame), CGRectGetMaxY(self.subtitleLabel.frame)) + 10;
+    if (y != CGRectGetMaxY(self.frame)) {
+        self.frame = CGRectMake(CGRectGetMinX(self.frame), CGRectGetMinY(self.frame),
+                                CGRectGetWidth(self.frame), y);
+        if ([self.delegate respondsToSelector:@selector(headerViewFrameDidChange:)]) {
+            [self.delegate headerViewFrameDidChange:self];
+        }
     }
-    return _titleLabel;
-}
-
-- (UILabel *)subtitleLabel
-{
-    if (!_subtitleLabel) {
-        _subtitleLabel = [[UILabel alloc] init];
-        _subtitleLabel.backgroundColor = [UIColor clearColor];
-        _subtitleLabel.font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyContentSubtitle];
-        _subtitleLabel.textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyContentSubtitle];
-        _subtitleLabel.numberOfLines = MAX_SUBTITLE_LINES;
-    }
-    return _subtitleLabel;
 }
 
 - (BOOL)showsShareButton
 {
-    return _showsShareButton;
+    return self.shareButton && !self.shareButton.hidden;
 }
 
 - (BOOL)showsBookmarkButton
 {
-    return _showsBookmarkButton;
+    return self.bookmarkButton && !self.bookmarkButton.hidden;
 }
 
 - (void)setShowsShareButton:(BOOL)shows
 {
-    _showsShareButton = shows;
-    
-    if (!_showsShareButton) {
-        [self hideShareButton];
+    if (shows == self.shareButton.hidden) {
+        self.shareButton.hidden = !shows;
+        [self layoutActionButtons];
     }
 }
 
 - (void)setShowsBookmarkButton:(BOOL)shows
 {
-    _showsBookmarkButton = shows;
-    
-    if (!_showsBookmarkButton) {
-        [self hideBookmarkButton];
+    if (shows == self.bookmarkButton.hidden) {
+        self.bookmarkButton.hidden = !shows;
+        [self layoutActionButtons];
     }
+}
+
+- (NSString *)title
+{
+    return self.titleLabel.text;
+}
+
+- (NSString *)subtitle
+{
+    return self.subtitleLabel.text;
+}
+
+- (void)setTitle:(NSString *)title
+{
+    self.titleLabel.text = title;
+    
+    self.titleLabel.text = _detailItem.title;
+    if (self.titleLabel.text.length) {
+        CGSize size = [self.titleLabel.text sizeWithFont:self.titleLabel.font
+                                       constrainedToSize:CGSizeMake(CGRectGetWidth(self.titleLabel.frame), 200)
+                                           lineBreakMode:UILineBreakModeWordWrap];
+        self.titleLabel.frame = CGRectMake(CGRectGetMinX(self.titleLabel.frame), CGRectGetMinY(self.titleLabel.frame),
+                                           CGRectGetWidth(self.titleLabel.frame), size.height);
+
+        // subtitle and button go 10px below bottom of title
+        CGFloat y = CGRectGetMaxY(self.titleLabel.frame) + 10;
+        CGRect frame = self.buttonContainer.frame;
+        frame.origin.y = y;
+        self.buttonContainer.frame = frame;
+
+        frame = self.subtitleLabel.frame;
+        frame.origin.y = y;
+        self.subtitleLabel.frame = frame;
+    }
+    [self contentDidChange];
+}
+
+- (void)setSubtitle:(NSString *)subtitle
+{
+    self.subtitleLabel.text = subtitle;
+
+    if (self.showsSubtitle && self.subtitleLabel.text) {
+        CGFloat subWidth = CGRectGetMinX(self.buttonContainer.frame) - 10;
+        CGSize size = [self.subtitleLabel.text sizeWithFont:self.subtitleLabel.font
+                                          constrainedToSize:CGSizeMake(subWidth, 200)];
+        self.subtitleLabel.frame = CGRectMake(CGRectGetMinX(self.subtitleLabel.frame),
+                                              CGRectGetMinY(self.subtitleLabel.frame),
+                                              subWidth, size.height);
+        self.subtitleLabel.hidden = NO;
+    } else {
+        self.subtitleLabel.hidden = YES;
+    }
+    [self contentDidChange];
 }
 
 - (id<KGOSearchResult>)detailItem
@@ -154,48 +180,14 @@
     [_detailItem release];
     _detailItem = [item retain];
     
-    CGRect frame = self.frame;
-    frame.size.height = 0;
-    self.frame = frame;
-    
-    self.titleLabel.text = _detailItem.title;
-    if (![_titleLabel isDescendantOfView:self]) {
-        [self addSubview:_titleLabel];
-    }
-    
-    NSString *subtitle = nil;
+    self.title = _detailItem.title;
+
     if ([_detailItem respondsToSelector:@selector(subtitle)]) {
-        subtitle = [_detailItem subtitle];
-    }
-    
-    if (subtitle) {
-        self.subtitleLabel.text = [_detailItem subtitle];
-        if (![_subtitleLabel isDescendantOfView:self]) {
-            [self addSubview:_subtitleLabel];
-        }
-    
-    } else {
-        [_subtitleLabel removeFromSuperview];
-        [_subtitleLabel release];
-        _subtitleLabel = nil;
+        self.subtitle = [_detailItem subtitle];
     }
 }
 
-- (CGFloat)headerWidthWithButtons
-{
-    // assuming share button occupies far right
-    // and bookmark button comes after share
-    CGFloat result = self.bounds.size.width - LABEL_PADDING;
-    if (_shareButton) {
-        result -= _shareButton.frame.size.width + LABEL_PADDING;
-    }
-    if (_bookmarkButton) {
-        result -= _bookmarkButton.frame.size.width + LABEL_PADDING;
-    }
-    return result;
-}
-
-- (void)toggleBookmark:(id)sender
+- (IBAction)toggleBookmark:(id)sender
 {
     if ([self.detailItem isBookmarked]) {
         [self.detailItem removeBookmark];
@@ -206,8 +198,15 @@
     [self setupBookmarkButtonImages];
 }
 
-- (void)setupBookmarkButtonImages
+- (IBAction)shareButtonPressed:(id)sender
 {
+    if ([self.delegate respondsToSelector:@selector(headerView:shareButtonPressed:)]) {
+        [self.delegate headerView:self shareButtonPressed:sender];
+    }
+}
+
+- (void)setupBookmarkButtonImages
+{    
     UIImage *buttonImage, *pressedButtonImage;
     if ([self.detailItem isBookmarked]) {
         buttonImage = [UIImage imageWithPathName:@"common/bookmark_on.png"];
@@ -216,81 +215,51 @@
         buttonImage = [UIImage imageWithPathName:@"common/bookmark_off.png"];
         pressedButtonImage = [UIImage imageWithPathName:@"common/bookmark_off_pressed.png"];
     }
-    [_bookmarkButton setImage:buttonImage forState:UIControlStateNormal];
-    [_bookmarkButton setImage:pressedButtonImage forState:UIControlStateHighlighted];
+    [self.bookmarkButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [self.bookmarkButton setBackgroundImage:pressedButtonImage forState:UIControlStateHighlighted];
 }
 
-- (void)layoutBookmarkButton
+- (void)addButtonWithImage:(UIImage *)image pressedImage:(UIImage *)pressedImage target:(id)target action:(SEL)action
 {
-    if (!_bookmarkButton) {
-        UIImage *placeholder = [UIImage imageWithPathName:@"common/bookmark_off.png"];
-        CGFloat buttonX = [self headerWidthWithButtons] - placeholder.size.width;
-        CGFloat buttonY = LABEL_PADDING + (_subtitleLabel == nil ? 0 : _titleLabel.frame.size.height + LABEL_PADDING);
-        
-        _bookmarkButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-        _bookmarkButton.frame = CGRectMake(buttonX, buttonY, placeholder.size.width, placeholder.size.height);
-        
-        [_bookmarkButton addTarget:self action:@selector(toggleBookmark:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_bookmarkButton];
-        
-    }
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(0, 0, image.size.width, image.size.height);
     
-    [self setupBookmarkButtonImages];
-    
-    CGRect frame = _bookmarkButton.frame;
-    if (_shareButton) {
-        frame.origin.x = self.bounds.size.width - _shareButton.frame.size.width - frame.size.width - 2 * LABEL_PADDING;
+    [button setBackgroundImage:image forState:UIControlStateNormal];
+    if (pressedImage) {
+        [button setBackgroundImage:pressedImage forState:UIControlStateHighlighted];
     }
-    frame.origin.y = LABEL_PADDING + (_subtitleLabel == nil ? 0 : _titleLabel.frame.size.height + LABEL_PADDING);
-    _bookmarkButton.frame = frame;
+    if (target && [target respondsToSelector:action]) {
+        [button addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+    }
+    [self.actionButtons addObject:button];
+    [self layoutActionButtons];
 }
 
-- (void)hideBookmarkButton
+- (void)layoutActionButtons
 {
-    if (_bookmarkButton) {
-        [_bookmarkButton removeFromSuperview];
-        [_bookmarkButton release];
-        _bookmarkButton = nil;
+    for (UIView *aView in self.buttonContainer.subviews) {
+        [aView removeFromSuperview];
     }
-}
 
-- (void)layoutShareButton
-{
-    if (!_shareButton) {
-        UIImage *buttonImage = [UIImage imageWithPathName:@"common/share.png"];
-        CGFloat buttonX = self.frame.size.width - buttonImage.size.width - LABEL_PADDING;
-        CGFloat buttonY = LABEL_PADDING + (_titleLabel == nil ? 0 : _titleLabel.frame.size.height + LABEL_PADDING);
-        
-        _shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-        _shareButton.frame = CGRectMake(buttonX, buttonY, buttonImage.size.width, buttonImage.size.height);
-        [_shareButton setImage:buttonImage forState:UIControlStateNormal];
-        [_shareButton setImage:[UIImage imageWithPathName:@"common/share_pressed.png"] forState:UIControlStateHighlighted];
-        if ([self.delegate respondsToSelector:@selector(shareButtonPressed:)]) {
-            [_shareButton addTarget:self.delegate action:@selector(shareButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    CGFloat x = 0;
+    CGFloat width = 0;
+    CGFloat spacing = 6;
+    for (UIButton *aButton in self.actionButtons) {
+        if (!aButton.hidden) {
+            width = CGRectGetWidth(aButton.frame);
+            aButton.frame = CGRectMake(x, 0, width, CGRectGetHeight(aButton.frame));
+            x += width + spacing;
+            [self.buttonContainer addSubview:aButton];
         }
-        [self addSubview:_shareButton];
-        
-    } else {
-        CGRect frame = _shareButton.frame;
-        frame.origin.y = LABEL_PADDING + (_titleLabel == nil ? 0 : _titleLabel.frame.size.height + LABEL_PADDING);
-        _shareButton.frame = frame;
-    }
-}
-
-- (void)hideShareButton
-{
-    if (_shareButton) {
-        [_shareButton removeFromSuperview];
-        [_shareButton release];
-        _shareButton = nil;
     }
     
-    // make sure bookmark button is flushed right
-    if (_bookmarkButton) {
-        CGRect frame = _bookmarkButton.frame;
-        frame.origin.x = [self headerWidthWithButtons];
-        _bookmarkButton.frame = frame;
-    }
+    width = x - spacing;
+    x = CGRectGetWidth(self.frame) - width - 10;
+
+    CGFloat y = self.titleLabel.hidden ? CGRectGetMinY(self.titleLabel.frame) : CGRectGetMaxY(self.titleLabel.frame);
+    
+    // TODO: in the future we might move this below the subtitle
+    self.buttonContainer.frame = CGRectMake(x, y, width, CGRectGetHeight(self.buttonContainer.frame));
 }
 
 @end

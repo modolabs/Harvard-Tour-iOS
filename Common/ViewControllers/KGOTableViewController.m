@@ -2,6 +2,7 @@
 #import "KGOTheme.h"
 #import "KGOSearchDisplayController.h"
 #import "Foundation+KGOAdditions.h"
+#import "UIKit+KGOAdditions.h"
 
 #define GROUPED_SECTION_HEADER_VPADDING 24
 #define PLAIN_SECTION_HEADER_VPADDING 5.0f
@@ -152,6 +153,14 @@
 	return [_tableController tableView:tableView heightForRowAtIndexPath:indexPath];
 }
 
+#pragma mark forwarding of UIScrollViewDelegate
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if ([_tableController respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+        [_tableController scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
+}
+
 @end
 
 #pragma mark -
@@ -294,7 +303,9 @@
 		tableView.dataSource = _searchController;
 	}
 	
-	[self.viewController.view addSubview:tableView];
+    if (![tableView isDescendantOfView:self.viewController.view]) {
+        [self.viewController.view addSubview:tableView];
+    }
 }
 
 - (UITableView *)addTableViewWithStyle:(UITableViewStyle)style {
@@ -528,7 +539,9 @@
     KGOTableCellStyle internalStyle;
     UITableViewCellStyle style;
     UIFont *titleFont = nil;
+    UIColor *titleTextColor = nil;
     UIFont *subtitleFont = nil;
+    UIColor *subtitleTextColor = nil;
 	
 	if ([dataSource respondsToSelector:@selector(tableView:styleForCellAtIndexPath:)]) {
 		internalStyle = [dataSource tableView:tableView styleForCellAtIndexPath:indexPath];
@@ -540,20 +553,27 @@
         case KGOTableCellStyleValue1:
             style = UITableViewCellStyleValue1;
             titleFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
+            titleTextColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyNavListTitle];
             subtitleFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyBodyText];
+            subtitleTextColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyBodyText];
             break;
         case KGOTableCellStyleValue2:
             style = UITableViewCellStyleValue2;
             titleFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListLabel];
+            titleTextColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyNavListLabel];
             subtitleFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListValue];
+            subtitleTextColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyNavListValue];
             break;
         case KGOTableCellStyleSubtitle:
             titleFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
+            titleTextColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyNavListTitle];
             subtitleFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListSubtitle];
+            subtitleTextColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyNavListSubtitle];
             style = UITableViewCellStyleSubtitle;
             break;
         default:
             titleFont = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertyNavListTitle];
+            titleTextColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertyNavListTitle];
             style = UITableViewCellStyleDefault;
             break;
     }
@@ -571,19 +591,19 @@
 			}
 		}
 	}
-    
-    // TODO: set theme colors as well
-    
-    cell.textLabel.font = titleFont;
-    if (subtitleFont) {
-        cell.detailTextLabel.font = subtitleFont;
-    }
-	
+
     if ([dataSource respondsToSelector:@selector(tableView:manipulatorForCellAtIndexPath:)]) {
         CellManipulator manipulateCell = [dataSource tableView:tableView manipulatorForCellAtIndexPath:indexPath];
         if (manipulateCell) {
             manipulateCell(cell);
         }
+    }
+    
+    cell.textLabel.font = titleFont;
+    cell.textLabel.textColor = titleTextColor;
+    if (subtitleFont) {
+        cell.detailTextLabel.font = subtitleFont;
+        cell.detailTextLabel.textColor = subtitleTextColor;
     }
     
 	if (cachedViews.count) {
@@ -592,7 +612,20 @@
 		}
 	}
     
+    if (cell.selectionStyle != UITableViewCellSelectionStyleNone) {
+        [cell applyBackgroundThemeColorForIndexPath:indexPath tableView:tableView];
+    }
+    
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	id<KGOTableViewDataSource> dataSource = [self dataSourceForTableView:tableView];
+	
+    if ([dataSource respondsToSelector:@selector(tableView:willDisplayCell:forRowAtIndexPath:)]) {
+        [dataSource tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
+    }
 }
 
 // implementing this only because it is required by the protocol
@@ -638,7 +671,6 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
     NSArray *views = [self tableView:tableView cachedViewsForCellAtIndexPath:indexPath];
     
     if (!views.count) {
@@ -674,11 +706,11 @@
     if (!title)
         return nil;
     
-    UIFont *font;
-    UIColor *textColor;
-    UIColor *bgColor;
+    UIFont *font = nil;
+    UIColor *textColor = nil;
+    UIColor *bgColor = nil;
     CGFloat hPadding = 10;
-    CGFloat viewHeight;
+    CGFloat viewHeight = 0;
     
     if (tableView.style == UITableViewStylePlain) {
         font = [[KGOTheme sharedTheme] fontForThemedProperty:KGOThemePropertySectionHeader];
@@ -690,6 +722,7 @@
         textColor = [[KGOTheme sharedTheme] textColorForThemedProperty:KGOThemePropertySectionHeaderGrouped];
         bgColor = [UIColor clearColor];
         viewHeight = font.lineHeight + GROUPED_SECTION_HEADER_VPADDING;
+        hPadding += [tableView marginWidth];
     }
     
     CGSize size = [title sizeWithFont:font];

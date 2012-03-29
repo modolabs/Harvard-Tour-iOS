@@ -5,11 +5,6 @@
 
 @protocol KGORequestDelegate;
 
-extern NSString * const HelloRequestDidCompleteNotification;
-extern NSString * const HelloRequestDidFailNotification;
-extern NSString * const KGODidLogoutNotification;
-extern NSString * const KGODidLoginNotification;
-
 // use this class to create requests Kurogo server.
 // requests to facebook, bitly etc are handled by KGOSocialMediaController
 @interface KGORequestManager : NSObject <KGORequestDelegate, UIAlertViewDelegate> {
@@ -49,16 +44,19 @@ extern NSString * const KGODidLoginNotification;
 + (KGORequestManager *)sharedManager;
 - (BOOL)isReachable;
 
-- (BOOL)isModuleAvailable:(NSString *)moduleTag;
-- (BOOL)isModuleAuthorized:(NSString *)moduleTag;
+- (BOOL)isModuleAvailable:(ModuleTag *)moduleTag;
+- (BOOL)isModuleAuthorized:(ModuleTag *)moduleTag;
 
 - (KGORequest *)requestWithDelegate:(id<KGORequestDelegate>)delegate
-                             module:(NSString *)module
+                             module:(ModuleTag *)module
                                path:(NSString *)path
+                            version:(NSUInteger)version
                              params:(NSDictionary *)params;
 
 - (void)showAlertForError:(NSError *)error request:(KGORequest *)request;
 - (void)showAlertForError:(NSError *)error request:(KGORequest *)request delegate:(id<UIAlertViewDelegate>)delegate;
+
+- (void)selectServerConfig:(NSString *)config;
 
 #pragma mark -
 

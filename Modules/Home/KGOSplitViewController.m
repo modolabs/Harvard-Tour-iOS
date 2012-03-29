@@ -1,7 +1,7 @@
 #import "KGOSplitViewController.h"
 #import "KGOTheme.h"
 #import "KGOModule.h"
-#import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 #import "HomeModule.h"
 
 @implementation KGOSplitViewController
@@ -113,13 +113,15 @@
     }
     
     if (!firstModule) {
-        // TODO: this overrides whichever method in the superclass responds
-        // to this notification
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(displayFirstModule)
                                                      name:ModuleListDidChangeNotification
                                                    object:nil];
 
+        // iOS 5 crashes if the detail view is not set
+        UIViewController *tempVC = [[[UIViewController alloc] init] autorelease];
+        self.rightViewController = tempVC;
+        
     } else {
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         

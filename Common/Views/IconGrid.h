@@ -27,15 +27,13 @@ typedef enum {
 @interface IconGrid : UIView {
     
 	id<IconGridDelegate> delegate;
-	
-    GridPadding padding;
-    GridSpacing spacing;
 
-    NSInteger maxColumns; // not doing anything with this yet
-    GridIconAlignment alignment;
-
-    NSArray *icons;
+    // these determine where the next icon should be placed
+    CGFloat _currentX;
+    CGFloat _currentY;
 }
+
+- (void)addIcons:(NSArray *)icons;
 
 @property (nonatomic, assign) id<IconGridDelegate> delegate;
 

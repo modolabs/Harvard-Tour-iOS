@@ -30,8 +30,8 @@
 {
     self = [super init];
     if (self) {
-        _clientID = [[config stringForKey:@"ClientID" nilIfEmpty:YES] retain];
-        _clientSecret = [[config stringForKey:@"ClientSecret" nilIfEmpty:YES] retain];
+        _clientID = [[config nonemptyStringForKey:@"ClientID"] retain];
+        _clientSecret = [[config nonemptyStringForKey:@"ClientSecret"] retain];
     }
     return self;
 }
@@ -78,7 +78,7 @@
 
 - (NSString *)serviceDisplayName
 {
-    return NSLocalizedString(@"foursquare", nil);
+    return NSLocalizedString(@"CORE_FOURSQUARE", @"foursquare");
 }
 
 @end

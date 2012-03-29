@@ -1,8 +1,8 @@
 #import "AboutModule.h"
 #import "AboutTableViewController.h"
 #import "Foundation+KGOAdditions.h"
-#import "AboutMITVC.h"
-#import "KGOWebViewController.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
+#import "KGORequestManager.h"
 
 @implementation AboutModule
 
@@ -12,27 +12,39 @@
         AboutTableViewController * aboutVc = [[[AboutTableViewController alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
         aboutVc.moduleTag = self.tag;
         vc = aboutVc;
-        
     }
     else if ([pageName isEqualToString:LocalPathPageNameDetail]) {
-        
-        AboutMITVC *aboutMITVC = [[[AboutMITVC alloc] initWithStyle:UITableViewStyleGrouped] autorelease];
-        aboutMITVC.orgName = [params stringForKey:@"orgName" nilIfEmpty:NO];
-        aboutMITVC.orgAboutText = [params stringForKey:@"orgText" nilIfEmpty:NO];
 
-        vc = aboutMITVC;
-    }
-    else if ([pageName isEqualToString:LocalPathPageNameWebViewDetail]) {
-        KGOWebViewController * creditsWebViewController = [[[KGOWebViewController alloc] init] autorelease];
-        NSString * credits = [params stringForKey:@"creditsHTMLString" nilIfEmpty: NO];
-        [creditsWebViewController setHTMLString: credits];
-        creditsWebViewController.title = @"Credits";
-        [creditsWebViewController applyTemplate:@"modules/about/credits.html"];
-        
-        vc = creditsWebViewController;
+        NSString *command = [params objectForKey:@"command"];
+        if (command) {
+            __block KGOWebViewController *webVC = [[[KGOWebViewController alloc] init] autorelease];
+            webVC.title = [params stringForKey:@"title"];
+            [webVC applyTemplate:@"common/webview.html"];
+            
+            KGORequest *request = [[KGORequestManager sharedManager] requestWithDelegate:nil
+                                                                                  module:@"about"
+                                                                                    path:command
+                                                                                 version:1
+                                                                                  params:nil];
+            request.expectedResponseType = [NSString class];
+            request.handler = ^(id jsonObject) {
+                webVC.HTMLString = jsonObject;
+                return 1;
+            };
+            [request connect];
+            
+            vc = webVC;
+        }
     }
 
     return vc;
 }
+
+#pragma mark -
+
+- (void)dealloc {
+    [super dealloc];
+}
+
 
 @end

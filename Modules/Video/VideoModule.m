@@ -1,37 +1,77 @@
-//
-//  VideoModule.m
-//  Universitas
-//
-//  Created by Jim Kang on 3/29/11.
-//  Copyright 2011 Modo Labs. All rights reserved.
-//
-
 #import "VideoModule.h"
 #import "VideoListViewController.h"
+#import "VideoDetailViewController.h"
+#import "VideoWebViewController.h"
 
 NSString * const KGODataModelNameVideo = @"Video";
 
 @implementation VideoModule
 
 @synthesize dataManager;
-//@synthesize currentSearchResults;
 @synthesize searchSection;
 
+- (void)willLaunch
+{
+    [super willLaunch];
+    if (!self.dataManager) {
+        self.dataManager = [[[VideoDataManager alloc] init] autorelease];
+        self.dataManager.module = self;
+    }
+}
+
 - (NSArray *)registeredPageNames {
-    return [NSArray arrayWithObjects:LocalPathPageNameHome, LocalPathPageNameSearch, LocalPathPageNameDetail, nil];
+    return [NSArray arrayWithObjects:
+            LocalPathPageNameHome,
+            LocalPathPageNameDetail,
+            LocalPathPageNameSearch,
+            LocalPathPageNameWebViewDetail,
+            nil];
 }
 
 - (UIViewController *)modulePage:(NSString *)pageName params:(NSDictionary *)params {
     UIViewController *vc = nil;
     if ([pageName isEqualToString:LocalPathPageNameHome]) {
-        vc = [[[VideoListViewController alloc]  
-               initWithStyle:UITableViewStylePlain] 
-              autorelease];        
-    } 
-    else if ([pageName isEqualToString:LocalPathPageNameSearch]) {        
-        // TODO.
+        VideoListViewController *listVC = [[[VideoListViewController alloc] initWithNibName:@"VideoListViewController" bundle:nil] autorelease];
+        listVC.dataManager = self.dataManager;
+        vc = listVC;
+    
+    } else if ([pageName isEqualToString:LocalPathPageNameSearch]) {
+        VideoListViewController *listVC = [[[VideoListViewController alloc] initWithNibName:@"VideoListViewController" bundle:nil] autorelease];
+        listVC.dataManager = self.dataManager;
+        
+        NSString *searchText = [params objectForKey:@"q"];
+        if (searchText) {
+            listVC.federatedSearchTerms = searchText;
+        }
+        
+        NSArray *searchResults = [params objectForKey:@"searchResults"];
+        if (searchResults) {
+            listVC.federatedSearchResults = searchResults;
+        }
+        
+        vc = listVC;
+
     } else if ([pageName isEqualToString:LocalPathPageNameDetail]) {
-        // TODO.
+        Video *video = [params objectForKey:@"video"];
+        NSString *section = [params objectForKey:@"section"];
+        if (video) {
+            VideoDetailViewController *detailVC = [[[VideoDetailViewController alloc] initWithVideo:video
+                                                                                         andSection:section] autorelease];
+            detailVC.dataManager = self.dataManager;
+            vc = detailVC;
+        }
+
+    } else if ([pageName isEqualToString:LocalPathPageNameWebViewDetail]) {
+        Video *video = [params objectForKey:@"video"];
+        NSString *validUrl = video.url;
+        if (!validUrl && validUrl.length <= 1) {
+            validUrl = video.mobileURL;
+        }
+        NSLog(@"(%@)",validUrl);
+        VideoWebViewController *webVC = [[[VideoWebViewController alloc]
+                                          initWithURL:[NSURL URLWithString:validUrl]] autorelease];
+        webVC.navigationItem.title = video.title; 
+        vc = webVC;
     }
     return vc;
 }
@@ -46,7 +86,12 @@ NSString * const KGODataModelNameVideo = @"Video";
 #pragma mark Search
 
 - (BOOL)supportsFederatedSearch {
-    return YES; // TODO: Make search optionally not hit network if we can tell it's federated search.
+    return YES;
+}
+
+- (void)dataManager:(VideoDataManager *)manager didReceiveVideos:(NSArray *)videos
+{
+    [self.searchDelegate receivedSearchResults:videos forSource:self.tag];
 }
 
 - (void)performSearchWithText:(NSString *)searchText 
@@ -54,27 +99,12 @@ NSString * const KGODataModelNameVideo = @"Video";
                      delegate:(id<KGOSearchResultsHolder>)delegate {
     
     self.searchDelegate = delegate;
-//    self.currentSearchResults = nil;
-    
-    if (!self.dataManager) {
-        self.dataManager = [[[VideoDataManager alloc] init] autorelease];
-    }
-    
-    // TODO: Get section
-    [self.dataManager 
-     requestSearchOfSection:self.searchSection 
-     query:searchText
-     thenRunBlock:
-     ^(id result) { 
-         if ([result isKindOfClass:[NSArray class]])
-         {
-             [self.searchDelegate searcher:self didReceiveResults:result];
-         }
-     }];
+    self.dataManager.delegate = self;
+    [self.dataManager searchSection:self.searchSection forQuery:searchText];
 }
 
 - (void)dealloc {
-//    [currentSearchResults release];
+    dataManager.delegate = nil;
     [dataManager release];
     [super dealloc];
 }

@@ -1,9 +1,8 @@
 #import "EmergencyContactsViewController.h"
 #import "EmergencyDataManager.h"
 #import "UIKit+KGOAdditions.h"
-#import "KGOAppDelegate.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
-
+#import "EmergencyModel.h"
 
 @interface EmergencyContactsViewController (Private)
 
@@ -15,8 +14,16 @@
 @synthesize module = _module;
 @synthesize allContacts = _allContacts;
 
-- (id)init {
-    return [self initWithStyle:UITableViewStylePlain];
+- (id)initWithStyle:(UITableViewStyle)style
+{
+    self = [super initWithStyle:style];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(emergencyContactsRetrieved:)
+                                                     name:EmergencyContactsRetrievedNotification
+                                                   object:nil];
+    }
+    return self; 
 }
 
 - (void)dealloc
@@ -48,18 +55,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    EmergencyDataManager *manager = [EmergencyDataManager managerForTag:_module.tag];
+    self.navigationItem.title = @"Contacts";
     
     if(_module.contactsFeedExists) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(emergencyContactsRetrieved:) name:EmergencyContactsRetrievedNotification object:manager];
+        EmergencyDataManager *manager = [EmergencyDataManager managerForTag:_module.tag];
 
         // load cached contacts
         self.allContacts = [manager allContacts];
         
-        // refresh contacts (if stale)
-        if (![manager contactsFresh]) {
-            [manager fetchContacts];
-        }
+        // request contacts from server if stale
+        [manager fetchContacts];
     }
 }
 
@@ -93,7 +98,7 @@
     
     return [[^(UITableViewCell *cell) {
         cell.textLabel.text = contact.title;
-        cell.detailTextLabel.text = contact.summary;
+        cell.detailTextLabel.text = contact.subtitle;
         cell.accessoryView = [[KGOTheme sharedTheme] accessoryViewForType:KGOAccessoryTypePhone];
     } copy] autorelease];
 }
@@ -103,10 +108,10 @@
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 	
     EmergencyContact *contact = [self.allContacts objectAtIndex:indexPath.row];
-    NSString *urlString = [NSString stringWithFormat:@"tel:%@", contact.dialablePhone];
-    NSURL *externURL = [NSURL URLWithString:urlString];
-    if ([[UIApplication sharedApplication] canOpenURL:externURL])
+    NSURL *externURL = [NSURL URLWithString:contact.url];
+    if ([[UIApplication sharedApplication] canOpenURL:externURL]) {
         [[UIApplication sharedApplication] openURL:externURL];
+    }
 }
 
 - (KGOTableCellStyle)tableView:(UITableView *)tableView styleForCellAtIndexPath:(NSIndexPath *)indexPath {
@@ -114,8 +119,11 @@
 }
 
 - (void)emergencyContactsRetrieved:(NSNotification *)notification {
+    id object = [notification object];
     EmergencyDataManager *manager = [EmergencyDataManager managerForTag:_module.tag];
-    self.allContacts = [manager allContacts];    
-    [self reloadDataForTableView:self.tableView];
+    if (object == manager) {
+        self.allContacts = [manager allContacts];    
+        [self reloadDataForTableView:self.tableView];
+    }
 }
 @end

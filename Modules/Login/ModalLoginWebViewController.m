@@ -1,6 +1,6 @@
 #import "ModalLoginWebViewController.h"
 #import "KGORequestManager.h"
-#import "KGOAppDelegate.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
 #import "LoginModule.h"
 
 @implementation ModalLoginWebViewController
@@ -33,7 +33,7 @@
     
     if ([[KGORequestManager sharedManager] isUserLoggedIn]) {
         DLog(@"dismissing because user logged in while we were being presented");
-        [self.parentViewController dismissModalViewControllerAnimated:YES];
+        [self dismissModal];
         return;
     }
 
@@ -61,17 +61,16 @@
 
 - (void)dismissModal
 {
-    if (self.parentViewController.modalViewController == self) {
-        DLog(@"invoking dismiss");
-        [self.parentViewController dismissModalViewControllerAnimated:YES];
-    }
+    DLog(@"invoking dismiss");
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     if ([[KGORequestManager sharedManager] isUserLoggedIn]) {
+
         DLog(@"logged in, we are safe to dismiss");
-        [self dismissModal];
+        [self didLogin:nil];
 
     } else {
         [super webView:webView didFailLoadWithError:error];
@@ -107,7 +106,7 @@
         [[KGORequestManager sharedManager] requestSessionInfo];
     }
     
-#ifdef USE_MOBILE_DEV
+#ifdef ALLOW_SELF_SIGNED_CERTIFICATE
     
     NSString *scheme = [url scheme];
     
@@ -168,7 +167,7 @@
     return YES;
 }
 
-#ifdef USE_MOBILE_DEV
+#ifdef ALLOW_SELF_SIGNED_CERTIFICATE
 
 #pragma mark - Webview
 

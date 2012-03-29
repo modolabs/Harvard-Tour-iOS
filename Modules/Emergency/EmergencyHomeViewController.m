@@ -2,7 +2,6 @@
 #import "EmergencyDataManager.h"
 #import "KGOHTMLTemplate.h"
 #import "UIKit+KGOAdditions.h"
-#import "KGOAppDelegate.h"
 #import "KGOAppDelegate+ModuleAdditions.h"
 
 
@@ -22,9 +21,21 @@
 
 @synthesize primaryContacts = _primaryContacts;
 
-- (id)init {
-    if ((self = [self initWithStyle:UITableViewStyleGrouped])) {
-        loadingStatus = Loading;
+- (id)initWithStyle:(UITableViewStyle)style
+{
+    self = [super initWithStyle:style];
+    if (self) {
+        loadingStatus = EmergencyStatusLoading;
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(emergencyNoticeRetrieved:)
+                                                     name:EmergencyNoticeRetrievedNotification
+                                                   object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(emergencyContactsRetrieved:)
+                                                     name:EmergencyContactsRetrievedNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -62,23 +73,15 @@
     [super viewDidLoad];
     self.notice = nil;
     EmergencyDataManager *manager = [EmergencyDataManager managerForTag:_module.tag];
+    [manager fetchLatestEmergencyNotice];
     
-    if(_module.noticeFeedExists) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(emergencyNoticeRetrieved:) name:EmergencyNoticeRetrievedNotification object:manager];
-        [manager fetchLatestEmergencyNotice];
-    }
-    
-    if(_module.contactsFeedExists) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(emergencyContactsRetrieved:) name:EmergencyContactsRetrievedNotification object:manager];
-
+    if (_module.contactsFeedExists) {
         // load cached contacts
         self.primaryContacts = [manager primaryContacts];
         _hasMoreContact = [manager hasSecondaryContacts];
         
-        // refresh contacts (if stale)
-        if (![manager contactsFresh]) {
-            [manager fetchContacts];
-        }
+        // make server request if needed
+        [manager fetchContacts];
     }
 }
 
@@ -148,11 +151,12 @@
         if (indexPath.row < self.primaryContacts.count) {
             EmergencyContact *contact = [self.primaryContacts objectAtIndex:indexPath.row];
             title = contact.title;
-            detailText = contact.summary;
+            detailText = contact.subtitle;
             accessoryTag = KGOAccessoryTypePhone;
 
         } else if(indexPath.row == self.primaryContacts.count) {
-            title = @"More contacts";
+            title = NSLocalizedString(@"EMERGENCY_MORE_CONTACTS", @"More contacts");
+            accessoryTag = KGOAccessoryTypeChevron;
         }
     }
     
@@ -183,11 +187,10 @@
     if (indexPath.section == [self sectionIndexForContacts]) {
         if (indexPath.row < self.primaryContacts.count) {
             EmergencyContact *contact = [self.primaryContacts objectAtIndex:indexPath.row];
-            NSString *urlString = [NSString stringWithFormat:@"tel:%@", contact.dialablePhone];
-            NSURL *externURL = [NSURL URLWithString:urlString];
-            if ([[UIApplication sharedApplication] canOpenURL:externURL])
+            NSURL *externURL = [NSURL URLWithString:contact.url];
+            if ([[UIApplication sharedApplication] canOpenURL:externURL]) {
                 [[UIApplication sharedApplication] openURL:externURL];
-            
+            }
             
         } else if (indexPath.row == self.primaryContacts.count) {
             [KGO_SHARED_APP_DELEGATE() showPage:EmergencyContactsPathPageName forModuleTag:_module.tag params:nil];
@@ -198,78 +201,106 @@
 
 - (NSArray *)noticeViewsWithtableView:(UITableView *)tableView {
     CGFloat height = 1000.0f;
-    if(self.contentDivHeight) {
+    if (_contentDivHeight) {
         height = [self.contentDivHeight floatValue] + 20.0;
     }
-    CGRect frame = CGRectMake(10, 10, tableView.frame.size.width-20-20, height);
-    self.infoWebView.delegate = nil;
+    CGFloat hPadding = 2;
+    CGRect frame = CGRectMake(hPadding, 4,
+                              tableView.frame.size.width - ([tableView marginWidth] + hPadding) * 2,
+                              height);
+
     self.infoWebView = [[[UIWebView alloc] initWithFrame:frame] autorelease];
+    self.infoWebView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.infoWebView.backgroundColor = [UIColor clearColor];
+    self.infoWebView.opaque = NO;
     self.infoWebView.delegate = self;
+
+    KGOHTMLTemplate *template = [KGOHTMLTemplate templateWithPathName:@"common/webview.html"];
+    NSString *contentText = nil;
     
-    NSString *htmlString;
-    if (loadingStatus == Loading) {
-        htmlString = @"<html><body style=\"font:15px/1.33em Helvetica;color:#333;margin:0;padding:2px\"><div id=\"content\">Loading...</div></body></html>";
-        [self.infoWebView loadHTMLString:htmlString baseURL:[[NSBundle mainBundle] resourceURL]];
-    } else if(loadingStatus == Failed) {
-        htmlString =@"<html><body style=\"font:15px/1.33em Helvetica;color:#333;margin:0;padding:2px\"><div id=\"content\">Failed to load.</div></body></html>";
-        [self.infoWebView loadHTMLString:htmlString baseURL:[[NSBundle mainBundle] resourceURL]];
+    switch (loadingStatus) {
+        case EmergencyStatusLoading:
+            contentText = NSLocalizedString(@"COMMON_INDETERMINATE_LOADING", @"Loading...");
+            break;
+        case EmergencyStatusFailed:
+            contentText = NSLocalizedString(@"EMERGENCY_STATUS_LOAD_FAILED", @"Failed to load.");
+            break;
+        case EmergencyStatusLoaded:
+            if (_notice) {
+                NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+                [dateFormatter setDateFormat:@"MMM d, y"];
+                NSString *pubDate = [dateFormatter stringFromDate:_notice.pubDate];
+
+                // TODO: make sure no strings are nil
+                contentText = [NSString stringWithFormat:
+                               @"<h2 class=\"compact\">%@</h2>"
+                               "<p class=\"date\">%@</p>"
+                               "<div class=\"body\">%@</div>", _notice.title, pubDate, _notice.html];
+            } else {
+                contentText = [NSString stringWithFormat:@"<h2 class=\"compact\">%@</h2>",
+                               NSLocalizedString(@"EMERGENCY_NO_EMERGENCY_MESSAGE", @"No emergency")];
+            }
+            break;
+        default:
+            break;
     }
-    
-    if (loadingStatus == Loaded) {
-        KGOHTMLTemplate *template;
-        NSMutableDictionary *values = [NSMutableDictionary dictionary];
-        
-        if(_notice) {
-            template = [KGOHTMLTemplate templateWithPathName:@"modules/emergency/emergency_notice_template.html"];
-        
-            NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
-            [dateFormatter setDateFormat:@"MMM d, y"];
-            NSString *pubDate = [dateFormatter stringFromDate:_notice.pubDate];
-        
-            [values setValue:_notice.title forKey:@"TITLE"];
-            [values setValue:pubDate forKey:@"DATE"];
-            [values setValue:_notice.html forKey:@"BODY"];
-        } else {
-            template = [KGOHTMLTemplate templateWithPathName:@"modules/emergency/no_emergency_notice_template.html"];
-            
-        }
-        [self.infoWebView loadTemplate:template values:values];
-    }
+
+    NSString *bodyText = [NSString stringWithFormat:@"<div id=\"content\">%@</div>", contentText];
+    NSDictionary *values = [NSDictionary dictionaryWithObject:bodyText forKey:@"BODY"];
+    [self.infoWebView loadTemplate:template values:values];
+
     return [NSArray arrayWithObject:self.infoWebView];
 }
 
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    if(self.contentDivHeight) {
+    if (self.contentDivHeight) {
         // height already known so just exit
         return;
     }
     NSString *output = [webView stringByEvaluatingJavaScriptFromString:@"document.getElementById(\"content\").offsetHeight;"];
     self.contentDivHeight = [NSNumber numberWithInt:[output intValue]];
-    if(self.contentDivHeight) {
+    if (self.contentDivHeight) {
         [self reloadDataForTableView:self.tableView];
     }
 }
 
 - (void)emergencyNoticeRetrieved:(NSNotification *)notification {
-    enum EmergencyNoticeStatus status = [[[notification userInfo] objectForKey:@"EmergencyStatus"] intValue];
-    loadingStatus = Loaded;
-    
-    if(status == NoCurrentEmergencyNotice) {
-        self.notice = nil;
-    } else if (status == EmergencyNoticeActive) {
-        // reset content values
-        self.notice = [[EmergencyDataManager managerForTag:_module.tag] latestEmergency];
-    }
-    self.contentDivHeight = nil;
+    id object = [notification object];
+    EmergencyDataManager *manager = [EmergencyDataManager managerForTag:_module.tag];
+    if (object == manager) {    
+        enum EmergencyNoticeStatus emStatus = [[[notification userInfo] objectForKey:@"EmergencyStatus"] intValue];
+        loadingStatus = EmergencyStatusLoaded;
+
+        // TODO: noticeFeedExists should be set by the data manager instead of this view
+        switch (emStatus) {
+            case NoCurrentEmergencyNotice:
+                self.notice = nil;
+                self.module.noticeFeedExists = YES;
+                break;
+            case EmergencyNoticeActive:
+                self.notice = [[EmergencyDataManager managerForTag:_module.tag] latestEmergency];
+                self.module.noticeFeedExists = YES;
+                break;
+            case EmergencyNoticeDisabled:
+                self.notice = nil;
+                self.module.noticeFeedExists = NO;
+                break;
+        }
+        self.contentDivHeight = nil;
         
-    [self reloadDataForTableView:self.tableView];
+        [self reloadDataForTableView:self.tableView];
+    }
 }
 
 - (void)emergencyContactsRetrieved:(NSNotification *)notification {
+    id object = [notification object];
     EmergencyDataManager *manager = [EmergencyDataManager managerForTag:_module.tag];
-    self.primaryContacts = [manager primaryContacts];
-    _hasMoreContact = [manager hasSecondaryContacts];    
-    [self reloadDataForTableView:self.tableView];
+    if (object == manager) {
+        self.primaryContacts = [manager primaryContacts];
+        _hasMoreContact = [manager hasSecondaryContacts];    
+        [self reloadDataForTableView:self.tableView];
+    }
 }
+
 @end

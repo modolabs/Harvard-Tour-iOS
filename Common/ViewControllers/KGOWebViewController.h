@@ -1,4 +1,5 @@
 #import <UIKit/UIKit.h>
+#import "MITMailComposeController.h"
 
 @class KGOWebViewController;
 
@@ -12,13 +13,14 @@
 @end
 
 
-@interface KGOWebViewController : UIViewController <UIWebViewDelegate, UIAlertViewDelegate> {
+@interface KGOWebViewController : UIViewController <UIWebViewDelegate, UIAlertViewDelegate,
+MFMailComposeViewControllerDelegate> {
     
     UIWebView *_webView;
     UIActivityIndicatorView *_loadingView;
     NSURL *_requestURL;
     
-    NSString * HTMLString;
+    NSString *_HTMLString;
 
     NSMutableArray *_templateStack;
     
@@ -29,12 +31,11 @@
 @property (nonatomic, retain) UIWebView *webView;
 @property (nonatomic, retain) NSURL *requestURL;
 
-@property (nonatomic, retain) NSString * HTMLString;
+@property (nonatomic, retain) NSString *HTMLString;
 
 @property (nonatomic) BOOL loadsLinksInternally; // defaults to NO
 
-- (void) showHTMLString: (NSString *) HTMLStringText;
-
+// things that are applied later are "outside"
 - (void)applyTemplate:(NSString *)filename;
 
 // useful if a network connection causes a request to fail

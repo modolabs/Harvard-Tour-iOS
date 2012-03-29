@@ -1,16 +1,20 @@
 #import "NewsCategory.h"
 #import "NewsStory.h"
 
+NSString * const NewsCategoryEntityName = @"NewsCategory";
 
 @implementation NewsCategory
 @dynamic lastUpdated;
-@dynamic nextSeekId;
 @dynamic category_id;
 @dynamic title;
 @dynamic moduleTag;
-@dynamic isMainCategory;
 @dynamic moreStories;
+@dynamic showBodyThumbnail;
 @dynamic stories;
+@dynamic url;
+
+// Added in v3
+@dynamic sortOrder;
 
 - (void)addStoriesObject:(NewsStory *)value {    
     NSSet *changedObjects = [[NSSet alloc] initWithObjects:&value count:1];

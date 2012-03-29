@@ -4,41 +4,59 @@
 #import "KGOTheme.h"
 #import "KGOSearchResultListTableView.h"
 #import "KGORequestManager.h"
+#import "KGOAppDelegate+ModuleAdditions.h"
+#import "MapModule.h"
 
 @implementation MapDetailViewController
 
-@synthesize placemark, pager;
+@synthesize placemark, pager, dataManager, mapModule;
 
 #pragma mark TabbedViewDelegate
 
 - (UIView *)tabbedControl:(KGOTabbedControl *)control containerViewAtIndex:(NSInteger)index {
     UIView *view = nil;
     if (index == _photoTabIndex) {
-
-    
+        // TODO
+        
     } else if (index == _detailsTabIndex) {
-        UIWebView *webView = [[[UIWebView alloc] initWithFrame:CGRectMake(10, 10, self.tabViewContainer.frame.size.width - 20, self.tabViewContainer.frame.size.height - 20)] autorelease];
-        [webView loadHTMLString:self.placemark.info baseURL:nil];
-        webView.delegate = self;
-        view = webView;
+        if (!_webView) {
+            CGRect frame = CGRectMake(10, 10,
+                                      CGRectGetWidth(self.tabViewContainer.frame) - 20,
+                                      CGRectGetHeight(self.tabViewContainer.frame) - 20);
+            _webView = [[UIWebView alloc] initWithFrame:frame];
+            _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            if ([_webView respondsToSelector: @selector(scrollView)]) {
+                // iOS 5
+                [[_webView scrollView] setBounces:NO];
+                [[_webView scrollView] setDecelerationRate:0];
+            } else {
+                // Icky hack for pre-iOS 5
+                UIScrollView *subview = nil;
+                for(UIView *view in _webView.subviews) {
+                    if([view isKindOfClass:[UIScrollView class]]) {
+                        subview = (UIScrollView *)view;
+                        subview.bounces = NO;
+                        subview.decelerationRate = 0;
+                    }
+                }
+            }
+        }
+        
+        NSString *body = self.placemark.info ? self.placemark.info : @"";
+        [_webView loadTemplate:[KGOHTMLTemplate templateWithPathName:@"modules/map/map_detail_template.html"] 
+                        values:[NSDictionary dictionaryWithObjectsAndKeys: body, @"BODY", nil]];
+        
+        _webView.delegate = self;
+        view = _webView;
         
     } else if (index == _nearbyTabIndex) {
         if (!_tableView) {
             CGRect frame = CGRectMake(0, 0, self.tabViewContainer.frame.size.width, self.tabViewContainer.frame.size.height);
-            _tableView = [[[KGOSearchResultListTableView alloc] initWithFrame:frame] autorelease];
+            _tableView = [[KGOSearchResultListTableView alloc] initWithFrame:frame];
+            _tableView.resultsDelegate = self;
             
-            NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    @"nearby", @"type",
-                                    [NSString stringWithFormat:@"%.5f", self.placemark.coordinate.latitude], @"lat",
-                                    [NSString stringWithFormat:@"%.5f", self.placemark.coordinate.longitude], @"lon",
-                                    nil];
-            _request = [[KGORequestManager sharedManager] requestWithDelegate:self
-                                                                       module:MapTag
-                                                                         path:@"search"
-                                                                       params:params];
-            _request.expectedResponseType = [NSDictionary class];
-            if (_request)
-                [_request connect];
+            self.dataManager.searchDelegate = self;
+            [self.dataManager searchNearby:self.placemark.coordinate];
         }
         
         view = _tableView;
@@ -54,17 +72,19 @@
     
     NSInteger currentTabIndex = 0;
     if (self.placemark.photoURL) {
-        [tabs addObject:NSLocalizedString(@"Photo", nil)];
+        [tabs addObject:NSLocalizedString(@"MAP_TAB_PHOTO", @"Photo")];
         _photoTabIndex = currentTabIndex;
         currentTabIndex++;
     }
-    if (self.placemark.info) {
-        [tabs addObject:NSLocalizedString(@"Details", nil)];
-        _detailsTabIndex = currentTabIndex;
-        currentTabIndex++;
-    }
-    [tabs addObject:NSLocalizedString(@"Nearby", nil)];
+    
+    // TODO: add detail tab for placemarks with itemized fields
+    [tabs addObject:NSLocalizedString(@"MAP_TAB_DETAILS", @"Details")];
+    _detailsTabIndex = currentTabIndex;
+    currentTabIndex++;
+    
+    [tabs addObject:NSLocalizedString(@"MAP_TAB_NEARBY", @"Nearby")];
     _nearbyTabIndex = currentTabIndex;
+    
     return tabs;
 }
 
@@ -72,8 +92,12 @@
 
 - (void)loadAnnotationContent {
     DLog(@"%@", [self.placemark description]);
+    if (!self.placemark.info) {
+        self.dataManager.delegate = self;
+        [self.dataManager requestDetailsForPlacemark:self.placemark];
+    }
 
-    self.tabViewHeader.detailItem = self.placemark;
+    self.headerView.detailItem = self.placemark;
     
     [_tableView release];
     _tableView = nil;
@@ -88,32 +112,128 @@
     }
 }
 
-#pragma mark KGORequestDelegate
+#pragma mark MapDataManager
 
-- (void)requestWillTerminate:(KGORequest *)request {
-    _request = nil;
+- (void)mapDataManager:(MapDataManager *)dataManager didUpdatePlacemark:(KGOPlacemark *)placemark
+{
+    [self reloadTabs];
+    if ([self.tabs selectedTabIndex] == _detailsTabIndex) {
+        [self reloadTabContent];
+    }
 }
 
-- (void)request:(KGORequest *)request didReceiveResult:(id)result {
-    _request = nil;
-    
-    NSArray *resultArray = [result arrayForKey:@"results"];
-    NSMutableArray *searchResults = [NSMutableArray arrayWithCapacity:[(NSArray *)resultArray count]];
-    for (id aResult in resultArray) {
-        KGOPlacemark *aPlacemark = [KGOPlacemark placemarkWithDictionary:aResult];
-        if (aPlacemark)
-            [searchResults addObject:aPlacemark];
+#pragma mark KGOSearchResultsDelegate
+
+- (void)resultsHolder:(id<KGOSearchResultsHolder>)resultsHolder didSelectResult:(id<KGOSearchResult>)aResult
+{
+    if ([resultsHolder isKindOfClass:[KGOSearchResultListTableView class]]) {
+        KGOAppDelegate *appDelegate = KGO_SHARED_APP_DELEGATE();
+
+        // TODO: decide if we prefer to open nearby locations in the map (active)
+        // or in another detail page (commented)
+
+        /*
+        NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:
+                                aResult, @"place", 
+                                resultsHolder, @"pagerController", 
+                                [_tableView indexPathForSelectedRow], @"currentIndexPath",
+                                nil];
+        [appDelegate showPage:LocalPathPageNameDetail forModuleTag:self.mapModule.tag params:params];
+        */
+        
+        NSDictionary *params = [NSDictionary dictionaryWithObject:[NSArray arrayWithObject:aResult]
+                                                           forKey:@"annotations"];
+        [appDelegate showPage:LocalPathPageNameHome forModuleTag:self.mapModule.tag params:params];
     }
-    NSLog(@"%@", searchResults);
-    [_tableView searcher:self didReceiveResults:searchResults];
+}
+
+- (NSArray *)results
+{
+    return  _tableView.items;
+}
+
+// from MIT
+#define METERS_PER_FOOT 0.3048
+#define FEET_PER_MILE 5280
+- (NSString *)distanceTextForMeters:(CLLocationDistance)meters
+{
+    NSString *measureSystem = [[NSLocale currentLocale] objectForKey:NSLocaleMeasurementSystem];
+    BOOL isMetric = ![measureSystem isEqualToString:@"U.S."];
+    
+    NSString *distanceString = nil;
+    if (!isMetric) {
+        CGFloat feet = meters / METERS_PER_FOOT;
+        if (feet * 2 > FEET_PER_MILE) {
+            distanceString = [NSString stringWithFormat:
+                              NSLocalizedString(@"MAP_%.1f_MILES_AWAY", @"%.1f miles away"), (feet / FEET_PER_MILE)];
+        } else {
+            distanceString = [NSString stringWithFormat:
+                              NSLocalizedString(@"MAP_%.0f_FEET_AWAY", @"%.1f miles away"),feet];
+        }
+    } else {
+        if (meters > 1000) {
+            distanceString = [NSString stringWithFormat:
+                              NSLocalizedString(@"MAP_%.1f_KM_AWAY", @"%.1f km away"), (meters / 1000)];
+        } else {
+            distanceString = [NSString stringWithFormat:
+                              NSLocalizedString(@"MAP_%.0f_METERS_AWAY", @"%.0f meters away"), meters];
+        }
+    }
+    
+    return distanceString;
+}
+
+- (void)receivedSearchResults:(NSArray *)searchResults forSource:(NSString *)source
+{
+    NSArray *filteredArray = [searchResults filteredArrayUsingPredicate:
+                              [NSPredicate predicateWithFormat:@"identifier != %@", self.placemark.identifier]];
+    CLLocation *fromLocation = [[[CLLocation alloc] initWithLatitude:self.placemark.coordinate.latitude
+                                                           longitude:self.placemark.coordinate.longitude] autorelease];
+    for (id testPlacemark in filteredArray) {
+        if ([testPlacemark isKindOfClass:[KGOPlacemark class]]) {
+            KGOPlacemark *aPlacemark = (KGOPlacemark *)testPlacemark;
+            CLLocation *toLocation = [[[CLLocation alloc] initWithLatitude:aPlacemark.coordinate.latitude
+                                                                 longitude:aPlacemark.coordinate.longitude] autorelease];
+            CLLocationDistance distance = [fromLocation distanceFromLocation:toLocation];
+            aPlacemark.currentSubtitle = [self distanceTextForMeters:distance];
+        }
+    }
+
+    _tableView.items = filteredArray;
+    [_tableView reloadData];
+}
+
+#pragma mark UIWebViewDelegate
+
+- (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
+    BOOL result = YES;
+    
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        NSURL *url = [request URL];
+        NSURL *baseURL = [NSURL fileURLWithPath:[[NSBundle mainBundle] resourcePath]];
+        
+        if ([[url path] rangeOfString:[baseURL path] options:NSAnchoredSearch].location == NSNotFound) {
+            [[UIApplication sharedApplication] openURL:url];
+            result = NO;
+        }
+    }
+    return result;
 }
 
 #pragma mark -
 
 - (void)dealloc
 {
-    [_request cancel];
+    self.dataManager.delegate = nil;
+    self.dataManager.searchDelegate = nil;
+    self.dataManager = nil;
+    self.placemark = nil;
+    self.pager = nil;
+    self.mapModule = nil;
+    _tableView.resultsDelegate = nil;
     [_tableView release];
+    _webView.delegate = nil;
+    [_webView release];
     [super dealloc];
 }
 
@@ -131,11 +251,13 @@
 {
     [super viewDidLoad];
     
+    self.navigationItem.title = NSLocalizedString(@"MAP_DETAIL_PAGE_TITLE", @"Location Info");
+    
     if (self.pager) {
         self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithCustomView:self.pager] autorelease];
     }
 
-    self.tabViewHeader.showsBookmarkButton = YES;
+    self.headerView.showsBookmarkButton = YES;
     [self loadAnnotationContent];
 }
 
