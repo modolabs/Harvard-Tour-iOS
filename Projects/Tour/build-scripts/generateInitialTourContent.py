@@ -16,11 +16,11 @@ import downloadMedia
 configuration = sys.argv[1]
 server = configuration.split(' - ')[-1]
 
-mainConfig = plistlib.readPlist("Config.plist")
+mainConfig = plistlib.readPlist("Supporting Files/en.lproj/Config.plist")
 
 secretConfig = None
-if os.path.isfile("secret/Config.plist"):
-    secretConfig = plist.readPlist("secret/Config.plist")
+if os.path.isfile("Supporting Files/en.lproj/secret/Config.plist"):
+    secretConfig = plist.readPlist("Supporting Files/en.lproj/secret/Config.plist")
 
 serverConfig = None
 if secretConfig and secretConfig.has_key('Servers') and secretConfig['Servers'].has_key(server):
