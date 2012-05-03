@@ -1151,8 +1151,8 @@
 				A1B5FCFF1524E8FC00136317 /* Video */,
 			);
 			name = Modules;
-			path = "/Volumes/Ra-Tilt/Users/lxs/ModoLabs/BC/BC-Tour-iOS/Projects/Universitas/../../Modules";
-			sourceTree = "<absolute>";
+			path = ../../Modules;
+			sourceTree = "<group>";
 		};
 		A1B5FCF11524E8FC00136317 /* Athletics */ = {
 			isa = PBXGroup;
