@@ -242,6 +242,7 @@
             NSURL *videoURL = [NSURL fileURLWithPath:[lenseVideoItem.video mediaFilePath]];
             MPMoviePlayerController *player = [[[MPMoviePlayerController alloc] initWithContentURL:videoURL] autorelease];
             player.shouldAutoplay = NO;
+            [player prepareToPlay];
             [moviePlayers addObject:player];
             [player.view setFrame:videoContainerView.bounds];
             [player.view setAutoresizingMask:videoContainerView.autoresizingMask];
