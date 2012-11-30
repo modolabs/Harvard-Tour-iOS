@@ -39,12 +39,12 @@
 	<string>Tour</string>
 	<key>Servers</key>
 	<dict>
-		<key>Development</key>
+		<key>Debug</key>
 		<dict>
 			<key>APIPath</key>
 			<string>rest</string>
 			<key>Host</key>
-			<string>localhost:8888</string>
+			<string>yardtour.harvard.edu</string>
 			<key>PathExtension</key>
 			<string></string>
 			<key>UseHTTPS</key>
