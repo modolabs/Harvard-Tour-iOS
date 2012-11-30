@@ -724,16 +724,6 @@
 		A1EBC7D915251293003330BC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "Supporting Files/en.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		A1EBC7DB15251293003330BC /* en */ = {isa = PBXFileReference; lastKnownFileType = folder; name = en; path = "Supporting Files/en.lproj/secret"; sourceTree = "<group>"; };
 		A1EBC7DD15251293003330BC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = "Supporting Files/en.lproj/Settings.plist"; sourceTree = "<group>"; };
-		A1EBC7E31525129C003330BC /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans-CN"; path = "Supporting Files/zh-Hans-CN.lproj/Config.plist"; sourceTree = "<group>"; };
-		A1EBC7E41525129C003330BC /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans-CN"; path = "Supporting Files/zh-Hans-CN.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		A1EBC7E51525129C003330BC /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans-CN"; path = "Supporting Files/zh-Hans-CN.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		A1EBC7E61525129C003330BC /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "zh-Hans-CN"; path = "Supporting Files/zh-Hans-CN.lproj/secret"; sourceTree = "<group>"; };
-		A1EBC7E71525129C003330BC /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans-CN"; path = "Supporting Files/zh-Hans-CN.lproj/Settings.plist"; sourceTree = "<group>"; };
-		A1EBC7ED152512A2003330BC /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hant-TW"; path = "Supporting Files/zh-Hant-TW.lproj/Config.plist"; sourceTree = "<group>"; };
-		A1EBC7EE152512A2003330BC /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "Supporting Files/zh-Hant-TW.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		A1EBC7EF152512A2003330BC /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "Supporting Files/zh-Hant-TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		A1EBC7F0152512A2003330BC /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "zh-Hant-TW"; path = "Supporting Files/zh-Hant-TW.lproj/secret"; sourceTree = "<group>"; };
-		A1EBC7F1152512A2003330BC /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hant-TW"; path = "Supporting Files/zh-Hant-TW.lproj/Settings.plist"; sourceTree = "<group>"; };
 		A1EBC7F7152512D4003330BC /* KGOInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = KGOInfo.plist; sourceTree = "<group>"; };
 		A6CDC9DF139D88560068D12A /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		A6CDC9E1139D8B3A0068D12A /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
@@ -2014,8 +2004,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				A1EBC7D515251293003330BC /* en */,
-				A1EBC7E31525129C003330BC /* zh-Hans-CN */,
-				A1EBC7ED152512A2003330BC /* zh-Hant-TW */,
 			);
 			name = Config.plist;
 			sourceTree = "<group>";
@@ -2024,8 +2012,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				A1EBC7D715251293003330BC /* en */,
-				A1EBC7E41525129C003330BC /* zh-Hans-CN */,
-				A1EBC7EE152512A2003330BC /* zh-Hant-TW */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -2034,8 +2020,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				A1EBC7D915251293003330BC /* en */,
-				A1EBC7E51525129C003330BC /* zh-Hans-CN */,
-				A1EBC7EF152512A2003330BC /* zh-Hant-TW */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -2044,8 +2028,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				A1EBC7DB15251293003330BC /* en */,
-				A1EBC7E61525129C003330BC /* zh-Hans-CN */,
-				A1EBC7F0152512A2003330BC /* zh-Hant-TW */,
 			);
 			name = secret;
 			sourceTree = "<group>";
@@ -2054,8 +2036,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				A1EBC7DD15251293003330BC /* en */,
-				A1EBC7E71525129C003330BC /* zh-Hans-CN */,
-				A1EBC7F1152512A2003330BC /* zh-Hant-TW */,
 			);
 			name = Settings.plist;
 			sourceTree = "<group>";
