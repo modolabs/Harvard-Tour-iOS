@@ -29,6 +29,7 @@
 		3A82708D103DAA2400BB4109 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A82708C103DAA2400BB4109 /* SystemConfiguration.framework */; };
 		3AA219501039D74700DB7637 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA2194F1039D74700DB7637 /* CoreData.framework */; };
 		4463CCB210D6F5750048CA83 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4463CCB110D6F5750048CA83 /* CoreLocation.framework */; };
+		4BFCC53F16696A9200145BAA /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BFCC53E16696A9200145BAA /* Default-568h@2x.png */; };
 		A16136BC1524DB4A0053CB36 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A16136BB1524DB4A0053CB36 /* Twitter.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		A16138AD1524DCBD0053CB36 /* KGOAppDelegate+ModuleAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = A161382C1524DCBD0053CB36 /* KGOAppDelegate+ModuleAdditions.m */; };
 		A16138AE1524DCBD0053CB36 /* KGOAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A161382E1524DCBD0053CB36 /* KGOAppDelegate.m */; };
@@ -291,6 +292,8 @@
 		3A82708C103DAA2400BB4109 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = ../../../../../System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SOURCE_ROOT; };
 		3AA2194F1039D74700DB7637 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		4463CCB110D6F5750048CA83 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		4BFCC53D16696A4900145BAA /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Resources/Default-568h@2x.png"; sourceTree = "<group>"; };
+		4BFCC53E16696A9200145BAA /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		A16136B91524D87F0053CB36 /* staging.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = staging.xcconfig; sourceTree = "<group>"; };
 		A16136BB1524DB4A0053CB36 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		A161382B1524DCBD0053CB36 /* KGOAppDelegate+ModuleAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "KGOAppDelegate+ModuleAdditions.h"; sourceTree = "<group>"; };
@@ -792,6 +795,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				4BFCC53E16696A9200145BAA /* Default-568h@2x.png */,
 				A1B326B915250CE000724B66 /* EventKitUI.framework */,
 				A1B326B715250CC800724B66 /* CoreTelephony.framework */,
 				A161382A1524DCBD0053CB36 /* Application */,
@@ -1092,6 +1096,7 @@
 		A16138F51524DD690053CB36 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4BFCC53D16696A4900145BAA /* Default-568h@2x.png */,
 				A16138FE1524DDA30053CB36 /* common */,
 				A16138FF1524DDA30053CB36 /* data */,
 				A16139001524DDA30053CB36 /* Default-Portrait~ipad.png */,
@@ -1111,10 +1116,10 @@
 		A16138F61524DD710053CB36 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				A1EBC7D415251293003330BC /* Config.plist */,
 				A1EBC7D615251293003330BC /* InfoPlist.strings */,
 				A1EBC7D815251293003330BC /* Localizable.strings */,
 				A1EBC7DC15251293003330BC /* Settings.plist */,
+				A1EBC7D415251293003330BC /* Config.plist */,
 				A1EBC7DA15251293003330BC /* secret */,
 				A1EBC7F7152512D4003330BC /* KGOInfo.plist */,
 			);
@@ -1773,6 +1778,7 @@
 				A1EBC7DF15251293003330BC /* InfoPlist.strings in Resources */,
 				A1EBC7E015251293003330BC /* Localizable.strings in Resources */,
 				A1EBC7E215251293003330BC /* Settings.plist in Resources */,
+				4BFCC53F16696A9200145BAA /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
