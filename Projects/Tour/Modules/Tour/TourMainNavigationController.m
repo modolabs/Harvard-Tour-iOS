@@ -94,4 +94,18 @@
     return [super shouldAutorotateToInterfaceOrientation:interfaceOrientation];
 }
 
+- (NSUInteger) supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskAll;
+}
+
+- (BOOL) shouldAutorotate
+{
+    if (fullScreenModeActive) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
 @end
