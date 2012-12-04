@@ -149,7 +149,7 @@
 			<key>bold</key>
 			<true/>
 			<key>color</key>
-			<string>#FFFFFF</string>
+			<string>#505050</string>
 			<key>size</key>
 			<integer>-1</integer>
 		</dict>
@@ -158,7 +158,7 @@
 			<key>bold</key>
 			<true/>
 			<key>color</key>
-			<string>#FFFFFF</string>
+			<string>#505050</string>
 			<key>size</key>
 			<integer>-1</integer>
 		</dict>
