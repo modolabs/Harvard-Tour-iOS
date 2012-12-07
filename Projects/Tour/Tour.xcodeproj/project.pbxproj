@@ -2092,6 +2092,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7111347C5750045CE9C /* kurogo_debug.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = "Yard Tour";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2101,6 +2102,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7041347B8D20045CE9C /* kurogo.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = "Yard Tour";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2110,6 +2112,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EBC1C7041347B8D20045CE9C /* kurogo.xcconfig */;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				PRODUCT_NAME = "Yard Tour";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
